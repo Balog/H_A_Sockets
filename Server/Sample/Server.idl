@@ -1,0 +1,100 @@
+[
+  uuid(22FD94F8-3ADB-429C-B80F-17DB209F386E), 
+  version(1.0), 
+  helpstring("Server Library")
+    
+]
+library Server
+{
+
+  importlib("stdole2.tlb");
+
+  [
+    uuid(2FD5E67A-F061-46B6-B0DB-134D450E76AC), 
+    version(1.0), 
+    helpstring("Dispatch interface for Clients Object"), 
+    dual, 
+    oleautomation
+  ]
+   interface IClients: IDispatch
+  {
+    [
+    id(0x00000001)
+    ]
+    HRESULT _stdcall Connect([in] BSTR CLName, [out] long * IDC, [in, out, optional] VARIANT_BOOL * OK );
+    [
+    id(0x00000002)
+    ]
+    HRESULT _stdcall Disconnect_IDC([out] long * IDC, [in, out, optional] VARIANT_BOOL * OK );
+    [
+    id(0x00000003)
+    ]
+    HRESULT _stdcall Disconnect_Name([in] BSTR CLName, [in, out, optional] VARIANT_BOOL * OK );
+    [
+    propget, 
+    id(0x00000004)
+    ]
+    HRESULT _stdcall CountClients([out, retval] long * Count );
+    [
+    id(0x00000005)
+    ]
+    HRESULT _stdcall DisconnectAll([in, out, optional] VARIANT_BOOL * OK );
+  };
+
+  [
+    uuid(67022A35-7BDB-48B0-BF37-A04F587EB5C5), 
+    version(1.0), 
+    helpstring("Clients Object")
+  ]
+  coclass Clients
+  {
+    [default] interface IClients;
+  };
+
+  [
+    uuid(6948B4F5-C3C0-4B08-8F39-9E62A58315C5), 
+    version(1.0), 
+    helpstring("Dispatch interface for Forms Object"), 
+    dual, 
+    oleautomation
+  ]
+   interface IForms: IDispatch
+  {
+    [
+    id(0x00000001)
+    ]
+    HRESULT _stdcall RegForm([in] long IDC, [in] BSTR NameForm, [out] long * IDF, [in, out, optional] VARIANT_BOOL * OK );
+  };
+
+  [
+    uuid(C9D9511F-3EC1-4139-8D22-4AACBBEA71F9), 
+    version(1.0), 
+    helpstring("Forms Object")
+  ]
+  coclass Forms
+  {
+    [default] interface IForms;
+  };
+
+  [
+    uuid(3AF8D7F1-0DAB-415C-A063-2BCE1F071E24), 
+    version(1.0), 
+    helpstring("Dispatch interface for Tables Object"), 
+    dual, 
+    oleautomation
+  ]
+   interface ITables: IDispatch
+  {
+  };
+
+  [
+    uuid(70589E3D-2EDF-4F04-AA29-B51CADD14B23), 
+    version(1.0), 
+    helpstring("Tables Object")
+  ]
+  coclass Tables
+  {
+    [default] interface ITables;
+  };
+
+}; 

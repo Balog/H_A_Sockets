@@ -1,0 +1,4950 @@
+//---------------------------------------------------------------------------
+
+#include <vcl.h>
+#pragma hdrstop
+
+#include "Docs.h"
+#include "About.h"
+//#include "LoadKeyFile.h"
+//#include "Svod.h"
+//#include "File_operations.cpp"
+//#include "SetZn.h"
+#include "Password.h"
+#include "MasterPointer.h"
+#include "Progress.h"
+#include "MoveAspects.h"
+#include "FMoveAsp.h"
+#include "Rep1.h"
+#include "Svod.h"
+#include "About.h"
+//---------------------------------------------------------------------------
+#pragma package(smart_init)
+#pragma resource "*.dfm"
+TDocuments *Documents;
+int XX,YY;
+TTreeNode *SelNode;
+PMyNode  MyNodePtr;
+//---------------------------------------------------------------------------
+__fastcall TDocuments::TDocuments(TComponent* Owner)
+        : TForm(Owner)
+{
+//TreeView1->RightClickSelect=true;
+Nodes->Connection=Zast->ADOConn;
+Branches->Connection=Zast->ADOConn;
+Comm->Connection=Zast->ADOConn;
+LoadTab1();
+LoadTab2();
+LoadTab3();
+LoadTab4();
+LoadTab5();
+Zast->Timer1->Enabled=true;
+
+///
+C=false;
+Ins=false;
+
+ADODataSet1->Connection=Zast->ADOConn;
+ADODataSet2->Connection=Zast->ADOConn;
+///
+//***
+Podr->Connection=Zast->ADOAspect;
+Sit->Connection=Zast->ADOConn;
+Temp->Connection=Zast->ADOConn;
+Metod->Connection=Zast->ADOConn;
+
+
+Metod->CommandText="Select * From Методика";
+
+Podr->Active=true;
+Sit->Active=true;
+
+//***
+}
+//---------------------------------------------------------------------------
+void __fastcall TDocuments::N8Click(TObject *Sender)
+{
+//Zast->Close();
+this->Close();
+}
+//---------------------------------------------------------------------------
+void __fastcall TDocuments::FormClose(TObject *Sender,
+      TCloseAction &Action)
+{
+DataSetRefresh1->Execute();
+DataSetRefresh2->Execute();
+DataSetRefresh3->Execute();
+DataSetRefresh4->Execute();
+
+DataSetPost1->Execute();
+DataSetPost2->Execute();
+DataSetPost3->Execute();
+DataSetPost4->Execute();
+//if(Application->MessageBox("Сохранить изменения?","Выход из программы",MB_YESNO+MB_ICONQUESTION)==IDYES	)
+/*
+if(Application->MessageBoxA("Сохранить изменения?","Выход из программы",MB_YESNOCANCEL	+MB_ICONQUESTION+MB_DEFBUTTON1)==IDYES)
+{
+
+}
+*/
+
+switch (Application->MessageBoxA("Записать все изменения на сервер?","Выход из программы",MB_YESNOCANCEL	+MB_ICONQUESTION+MB_DEFBUTTON1))
+{
+ case IDYES:
+ {
+ Zast->MClient->WriteDiaryEvent("NetAspects","Завершение работы запись данных","");
+ SaveAllTables(true);
+  Zast->Close();
+ break;
+ }
+ case IDNO:
+ {
+ Zast->MClient->WriteDiaryEvent("NetAspects","Завершение работы отказ от записи","");
+ Action=caFree;
+ Zast->Close();
+ break;
+ }
+ case IDCANCEL:
+ {
+ Action=caNone;
+ break;
+ }
+}
+
+
+}
+//---------------------------------------------------------------------------
+void TDocuments::LoadTab1()
+{
+Nodes->Active=false;
+Nodes->CommandText="Select * From Узлы_3";
+Nodes->Active=true;
+Nodes->First();
+for(int i=0;i<Nodes->RecordCount;i++)
+{
+ int Parent=Nodes->FieldByName("Родитель")->Value;
+ if (Parent!=0)
+ {
+ Branches->Active=false;
+ Branches->CommandText="Select * From Узлы_3 Where [Номер узла]="+IntToStr(Parent);
+ Branches->Active=true;
+ if (Branches->RecordCount==0)
+ {
+  Nodes->Delete();
+ }
+
+ }
+ Nodes->Next();
+}
+
+PMyNode  MyNodePtr;
+MyNodePtr = new TMyNode;
+
+
+TTreeNode *N;
+TTreeNode *N1;
+//TTreeNode *N2;
+int NumParent;
+TreeView1->Items->BeginUpdate();
+TreeView1->Items->Clear();
+
+
+Nodes->Active=true;
+Nodes->First();
+NumParent=Nodes->FieldByName("Номер узла")->Value;
+AnsiString Text=Nodes->FieldByName("Название")->Value;
+
+MyNodePtr->Number=NumParent;
+MyNodePtr->Parent=0;
+MyNodePtr->Node=true;
+
+Nodes->Edit();
+N1=TreeView1->Items->AddChildObject(NULL,Text,MyNodePtr);
+
+Nodes->Post();
+
+Branches->Active=false;
+Branches->CommandText="Select * From Ветви_3 Where [Номер родителя]="+IntToStr(NumParent);
+Branches->Active=true;
+Branches->First();
+for (int j=0; j<Branches->RecordCount;j++)
+{
+int NumBranches=Branches->FieldByName("Номер ветви")->Value;
+int BranchesParent=Branches->FieldByName("Номер родителя")->Value;
+AnsiString TextBranches=Branches->FieldByName("Название")->Value;
+bool View=Branches->FieldByName("Показ")->Value;
+MyNodePtr = new TMyNode;
+MyNodePtr->Number=NumBranches;
+MyNodePtr->Parent=BranchesParent;
+MyNodePtr->Node=false;
+if (View==true)
+{
+TreeView1->Items->AddChildObject(N1,TextBranches,MyNodePtr);
+}
+
+Branches->Edit();
+
+Branches->Post();
+Branches->Next();
+}
+
+
+
+Nodes->Active=false;
+Nodes->CommandText="Select * From Узлы_3 Where ([Родитель])>0";
+Nodes->Active=true;
+Nodes->First();
+for(int i=0;i<Nodes->RecordCount;i++)
+{
+int NumNode=Nodes->FieldByName("Номер узла")->Value;
+NumParent=Nodes->FieldByName("Родитель")->Value;
+AnsiString TextNode=Nodes->FieldByName("Название")->Value;
+TTreeNode *ParNod;
+ParNod=N1;
+for (unsigned int k=0; k<NodeVector_3.size();k++)
+{
+ if (NodeVector_3[k].Number==NumParent)
+ {
+  ParNod=NodeVector_3[k].Nod;
+ }
+}
+
+MyNodePtr = new TMyNode;
+MyNodePtr->Number=NumNode;
+MyNodePtr->Parent=NumParent;
+MyNodePtr->Node=true;
+N=TreeView1->Items->AddChildObject(ParNod,TextNode,MyNodePtr);
+
+
+Nodes->Edit();
+
+Nodes->Post();
+Node NN;
+NN.Number=NumNode;
+NN.Parent=NumParent;
+NN.Nod=N;
+It_Node_3=NodeVector_3.end();
+NodeVector_3.insert(It_Node_3,NN);
+
+
+Branches->Active=false;
+Branches->CommandText="Select * From Ветви_3 Where [Номер родителя]="+IntToStr(NumNode);
+Branches->Active=true;
+Branches->First();
+for (int j=0; j<Branches->RecordCount;j++)
+{
+int NumBranches=Branches->FieldByName("Номер ветви")->Value;
+int BranchesParent=Branches->FieldByName("Номер родителя")->Value;
+AnsiString TextBranches=Branches->FieldByName("Название")->Value;
+
+
+MyNodePtr = new TMyNode;
+MyNodePtr->Number=NumBranches;
+MyNodePtr->Parent=BranchesParent;
+MyNodePtr->Node=false;
+TreeView1->Items->AddChildObject(N,TextBranches,MyNodePtr);
+
+Branches->Edit();
+
+Branches->Post();
+Branches->Next();
+}
+Nodes->Next();
+}
+Nodes->Active=false;
+Branches->Active=false;
+
+
+TreeView1->Items->EndUpdate();
+
+//ShowMessage(TreeView1->Items->Item[0]->Text);
+TreeView1->Items->Item[0]->Expand(false);
+/*
+for(int i=0;i<TreeView1->Items->Count;i++)
+{
+ShowMessage(TreeView1->Items->Item[i]->Text);
+TreeView1->Items->Item[i]->Expand(false);
+}
+*/
+}
+//-------------------------------------------------------------------------------------------------
+void TDocuments::LoadTab2()
+{
+Nodes->Active=false;
+Nodes->CommandText="Select * From Узлы_4";
+Nodes->Active=true;
+Nodes->First();
+for(int i=0;i<Nodes->RecordCount;i++)
+{
+ int Parent=Nodes->FieldByName("Родитель")->Value;
+ if (Parent!=0)
+ {
+ Branches->Active=false;
+ Branches->CommandText="Select * From Узлы_4 Where [Номер узла]="+IntToStr(Parent);
+ Branches->Active=true;
+ if (Branches->RecordCount==0)
+ {
+  Nodes->Delete();
+ }
+// Nodes->Next();
+ }
+ Nodes->Next();
+}
+//--------------------------------------------------
+
+
+
+PMyNode  MyNodePtr;
+MyNodePtr = new TMyNode;
+
+
+TTreeNode *N;
+TTreeNode *N1;
+
+int NumParent;
+TreeView2->Items->BeginUpdate();
+TreeView2->Items->Clear();
+
+
+Nodes->Active=true;
+Nodes->First();
+NumParent=Nodes->FieldByName("Номер узла")->Value;
+AnsiString Text=Nodes->FieldByName("Название")->Value;
+
+MyNodePtr->Number=NumParent;
+MyNodePtr->Parent=0;
+MyNodePtr->Node=true;
+
+Nodes->Edit();
+N1=TreeView2->Items->AddChildObject(NULL,Text,MyNodePtr);
+
+Nodes->Post();
+
+Branches->Active=false;
+Branches->CommandText="Select * From Ветви_4 Where [Номер родителя]="+IntToStr(NumParent);
+Branches->Active=true;
+Branches->First();
+for (int j=0; j<Branches->RecordCount;j++)
+{
+int NumBranches=Branches->FieldByName("Номер ветви")->Value;
+int BranchesParent=Branches->FieldByName("Номер родителя")->Value;
+AnsiString TextBranches=Branches->FieldByName("Название")->Value;
+bool View=Branches->FieldByName("Показ")->Value;
+MyNodePtr = new TMyNode;
+MyNodePtr->Number=NumBranches;
+MyNodePtr->Parent=BranchesParent;
+MyNodePtr->Node=false;
+if (View==true)
+{
+TreeView2->Items->AddChildObject(N1,TextBranches,MyNodePtr);
+}
+
+Branches->Edit();
+
+Branches->Post();
+Branches->Next();
+}
+
+
+
+Nodes->Active=false;
+Nodes->CommandText="Select * From Узлы_4 Where ([Родитель])>0";
+Nodes->Active=true;
+Nodes->First();
+for(int i=0;i<Nodes->RecordCount;i++)
+{
+int NumNode=Nodes->FieldByName("Номер узла")->Value;
+NumParent=Nodes->FieldByName("Родитель")->Value;
+AnsiString TextNode=Nodes->FieldByName("Название")->Value;
+TTreeNode *ParNod;
+ParNod=N1;
+for (unsigned int k=0; k<NodeVector_4.size();k++)
+{
+ if (NodeVector_4[k].Number==NumParent)
+ {
+  ParNod=NodeVector_4[k].Nod;
+ }
+}
+
+MyNodePtr = new TMyNode;
+MyNodePtr->Number=NumNode;
+MyNodePtr->Parent=NumParent;
+MyNodePtr->Node=true;
+N=TreeView2->Items->AddChildObject(ParNod,TextNode,MyNodePtr);
+
+
+Nodes->Edit();
+
+Nodes->Post();
+Node NN;
+NN.Number=NumNode;
+NN.Parent=NumParent;
+NN.Nod=N;
+It_Node_4=NodeVector_4.end();
+NodeVector_4.insert(It_Node_4,NN);
+
+
+Branches->Active=false;
+Branches->CommandText="Select * From Ветви_4 Where [Номер родителя]="+IntToStr(NumNode);
+Branches->Active=true;
+Branches->First();
+for (int j=0; j<Branches->RecordCount;j++)
+{
+int NumBranches=Branches->FieldByName("Номер ветви")->Value;
+int BranchesParent=Branches->FieldByName("Номер родителя")->Value;
+AnsiString TextBranches=Branches->FieldByName("Название")->Value;
+
+
+MyNodePtr = new TMyNode;
+MyNodePtr->Number=NumBranches;
+MyNodePtr->Parent=BranchesParent;
+MyNodePtr->Node=false;
+TreeView2->Items->AddChildObject(N,TextBranches,MyNodePtr);
+
+
+Branches->Edit();
+
+Branches->Post();
+Branches->Next();
+}
+Nodes->Next();
+}
+Nodes->Active=false;
+Branches->Active=false;
+
+
+TreeView2->Items->EndUpdate();
+TreeView2->Items->Item[0]->Expand(false);
+/*
+for(int i=0;i<TreeView2->Items->Count;i++)
+{
+TreeView2->Items->Item[i]->Expand(true);
+}
+*/
+}
+//---------------------------------------------------------------------------------
+void TDocuments::LoadTab3()
+{
+Nodes->Active=false;
+Nodes->CommandText="Select * From Узлы_5";
+Nodes->Active=true;
+Nodes->First();
+for(int i=0;i<Nodes->RecordCount;i++)
+{
+ int Parent=Nodes->FieldByName("Родитель")->Value;
+ if (Parent!=0)
+ {
+ Branches->Active=false;
+ Branches->CommandText="Select * From Узлы_5 Where [Номер узла]="+IntToStr(Parent);
+ Branches->Active=true;
+ if (Branches->RecordCount==0)
+ {
+  Nodes->Delete();
+ }
+// Nodes->Next();
+ }
+ Nodes->Next();
+}
+
+PMyNode  MyNodePtr;
+MyNodePtr = new TMyNode;
+
+
+TTreeNode *N;
+TTreeNode *N1;
+
+int NumParent;
+TreeView3->Items->BeginUpdate();
+TreeView3->Items->Clear();
+
+
+Nodes->Active=true;
+Nodes->First();
+NumParent=Nodes->FieldByName("Номер узла")->Value;
+AnsiString Text=Nodes->FieldByName("Название")->Value;
+
+MyNodePtr->Number=NumParent;
+MyNodePtr->Parent=0;
+MyNodePtr->Node=true;
+
+Nodes->Edit();
+N1=TreeView3->Items->AddChildObject(NULL,Text,MyNodePtr);
+
+Nodes->Post();
+
+Branches->Active=false;
+Branches->CommandText="Select * From Ветви_5 Where [Номер родителя]="+IntToStr(NumParent);
+Branches->Active=true;
+Branches->First();
+for (int j=0; j<Branches->RecordCount;j++)
+{
+int NumBranches=Branches->FieldByName("Номер ветви")->Value;
+int BranchesParent=Branches->FieldByName("Номер родителя")->Value;
+AnsiString TextBranches=Branches->FieldByName("Название")->Value;
+bool View=Branches->FieldByName("Показ")->Value;
+MyNodePtr = new TMyNode;
+MyNodePtr->Number=NumBranches;
+MyNodePtr->Parent=BranchesParent;
+MyNodePtr->Node=false;
+if (View==true)
+{
+TreeView3->Items->AddChildObject(N1,TextBranches,MyNodePtr);
+}
+
+Branches->Edit();
+
+Branches->Post();
+Branches->Next();
+}
+
+
+
+Nodes->Active=false;
+Nodes->CommandText="Select * From Узлы_5 Where ([Родитель])>0";
+Nodes->Active=true;
+Nodes->First();
+for(int i=0;i<Nodes->RecordCount;i++)
+{
+int NumNode=Nodes->FieldByName("Номер узла")->Value;
+NumParent=Nodes->FieldByName("Родитель")->Value;
+AnsiString TextNode=Nodes->FieldByName("Название")->Value;
+TTreeNode *ParNod;
+ParNod=N1;
+for (unsigned int k=0; k<NodeVector_5.size();k++)
+{
+ if (NodeVector_5[k].Number==NumParent)
+ {
+  ParNod=NodeVector_5[k].Nod;
+ }
+}
+
+MyNodePtr = new TMyNode;
+MyNodePtr->Number=NumNode;
+MyNodePtr->Parent=NumParent;
+MyNodePtr->Node=true;
+//N=TreeView1->Items->AddChildObject(ParNod,TextNode+" "+IntToStr(MyNodePtr->Number)+" "+IntToStr(MyNodePtr->Parent)+" Узел",MyNodePtr);
+N=TreeView3->Items->AddChildObject(ParNod,TextNode,MyNodePtr);
+
+//N=TreeView1->Items->AddChild(ParNod,TextNode);
+Nodes->Edit();
+
+Nodes->Post();
+Node NN;
+NN.Number=NumNode;
+NN.Parent=NumParent;
+NN.Nod=N;
+It_Node_5=NodeVector_5.end();
+NodeVector_5.insert(It_Node_5,NN);
+
+
+Branches->Active=false;
+Branches->CommandText="Select * From Ветви_5 Where [Номер родителя]="+IntToStr(NumNode);
+Branches->Active=true;
+Branches->First();
+for (int j=0; j<Branches->RecordCount;j++)
+{
+int NumBranches=Branches->FieldByName("Номер ветви")->Value;
+int BranchesParent=Branches->FieldByName("Номер родителя")->Value;
+AnsiString TextBranches=Branches->FieldByName("Название")->Value;
+
+
+MyNodePtr = new TMyNode;
+MyNodePtr->Number=NumBranches;
+MyNodePtr->Parent=BranchesParent;
+MyNodePtr->Node=false;
+TreeView3->Items->AddChildObject(N,TextBranches,MyNodePtr);
+
+
+Branches->Edit();
+
+Branches->Post();
+Branches->Next();
+}
+Nodes->Next();
+}
+Nodes->Active=false;
+Branches->Active=false;
+
+
+TreeView3->Items->EndUpdate();
+TreeView3->Items->Item[0]->Expand(false);
+/*
+for(int i=0;i<TreeView3->Items->Count;i++)
+{
+TreeView3->Items->Item[i]->Expand(true);
+}
+*/
+}
+//------------------------------------------------------------------------------
+void TDocuments::LoadTab4()
+{
+Nodes->Active=false;
+Nodes->CommandText="Select * From Узлы_6";
+Nodes->Active=true;
+Nodes->First();
+for(int i=0;i<Nodes->RecordCount;i++)
+{
+ int Parent=Nodes->FieldByName("Родитель")->Value;
+ if (Parent!=0)
+ {
+ Branches->Active=false;
+ Branches->CommandText="Select * From Узлы_6 Where [Номер узла]="+IntToStr(Parent);
+ Branches->Active=true;
+ if (Branches->RecordCount==0)
+ {
+  Nodes->Delete();
+ }
+
+ }
+ Nodes->Next();
+}
+
+PMyNode  MyNodePtr;
+MyNodePtr = new TMyNode;
+
+
+TTreeNode *N;
+TTreeNode *N1;
+
+int NumParent;
+TreeView4->Items->BeginUpdate();
+TreeView4->Items->Clear();
+
+
+Nodes->Active=true;
+Nodes->First();
+NumParent=Nodes->FieldByName("Номер узла")->Value;
+AnsiString Text=Nodes->FieldByName("Название")->Value;
+
+MyNodePtr->Number=NumParent;
+MyNodePtr->Parent=0;
+MyNodePtr->Node=true;
+
+Nodes->Edit();
+N1=TreeView4->Items->AddChildObject(NULL,Text,MyNodePtr);
+
+Nodes->Post();
+
+Branches->Active=false;
+Branches->CommandText="Select * From Ветви_6 Where [Номер родителя]="+IntToStr(NumParent);
+Branches->Active=true;
+Branches->First();
+for (int j=0; j<Branches->RecordCount;j++)
+{
+int NumBranches=Branches->FieldByName("Номер ветви")->Value;
+int BranchesParent=Branches->FieldByName("Номер родителя")->Value;
+AnsiString TextBranches=Branches->FieldByName("Название")->Value;
+bool View=Branches->FieldByName("Показ")->Value;
+MyNodePtr = new TMyNode;
+MyNodePtr->Number=NumBranches;
+MyNodePtr->Parent=BranchesParent;
+MyNodePtr->Node=false;
+if (View==true)
+{
+TreeView4->Items->AddChildObject(N1,TextBranches,MyNodePtr);
+}
+
+Branches->Edit();
+
+Branches->Post();
+Branches->Next();
+}
+
+
+
+Nodes->Active=false;
+Nodes->CommandText="Select * From Узлы_6 Where ([Родитель])>0";
+Nodes->Active=true;
+Nodes->First();
+for(int i=0;i<Nodes->RecordCount;i++)
+{
+int NumNode=Nodes->FieldByName("Номер узла")->Value;
+NumParent=Nodes->FieldByName("Родитель")->Value;
+AnsiString TextNode=Nodes->FieldByName("Название")->Value;
+TTreeNode *ParNod;
+ParNod=N1;
+for (unsigned int k=0; k<NodeVector_6.size();k++)
+{
+ if (NodeVector_6[k].Number==NumParent)
+ {
+  ParNod=NodeVector_6[k].Nod;
+ }
+}
+
+MyNodePtr = new TMyNode;
+MyNodePtr->Number=NumNode;
+MyNodePtr->Parent=NumParent;
+MyNodePtr->Node=true;
+//N=TreeView1->Items->AddChildObject(ParNod,TextNode+" "+IntToStr(MyNodePtr->Number)+" "+IntToStr(MyNodePtr->Parent)+" Узел",MyNodePtr);
+N=TreeView4->Items->AddChildObject(ParNod,TextNode,MyNodePtr);
+
+//N=TreeView1->Items->AddChild(ParNod,TextNode);
+Nodes->Edit();
+
+Nodes->Post();
+Node NN;
+NN.Number=NumNode;
+NN.Parent=NumParent;
+NN.Nod=N;
+It_Node_6=NodeVector_6.end();
+NodeVector_6.insert(It_Node_6,NN);
+
+
+Branches->Active=false;
+Branches->CommandText="Select * From Ветви_6 Where [Номер родителя]="+IntToStr(NumNode);
+Branches->Active=true;
+Branches->First();
+for (int j=0; j<Branches->RecordCount;j++)
+{
+int NumBranches=Branches->FieldByName("Номер ветви")->Value;
+int BranchesParent=Branches->FieldByName("Номер родителя")->Value;
+AnsiString TextBranches=Branches->FieldByName("Название")->Value;
+
+
+MyNodePtr = new TMyNode;
+MyNodePtr->Number=NumBranches;
+MyNodePtr->Parent=BranchesParent;
+MyNodePtr->Node=false;
+TreeView4->Items->AddChildObject(N,TextBranches,MyNodePtr);
+
+
+Branches->Edit();
+
+Branches->Post();
+Branches->Next();
+}
+Nodes->Next();
+}
+Nodes->Active=false;
+Branches->Active=false;
+
+
+TreeView4->Items->EndUpdate();
+TreeView4->Items->Item[0]->Expand(false);
+/*
+for(int i=0;i<TreeView4->Items->Count;i++)
+{
+TreeView4->Items->Item[i]->Expand(true);
+}
+*/
+}
+//---------------------------------------------------------------------------------
+void TDocuments::LoadTab5()
+{
+Nodes->Active=false;
+Nodes->CommandText="Select * From Узлы_7";
+Nodes->Active=true;
+Nodes->First();
+for(int i=0;i<Nodes->RecordCount;i++)
+{
+ int Parent=Nodes->FieldByName("Родитель")->Value;
+ if (Parent!=0)
+ {
+ Branches->Active=false;
+ Branches->CommandText="Select * From Узлы_7 Where [Номер узла]="+IntToStr(Parent);
+ Branches->Active=true;
+ if (Branches->RecordCount==0)
+ {
+  Nodes->Delete();
+ }
+// Nodes->Next();
+ }
+ Nodes->Next();
+}
+
+PMyNode  MyNodePtr;
+MyNodePtr = new TMyNode;
+
+
+TTreeNode *N;
+TTreeNode *N1;
+int NumParent;
+TreeView5->Items->BeginUpdate();
+TreeView5->Items->Clear();
+
+
+Nodes->Active=true;
+Nodes->First();
+NumParent=Nodes->FieldByName("Номер узла")->Value;
+AnsiString Text=Nodes->FieldByName("Название")->Value;
+
+MyNodePtr->Number=NumParent;
+MyNodePtr->Parent=0;
+MyNodePtr->Node=true;
+
+Nodes->Edit();
+N1=TreeView5->Items->AddChildObject(NULL,Text,MyNodePtr);
+
+Nodes->Post();
+
+Branches->Active=false;
+Branches->CommandText="Select * From Ветви_7 Where [Номер родителя]="+IntToStr(NumParent);
+Branches->Active=true;
+Branches->First();
+for (int j=0; j<Branches->RecordCount;j++)
+{
+int NumBranches=Branches->FieldByName("Номер ветви")->Value;
+int BranchesParent=Branches->FieldByName("Номер родителя")->Value;
+AnsiString TextBranches=Branches->FieldByName("Название")->Value;
+bool View=Branches->FieldByName("Показ")->Value;
+MyNodePtr = new TMyNode;
+MyNodePtr->Number=NumBranches;
+MyNodePtr->Parent=BranchesParent;
+MyNodePtr->Node=false;
+if (View==true)
+{
+TreeView5->Items->AddChildObject(N1,TextBranches,MyNodePtr);
+}
+
+Branches->Edit();
+
+Branches->Post();
+Branches->Next();
+}
+
+
+
+Nodes->Active=false;
+Nodes->CommandText="Select * From Узлы_7 Where ([Родитель])>0";
+Nodes->Active=true;
+Nodes->First();
+for(int i=0;i<Nodes->RecordCount;i++)
+{
+int NumNode=Nodes->FieldByName("Номер узла")->Value;
+NumParent=Nodes->FieldByName("Родитель")->Value;
+AnsiString TextNode=Nodes->FieldByName("Название")->Value;
+TTreeNode *ParNod;
+ParNod=N1;
+for (unsigned int k=0; k<NodeVector_7.size();k++)
+{
+ if (NodeVector_7[k].Number==NumParent)
+ {
+  ParNod=NodeVector_7[k].Nod;
+ }
+}
+
+MyNodePtr = new TMyNode;
+MyNodePtr->Number=NumNode;
+MyNodePtr->Parent=NumParent;
+MyNodePtr->Node=true;
+N=TreeView5->Items->AddChildObject(ParNod,TextNode,MyNodePtr);
+
+
+Nodes->Edit();
+
+Nodes->Post();
+Node NN;
+NN.Number=NumNode;
+NN.Parent=NumParent;
+NN.Nod=N;
+It_Node_7=NodeVector_7.end();
+NodeVector_7.insert(It_Node_7,NN);
+
+
+Branches->Active=false;
+Branches->CommandText="Select * From Ветви_7 Where [Номер родителя]="+IntToStr(NumNode);
+Branches->Active=true;
+Branches->First();
+for (int j=0; j<Branches->RecordCount;j++)
+{
+int NumBranches=Branches->FieldByName("Номер ветви")->Value;
+int BranchesParent=Branches->FieldByName("Номер родителя")->Value;
+AnsiString TextBranches=Branches->FieldByName("Название")->Value;
+
+
+MyNodePtr = new TMyNode;
+MyNodePtr->Number=NumBranches;
+MyNodePtr->Parent=BranchesParent;
+MyNodePtr->Node=false;
+TreeView5->Items->AddChildObject(N,TextBranches,MyNodePtr);
+
+
+Branches->Edit();
+
+Branches->Post();
+Branches->Next();
+}
+Nodes->Next();
+}
+Nodes->Active=false;
+Branches->Active=false;
+
+
+TreeView5->Items->EndUpdate();
+TreeView5->Items->Item[0]->Expand(false);
+/*
+for(int i=0;i<TreeView5->Items->Count;i++)
+{
+TreeView5->Items->Item[i]->Expand(true);
+}
+*/
+}
+//-----------------------------------------------------------------------------------------------------
+void __fastcall TDocuments::TreeView1Edited(TObject *Sender,
+      TTreeNode *Node, AnsiString &S)
+{
+bool IsNode=PMyNode(Node->Data)->Node;
+int Number=PMyNode(Node->Data)->Number;
+if (S=="")
+{
+S=" ";
+}
+if (IsNode==true)
+{
+ Nodes->Active=false;
+ Nodes->CommandText="Select * From Узлы_3 Where [Номер узла]="+IntToStr(Number);
+ Nodes->Active=true;
+ Nodes->Edit();
+ Nodes->FieldByName("Название")->Value=S;
+ Nodes->Post();
+
+}
+else
+{
+ Branches->Active=false;
+ Branches->CommandText="Select * From Ветви_3 Where [Номер ветви]="+IntToStr(Number);
+ Branches->Active=true;
+ Branches->Edit();
+ Branches->FieldByName("Название")->Value=S;
+ Branches->Post();
+}
+}
+//---------------------------------------------------------------------------
+
+
+void __fastcall TDocuments::N3Click(TObject *Sender)
+{
+int Number;
+bool IsNode;
+TTreeNode *N;
+//PMyNode(TreeView1->Selected->Data)->Number;
+
+//Номер предка
+//Нужно узнать номер новой ветви
+int NumParentNode=PMyNode(SelNode->Data)->Number;
+//Является ли предок узлом?
+IsNode=PMyNode(SelNode->Data)->Node;
+if (IsNode==true)
+{
+//Если является то нужно только оформить на него ссылку
+Branches->Active=false;
+Branches->CommandText="Select * From Ветви_3";
+Branches->Active=true;
+Branches->Append();
+Branches->FieldByName("Номер родителя")->Value=NumParentNode;
+Branches->FieldByName("Название")->Value="Новое воздействие";
+Branches->Post();
+Branches->Last();
+Number=Branches->FieldByName("Номер ветви")->Value;
+
+MyNodePtr = new TMyNode;
+MyNodePtr->Number=Number;
+MyNodePtr->Parent=NumParentNode;
+MyNodePtr->Node=false;
+
+}
+else
+{
+//А если является ветвью то нужно ее перенести в узлы и оформить на нее ссылку.
+int Par;
+AnsiString Text;
+Branches->Active=false;
+Branches->CommandText="Select * From Ветви_3 Where [Номер ветви]="+IntToStr(NumParentNode);
+Branches->Active=true;
+Par=Branches->FieldByName("Номер родителя")->Value;
+Text=Branches->FieldByName("Название")->Value;
+Branches->Delete();
+Nodes->Active=false;
+Nodes->CommandText="Select * From Узлы_3";
+Nodes->Active=true;
+Nodes->Append();
+Nodes->FieldByName("Родитель")->Value=Par;
+Nodes->FieldByName("Название")->Value=Text;
+Nodes->Post();
+Nodes->Last();
+
+//PMyNode(TreeView1->Selected->Data)->Node
+PMyNode(SelNode->Data)->Number=Nodes->FieldByName("Номер узла")->Value;
+PMyNode(SelNode->Data)->Parent=Nodes->FieldByName("Родитель")->Value;
+PMyNode(SelNode->Data)->Node=true;
+NumParentNode=Nodes->FieldByName("Номер узла")->Value;
+Branches->Active=false;
+Branches->CommandText="Select * From Ветви_3";
+Branches->Active=true;
+Branches->Append();
+Branches->FieldByName("Номер родителя")->Value=NumParentNode;
+Branches->FieldByName("Название")->Value="Новое воздействие";
+Branches->Post();
+Branches->Last();
+Number=Branches->FieldByName("Номер ветви")->Value;
+
+
+MyNodePtr = new TMyNode;
+MyNodePtr->Number=Number;
+MyNodePtr->Parent=NumParentNode;
+MyNodePtr->Node=false;
+}
+TreeView1->Items->AddChildObject(SelNode,"Новое воздействие",MyNodePtr);
+}
+//---------------------------------------------------------------------------
+int TDocuments::DeleteNode(String NameNode, String NameBranch, int Number)
+{
+MP<TADODataSet>Tab(this);
+Tab->Connection=Zast->ADOConn;
+Tab->CommandText="Select * From "+NameNode+" Where [Родитель]="+IntToStr(Number);
+Tab->Active=true;
+
+if(Tab->RecordCount!=0)
+{
+for(Tab->First();!Tab->Eof;Tab->Next())
+{
+ int Parent=Tab->FieldByName("Номер узла")->AsInteger;
+ DeleteNode(NameNode, NameBranch, Parent);
+}
+
+}
+Comm->CommandText="Delete * From "+NameBranch+" Where [Номер родителя]="+IntToStr(Number);
+Comm->Execute();
+
+ Comm->CommandText="Delete * From "+NameNode+" Where [Номер узла]="+IntToStr(Number);
+ Comm->Execute();
+
+
+
+return -1;
+}
+//---------------------------------------------------------------------------
+void __fastcall TDocuments::N9Click(TObject *Sender)
+{
+//Добавить проверку на отсутствие у родителя удаляемой ветви (узла) потомков
+//и перевода его в категорию ветвей
+TTreeNode *N;
+
+
+int Number=PMyNode(TreeView1->Selected->Data)->Number;
+int Parent=PMyNode(TreeView1->Selected->Data)->Parent;
+bool IsNode=PMyNode(TreeView1->Selected->Data)->Node;
+if (IsNode==true)
+{
+
+
+DeleteNode("Узлы_3","Ветви_5", Number);
+
+}
+else
+{
+Comm->CommandText="Delete * From Ветви_3 Where [Номер ветви]="+IntToStr(Number);
+Comm->Execute();
+
+}
+
+Branches->Active=false;
+Branches->CommandText="Select * From Ветви_3 Where [Номер родителя]="+IntToStr(Parent);
+Branches->Active=true;
+Nodes->Active=false;
+Nodes->CommandText="Select * From Узлы_3 Where Родитель="+IntToStr(Parent);
+Nodes->Active=true;
+
+if (Branches->RecordCount==0 & Nodes->RecordCount==0)
+{
+ Nodes->Active=false;
+ Nodes->CommandText="Select * From Узлы_3 Where [Номер узла]="+IntToStr(Parent);
+ Nodes->Active=true;
+ if (Nodes->RecordCount==0)
+ {
+  ShowMessage("Ошибка! Удалялась запись в таблице узлов номер "+IntToStr(Number)+" предок номер "+IntToStr(Parent));
+  ShowMessage("Не найдена запись в таблице узлов номер "+IntToStr(Parent));
+
+ }
+ else
+ {
+ int NumParent=Nodes->FieldByName("Родитель")->Value;
+ if (NumParent!=0)
+ {
+ AnsiString Text=Nodes->FieldByName("Название")->Value;;
+ Nodes->Delete();
+ Branches->Active=false;
+ Branches->CommandText="Select * From Ветви_3";
+ Branches->Active=true;
+ Branches->Append();
+ Branches->FieldByName("Номер родителя")->Value=NumParent;
+ Branches->FieldByName("Название")->Value=Text;
+ Branches->Post();
+ Branches->Last();
+ int Number=Branches->FieldByName("Номер ветви")->Value;
+ N=TreeView1->GetNodeAt(XX,YY);
+ TTreeNode * ParNode=N->Parent;
+ PMyNode(ParNode->Data)->Number=Number;
+ PMyNode(ParNode->Data)->Parent=NumParent;
+ PMyNode(ParNode->Data)->Node=false;
+ //
+ //ParNode->Text=Text+" "+IntToStr(Number)+" "+IntToStr(NumParent)+" Ветвь";
+}
+}
+}
+TreeView1->Items->Delete(TreeView1->GetNodeAt(XX,YY));
+
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TDocuments::TreeView1MouseDown(TObject *Sender,
+      TMouseButton Button, TShiftState Shift, int X, int Y)
+{
+TTreeNode* N=TreeView1->GetNodeAt(X,Y);
+//if(N!=NULL)
+//{
+//N->Selected=true;
+THitTests HT;
+HT=TreeView1->GetHitTestInfoAt(X,Y);
+if (HT.Contains(htOnItem))
+{
+N->Selected=true;
+SelNode=TreeView1->Selected;
+//ShowMessage(SelNode->Text);
+ if (Button==mbRight)
+ {
+  TPoint TP;
+  TP=TreeView1->ClientOrigin;
+  if (SelNode->AbsoluteIndex==0)
+  {
+  PopupMenu1->Items->Items[0]->Enabled=true;
+  PopupMenu1->Items->Items[1]->Enabled=false;
+  }
+  else
+  {
+  PopupMenu1->Items->Items[0]->Enabled=true;
+  PopupMenu1->Items->Items[1]->Enabled=true;
+  }
+  PopupMenu1->Popup(X+TP.x,Y+TP.y);
+
+ }
+
+XX=X;
+YY=Y;
+// TreeView1->Items->Delete(TreeView1->GetNodeAt(X,Y));
+}
+//}
+}
+//---------------------------------------------------------------------------
+
+
+
+void __fastcall TDocuments::TreeView2Edited(TObject *Sender,
+      TTreeNode *Node, AnsiString &S)
+{
+bool IsNode=PMyNode(Node->Data)->Node;
+int Number=PMyNode(Node->Data)->Number;
+if (S=="")
+{
+S=" ";
+}
+if (IsNode==true)
+{
+ Nodes->Active=false;
+ Nodes->CommandText="Select * From Узлы_4 Where [Номер узла]="+IntToStr(Number);
+ Nodes->Active=true;
+ Nodes->Edit();
+ Nodes->FieldByName("Название")->Value=S;
+ Nodes->Post();
+
+}
+else
+{
+ Branches->Active=false;
+ Branches->CommandText="Select * From Ветви_4 Where [Номер ветви]="+IntToStr(Number);
+ Branches->Active=true;
+ Branches->Edit();
+ Branches->FieldByName("Название")->Value=S;
+ Branches->Post();
+}
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TDocuments::TreeView2MouseDown(TObject *Sender,
+      TMouseButton Button, TShiftState Shift, int X, int Y)
+{
+TTreeNode* N=TreeView2->GetNodeAt(X,Y);
+
+THitTests HT;
+HT=TreeView2->GetHitTestInfoAt(X,Y);
+if (HT.Contains(htOnItem))
+{
+N->Selected=true;
+SelNode=TreeView2->Selected;
+
+//ShowMessage(SelNode->Text);
+ if (Button==mbRight)
+ {
+  TPoint TP;
+  TP=TreeView2->ClientOrigin;
+  if (SelNode->AbsoluteIndex==0)
+  {
+  PopupMenu2->Items->Items[0]->Enabled=true;
+  PopupMenu2->Items->Items[1]->Enabled=false;
+  }
+  else
+  {
+  PopupMenu2->Items->Items[0]->Enabled=true;
+  PopupMenu2->Items->Items[1]->Enabled=true;
+  }
+  PopupMenu2->Popup(X+TP.x,Y+TP.y);
+
+ }
+
+XX=X;
+YY=Y;
+}
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TDocuments::N10Click(TObject *Sender)
+{
+int Number;
+bool IsNode;
+TTreeNode *N;
+//PMyNode(TreeView1->Selected->Data)->Number;
+
+//Номер предка
+//Нужно узнать номер новой ветви
+int NumParentNode=PMyNode(SelNode->Data)->Number;
+//Является ли предок узлом?
+IsNode=PMyNode(SelNode->Data)->Node;
+if (IsNode==true)
+{
+//Если является то нужно только оформить на него ссылку
+Branches->Active=false;
+Branches->CommandText="Select * From Ветви_4";
+Branches->Active=true;
+Branches->Append();
+Branches->FieldByName("Номер родителя")->Value=NumParentNode;
+Branches->FieldByName("Название")->Value="Новое мероприятие";
+Branches->Post();
+Branches->Last();
+Number=Branches->FieldByName("Номер ветви")->Value;
+
+MyNodePtr = new TMyNode;
+MyNodePtr->Number=Number;
+MyNodePtr->Parent=NumParentNode;
+MyNodePtr->Node=false;
+
+}
+else
+{
+//А если является ветвью то нужно ее перенести в узлы и оформить на нее ссылку.
+int Par;
+AnsiString Text;
+Branches->Active=false;
+Branches->CommandText="Select * From Ветви_4 Where [Номер ветви]="+IntToStr(NumParentNode);
+Branches->Active=true;
+Par=Branches->FieldByName("Номер родителя")->Value;
+Text=Branches->FieldByName("Название")->Value;
+Branches->Delete();
+Nodes->Active=false;
+Nodes->CommandText="Select * From Узлы_4";
+Nodes->Active=true;
+Nodes->Append();
+Nodes->FieldByName("Родитель")->Value=Par;
+Nodes->FieldByName("Название")->Value=Text;
+Nodes->Post();
+Nodes->Last();
+
+//PMyNode(TreeView1->Selected->Data)->Node
+PMyNode(SelNode->Data)->Number=Nodes->FieldByName("Номер узла")->Value;
+PMyNode(SelNode->Data)->Parent=Nodes->FieldByName("Родитель")->Value;
+PMyNode(SelNode->Data)->Node=true;
+NumParentNode=Nodes->FieldByName("Номер узла")->Value;
+Branches->Active=false;
+Branches->CommandText="Select * From Ветви_4";
+Branches->Active=true;
+Branches->Append();
+Branches->FieldByName("Номер родителя")->Value=NumParentNode;
+Branches->FieldByName("Название")->Value="Новое мероприятие";
+Branches->Post();
+Branches->Last();
+Number=Branches->FieldByName("Номер ветви")->Value;
+
+
+MyNodePtr = new TMyNode;
+MyNodePtr->Number=Number;
+MyNodePtr->Parent=NumParentNode;
+MyNodePtr->Node=false;
+}
+TreeView2->Items->AddChildObject(SelNode,"Новое мероприятие",MyNodePtr);
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TDocuments::N11Click(TObject *Sender)
+{
+//Добавить проверку на отсутствие у родителя удаляемой ветви (узла) потомков
+//и перевода его в категорию ветвей
+TTreeNode *N;
+
+
+int Number=PMyNode(TreeView2->Selected->Data)->Number;
+int Parent=PMyNode(TreeView2->Selected->Data)->Parent;
+bool IsNode=PMyNode(TreeView2->Selected->Data)->Node;
+if (IsNode==true)
+{
+DeleteNode("Узлы_4","Ветви_4", Number);
+
+}
+else
+{
+Comm->CommandText="Delete * From Ветви_4 Where [Номер ветви]="+IntToStr(Number);
+Comm->Execute();
+
+}
+
+Branches->Active=false;
+Branches->CommandText="Select * From Ветви_4 Where [Номер родителя]="+IntToStr(Parent);
+Branches->Active=true;
+Nodes->Active=false;
+Nodes->CommandText="Select * From Узлы_4 Where Родитель="+IntToStr(Parent);
+Nodes->Active=true;
+if (Branches->RecordCount==0 & Nodes->RecordCount==0)
+{
+ Nodes->Active=false;
+ Nodes->CommandText="Select * From Узлы_4 Where [Номер узла]="+IntToStr(Parent);
+ Nodes->Active=true;
+ if (Nodes->RecordCount==0)
+ {
+  ShowMessage("Ошибка! Удалялась запись в таблице узлов номер "+IntToStr(Number)+" предок номер "+IntToStr(Parent));
+  ShowMessage("Не найдена запись в таблице узлов номер "+IntToStr(Parent));
+
+ }
+ else
+ {
+ int NumParent=Nodes->FieldByName("Родитель")->Value;
+ AnsiString Text=Nodes->FieldByName("Название")->Value;
+  if (NumParent!=0)
+ {
+ Nodes->Delete();
+ Branches->Active=false;
+ Branches->CommandText="Select * From Ветви_4";
+ Branches->Active=true;
+ Branches->Append();
+ Branches->FieldByName("Номер родителя")->Value=NumParent;
+ Branches->FieldByName("Название")->Value=Text;
+ Branches->Post();
+ Branches->Last();
+ int Number=Branches->FieldByName("Номер ветви")->Value;
+ N=TreeView2->GetNodeAt(XX,YY);
+ TTreeNode * ParNode=N->Parent;
+ PMyNode(ParNode->Data)->Number=Number;
+ PMyNode(ParNode->Data)->Parent=NumParent;
+ PMyNode(ParNode->Data)->Node=false;
+ //
+ //ParNode->Text=Text+" "+IntToStr(Number)+" "+IntToStr(NumParent)+" Ветвь";
+}
+}
+}
+TreeView2->Items->Delete(TreeView2->GetNodeAt(XX,YY));
+
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TDocuments::TreeView3Edited(TObject *Sender,
+      TTreeNode *Node, AnsiString &S)
+{
+bool IsNode=PMyNode(Node->Data)->Node;
+int Number=PMyNode(Node->Data)->Number;
+if (S=="")
+{
+S=" ";
+}
+if (IsNode==true)
+{
+ Nodes->Active=false;
+ Nodes->CommandText="Select * From Узлы_5 Where [Номер узла]="+IntToStr(Number);
+ Nodes->Active=true;
+ Nodes->Edit();
+ Nodes->FieldByName("Название")->Value=S;
+ Nodes->Post();
+
+}
+else
+{
+ Branches->Active=false;
+ Branches->CommandText="Select * From Ветви_5 Where [Номер ветви]="+IntToStr(Number);
+ Branches->Active=true;
+ Branches->Edit();
+ Branches->FieldByName("Название")->Value=S;
+ Branches->Post();
+}
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TDocuments::PageControl1MouseDown(TObject *Sender,
+      TMouseButton Button, TShiftState Shift, int X, int Y)
+{
+THitTests HT;
+HT=TreeView3->GetHitTestInfoAt(X,Y);
+if (HT.Contains(htOnItem))
+{
+SelNode=TreeView3->Selected;
+//ShowMessage(SelNode->Text);
+ if (Button==mbRight)
+ {
+  TPoint TP;
+  TP=TreeView3->ClientOrigin;
+  if (SelNode->AbsoluteIndex==0)
+  {
+  PopupMenu3->Items->Items[0]->Enabled=true;
+  PopupMenu3->Items->Items[1]->Enabled=false;
+  }
+  else
+  {
+  PopupMenu3->Items->Items[0]->Enabled=true;
+  PopupMenu3->Items->Items[1]->Enabled=true;
+  }
+  PopupMenu3->Popup(X+TP.x,Y+TP.y);
+
+ }
+
+XX=X;
+YY=Y;
+// TreeView1->Items->Delete(TreeView1->GetNodeAt(X,Y));
+}
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TDocuments::N12Click(TObject *Sender)
+{
+int Number;
+bool IsNode;
+TTreeNode *N;
+//PMyNode(TreeView1->Selected->Data)->Number;
+
+//Номер предка
+//Нужно узнать номер новой ветви
+int NumParentNode=PMyNode(SelNode->Data)->Number;
+//Является ли предок узлом?
+IsNode=PMyNode(SelNode->Data)->Node;
+if (IsNode==true)
+{
+//Если является то нужно только оформить на него ссылку
+Branches->Active=false;
+Branches->CommandText="Select * From Ветви_5";
+Branches->Active=true;
+Branches->Append();
+Branches->FieldByName("Номер родителя")->Value=NumParentNode;
+Branches->FieldByName("Название")->Value="Новая территория";
+Branches->Post();
+Branches->Last();
+Number=Branches->FieldByName("Номер ветви")->Value;
+
+MyNodePtr = new TMyNode;
+MyNodePtr->Number=Number;
+MyNodePtr->Parent=NumParentNode;
+MyNodePtr->Node=false;
+
+}
+else
+{
+//А если является ветвью то нужно ее перенести в узлы и оформить на нее ссылку.
+int Par;
+AnsiString Text;
+Branches->Active=false;
+Branches->CommandText="Select * From Ветви_5 Where [Номер ветви]="+IntToStr(NumParentNode);
+Branches->Active=true;
+Par=Branches->FieldByName("Номер родителя")->Value;
+Text=Branches->FieldByName("Название")->Value;
+Branches->Delete();
+Nodes->Active=false;
+Nodes->CommandText="Select * From Узлы_5";
+Nodes->Active=true;
+Nodes->Append();
+Nodes->FieldByName("Родитель")->Value=Par;
+Nodes->FieldByName("Название")->Value=Text;
+Nodes->Post();
+Nodes->Last();
+
+//PMyNode(TreeView1->Selected->Data)->Node
+PMyNode(SelNode->Data)->Number=Nodes->FieldByName("Номер узла")->Value;
+PMyNode(SelNode->Data)->Parent=Nodes->FieldByName("Родитель")->Value;
+PMyNode(SelNode->Data)->Node=true;
+NumParentNode=Nodes->FieldByName("Номер узла")->Value;
+Branches->Active=false;
+Branches->CommandText="Select * From Ветви_5";
+Branches->Active=true;
+Branches->Append();
+Branches->FieldByName("Номер родителя")->Value=NumParentNode;
+Branches->FieldByName("Название")->Value="Новая территория";
+Branches->Post();
+Branches->Last();
+Number=Branches->FieldByName("Номер ветви")->Value;
+
+
+MyNodePtr = new TMyNode;
+MyNodePtr->Number=Number;
+MyNodePtr->Parent=NumParentNode;
+MyNodePtr->Node=false;
+}
+TreeView3->Items->AddChildObject(SelNode,"Новая территория",MyNodePtr);
+
+}
+//---------------------------------------------------------------------------
+
+
+void __fastcall TDocuments::TreeView3MouseDown(TObject *Sender,
+      TMouseButton Button, TShiftState Shift, int X, int Y)
+{
+TTreeNode* N=TreeView3->GetNodeAt(X,Y);
+
+THitTests HT;
+HT=TreeView3->GetHitTestInfoAt(X,Y);
+if (HT.Contains(htOnItem))
+{
+N->Selected=true;
+SelNode=TreeView3->Selected;
+
+ if (Button==mbRight)
+ {
+  TPoint TP;
+  TP=TreeView3->ClientOrigin;
+  if (SelNode->AbsoluteIndex==0)
+  {
+  PopupMenu3->Items->Items[0]->Enabled=true;
+  PopupMenu3->Items->Items[1]->Enabled=false;
+  }
+  else
+  {
+  PopupMenu3->Items->Items[0]->Enabled=true;
+  PopupMenu3->Items->Items[1]->Enabled=true;
+  }
+  PopupMenu3->Popup(X+TP.x,Y+TP.y);
+
+ }
+
+XX=X;
+YY=Y;
+}
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TDocuments::N13Click(TObject *Sender)
+{
+//Добавить проверку на отсутствие у родителя удаляемой ветви (узла) потомков
+//и перевода его в категорию ветвей
+TTreeNode *N;
+//N=TreeView1->GetNodeAt(XX,YY);
+
+int Number=PMyNode(TreeView3->Selected->Data)->Number;
+int Parent=PMyNode(TreeView3->Selected->Data)->Parent;
+bool IsNode=PMyNode(TreeView3->Selected->Data)->Node;
+if (IsNode==true)
+{
+DeleteNode("Узлы_5","Ветви_5", Number);
+
+}
+else
+{
+Comm->CommandText="Delete * From Ветви_5 Where [Номер ветви]="+IntToStr(Number);
+Comm->Execute();
+
+}
+
+Branches->Active=false;
+Branches->CommandText="Select * From Ветви_5 Where [Номер родителя]="+IntToStr(Parent);
+Branches->Active=true;
+Nodes->Active=false;
+Nodes->CommandText="Select * From Узлы_5 Where Родитель="+IntToStr(Parent);
+Nodes->Active=true;
+if (Branches->RecordCount==0 & Nodes->RecordCount==0)
+{
+ Nodes->Active=false;
+ Nodes->CommandText="Select * From Узлы_5 Where [Номер узла]="+IntToStr(Parent);
+ Nodes->Active=true;
+ if (Nodes->RecordCount==0)
+ {
+  ShowMessage("Ошибка! Удалялась запись в таблице узлов номер "+IntToStr(Number)+" предок номер "+IntToStr(Parent));
+  ShowMessage("Не найдена запись в таблице узлов номер "+IntToStr(Parent));
+
+ }
+ else
+ {
+ int NumParent=Nodes->FieldByName("Родитель")->Value;
+ AnsiString Text=Nodes->FieldByName("Название")->Value;
+  if (NumParent!=0)
+ {
+ Nodes->Delete();
+ Branches->Active=false;
+ Branches->CommandText="Select * From Ветви_5";
+ Branches->Active=true;
+ Branches->Append();
+ Branches->FieldByName("Номер родителя")->Value=NumParent;
+ Branches->FieldByName("Название")->Value=Text;
+ Branches->Post();
+ Branches->Last();
+ int Number=Branches->FieldByName("Номер ветви")->Value;
+ N=TreeView3->GetNodeAt(XX,YY);
+ TTreeNode * ParNode=N->Parent;
+ PMyNode(ParNode->Data)->Number=Number;
+ PMyNode(ParNode->Data)->Parent=NumParent;
+ PMyNode(ParNode->Data)->Node=false;
+ //
+ //ParNode->Text=Text+" "+IntToStr(Number)+" "+IntToStr(NumParent)+" Ветвь";
+}
+}
+}
+TreeView3->Items->Delete(TreeView3->GetNodeAt(XX,YY));
+
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TDocuments::TreeView4Edited(TObject *Sender,
+      TTreeNode *Node, AnsiString &S)
+{
+bool IsNode=PMyNode(Node->Data)->Node;
+int Number=PMyNode(Node->Data)->Number;
+if (S=="")
+{
+S=" ";
+}
+if (IsNode==true)
+{
+ Nodes->Active=false;
+ Nodes->CommandText="Select * From Узлы_6 Where [Номер узла]="+IntToStr(Number);
+ Nodes->Active=true;
+ Nodes->Edit();
+ Nodes->FieldByName("Название")->Value=S;
+ Nodes->Post();
+
+}
+else
+{
+ Branches->Active=false;
+ Branches->CommandText="Select * From Ветви_6 Where [Номер ветви]="+IntToStr(Number);
+ Branches->Active=true;
+ Branches->Edit();
+ Branches->FieldByName("Название")->Value=S;
+ Branches->Post();
+}
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TDocuments::TreeView4MouseDown(TObject *Sender,
+      TMouseButton Button, TShiftState Shift, int X, int Y)
+{
+TTreeNode* N=TreeView4->GetNodeAt(X,Y);
+
+THitTests HT;
+HT=TreeView4->GetHitTestInfoAt(X,Y);
+if (HT.Contains(htOnItem))
+{
+N->Selected=true;
+SelNode=TreeView4->Selected;
+//ShowMessage(SelNode->Text);
+ if (Button==mbRight)
+ {
+  TPoint TP;
+  TP=TreeView4->ClientOrigin;
+  if (SelNode->AbsoluteIndex==0)
+  {
+  PopupMenu4->Items->Items[0]->Enabled=true;
+  PopupMenu4->Items->Items[1]->Enabled=false;
+  }
+  else
+  {
+  PopupMenu4->Items->Items[0]->Enabled=true;
+  PopupMenu4->Items->Items[1]->Enabled=true;
+  }
+  PopupMenu4->Popup(X+TP.x,Y+TP.y);
+
+ }
+
+XX=X;
+YY=Y;
+}
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TDocuments::N14Click(TObject *Sender)
+{
+int Number;
+bool IsNode;
+TTreeNode *N;
+
+
+//Номер предка
+//Нужно узнать номер новой ветви
+int NumParentNode=PMyNode(SelNode->Data)->Number;
+//Является ли предок узлом?
+IsNode=PMyNode(SelNode->Data)->Node;
+if (IsNode==true)
+{
+//Если является то нужно только оформить на него ссылку
+Branches->Active=false;
+Branches->CommandText="Select * From Ветви_6";
+Branches->Active=true;
+Branches->Append();
+Branches->FieldByName("Номер родителя")->Value=NumParentNode;
+Branches->FieldByName("Название")->Value="Новый вид деятельности";
+Branches->Post();
+Branches->Last();
+Number=Branches->FieldByName("Номер ветви")->Value;
+
+MyNodePtr = new TMyNode;
+MyNodePtr->Number=Number;
+MyNodePtr->Parent=NumParentNode;
+MyNodePtr->Node=false;
+
+}
+else
+{
+//А если является ветвью то нужно ее перенести в узлы и оформить на нее ссылку.
+int Par;
+AnsiString Text;
+Branches->Active=false;
+Branches->CommandText="Select * From Ветви_6 Where [Номер ветви]="+IntToStr(NumParentNode);
+Branches->Active=true;
+Par=Branches->FieldByName("Номер родителя")->Value;
+Text=Branches->FieldByName("Название")->Value;
+Branches->Delete();
+Nodes->Active=false;
+Nodes->CommandText="Select * From Узлы_6";
+Nodes->Active=true;
+Nodes->Append();
+Nodes->FieldByName("Родитель")->Value=Par;
+Nodes->FieldByName("Название")->Value=Text;
+Nodes->Post();
+Nodes->Last();
+
+
+PMyNode(SelNode->Data)->Number=Nodes->FieldByName("Номер узла")->Value;
+PMyNode(SelNode->Data)->Parent=Nodes->FieldByName("Родитель")->Value;
+PMyNode(SelNode->Data)->Node=true;
+NumParentNode=Nodes->FieldByName("Номер узла")->Value;
+Branches->Active=false;
+Branches->CommandText="Select * From Ветви_6";
+Branches->Active=true;
+Branches->Append();
+Branches->FieldByName("Номер родителя")->Value=NumParentNode;
+Branches->FieldByName("Название")->Value="Новый вид деятельности";
+Branches->Post();
+Branches->Last();
+Number=Branches->FieldByName("Номер ветви")->Value;
+
+
+MyNodePtr = new TMyNode;
+MyNodePtr->Number=Number;
+MyNodePtr->Parent=NumParentNode;
+MyNodePtr->Node=false;
+}
+TreeView4->Items->AddChildObject(SelNode,"Новый вид деятельности",MyNodePtr);
+
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TDocuments::N15Click(TObject *Sender)
+{
+//Добавить проверку на отсутствие у родителя удаляемой ветви (узла) потомков
+//и перевода его в категорию ветвей
+TTreeNode *N;
+//N=TreeView1->GetNodeAt(XX,YY);
+
+int Number=PMyNode(TreeView4->Selected->Data)->Number;
+int Parent=PMyNode(TreeView4->Selected->Data)->Parent;
+bool IsNode=PMyNode(TreeView4->Selected->Data)->Node;
+if (IsNode==true)
+{
+DeleteNode("Узлы_6","Ветви_6", Number);
+
+}
+else
+{
+Comm->CommandText="Delete * From Ветви_6 Where [Номер ветви]="+IntToStr(Number);
+Comm->Execute();
+
+}
+
+Branches->Active=false;
+Branches->CommandText="Select * From Ветви_6 Where [Номер родителя]="+IntToStr(Parent);
+Branches->Active=true;
+Nodes->Active=false;
+Nodes->CommandText="Select * From Узлы_6 Where Родитель="+IntToStr(Parent);
+Nodes->Active=true;
+if (Branches->RecordCount==0 & Nodes->RecordCount==0)
+{
+ Nodes->Active=false;
+ Nodes->CommandText="Select * From Узлы_6 Where [Номер узла]="+IntToStr(Parent);
+ Nodes->Active=true;
+ if (Nodes->RecordCount==0)
+ {
+  ShowMessage("Ошибка! Удалялась запись в таблице узлов номер "+IntToStr(Number)+" предок номер "+IntToStr(Parent));
+  ShowMessage("Не найдена запись в таблице узлов номер "+IntToStr(Parent));
+
+ }
+ else
+ {
+ int NumParent=Nodes->FieldByName("Родитель")->Value;
+ AnsiString Text=Nodes->FieldByName("Название")->Value;
+  if (NumParent!=0)
+ {
+ Nodes->Delete();
+ Branches->Active=false;
+ Branches->CommandText="Select * From Ветви_6";
+ Branches->Active=true;
+ Branches->Append();
+ Branches->FieldByName("Номер родителя")->Value=NumParent;
+ Branches->FieldByName("Название")->Value=Text;
+ Branches->Post();
+ Branches->Last();
+ int Number=Branches->FieldByName("Номер ветви")->Value;
+ N=TreeView4->GetNodeAt(XX,YY);
+ TTreeNode * ParNode=N->Parent;
+ PMyNode(ParNode->Data)->Number=Number;
+ PMyNode(ParNode->Data)->Parent=NumParent;
+ PMyNode(ParNode->Data)->Node=false;
+ //
+ //ParNode->Text=Text+" "+IntToStr(Number)+" "+IntToStr(NumParent)+" Ветвь";
+}
+}
+}
+TreeView4->Items->Delete(TreeView4->GetNodeAt(XX,YY));
+
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TDocuments::TreeView5Edited(TObject *Sender,
+      TTreeNode *Node, AnsiString &S)
+{
+bool IsNode=PMyNode(Node->Data)->Node;
+int Number=PMyNode(Node->Data)->Number;
+if (S=="")
+{
+S=" ";
+}
+if (IsNode==true)
+{
+ Nodes->Active=false;
+ Nodes->CommandText="Select * From Узлы_7 Where [Номер узла]="+IntToStr(Number);
+ Nodes->Active=true;
+ Nodes->Edit();
+ Nodes->FieldByName("Название")->Value=S;
+ Nodes->Post();
+
+}
+else
+{
+ Branches->Active=false;
+ Branches->CommandText="Select * From Ветви_7 Where [Номер ветви]="+IntToStr(Number);
+ Branches->Active=true;
+ Branches->Edit();
+ Branches->FieldByName("Название")->Value=S;
+ Branches->Post();
+}
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TDocuments::TreeView5MouseDown(TObject *Sender,
+      TMouseButton Button, TShiftState Shift, int X, int Y)
+{
+TTreeNode* N=TreeView5->GetNodeAt(X,Y);
+
+THitTests HT;
+HT=TreeView5->GetHitTestInfoAt(X,Y);
+if (HT.Contains(htOnItem))
+{
+N->Selected=true;
+SelNode=TreeView5->Selected;
+//ShowMessage(SelNode->Text);
+ if (Button==mbRight)
+ {
+  TPoint TP;
+  TP=TreeView5->ClientOrigin;
+  if (SelNode->AbsoluteIndex==0)
+  {
+  PopupMenu5->Items->Items[0]->Enabled=true;
+  PopupMenu5->Items->Items[1]->Enabled=false;
+  }
+  else
+  {
+  PopupMenu5->Items->Items[0]->Enabled=true;
+  PopupMenu5->Items->Items[1]->Enabled=true;
+  }
+  PopupMenu5->Popup(X+TP.x,Y+TP.y);
+
+ }
+
+XX=X;
+YY=Y;
+}
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TDocuments::N16Click(TObject *Sender)
+{
+int Number;
+bool IsNode;
+TTreeNode *N;
+
+
+//Номер предка
+//Нужно узнать номер новой ветви
+int NumParentNode=PMyNode(SelNode->Data)->Number;
+//Является ли предок узлом?
+IsNode=PMyNode(SelNode->Data)->Node;
+if (IsNode==true)
+{
+//Если является то нужно только оформить на него ссылку
+Branches->Active=false;
+Branches->CommandText="Select * From Ветви_7";
+Branches->Active=true;
+Branches->Append();
+Branches->FieldByName("Номер родителя")->Value=NumParentNode;
+Branches->FieldByName("Название")->Value="Новый аспект";
+Branches->Post();
+Branches->Last();
+Number=Branches->FieldByName("Номер ветви")->Value;
+
+MyNodePtr = new TMyNode;
+MyNodePtr->Number=Number;
+MyNodePtr->Parent=NumParentNode;
+MyNodePtr->Node=false;
+
+}
+else
+{
+//А если является ветвью то нужно ее перенести в узлы и оформить на нее ссылку.
+int Par;
+AnsiString Text;
+Branches->Active=false;
+Branches->CommandText="Select * From Ветви_7 Where [Номер ветви]="+IntToStr(NumParentNode);
+Branches->Active=true;
+Par=Branches->FieldByName("Номер родителя")->Value;
+Text=Branches->FieldByName("Название")->Value;
+Branches->Delete();
+Nodes->Active=false;
+Nodes->CommandText="Select * From Узлы_7";
+Nodes->Active=true;
+Nodes->Append();
+Nodes->FieldByName("Родитель")->Value=Par;
+Nodes->FieldByName("Название")->Value=Text;
+Nodes->Post();
+Nodes->Last();
+
+
+PMyNode(SelNode->Data)->Number=Nodes->FieldByName("Номер узла")->Value;
+PMyNode(SelNode->Data)->Parent=Nodes->FieldByName("Родитель")->Value;
+PMyNode(SelNode->Data)->Node=true;
+NumParentNode=Nodes->FieldByName("Номер узла")->Value;
+Branches->Active=false;
+Branches->CommandText="Select * From Ветви_7";
+Branches->Active=true;
+Branches->Append();
+Branches->FieldByName("Номер родителя")->Value=NumParentNode;
+Branches->FieldByName("Название")->Value="Новый аспект";
+Branches->Post();
+Branches->Last();
+Number=Branches->FieldByName("Номер ветви")->Value;
+
+
+MyNodePtr = new TMyNode;
+MyNodePtr->Number=Number;
+MyNodePtr->Parent=NumParentNode;
+MyNodePtr->Node=false;
+}
+TreeView5->Items->AddChildObject(SelNode,"Новый аспект",MyNodePtr);
+
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TDocuments::N17Click(TObject *Sender)
+{
+//Добавить проверку на отсутствие у родителя удаляемой ветви (узла) потомков
+//и перевода его в категорию ветвей
+TTreeNode *N;
+
+
+int Number=PMyNode(TreeView5->Selected->Data)->Number;
+int Parent=PMyNode(TreeView5->Selected->Data)->Parent;
+bool IsNode=PMyNode(TreeView5->Selected->Data)->Node;
+if (IsNode==true)
+{
+DeleteNode("Узлы_7","Ветви_7", Number);
+
+}
+else
+{
+Comm->CommandText="Delete * From Ветви_7 Where [Номер ветви]="+IntToStr(Number);
+Comm->Execute();
+
+}
+
+Branches->Active=false;
+Branches->CommandText="Select * From Ветви_7 Where [Номер родителя]="+IntToStr(Parent);
+Branches->Active=true;
+Nodes->Active=false;
+Nodes->CommandText="Select * From Узлы_7 Where Родитель="+IntToStr(Parent);
+Nodes->Active=true;
+if (Branches->RecordCount==0 & Nodes->RecordCount==0)
+{
+ Nodes->Active=false;
+ Nodes->CommandText="Select * From Узлы_7 Where [Номер узла]="+IntToStr(Parent);
+ Nodes->Active=true;
+ if (Nodes->RecordCount==0)
+ {
+  ShowMessage("Ошибка! Удалялась запись в таблице узлов номер "+IntToStr(Number)+" предок номер "+IntToStr(Parent));
+  ShowMessage("Не найдена запись в таблице узлов номер "+IntToStr(Parent));
+
+ }
+ else
+ {
+ int NumParent=Nodes->FieldByName("Родитель")->Value;
+ AnsiString Text=Nodes->FieldByName("Название")->Value;
+  if (NumParent!=0)
+ {
+ Nodes->Delete();
+ Branches->Active=false;
+ Branches->CommandText="Select * From Ветви_7";
+ Branches->Active=true;
+ Branches->Append();
+ Branches->FieldByName("Номер родителя")->Value=NumParent;
+ Branches->FieldByName("Название")->Value=Text;
+ Branches->Post();
+ Branches->Last();
+ int Number=Branches->FieldByName("Номер ветви")->Value;
+ N=TreeView5->GetNodeAt(XX,YY);
+ TTreeNode * ParNode=N->Parent;
+ PMyNode(ParNode->Data)->Number=Number;
+ PMyNode(ParNode->Data)->Parent=NumParent;
+ PMyNode(ParNode->Data)->Node=false;
+
+}
+}
+}
+TreeView5->Items->Delete(TreeView5->GetNodeAt(XX,YY));
+
+}
+//---------------------------------------------------------------------------
+
+
+void __fastcall TDocuments::FormShow(TObject *Sender)
+{
+//ShowMessage("Главспец");
+//Pass->Hide();
+//Pass->Close();
+//Zast->MClient->Start();
+Zast->MClient->RegForm(this);
+
+//Pass->ShowModal();
+/*
+NameForm(this, "Хранилище документов");
+*/
+
+
+/////
+ADODataSet1->Active=false;
+ADODataSet1->CommandText="select * from Значимость Order By [Мин граница]";
+ADODataSet1->Active=true;
+/////
+//***
+Initialize();
+//***
+//PageControl1->TabIndex=0;
+PageControl1->ActivePageIndex=0;
+
+Metod->Active=true;
+ReadMetod->Checked=false;
+DBMemo1->ReadOnly=!ReadMetod->Checked;
+
+ Zast->MClient->WriteDiaryEvent("NetAspects","Запуск модуля главспеца завершен","");
+
+Zast->MClient->Stop();
+
+
+}
+//---------------------------------------------------------------------------
+String TDocuments::LoadAspects()
+{
+ Zast->MClient->WriteDiaryEvent("NetAspects","Чтение аспектов (главспец)","");
+ String Ret="Ошибка";
+try
+{
+
+Zast->MClient->PrepareLoadAspects(0, 497, 473, 243, 243);
+MP<TADOCommand>Comm(this);
+Comm->Connection=Zast->ADOAspect;
+Comm->CommandText="Delete * From TempAspects";
+Comm->Execute();
+
+MP<TADODataSet>Local(this);
+Local->Connection=Zast->ADOAspect;
+Local->CommandText="SELECT TempAspects.[Номер аспекта], TempAspects.Подразделение, TempAspects.Ситуация, TempAspects.[Вид территории], TempAspects.Деятельность, TempAspects.Специальность, TempAspects.Аспект, TempAspects.Воздействие, TempAspects.G, TempAspects.O, TempAspects.R, TempAspects.S, TempAspects.T, TempAspects.L, TempAspects.N, TempAspects.Z, TempAspects.Значимость, TempAspects.[Проявление воздействия], TempAspects.[Тяжесть последствий], TempAspects.Приоритетность,  TempAspects.Исполнитель, TempAspects.[Дата создания], TempAspects.[Начало действия], TempAspects.[Конец действия] FROM TempAspects ORDER BY TempAspects.[Номер аспекта];";
+Local->Active=true;
+
+Table* Server=Zast->MClient->CreateTable(this, Zast->ServerName, Zast->VDB[Zast->GetIDDBName("Аспекты")].ServerDB);
+
+Server->SetCommandText("SELECT TempAspects.[Номер аспекта], TempAspects.Подразделение, TempAspects.Ситуация, TempAspects.[Вид территории], TempAspects.Деятельность, TempAspects.Специальность, TempAspects.Аспект, TempAspects.Воздействие, TempAspects.G, TempAspects.O, TempAspects.R, TempAspects.S, TempAspects.T, TempAspects.L, TempAspects.N, TempAspects.Z, TempAspects.Значимость, TempAspects.[Проявление воздействия], TempAspects.[Тяжесть последствий], TempAspects.Приоритетность,  TempAspects.Исполнитель, TempAspects.[Дата создания], TempAspects.[Начало действия], TempAspects.[Конец действия] FROM TempAspects ORDER BY TempAspects.[Номер аспекта];");
+Server->Active(true);
+FProg->Label1->Caption="Загрузка аспектов";
+
+Zast->MClient->LoadTable(Server, Local, FProg->Label1, FProg->Progress);
+
+if(Zast->MClient->VerifyTable(Local, Server)==0)
+{
+
+MP<TADODataSet>Memo1(this);
+Memo1->Connection=Zast->ADOAspect;
+Memo1->CommandText="SELECT Memo1.Num, Memo1.NumStr, Memo1.Text FROM Memo1 ORDER BY Memo1.Num, Memo1.NumStr;";
+Memo1->Active=true;
+
+Table* SMemo1=Zast->MClient->CreateTable(this, Zast->ServerName, Zast->VDB[Zast->GetIDDBName("Аспекты")].ServerDB);
+
+SMemo1->SetCommandText("SELECT Memo1.Num, Memo1.NumStr, Memo1.Text FROM Memo1 ORDER BY Memo1.Num, Memo1.NumStr;");
+SMemo1->Active(true);
+
+Zast->MClient->LoadTable(SMemo1, Memo1);
+
+if(Zast->MClient->VerifyTable(Memo1, SMemo1)==0)
+{
+
+MP<TADODataSet>Memo2(this);
+Memo2->Connection=Zast->ADOAspect;
+Memo2->CommandText="SELECT Memo2.Num, Memo2.NumStr, Memo2.Text FROM Memo2 ORDER BY Memo2.Num, Memo2.NumStr;";
+Memo2->Active=true;
+
+Table* SMemo2=Zast->MClient->CreateTable(this, Zast->ServerName, Zast->VDB[Zast->GetIDDBName("Аспекты")].ServerDB);
+
+SMemo2->SetCommandText("SELECT Memo2.Num, Memo2.NumStr, Memo2.Text FROM Memo2 ORDER BY Memo2.Num, Memo2.NumStr;");
+SMemo2->Active(true);
+
+Zast->MClient->LoadTable(SMemo2, Memo2);
+
+if(Zast->MClient->VerifyTable(Memo2, SMemo2)==0)
+{
+
+MP<TADODataSet>Memo3(this);
+Memo3->Connection=Zast->ADOAspect;
+Memo3->CommandText="SELECT Memo3.Num, Memo3.NumStr, Memo3.Text FROM Memo3 ORDER BY Memo3.Num, Memo3.NumStr;";
+Memo3->Active=true;
+
+Table* SMemo3=Zast->MClient->CreateTable(this, Zast->ServerName, Zast->VDB[Zast->GetIDDBName("Аспекты")].ServerDB);
+
+SMemo3->SetCommandText("SELECT Memo3.Num, Memo3.NumStr, Memo3.Text FROM Memo3 ORDER BY Memo3.Num, Memo3.NumStr;");
+SMemo3->Active(true);
+
+Zast->MClient->LoadTable(SMemo3, Memo3);
+
+if(Zast->MClient->VerifyTable(Memo3, SMemo3)==0)
+{
+
+MP<TADODataSet>Memo4(this);
+Memo4->Connection=Zast->ADOAspect;
+Memo4->CommandText="SELECT Memo4.Num, Memo4.NumStr, Memo4.Text FROM Memo4 ORDER BY Memo4.Num, Memo4.NumStr;";
+Memo4->Active=true;
+
+Table* SMemo4=Zast->MClient->CreateTable(this, Zast->ServerName, Zast->VDB[Zast->GetIDDBName("Аспекты")].ServerDB);
+
+SMemo4->SetCommandText("SELECT Memo4.Num, Memo4.NumStr, Memo4.Text FROM Memo4 ORDER BY Memo4.Num, Memo4.NumStr;");
+SMemo4->Active(true);
+
+Zast->MClient->LoadTable(SMemo4, Memo4);
+
+if(Zast->MClient->VerifyTable(Memo4, SMemo4)==0)
+{
+Comm->CommandText="Delete * from TempПодразделения";
+Comm->Execute();
+
+
+
+PrepareMergeAspects();
+try
+{
+MergeAspects();
+}
+catch(...)
+{
+Zast->MClient->DeleteTable(this, SMemo4);
+Zast->MClient->DeleteTable(this, SMemo3);
+Zast->MClient->DeleteTable(this, SMemo2);
+Zast->MClient->DeleteTable(this, SMemo1);
+Zast->MClient->DeleteTable(this, Server);
+
+ return Ret;
+}
+Ret="Завершено";
+
+}
+Zast->MClient->DeleteTable(this, SMemo4);
+}
+Zast->MClient->DeleteTable(this, SMemo3);
+}
+Zast->MClient->DeleteTable(this, SMemo2);
+
+}
+Zast->MClient->DeleteTable(this, SMemo1);
+}
+Zast->MClient->DeleteTable(this, Server);
+
+}
+catch(...)
+{
+ Zast->MClient->WriteDiaryEvent("Ошибка NetAspects","Ошибка занрузки аспектов (главспец)"," Ошибка "+IntToStr(GetLastError()));
+}
+ return Ret;
+
+}
+//---------------------------------------------------------------------------
+void TDocuments::PrepareMergeAspects()
+{
+ Zast->MClient->WriteDiaryEvent("NetAspects","Начало подготовки объединения аспектов (главспец)","");
+
+try
+{
+MP<TADODataSet>Temp(this);
+Temp->Connection=Zast->ADOAspect;
+Temp->CommandText="Select * From TempAspects order by [Номер аспекта]";
+Temp->Active=true;
+
+MP<TADODataSet>Memo(this);
+Memo->Connection=Zast->ADOAspect;
+
+
+for(Temp->First();!Temp->Eof;Temp->Next())
+{
+ int TempNum=Temp->FieldByName("Номер аспекта")->Value;
+
+MP<TMemo>M(this);
+M->Visible=false;
+M->Parent=this;
+M->Width=1009;
+
+TStrings* TT=M->Lines;
+TT->Clear();
+
+Memo->Active=false;
+Memo->CommandText="Select * from Memo1 Where Num="+IntToStr(TempNum);
+Memo->Active=true;
+
+for(Memo->First();!Memo->Eof;Memo->Next())
+{
+String S=Memo->FieldByName("Text")->AsString;
+TT->Append(S);
+}
+Temp->Edit();
+Temp->FieldByName("Выполняющиеся мероприятия")->Assign(TT);
+Temp->Post();
+
+
+TT->Clear();
+
+Memo->Active=false;
+Memo->CommandText="Select * from Memo2 Where Num="+IntToStr(TempNum);
+Memo->Active=true;
+
+for(Memo->First();!Memo->Eof;Memo->Next())
+{
+String S=Memo->FieldByName("Text")->AsString;
+TT->Append(S);
+}
+Temp->Edit();
+Temp->FieldByName("Предлагаемые мероприятия")->Assign(TT);
+Temp->Post();
+
+
+TT->Clear();
+
+Memo->Active=false;
+Memo->CommandText="Select * from Memo3 Where Num="+IntToStr(TempNum);
+Memo->Active=true;
+
+for(Memo->First();!Memo->Eof;Memo->Next())
+{
+String S=Memo->FieldByName("Text")->AsString;
+TT->Append(S);
+}
+Temp->Edit();
+Temp->FieldByName("Мониторинг и контроль")->Assign(TT);
+Temp->Post();
+
+TT->Clear();
+
+Memo->Active=false;
+Memo->CommandText="Select * from Memo4 Where Num="+IntToStr(TempNum);
+Memo->Active=true;
+
+for(Memo->First();!Memo->Eof;Memo->Next())
+{
+String S=Memo->FieldByName("Text")->AsString;
+TT->Append(S);
+}
+Temp->Edit();
+Temp->FieldByName("Предлагаемый мониторинг и контроль")->Assign(TT);
+Temp->Post();
+}
+}
+catch(...)
+{
+ Zast->MClient->WriteDiaryEvent("Ошибка NetAspects","Ошибка полготовки к объединению аспектов (главспец)"," Ошибка "+IntToStr(GetLastError()));
+}
+
+}
+//---------------------------------------------------------------------------
+void TDocuments::MergeAspects()
+{
+ Zast->MClient->WriteDiaryEvent("NetAspects","Объединение аспектов (главспец)","");
+
+try
+{
+MP<TADODataSet>Temp(this);
+Temp->Connection=Zast->ADOAspect;
+Temp->CommandText="Select * From TempAspects";
+Temp->Active=true;
+
+MP<TADODataSet>Podr(this);
+Podr->Connection=Zast->ADOAspect;
+Podr->CommandText="Select * From Подразделения";
+Podr->Active=true;
+
+for(Temp->First();!Temp->Eof;Temp->Next())
+{
+ int N=Temp->FieldByName("Подразделение")->Value;
+
+ if(Podr->Locate("ServerNum", N, SO))
+ {
+  int Num=Podr->FieldByName("Номер подразделения")->Value;
+
+  Temp->Edit();
+  Temp->FieldByName("Подразделение")->Value=Num;
+  Temp->Post();
+ }
+ else
+ {
+  ShowMessage("Ошибка копирования аспектов");
+ }
+}
+
+MP<TADOCommand>Comm(this);
+Comm->Connection=Zast->ADOAspect;
+
+
+
+Comm->CommandText="Delete * From Аспекты";
+Comm->Execute();
+
+
+String CT="INSERT INTO Аспекты ( [Номер аспекта], Подразделение, Ситуация, [Вид территории], Деятельность, Специальность, Аспект, Воздействие, G, O, R, S, T, L, N, Z, Значимость, [Проявление воздействия], [Тяжесть последствий], Приоритетность, [Выполняющиеся мероприятия], [Предлагаемые мероприятия], [Мониторинг и контроль], [Предлагаемый мониторинг и контроль], Исполнитель, [Дата создания], [Начало действия], [Конец действия] ) ";
+CT=CT+" SELECT TempAspects.[Номер аспекта], TempAspects.Подразделение, TempAspects.Ситуация, TempAspects.[Вид территории], TempAspects.Деятельность, TempAspects.Специальность, TempAspects.Аспект, TempAspects.Воздействие, TempAspects.G, TempAspects.O, TempAspects.R, TempAspects.S, TempAspects.T, TempAspects.L, TempAspects.N, TempAspects.Z, TempAspects.Значимость, TempAspects.[Проявление воздействия], TempAspects.[Тяжесть последствий], TempAspects.Приоритетность, TempAspects.[Выполняющиеся мероприятия], TempAspects.[Предлагаемые мероприятия], TempAspects.[Мониторинг и контроль], TempAspects.[Предлагаемый мониторинг и контроль], TempAspects.Исполнитель, TempAspects.[Дата создания], TempAspects.[Начало действия], TempAspects.[Конец действия] ";
+CT=CT+" FROM TempAspects;";
+Comm->CommandText=CT;
+Comm->Execute();
+
+Comm->CommandText="Delete * From TempAspects";
+Comm->Execute();
+}
+catch(...)
+{
+ Zast->MClient->WriteDiaryEvent("Ошибка NetAspects","Ошибка объединения аспектов главспецом"," Ошибка "+IntToStr(GetLastError()));
+  throw 1;
+}
+}
+//---------------------------------------------------------------------------
+
+//---------------------------------------------------------------------------
+void __fastcall TDocuments::FormActivate(TObject *Sender)
+{
+this->Top=0;
+this->Left=0;
+this->Width=1024;
+this->Height=742;
+
+Podr->Active=false;
+Podr->Active=true;
+Sit->Active=false;
+Sit->Active=true;
+
+}
+//---------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+void TDocuments::Crit(TDataSet *DataSet)
+{
+int NR=DataSet->RecNo;
+
+while(!DataSet->Eof)
+{
+ DataSet->Edit();
+ DataSet->FieldByName("Критерий1")->Value="Да";
+ DataSet->FieldByName("Критерий")->Value=true;
+ DataSet->Post();
+ DataSet->Next();
+}
+DataSet->First();
+DataSet->MoveBy(NR-1);
+}
+//----------------------------------------------
+void TDocuments::Crit1(TDataSet *DataSet)
+{
+
+int NR=DataSet->RecNo;
+
+while(!DataSet->Bof)
+{
+ DataSet->Edit();
+ DataSet->FieldByName("Критерий1")->Value="Нет";
+ DataSet->FieldByName("Критерий")->Value=false;
+ DataSet->Post();
+ DataSet->Prior();
+}
+DataSet->First();
+DataSet->MoveBy(NR-1);
+}
+
+//---------------------------
+void TDocuments::Crit2(TDataSet *DataSet)
+{
+int NR=DataSet->RecNo;
+ADODataSet1->Active=false;
+ADODataSet1->CommandText="select * from Значимость Order By [Мин граница]";
+ADODataSet1->Active=true;
+DataSet->Last();
+
+
+
+int Min=DataSet->FieldByName("Мин граница")->Value;
+bool Cr=DataSet->FieldByName("Критерий")->Value;
+
+DataSet->Edit();
+DataSet->FieldByName("Макс граница")->Value=Min+1;
+DataSet->Post();
+
+DataSet->Prior();
+for(int i=1;i<DataSet->RecordCount;i++)
+{
+DataSet->Edit();
+DataSet->FieldByName("Макс граница")->Value=Min-1;
+if(Cr==false)
+{
+DataSet->FieldByName("Критерий")->Value=false;
+DataSet->FieldByName("Критерий1")->Value="Нет";
+
+}
+DataSet->Post();
+Min=DataSet->FieldByName("Мин граница")->Value;
+Cr=DataSet->FieldByName("Критерий")->Value;
+DataSet->Prior();
+}
+DataSet->First();
+DataSet->Edit();
+DataSet->FieldByName("Мин граница")->Value=0;
+DataSet->Post();
+ADODataSet1->Active=false;
+ADODataSet1->CommandText="select * from Значимость Order By [Мин граница]";
+ADODataSet1->Active=true;
+DataSet->First();
+
+//bool K=false;
+for(int i=0;i<DataSet->RecordCount;i++)
+{
+if(DataSet->FieldByName("Мин граница")->Value>DataSet->FieldByName("Макс граница")->Value)
+{
+ ShowMessage("В списке уже есть минмальная граница равная "+DataSet->FieldByName("Мин граница")->Value+" исправьте ее");
+//K=true;
+
+break;
+}
+ADODataSet1->Next();
+}
+
+DataSet->First();
+DataSet->MoveBy(NR-1);
+
+
+
+}
+//---------------------------------------------------------------------------
+void __fastcall TDocuments::ADODataSet1BeforePost(TDataSet *DataSet)
+{
+if(C==false)
+{
+AnsiString A=DataSet->FieldByName("Критерий1")->Value;
+if(A=="Да")
+{
+ DataSet->FieldByName("Критерий")->Value=true;
+ Kriteriy=true;
+}
+else
+{
+ DataSet->FieldByName("Критерий")->Value=false;
+ Kriteriy=false;
+}
+
+}        
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TDocuments::ADODataSet1AfterPost(TDataSet *DataSet)
+{
+if(C==false)
+{
+
+ /*
+ADODataSet1->Active=false;
+ADODataSet1->CommandText="select * from Значимость Order By [Мин граница]";
+ADODataSet1->Active=true;
+ */
+bool B=Kriteriy;
+if(B==true)
+{
+C=true;
+Crit(DataSet);
+C=false;
+}
+else
+{
+C=true;
+Crit1(DataSet);
+C=false;
+}
+
+C=true;
+Crit2(DataSet);
+C=false;
+}
+//Button1->Enabled=true;        
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TDocuments::MenuItem1Click(TObject *Sender)
+{
+// Добавить
+Ins=true;
+ADODataSet1->Last();
+int Max=ADODataSet1->FieldByName("Макс граница")->Value;
+bool Cr=ADODataSet1->FieldByName("Критерий")->Value;
+ADODataSet1->Append();
+ADODataSet1->FieldByName("Мин граница")->Value=Max;
+ADODataSet1->FieldByName("Макс граница")->Value=Max+1;
+ADODataSet1->FieldByName("Критерий")->Value=Cr;
+ADODataSet1->FieldByName("Наименование значимости")->Value="Новая значимость";
+ADODataSet1->FieldByName("Необходимая мера")->Value="Новая необходимая мера";
+
+if (Cr==true)
+{
+ADODataSet1->FieldByName("Критерий1")->Value="Да";
+}
+else
+{
+ADODataSet1->FieldByName("Критерий1")->Value="Нет";
+}
+
+ADODataSet1->Post();
+ADODataSet1->Last();
+Ins=false;        
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TDocuments::MenuItem2Click(TObject *Sender)
+{
+// Удалить
+
+ADODataSet1->Delete();
+ADODataSet2->Active=false;
+ADODataSet2->CommandText="Select * From Значимость Order By [Мин граница]";
+ADODataSet2->Active=true;
+ADODataSet2->Last();
+
+int Min=ADODataSet2->FieldByName("Мин граница")->Value;
+
+ADODataSet2->Prior();
+for(int i=1;i<ADODataSet2->RecordCount;i++)
+{
+ADODataSet2->Edit();
+// int Min=ADODataSet1->FieldByName("Мин граница")->Value;
+
+
+ADODataSet2->FieldByName("Макс граница")->Value=Min-1;
+Min=ADODataSet2->FieldByName("Мин граница")->Value;
+ADODataSet2->Post();
+ADODataSet2->Prior();
+}
+ADODataSet1->Active=false;
+ADODataSet1->Active=true;        
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TDocuments::PopupMenu6Popup(TObject *Sender)
+{
+if(ADODataSet1->RecordCount>2)
+{
+  PopupMenu1->Items->Items[0]->Enabled=true;
+  PopupMenu1->Items->Items[1]->Enabled=true;
+}
+else
+{
+  PopupMenu1->Items->Items[0]->Enabled=true;
+  PopupMenu1->Items->Items[1]->Enabled=false;
+}        
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TDocuments::ADODataSet1AfterInsert(TDataSet *DataSet)
+{
+if(Ins==false)
+{
+DataSet->Prior();
+DataSet->Next();
+}
+}
+//---------------------------------------------------------------------------
+void TDocuments::Initialize()
+{
+Podr->Active=true;
+Sit->Active=true;
+}
+
+//---------------------------------------------------------------------------
+
+void __fastcall TDocuments::MenuItem3Click(TObject *Sender)
+{
+Podr->Insert();
+Podr->FieldByName("Название подразделения")->Value="Новое подразделение";
+Podr->Post();
+
+
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TDocuments::MenuItem4Click(TObject *Sender)
+{
+int NumP=Podr->FieldByName("ServerNum")->AsInteger;
+
+Zast->MClient->Start();
+Table* STab=Zast->MClient->CreateTable(this, Zast->ServerName, Zast->VDB[Zast->GetIDDBName("Аспекты")].ServerDB);
+
+STab->SetCommandText("SELECT Аспекты.[Номер аспекта], Аспекты.Подразделение FROM Аспекты WHERE (((Аспекты.Подразделение)="+IntToStr(NumP)+"));");
+STab->Active(true);
+
+int N=0;
+N=STab->RecordCount();
+
+if(N==0)
+{
+Podr->Delete();
+}
+else
+{
+String S1;
+int N1=N-((int)(N/10))*10;
+switch(N1)
+{
+ case 1:
+ {
+ S1="На сервере зафиксирован "+IntToStr(N)+" аспект, принадлежащий этому подразделению.";
+ break;
+ }
+ case 2: case 3: case 4:
+ {
+ S1="На сервере зафиксировано "+IntToStr(N)+" аспекта, принадлежащих этому подразделению.";
+ break;
+ }
+ default:
+ {
+ S1="На сервере зафиксировано "+IntToStr(N)+" аспектов, принадлежащих этому подразделению.";
+ }
+}
+
+String S=S1+"\rИспользуя \"Движение аспектов\" предварительно освободите удаляемое подразделение от аспектов";
+Application->MessageBoxA(S.c_str(),"Удаление подразделения",MB_ICONEXCLAMATION);
+}
+Zast->MClient->DeleteTable(this, STab);
+Zast->MClient->Stop();
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TDocuments::MenuItem5Click(TObject *Sender)
+{
+Sit->Insert();
+Sit->FieldByName("Название ситуации")->Value="Новая ситуация";
+Sit->Post();        
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TDocuments::MenuItem6Click(TObject *Sender)
+{
+
+Sit->Delete();
+}
+//---------------------------------------------------------------------------
+
+
+void __fastcall TDocuments::N6Click(TObject *Sender)
+{
+//Чтение перечня видов воздействия
+//Узлы_3 и Ветви_3
+Zast->MClient->Start();
+ShowMessage(ReadVidVozd(true));
+Zast->MClient->Stop();
+}
+//---------------------------------------------------------------------------
+String  TDocuments::ReadVidVozd(bool Pr)
+{
+if(Pr)
+{
+FProg->Label1->Caption="Чтение видов воздействий";
+}
+if(LoadNodeBranch("Узлы_3","Ветви_3", Pr))
+{
+//LoadDirec("Ветви_3","Воздействия");
+LoadTab1();
+LoadDirVozd();
+
+return "Завершено";
+
+}
+else
+{
+return "Ошибка";
+}
+
+}
+//-----------------------------------
+void TDocuments::LoadDirVozd()
+{
+MP<TADOCommand>Comm(this);
+Comm->Connection=Zast->ADOAspect;
+Comm->CommandText="Delete * From TempVozd";
+Comm->Execute();
+
+MP<TADODataSet>TempVozd(this);
+TempVozd->Connection=Zast->ADOAspect;
+TempVozd->CommandText="Select TempVozd.[Номер воздействия], TempVozd.[Наименование воздействия], TempVozd.[Показ] From TempVozd order by [Номер воздействия]";
+TempVozd->Active=true;
+
+Table* SVozd=Zast->MClient->CreateTable(this, Zast->ServerName, Zast->VDB[Zast->GetIDDBName("Аспекты")].ServerDB);
+
+SVozd->SetCommandText("Select Воздействия.[Номер воздействия], Воздействия.[Наименование воздействия], Воздействия.[Показ] From Воздействия order by [Номер воздействия]");
+SVozd->Active(true);
+
+Zast->MClient->LoadTable(SVozd, TempVozd);
+
+if(Zast->MClient->VerifyTable(SVozd, TempVozd)==0)
+{
+
+Comm->CommandText="UPDATE Воздействия SET Воздействия.Del = False;";
+Comm->Execute();
+
+MP<TADODataSet>Vozd(this);
+Vozd->Connection=Zast->ADOAspect;
+Vozd->CommandText="Select * From Воздействия";
+Vozd->Active=true;
+
+ for(Vozd->First();!Vozd->Eof;Vozd->Next())
+ {
+  int N=Vozd->FieldByName("Номер воздействия")->Value;
+
+  if(TempVozd->Locate("Номер воздействия", N, SO))
+  {
+   Vozd->Edit();
+   Vozd->FieldByName("Наименование воздействия")->Value=TempVozd->FieldByName("Наименование воздействия")->Value;
+   Vozd->FieldByName("Показ")->Value=TempVozd->FieldByName("Показ")->Value;
+   Vozd->Post();
+
+   TempVozd->Delete();
+  }
+  else
+  {
+   Vozd->Edit();
+   Vozd->FieldByName("Del")->Value=true;
+   Vozd->Post();
+  }
+ }
+Comm->CommandText="DELETE Воздействия.Del FROM Воздействия WHERE (((Воздействия.Del)=True));";
+Comm->Execute();
+
+Comm->CommandText="INSERT INTO Воздействия ( [Номер воздействия], [Наименование воздействия], Показ ) SELECT TempVozd.[Номер воздействия], TempVozd.[Наименование воздействия], TempVozd.Показ FROM TempVozd;";
+Comm->Execute();
+
+Comm->CommandText="DELETE TempVozd.* FROM TempVozd;";
+Comm->Execute();
+
+}
+Zast->MClient->DeleteTable(this, SVozd);
+/*
+ MP<TADODataSet>Branch(this);
+ Branch->Connection=Zast->ADOConn;
+ Branch->CommandText="Select * From Ветви_3 Order by [Номер ветви]";
+ Branch->Active=true;
+
+ MP<TADODataSet>Vozd(this);
+ Vozd->Connection=Zast->ADOAspect;
+ Vozd->CommandText="Select * From Воздействия Order by [Номер воздействия]";
+ Vozd->Active=true;
+
+ MP<TADOCommand>Comm(this);
+ Comm->Connection=Zast->ADOAspect;
+ Comm->CommandText="UPDATE Воздействия SET Воздействия.Del = False;";
+ Comm->Execute();
+
+ Comm->Connection=Zast->ADOConn;
+ Comm->CommandText="UPDATE Ветви_3 SET Ветви_3.Del = False;";
+ Comm->Execute();
+
+ for(Branch->First();!Branch->Eof;Branch->Next())
+ {
+  int N=Branch->FieldByName("Номер ветви")->Value;
+
+  if(Branch->FieldByName("Показ")->AsBoolean)
+  {
+  if(Vozd->Locate("Номер воздействия",N,SO))
+  {
+   Vozd->Edit();
+   Vozd->FieldByName("Наименование воздействия")->Value=Branch->FieldByName("Название")->Value;
+   Vozd->FieldByName("Показ")->Value=Branch->FieldByName("Показ")->Value;
+   Vozd->FieldByName("Del")->Value=true;
+   Vozd->Post();
+  }
+  else
+  {
+   Vozd->Insert();
+   Vozd->FieldByName("Номер воздействия")->Value=Branch->FieldByName("Номер ветви")->Value;
+   Vozd->FieldByName("Наименование воздействия")->Value=Branch->FieldByName("Название")->Value;
+   Vozd->FieldByName("Показ")->Value=Branch->FieldByName("Показ")->Value;
+   Vozd->FieldByName("Del")->Value=true;
+   Vozd->Post();
+  }
+  }
+  else
+  {
+  if(Vozd->Locate("Номер воздействия",0,SO))
+  {
+   Vozd->Edit();
+   Vozd->FieldByName("Наименование воздействия")->Value=Branch->FieldByName("Название")->Value;
+   Vozd->FieldByName("Показ")->Value=Branch->FieldByName("Показ")->Value;
+   Vozd->FieldByName("Del")->Value=true;
+   Vozd->Post();
+  }
+  else
+  {
+   Vozd->Insert();
+   Vozd->FieldByName("Номер воздействия")->Value=0;
+   Vozd->FieldByName("Наименование воздействия")->Value=Branch->FieldByName("Название")->Value;
+   Vozd->FieldByName("Показ")->Value=Branch->FieldByName("Показ")->Value;
+   Vozd->FieldByName("Del")->Value=true;
+   Vozd->Post();
+  }
+  }
+ }
+ Comm->Connection=Zast->ADOAspect;
+ Comm->CommandText="UPDATE Воздействия INNER JOIN Аспекты ON Воздействия.[Номер воздействия] = Аспекты.Воздействие SET Аспекты.Воздействие = 0 WHERE (((Воздействия.Del)=False));";
+ Comm->Execute();
+
+ Comm->Connection=Zast->ADOAspect;
+ Comm->CommandText="Delete * from Воздействия Where Del=false";
+ Comm->Execute();
+
+
+ Comm->Connection=Zast->ADOAspect;
+ Comm->CommandText="UPDATE Воздействия SET Воздействия.Del = False;";
+ Comm->Execute();
+ */
+}
+//------------------------------------
+bool TDocuments::LoadNodeBranch(String NodeTable, String BranchTable, bool Pr)
+{
+//Чтение перечня видов воздействия
+//Узлы_3 и Ветви_3
+bool Ret=false;
+Zast->MClient->WriteDiaryEvent("NetAspects","Начало загрузки узлов и ветвей справочников (главспец)","Узел: "+NodeTable+" Ветвь: "+BranchTable);
+ try
+ {
+MP<TADOCommand>Comm(this);
+Comm->Connection=Zast->ADOConn;
+Comm->CommandText="Delete * From TempNode";
+Comm->Execute();
+
+Comm->CommandText="Delete * From TempBranch";
+Comm->Execute();
+
+MP<TADODataSet>TempNode(this);
+TempNode->Connection=Zast->ADOConn;
+TempNode->CommandText="Select TempNode.[Номер узла], TempNode.[Родитель], TempNode.[Название] From TempNode Order by Родитель, [Номер узла]";
+TempNode->Active=true;
+
+
+
+Table* SNode=Zast->MClient->CreateTable(this, Zast->ServerName, Zast->VDB[Zast->GetIDDBName("Reference")].ServerDB);
+
+SNode->SetCommandText("Select "+NodeTable+".[Номер узла], "+NodeTable+".[Родитель], "+NodeTable+".[Название] From "+NodeTable+" Order by Родитель, [Номер узла]");
+SNode->Active(true);
+
+Zast->MClient->LoadTable(SNode, TempNode);
+
+if(Zast->MClient->VerifyTable(SNode, TempNode)==0)
+{
+MP<TADODataSet>TempBranch(this);
+TempBranch->Connection=Zast->ADOConn;
+TempBranch->CommandText="Select TempBranch.[Номер ветви], TempBranch.[Номер родителя], TempBranch.[Название], TempBranch.[Показ] From TempBranch Order by [Номер родителя], [Номер ветви]";
+TempBranch->Active=true;
+
+
+Table* SBranch=Zast->MClient->CreateTable(this, Zast->ServerName, Zast->VDB[Zast->GetIDDBName("Reference")].ServerDB);
+
+SBranch->SetCommandText("Select "+BranchTable+".[Номер ветви], "+BranchTable+".[Номер родителя], "+BranchTable+".[Название], "+BranchTable+".[Показ] From "+BranchTable+" Order by [Номер родителя], [Номер ветви]");
+SBranch->Active(true);
+
+if(Pr)
+{
+Zast->MClient->LoadTable(SBranch, TempBranch, FProg->Label1, FProg->Progress);
+}
+else
+{
+Zast->MClient->LoadTable(SBranch, TempBranch);
+}
+
+if(Zast->MClient->VerifyTable(SBranch, TempBranch)==0)
+{
+
+MergeNode(NodeTable);
+MergeBranch(BranchTable);
+Zast->MClient->WriteDiaryEvent("NetAspects","Завершение загрузки узлов и ветвей справлоников (главспец)","Узел: "+NodeTable+" Ветвь: "+BranchTable);
+
+Ret=true;
+}
+
+Zast->MClient->DeleteTable(this, SBranch);
+
+}
+
+Zast->MClient->DeleteTable(this, SNode);
+
+
+Comm->CommandText="Delete * From TempNode";
+Comm->Execute();
+
+Comm->CommandText="Delete * From TempBranch";
+Comm->Execute();
+
+if(!Ret)
+{
+Zast->MClient->WriteDiaryEvent("Ошибка NetAspects","Сбой загрузки узлов и ветвей справлоников (главспец)","Узел: "+NodeTable+" Ветвь: "+BranchTable);
+}
+
+}
+catch(...)
+{
+ Zast->MClient->WriteDiaryEvent("Ошибка NetAspects ","Ошибка загрузки узлов и ветвей справочников (главспец)","Узел: "+NodeTable+" Ветвь: "+BranchTable+" Ошибка "+IntToStr(GetLastError()));
+}
+return Ret;
+}
+//-------------------------------------------------
+void TDocuments::MergeNode(String NodeTable)
+{
+Zast->MClient->WriteDiaryEvent("NetAspects","Начало объединения узлов справочников (главспец)","Узел: "+NodeTable);
+
+try
+{
+TLocateOptions SO;
+MP<TADOCommand>Comm(this);
+Comm->Connection=Zast->ADOConn;
+Comm->CommandText="UPDATE "+NodeTable+" SET "+NodeTable+".Del = False;";
+Comm->Execute();
+
+MP<TADODataSet>TempNode(this);
+TempNode->Connection=Zast->ADOConn;
+TempNode->CommandText="Select * From TempNode";
+TempNode->Active=true;
+
+MP<TADODataSet>Node(this);
+Node->Connection=Zast->ADOConn;
+Node->CommandText="Select * From "+NodeTable;
+Node->Active=true;
+
+for(Node->First();!Node->Eof;Node->Next())
+{
+int NumNode=Node->FieldByName("Номер узла")->Value;
+if(TempNode->Locate("Номер узла", NumNode, SO))
+{
+ //Найдено соответствие
+ Node->Edit();
+ Node->FieldByName("Родитель")->Value=TempNode->FieldByName("Родитель")->Value;
+ Node->FieldByName("Название")->Value=TempNode->FieldByName("Название")->Value;
+ Node->Post();
+
+ TempNode->Delete();
+}
+else
+{
+ //Нет соответствия
+ Node->Edit();
+ Node->FieldByName("Del")->Value=true;
+ Node->Post();
+}
+}
+
+Comm->CommandText="Delete * From "+NodeTable+" Where Del=true";
+Comm->Execute();
+
+Comm->CommandText="INSERT INTO "+NodeTable+" ( [Номер узла], Родитель, Название) SELECT TempNode.[Номер узла], TempNode.Родитель, TempNode.Название FROM TempNode;";
+Comm->Execute();
+
+Comm->CommandText="Delete * From TempNode";
+Comm->Execute();
+
+Zast->MClient->WriteDiaryEvent("NetAspects","Завершение объединения узлов справочников (главспец)","Узел: "+NodeTable);
+}
+catch(...)
+{
+Zast->MClient->WriteDiaryEvent("Ошибка NetAspects","Ошибка объединения узлов справочников (главспец)","Узел: "+NodeTable+" Ошибка "+IntToStr(GetLastError()));
+}
+}
+//----------------------------------------------------
+void TDocuments::MergeBranch(String BranchTable)
+{
+Zast->MClient->WriteDiaryEvent("NetAspects","Начало объединения ветвей справочников (главспец)"," Ветвь: "+BranchTable);
+
+try
+{
+TLocateOptions SO;
+MP<TADOCommand>Comm(this);
+Comm->Connection=Zast->ADOConn;
+Comm->CommandText="UPDATE "+BranchTable+" SET "+BranchTable+".Del = False;";
+Comm->Execute();
+
+MP<TADODataSet>TempBranch(this);
+TempBranch->Connection=Zast->ADOConn;
+TempBranch->CommandText="Select * From TempBranch";
+TempBranch->Active=true;
+
+MP<TADODataSet>Branch(this);
+Branch->Connection=Zast->ADOConn;
+Branch->CommandText="Select * From "+BranchTable;
+Branch->Active=true;
+
+for(Branch->First();!Branch->Eof;Branch->Next())
+{
+int NumBranch=Branch->FieldByName("Номер ветви")->Value;
+if(TempBranch->Locate("Номер ветви", NumBranch, SO))
+{
+ //Найдено соответствие
+ Branch->Edit();
+ Branch->FieldByName("Номер родителя")->Value=TempBranch->FieldByName("Номер родителя")->Value;
+ Branch->FieldByName("Название")->Value=TempBranch->FieldByName("Название")->Value;
+ Branch->FieldByName("Показ")->Value=TempBranch->FieldByName("Показ")->Value;
+ Branch->Post();
+
+ TempBranch->Delete();
+}
+else
+{
+ //Нет соответствия
+ Branch->Edit();
+ Branch->FieldByName("Del")->Value=true;
+ Branch->Post();
+}
+}
+
+Comm->CommandText="Delete * From "+BranchTable+" Where Del=true";
+Comm->Execute();
+
+Comm->CommandText="INSERT INTO "+BranchTable+" ( [Номер ветви], [Номер родителя], Название, Показ ) SELECT TempBranch.[Номер ветви], TempBranch.[Номер родителя], TempBranch.Название, TempBranch.Показ FROM TempBranch;";
+Comm->Execute();
+
+Comm->CommandText="Delete * From TempBranch";
+Comm->Execute();
+
+Zast->MClient->WriteDiaryEvent("NetAspects","Конец объединения ветвей справочников (главспец)"," Ветвь: "+BranchTable);
+}
+catch(...)
+{
+Zast->MClient->WriteDiaryEvent("Ошибка NetAspects","Ошибка объединения ветвей справочников (главспец)"," Ветвь: "+BranchTable+" Ошибка "+IntToStr(GetLastError()));
+}
+}
+//----------------------------------------------------
+void __fastcall TDocuments::N7Click(TObject *Sender)
+{
+//Чтение перечня природоохранных мероприятий
+//Узлы_4 и Ветви_4
+Zast->MClient->Start();
+ShowMessage(ReadMeropr(true));
+Zast->MClient->Stop();
+}
+//---------------------------------------------------------------------------
+String TDocuments::ReadMeropr(bool Pr)
+{
+if(Pr)
+{
+FProg->Label1->Caption="Чтение природоохранных мероприятий";
+}
+if(LoadNodeBranch("Узлы_4","Ветви_4", Pr))
+{
+LoadTab2();
+
+return "Завершено";
+
+}
+else
+{
+return "Ошибка";
+}
+}
+//--------------------------------------------------------
+
+void __fastcall TDocuments::N20Click(TObject *Sender)
+{
+//Чтение перечня видов территорий
+//Узлы_5 и Ветви_5
+Zast->MClient->Start();
+ShowMessage(ReadTerr(true));
+Zast->MClient->Stop();
+}
+//---------------------------------------------------------------------------
+String TDocuments::ReadTerr(bool Pr)
+{
+if(Pr)
+{
+FProg->Label1->Caption="Чтение видов территорий";
+}
+if(LoadNodeBranch("Узлы_5","Ветви_5", Pr))
+{
+LoadTab3();
+LoadDirTerr();
+return "Завершено";
+
+}
+else
+{
+return "Ошибка";
+}
+}
+//------------------------------------------------------------
+void TDocuments::LoadDirTerr()
+{
+MP<TADOCommand>Comm(this);
+Comm->Connection=Zast->ADOAspect;
+Comm->CommandText="Delete * From TempTerr";
+Comm->Execute();
+
+MP<TADODataSet>TempTerr(this);
+TempTerr->Connection=Zast->ADOAspect;
+TempTerr->CommandText="Select TempTerr.[Номер территории], TempTerr.[Наименование территории], TempTerr.[Показ] From TempTerr order by [Номер территории]";
+TempTerr->Active=true;
+
+Table* STerr=Zast->MClient->CreateTable(this, Zast->ServerName, Zast->VDB[Zast->GetIDDBName("Аспекты")].ServerDB);
+
+STerr->SetCommandText("Select Территория.[Номер территории], Территория.[Наименование территории], Территория.[Показ] From Территория order by [Номер территории]");
+STerr->Active(true);
+
+Zast->MClient->LoadTable(STerr, TempTerr);
+
+if(Zast->MClient->VerifyTable(STerr, TempTerr)==0)
+{
+
+Comm->CommandText="UPDATE Территория SET Территория.Del = False;";
+Comm->Execute();
+
+MP<TADODataSet>Terr(this);
+Terr->Connection=Zast->ADOAspect;
+Terr->CommandText="Select * From Территория";
+Terr->Active=true;
+
+ for(Terr->First();!Terr->Eof;Terr->Next())
+ {
+  int N=Terr->FieldByName("Номер территории")->Value;
+
+  if(TempTerr->Locate("Номер территории", N, SO))
+  {
+   Terr->Edit();
+   Terr->FieldByName("Наименование территории")->Value=TempTerr->FieldByName("Наименование территории")->Value;
+   Terr->FieldByName("Показ")->Value=TempTerr->FieldByName("Показ")->Value;
+   Terr->Post();
+
+   TempTerr->Delete();
+  }
+  else
+  {
+   Terr->Edit();
+   Terr->FieldByName("Del")->Value=true;
+   Terr->Post();
+  }
+ }
+Comm->CommandText="DELETE Территория.Del FROM Территория WHERE (((Территория.Del)=True));";
+Comm->Execute();
+
+Comm->CommandText="INSERT INTO Территория ( [Номер территории], [Наименование территории], Показ ) SELECT TempTerr.[Номер территории], TempTerr.[Наименование территории], TempTerr.Показ FROM TempTerr;";
+Comm->Execute();
+
+Comm->CommandText="DELETE TempTerr.* FROM TempTerr;";
+Comm->Execute();
+
+}
+Zast->MClient->DeleteTable(this, STerr);
+/*
+ MP<TADODataSet>Branch(this);
+ Branch->Connection=Zast->ADOConn;
+ Branch->CommandText="Select * From Ветви_5 Order by [Номер ветви]";
+ Branch->Active=true;
+
+ MP<TADODataSet>Terr(this);
+ Terr->Connection=Zast->ADOAspect;
+ Terr->CommandText="Select * From Территория Order by [Номер территории]";
+ Terr->Active=true;
+
+ MP<TADOCommand>Comm(this);
+ Comm->Connection=Zast->ADOAspect;
+ Comm->CommandText="UPDATE Территория SET Территория.Del = False;";
+ Comm->Execute();
+
+ Comm->Connection=Zast->ADOConn;
+ Comm->CommandText="UPDATE Ветви_5 SET Ветви_5.Del = False;";
+ Comm->Execute();
+
+ for(Branch->First();!Branch->Eof;Branch->Next())
+ {
+  int N=Branch->FieldByName("Номер ветви")->Value;
+
+  if(Branch->FieldByName("Показ")->AsBoolean)
+  {
+  if(Terr->Locate("Номер территории",N,SO))
+  {
+   Terr->Edit();
+   Terr->FieldByName("Наименование территории")->Value=Branch->FieldByName("Название")->Value;
+   Terr->FieldByName("Показ")->Value=Branch->FieldByName("Показ")->Value;
+   Terr->FieldByName("Del")->Value=true;
+   Terr->Post();
+  }
+  else
+  {
+   Terr->Insert();
+   Terr->FieldByName("Номер территории")->Value=Branch->FieldByName("Номер ветви")->Value;
+   Terr->FieldByName("Наименование территории")->Value=Branch->FieldByName("Название")->Value;
+   Terr->FieldByName("Показ")->Value=Branch->FieldByName("Показ")->Value;
+   Terr->FieldByName("Del")->Value=true;
+   Terr->Post();
+  }
+  }
+  else
+  {
+  if(Terr->Locate("Номер территории",0,SO))
+  {
+   Terr->Edit();
+   Terr->FieldByName("Наименование территории")->Value=Branch->FieldByName("Название")->Value;
+   Terr->FieldByName("Показ")->Value=Branch->FieldByName("Показ")->Value;
+   Terr->FieldByName("Del")->Value=true;
+   Terr->Post();
+  }
+  else
+  {
+   Terr->Insert();
+   Terr->FieldByName("Номер территории")->Value=0;
+   Terr->FieldByName("Наименование территории")->Value=Branch->FieldByName("Название")->Value;
+   Terr->FieldByName("Показ")->Value=Branch->FieldByName("Показ")->Value;
+   Terr->FieldByName("Del")->Value=true;
+   Terr->Post();
+  }
+  }
+ }
+ Comm->Connection=Zast->ADOAspect;
+ Comm->CommandText="UPDATE Территория INNER JOIN Аспекты ON Территория.[Номер территории] = Аспекты.[Вид территории] SET Аспекты.[Вид территории] = 0 WHERE (((Территория.Del)=False));";
+ Comm->Execute();
+
+ Comm->Connection=Zast->ADOAspect;
+ Comm->CommandText="Delete * from Территория Where Del=false";
+ Comm->Execute();
+
+
+ Comm->Connection=Zast->ADOAspect;
+ Comm->CommandText="UPDATE Территория SET Территория.Del = False;";
+ Comm->Execute();
+ */
+}
+//------------------------------------
+void __fastcall TDocuments::N24Click(TObject *Sender)
+{
+//Чтение перечня видов деятельности
+//Узлы_6 и Ветви_6
+Zast->MClient->Start();
+ShowMessage(ReadDeyat(true));
+Zast->MClient->Stop();
+}
+//---------------------------------------------------------------------------
+String TDocuments::ReadDeyat(bool Pr)
+{
+if(Pr)
+{
+FProg->Label1->Caption="Чтение видов деятельности";
+}
+if(LoadNodeBranch("Узлы_6","Ветви_6", Pr))
+{
+LoadTab4();
+LoadDirDeyat();
+return "Завершено";
+
+}
+else
+{
+return "Ошибка";
+}
+}
+//-----------------------------------------------------
+void TDocuments::LoadDirDeyat()
+{
+MP<TADOCommand>Comm(this);
+Comm->Connection=Zast->ADOAspect;
+Comm->CommandText="Delete * From TempDeyat";
+Comm->Execute();
+
+MP<TADODataSet>TempDeyat(this);
+TempDeyat->Connection=Zast->ADOAspect;
+TempDeyat->CommandText="Select TempDeyat.[Номер деятельности], TempDeyat.[Наименование деятельности], TempDeyat.[Показ] From TempDeyat order by [Номер деятельности]";
+TempDeyat->Active=true;
+
+Table* SDeyat=Zast->MClient->CreateTable(this, Zast->ServerName, Zast->VDB[Zast->GetIDDBName("Аспекты")].ServerDB);
+
+SDeyat->SetCommandText("Select Деятельность.[Номер деятельности], Деятельность.[Наименование деятельности], Деятельность.[Показ] From Деятельность order by [Номер деятельности]");
+SDeyat->Active(true);
+
+Zast->MClient->LoadTable(SDeyat, TempDeyat);
+
+if(Zast->MClient->VerifyTable(SDeyat, TempDeyat)==0)
+{
+
+Comm->CommandText="UPDATE Деятельность SET Деятельность.Del = False;";
+Comm->Execute();
+
+MP<TADODataSet>Deyat(this);
+Deyat->Connection=Zast->ADOAspect;
+Deyat->CommandText="Select * From Деятельность";
+Deyat->Active=true;
+
+ for(Deyat->First();!Deyat->Eof;Deyat->Next())
+ {
+  int N=Deyat->FieldByName("Номер деятельности")->Value;
+
+  if(TempDeyat->Locate("Номер деятельности", N, SO))
+  {
+   Deyat->Edit();
+   Deyat->FieldByName("Наименование деятельности")->Value=TempDeyat->FieldByName("Наименование деятельности")->Value;
+   Deyat->FieldByName("Показ")->Value=TempDeyat->FieldByName("Показ")->Value;
+   Deyat->Post();
+
+   TempDeyat->Delete();
+  }
+  else
+  {
+   Deyat->Edit();
+   Deyat->FieldByName("Del")->Value=true;
+   Deyat->Post();
+  }
+ }
+Comm->CommandText="DELETE деятельность.Del FROM Деятельность WHERE (((Деятельность.Del)=True));";
+Comm->Execute();
+
+Comm->CommandText="INSERT INTO Деятельность ( [Номер деятельности], [Наименование деятельности], Показ ) SELECT TempDeyat.[Номер деятельности], TempDeyat.[Наименование деятельности], TempDeyat.Показ FROM TempDeyat;";
+Comm->Execute();
+
+Comm->CommandText="DELETE TempDeyat.* FROM TempDeyat;";
+Comm->Execute();
+
+}
+Zast->MClient->DeleteTable(this, SDeyat);
+
+/*
+ MP<TADODataSet>Branch(this);
+ Branch->Connection=Zast->ADOConn;
+ Branch->CommandText="Select * From Ветви_6 Order by [Номер ветви]";
+ Branch->Active=true;
+
+ MP<TADODataSet>Deyat(this);
+ Deyat->Connection=Zast->ADOAspect;
+ Deyat->CommandText="Select * From Деятельность Order by [Номер деятельности]";
+ Deyat->Active=true;
+
+ MP<TADOCommand>Comm(this);
+ Comm->Connection=Zast->ADOAspect;
+ Comm->CommandText="UPDATE Деятельность SET Деятельность.Del = False;";
+ Comm->Execute();
+
+ Comm->Connection=Zast->ADOConn;
+ Comm->CommandText="UPDATE Ветви_6 SET Ветви_6.Del = False;";
+ Comm->Execute();
+
+ for(Branch->First();!Branch->Eof;Branch->Next())
+ {
+  int N=Branch->FieldByName("Номер ветви")->Value;
+
+  if(Branch->FieldByName("Показ")->AsBoolean)
+  {
+  if(Deyat->Locate("Номер деятельности",N,SO))
+  {
+   Deyat->Edit();
+   Deyat->FieldByName("Наименование деятельности")->Value=Branch->FieldByName("Название")->Value;
+   Deyat->FieldByName("Показ")->Value=Branch->FieldByName("Показ")->Value;
+   Deyat->FieldByName("Del")->Value=true;
+   Deyat->Post();
+  }
+  else
+  {
+   Deyat->Insert();
+   Deyat->FieldByName("Номер деятельности")->Value=Branch->FieldByName("Номер ветви")->Value;
+   Deyat->FieldByName("Наименование деятельности")->Value=Branch->FieldByName("Название")->Value;
+   Deyat->FieldByName("Показ")->Value=Branch->FieldByName("Показ")->Value;
+   Deyat->FieldByName("Del")->Value=true;
+   Deyat->Post();
+  }
+  }
+  else
+  {
+  if(Deyat->Locate("Номер деятельности",0,SO))
+  {
+   Deyat->Edit();
+   Deyat->FieldByName("Наименование деятельности")->Value=Branch->FieldByName("Название")->Value;
+   Deyat->FieldByName("Показ")->Value=Branch->FieldByName("Показ")->Value;
+   Deyat->FieldByName("Del")->Value=true;
+   Deyat->Post();
+  }
+  else
+  {
+   Deyat->Insert();
+   Deyat->FieldByName("Номер деятельности")->Value=0;
+   Deyat->FieldByName("Наименование деятельности")->Value=Branch->FieldByName("Название")->Value;
+   Deyat->FieldByName("Показ")->Value=Branch->FieldByName("Показ")->Value;
+   Deyat->FieldByName("Del")->Value=true;
+   Deyat->Post();
+  }
+  }
+ }
+ Comm->Connection=Zast->ADOAspect;
+ Comm->CommandText="UPDATE Деятельность INNER JOIN Аспекты ON Деятельность.[Номер деятельности] = Аспекты.[Деятельность] SET Аспекты.[Деятельность] = 0 WHERE (((Деятельность.Del)=False));";
+ Comm->Execute();
+
+ Comm->Connection=Zast->ADOAspect;
+ Comm->CommandText="Delete * from Деятельность Where Del=false";
+ Comm->Execute();
+
+
+ Comm->Connection=Zast->ADOAspect;
+ Comm->CommandText="UPDATE Деятельность SET Деятельность.Del = False;";
+ Comm->Execute();
+ */
+}
+//------------------------------------
+
+void __fastcall TDocuments::N25Click(TObject *Sender)
+{
+//Чтение общего справочника экологических аспектов
+//Узлы_7 и Ветви_7
+Zast->MClient->Start();
+ShowMessage(ReadAspect(true));
+Zast->MClient->Stop();
+}
+//---------------------------------------------------------------------------
+String TDocuments::ReadAspect(bool Pr)
+{
+if(Pr)
+{
+FProg->Label1->Caption="Чтение справочника экологических аспектов";
+}
+if(LoadNodeBranch("Узлы_7","Ветви_7", Pr))
+{
+LoadTab5();
+LoadDirAspect();
+return "Завершено";
+
+}
+else
+{
+return "Ошибка";
+}
+}
+//----------------------------------------------------
+void TDocuments::LoadDirAspect()
+{
+MP<TADOCommand>Comm(this);
+Comm->Connection=Zast->ADOAspect;
+Comm->CommandText="Delete * From TempAspect";
+Comm->Execute();
+
+MP<TADODataSet>TempAspect(this);
+TempAspect->Connection=Zast->ADOAspect;
+TempAspect->CommandText="Select TempAspect.[Номер аспекта], TempAspect.[Наименование аспекта], TempAspect.[Показ] From TempAspect order by [Номер аспекта]";
+TempAspect->Active=true;
+
+Table* SDeyat=Zast->MClient->CreateTable(this, Zast->ServerName, Zast->VDB[Zast->GetIDDBName("Аспекты")].ServerDB);
+
+SDeyat->SetCommandText("Select Аспект.[Номер аспекта], Аспект.[Наименование аспекта], Аспект.[Показ] From Аспект order by [Номер аспекта]");
+SDeyat->Active(true);
+
+Zast->MClient->LoadTable(SDeyat, TempAspect);
+
+if(Zast->MClient->VerifyTable(SDeyat, TempAspect)==0)
+{
+
+Comm->CommandText="UPDATE Аспект SET Аспект.Del = False;";
+Comm->Execute();
+
+MP<TADODataSet>Aspect(this);
+Aspect->Connection=Zast->ADOAspect;
+Aspect->CommandText="Select * From Аспект";
+Aspect->Active=true;
+
+ for(Aspect->First();!Aspect->Eof;Aspect->Next())
+ {
+  int N=Aspect->FieldByName("Номер аспекта")->Value;
+
+  if(TempAspect->Locate("Номер аспекта", N, SO))
+  {
+   Aspect->Edit();
+   Aspect->FieldByName("Наименование аспекта")->Value=TempAspect->FieldByName("Наименование аспекта")->Value;
+   Aspect->FieldByName("Показ")->Value=TempAspect->FieldByName("Показ")->Value;
+   Aspect->Post();
+
+   TempAspect->Delete();
+  }
+  else
+  {
+   Aspect->Edit();
+   Aspect->FieldByName("Del")->Value=true;
+   Aspect->Post();
+  }
+ }
+Comm->CommandText="DELETE Аспект.Del FROM Аспект WHERE (((Аспект.Del)=True));";
+Comm->Execute();
+
+Comm->CommandText="INSERT INTO Аспект ( [Номер аспекта], [Наименование аспекта], Показ ) SELECT TempAspect.[Номер аспекта], TempAspect.[Наименование аспекта], TempAspect.Показ FROM TempAspect;";
+Comm->Execute();
+
+Comm->CommandText="DELETE TempDeyat.* FROM TempDeyat;";
+Comm->Execute();
+
+}
+Zast->MClient->DeleteTable(this, SDeyat);
+
+/*
+ MP<TADODataSet>Branch(this);
+ Branch->Connection=Zast->ADOConn;
+ Branch->CommandText="Select * From Ветви_7 Order by [Номер ветви]";
+ Branch->Active=true;
+
+ MP<TADODataSet>Aspect(this);
+ Aspect->Connection=Zast->ADOAspect;
+ Aspect->CommandText="Select * From аспект Order by [Номер аспекта]";
+ Aspect->Active=true;
+
+ MP<TADOCommand>Comm(this);
+ Comm->Connection=Zast->ADOAspect;
+ Comm->CommandText="UPDATE аспект SET аспект.Del = False;";
+ Comm->Execute();
+
+ Comm->Connection=Zast->ADOConn;
+ Comm->CommandText="UPDATE Ветви_7 SET Ветви_7.Del = False;";
+ Comm->Execute();
+
+ for(Branch->First();!Branch->Eof;Branch->Next())
+ {
+  int N=Branch->FieldByName("Номер ветви")->Value;
+
+  if(Branch->FieldByName("Показ")->AsBoolean)
+  {
+  if(Aspect->Locate("Номер аспекта",N,SO))
+  {
+   Aspect->Edit();
+   Aspect->FieldByName("Наименование аспекта")->Value=Branch->FieldByName("Название")->Value;
+   Aspect->FieldByName("Показ")->Value=Branch->FieldByName("Показ")->Value;
+   Aspect->FieldByName("Del")->Value=true;
+   Aspect->Post();
+  }
+  else
+  {
+   Aspect->Insert();
+   Aspect->FieldByName("Номер аспекта")->Value=Branch->FieldByName("Номер ветви")->Value;
+   Aspect->FieldByName("Наименование аспекта")->Value=Branch->FieldByName("Название")->Value;
+   Aspect->FieldByName("Показ")->Value=Branch->FieldByName("Показ")->Value;
+   Aspect->FieldByName("Del")->Value=true;
+   Aspect->Post();
+  }
+  }
+  else
+  {
+  if(Aspect->Locate("Номер аспекта",0,SO))
+  {
+   Aspect->Edit();
+   Aspect->FieldByName("Наименование аспекта")->Value=Branch->FieldByName("Название")->Value;
+   Aspect->FieldByName("Показ")->Value=Branch->FieldByName("Показ")->Value;
+   Aspect->FieldByName("Del")->Value=true;
+   Aspect->Post();
+  }
+  else
+  {
+   Aspect->Insert();
+   Aspect->FieldByName("Номер аспекта")->Value=0;
+   Aspect->FieldByName("Наименование аспекта")->Value=Branch->FieldByName("Название")->Value;
+   Aspect->FieldByName("Показ")->Value=Branch->FieldByName("Показ")->Value;
+   Aspect->FieldByName("Del")->Value=true;
+   Aspect->Post();
+  }
+  }
+ }
+ Comm->Connection=Zast->ADOAspect;
+ Comm->CommandText="UPDATE Аспект INNER JOIN Аспекты ON Аспект.[Номер аспекта] = Аспекты.[Аспект] SET Аспекты.[аспект] = 0 WHERE (((Аспект.Del)=False));";
+ Comm->Execute();
+
+ Comm->Connection=Zast->ADOAspect;
+ Comm->CommandText="Delete * from Аспект Where Del=false";
+ Comm->Execute();
+
+
+ Comm->Connection=Zast->ADOAspect;
+ Comm->CommandText="UPDATE аспект SET Аспект.Del = False;";
+ Comm->Execute();
+ */
+}
+//------------------------------------
+void __fastcall TDocuments::N26Click(TObject *Sender)
+{
+//Чтение критериев
+Zast->MClient->Start();
+ShowMessage(ReadCrit(true));
+Zast->MClient->Stop();
+}
+//---------------------------------------------------------------------------
+String TDocuments::ReadCrit(bool Pr)
+{
+if(LoadCrit(Pr))
+{
+ADODataSet1->Active=false;
+ADODataSet1->Active=true;
+return "Завершено";
+
+}
+else
+{
+return "Ошибка";
+}
+}
+//-----------------------------------------------
+bool TDocuments::LoadCrit(bool Pr)
+{
+bool Ret=false;
+Zast->MClient->WriteDiaryEvent("NetAspects","Начало загрузки критериев (главспец)","");
+
+try
+{
+MP<TADOCommand>Comm(this);
+Comm->Connection=Zast->ADOConn;
+Comm->CommandText="Delete * From TempZn";
+Comm->Execute();
+
+MP<TADODataSet>TempZn(this);
+TempZn->Connection=Zast->ADOConn;
+TempZn->CommandText="Select TempZn.[Номер значимости], TempZn.[Наименование значимости], TempZn.[Критерий1], TempZn.[Критерий], TempZn.[Мин граница], TempZn.[Макс граница], TempZn.[Необходимая мера] From TempZn Order by [Номер значимости]";
+TempZn->Active=true;
+
+
+
+Table* SZn=Zast->MClient->CreateTable(this, Zast->ServerName, Zast->VDB[Zast->GetIDDBName("Reference")].ServerDB);
+
+SZn->SetCommandText("Select Значимость.[Номер значимости], Значимость.[Наименование значимости], Значимость.[Критерий1], Значимость.[Критерий], Значимость.[Мин граница], Значимость.[Макс граница], Значимость.[Необходимая мера] From Значимость Order by [Номер значимости]");
+SZn->Active(true);
+if(Pr)
+{
+FProg->Label1->Caption="Чтение критериев";
+Zast->MClient->LoadTable(SZn, TempZn, FProg->Label1, FProg->Progress);
+}
+else
+{
+Zast->MClient->LoadTable(SZn, TempZn);
+}
+if(Zast->MClient->VerifyTable(SZn, TempZn)==0)
+{
+Comm->CommandText="Delete * From Значимость";
+Comm->Execute();
+
+Comm->CommandText="INSERT INTO Значимость ( [Номер значимости], [Наименование значимости], Критерий1, Критерий, [Мин граница], [Макс граница], [Необходимая мера] ) SELECT TempZn.[Номер значимости], TempZn.[Наименование значимости], TempZn.Критерий1, TempZn.Критерий, TempZn.[Мин граница], TempZn.[Макс граница], TempZn.[Необходимая мера] FROM TempZn;";
+Comm->Execute();
+Zast->MClient->WriteDiaryEvent("NetAspects","Конец загрузки критериев (главспец)","");
+
+Ret=true;
+}
+
+Zast->MClient->DeleteTable(this, SZn);
+
+if(!Ret)
+{
+Zast->MClient->WriteDiaryEvent("Ошибка NetAspects","Сбой загрузки критериев (главспец)","");
+}
+}
+catch(...)
+{
+Zast->MClient->WriteDiaryEvent("Ошибка NetAspects","Ошибка загрузки критериев (главспец)"," Ошибка "+IntToStr(GetLastError()));
+}
+return Ret;
+}
+//---------------------------------------
+
+void __fastcall TDocuments::N27Click(TObject *Sender)
+{
+//Чтение подразделений
+Zast->MClient->Start();
+ShowMessage(ReadPodr(true));
+Zast->MClient->Stop();
+}
+//---------------------------------------------------------------------------
+String TDocuments::ReadPodr(bool Pr)
+{
+if(LoadPodr(Pr))
+{
+Podr->Active=false;
+Podr->Active=true;
+return "Завершено";
+
+}
+else
+{
+return "Ошибка";
+}
+}
+//-------------------------------------------------------
+bool TDocuments::LoadPodr(bool Pr)
+{
+bool Ret=false;
+Zast->MClient->WriteDiaryEvent("NetAspects","Начало загрузки подразделений (главспец)","");
+try
+{
+MP<TADOCommand>Comm(this);
+Comm->Connection=Zast->ADOAspect;
+Comm->CommandText="Delete * From TempПодразделения";
+Comm->Execute();
+
+MP<TADODataSet>TempPodr(this);
+TempPodr->Connection=Zast->ADOAspect;
+TempPodr->CommandText="Select TempПодразделения.[Номер подразделения], TempПодразделения.[Название подразделения] From TempПодразделения order by [Номер подразделения]";
+TempPodr->Active=true;
+
+
+
+Table* SPodr=Zast->MClient->CreateTable(this, Zast->ServerName, Zast->VDB[Zast->GetIDDBName("Аспекты")].ServerDB);
+
+SPodr->SetCommandText("Select Подразделения.[Номер подразделения], Подразделения.[Название подразделения] From Подразделения order by [Номер подразделения]");
+SPodr->Active(true);
+if(Pr)
+{
+FProg->Label1->Caption="Чтение подразделений";
+Zast->MClient->LoadTable(SPodr, TempPodr, FProg->Label1, FProg->Progress);
+}
+else
+{
+Zast->MClient->LoadTable(SPodr, TempPodr);
+}
+
+MP<TADODataSet>Podr(this);
+Podr->Connection=Zast->ADOAspect;
+Podr->CommandText="Select * From Подразделения";
+Podr->Active=true;
+
+if(Zast->MClient->VerifyTable(SPodr, TempPodr)==0)
+{
+Comm->CommandText="UPDATE Подразделения SET Подразделения.Del = False;";
+Comm->Execute();
+
+for(Podr->First();!Podr->Eof;Podr->Next())
+{
+ int N=Podr->FieldByName("ServerNum")->Value;
+ if(TempPodr->Locate("Номер подразделения",N,SO))
+ {
+  Podr->Edit();
+  Podr->FieldByName("Название подразделения")->Value=TempPodr->FieldByName("Название подразделения")->Value;
+  Podr->Post();
+
+  TempPodr->Delete();
+ }
+ else
+ {
+  Podr->Edit();
+  Podr->FieldByName("Del")->Value=true;
+  Podr->Post();
+ }
+}
+Comm->CommandText="DELETE * FROM Подразделения WHERE (((Подразделения.Del)=True));";
+Comm->Execute();
+
+Comm->CommandText="INSERT INTO Подразделения ( ServerNum, [Название подразделения] ) SELECT TempПодразделения.[Номер подразделения], TempПодразделения.[Название подразделения] FROM TempПодразделения;";
+Comm->Execute();
+
+Comm->CommandText="Delete * From TempПодразделения";
+Comm->Execute();
+
+Zast->MClient->WriteDiaryEvent("NetAspects","Конец загрузки подразделений (главспец)","");
+Ret=true;
+}
+
+Zast->MClient->DeleteTable(this, SPodr);
+}
+catch(...)
+{
+Zast->MClient->WriteDiaryEvent("Ошибка NetAspects","Ошибка загрузки подразделений (главспец)"," Ошибка "+IntToStr(GetLastError()));
+
+}
+return Ret;
+}
+//---------------------------------------------------------------------------
+void __fastcall TDocuments::N28Click(TObject *Sender)
+{
+//Чтение ситуаций
+Zast->MClient->Start();
+ShowMessage(ReadSit(true));
+Zast->MClient->Stop();
+}
+//---------------------------------------------------------------------------
+String TDocuments::ReadSit(bool Pr)
+{
+if(LoadSit(Pr))
+{
+Sit->Active=false;
+Sit->Active=true;
+return "Завершено";
+
+}
+else
+{
+return "Ошибка";
+}
+}
+//-------------------------------------------
+bool TDocuments::LoadSit(bool Pr)
+{
+bool Ret=false;
+Zast->MClient->WriteDiaryEvent("NetAspects","Начало загрузки ситуаций (главспец)","");
+try
+{
+MP<TADOCommand>Comm(this);
+Comm->Connection=Zast->ADOConn;
+Comm->CommandText="Delete * From TempSit";
+Comm->Execute();
+
+MP<TADODataSet>TempSit(this);
+TempSit->Connection=Zast->ADOConn;
+TempSit->CommandText="Select TempSit.[Номер ситуации], TempSit.[Название ситуации] From TempSit order by [Номер ситуации]";
+TempSit->Active=true;
+
+
+
+Table* SSit=Zast->MClient->CreateTable(this, Zast->ServerName, Zast->VDB[Zast->GetIDDBName("Reference")].ServerDB);
+
+SSit->SetCommandText("Select Ситуации.[Номер ситуации], Ситуации.[Название ситуации] From Ситуации order by [Номер ситуации]");
+SSit->Active(true);
+if(Pr)
+{
+FProg->Label1->Caption="Чтение ситуаций";
+Zast->MClient->LoadTable(SSit, TempSit, FProg->Label1, FProg->Progress);
+}
+else
+{
+Zast->MClient->LoadTable(SSit, TempSit);
+}
+
+if(Zast->MClient->VerifyTable(SSit, TempSit)==0)
+{
+Comm->CommandText="Delete * From Ситуации";
+Comm->Execute();
+
+Comm->CommandText="INSERT INTO Ситуации ( [Номер ситуации], [Название ситуации] ) SELECT TempSit.[Номер ситуации], TempSit.[Название ситуации] FROM TempSit;";
+Comm->Execute();
+
+//----
+Comm->Connection=Zast->ADOAspect;
+Comm->CommandText="Delete * From TempSit";
+Comm->Execute();
+
+MP<TADODataSet>TempSit1(this);
+TempSit1->Connection=Zast->ADOAspect;
+TempSit1->CommandText="Select TempSit.[Номер ситуации], TempSit.[Название ситуации] From TempSit order by [Номер ситуации]";
+TempSit1->Active=true;
+
+
+
+Table* SSit1=Zast->MClient->CreateTable(this, Zast->ServerName, Zast->VDB[Zast->GetIDDBName("Аспекты")].ServerDB);
+
+SSit1->SetCommandText("Select Ситуации.[Номер ситуации], Ситуации.[Название ситуации] From Ситуации Where Показ=True order by [Номер ситуации]");
+SSit1->Active(true);
+
+Zast->MClient->LoadTable(SSit1, TempSit1);
+
+if(Zast->MClient->VerifyTable(SSit1, TempSit1)==0)
+{
+
+Comm->CommandText="Delete * From Ситуации where показ=true";
+Comm->Execute();
+
+Comm->CommandText="INSERT INTO Ситуации ( [Номер ситуации], [Название ситуации], Показ ) SELECT TempSit.[Номер ситуации], TempSit.[Название ситуации], True FROM TempSit;";
+Comm->Execute();
+
+}
+Zast->MClient->DeleteTable(this, SSit1);
+
+
+Zast->MClient->WriteDiaryEvent("NetAspects","Конец загрузки ситуаций (главспец)","");
+Ret=true;
+}
+
+Zast->MClient->DeleteTable(this, SSit);
+}
+catch(...)
+{
+Zast->MClient->WriteDiaryEvent("Ошибка NetAspects","Ошибка загрузки ситуаций (главспец)"," Ошибка "+IntToStr(GetLastError()));
+
+}
+return Ret;
+}
+//----------------------------------------------------------------------------
+void __fastcall TDocuments::DBMemo1Exit(TObject *Sender)
+{
+DataSetRefresh4->Execute();
+DataSetPost1->Execute();
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TDocuments::DBGrid1Exit(TObject *Sender)
+{
+DataSetRefresh2->Execute();
+DataSetPost2->Execute();
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TDocuments::ReadMetodClick(TObject *Sender)
+{
+DBMemo1->ReadOnly=!ReadMetod->Checked;        
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TDocuments::N2Click(TObject *Sender)
+{
+//Чтение методики
+
+Zast->MClient->Start();
+ShowMessage(ReadMet(true));
+Zast->MClient->Stop();
+}
+//---------------------------------------------------------------------------
+String TDocuments::ReadMet(bool Pr)
+{
+if(LoadMet(Pr))
+{
+Metod->Active=false;
+Metod->Active=true;
+return "Завершено";
+
+}
+else
+{
+return "Ошибка";
+}
+}
+//-------------------------------------------------------
+bool TDocuments::LoadMet(bool Pr)
+{
+bool Ret=false;
+Zast->MClient->WriteDiaryEvent("NetAspects","Начало загрузки методики (главспец)","");
+try
+{
+if(Zast->MClient->PrepareLoadMetod("Reference"))
+{
+MP<TADOCommand>Comm(this);
+Comm->Connection=Zast->ADOConn;
+Comm->CommandText="Delete * From TempMet";
+Comm->Execute();
+
+MP<TADODataSet>TempMet(this);
+TempMet->Connection=Zast->ADOConn;
+TempMet->CommandText="Select TempMet.[Номер], TempMet.[Методика] From TempMet order by Номер";
+TempMet->Active=true;
+
+Table* STMet=Zast->MClient->CreateTable(this, Zast->ServerName, Zast->VDB[Zast->GetIDDBName("Reference")].ServerDB);
+
+STMet->SetCommandText("Select TempMet.[Номер], TempMet.[Методика] From TempMet order by Номер");
+STMet->Active(true);
+if(Pr)
+{
+FProg->Label1->Caption="Чтение методики";
+Zast->MClient->LoadTable(STMet, TempMet, FProg->Label1, FProg->Progress);
+}
+else
+{
+Zast->MClient->LoadTable(STMet, TempMet);
+}
+
+if(Zast->MClient->VerifyTable(STMet, TempMet)==0)
+{
+Comm->CommandText="Delete * from  Методика";
+Comm->Execute();
+
+MP<TADODataSet>Metod(this);
+Metod->Connection=Zast->ADOConn;
+Metod->CommandText="Select * from Методика ";
+Metod->Active=true;
+
+MP<TMemo>M(this);
+M->Visible=false;
+M->Parent=this;
+
+TStrings* TT=M->Lines;
+TT->Clear();
+for(TempMet->First();!TempMet->Eof;TempMet->Next())
+{
+String S=TempMet->FieldByName("методика")->AsString;
+TT->Append(S);
+}
+Metod->Insert();
+Metod->FieldByName("Номер")->Value=1;
+Metod->FieldByName("Методика")->Assign(TT);
+Metod->Post();
+
+Zast->MClient->WriteDiaryEvent("NetAspects","Конец загрузки методики (главспец)","");
+Ret=true;
+}
+Zast->MClient->DeleteTable(this, STMet);
+}
+}
+catch(...)
+{
+Zast->MClient->WriteDiaryEvent("Ошибка NetAspects","Ошибка загрузки методики (главспец)"," Ошибка "+IntToStr(GetLastError()));
+
+}
+return Ret;
+}
+//---------------------------------------------------------------------------
+void __fastcall TDocuments::N32Click(TObject *Sender)
+{
+//запись видов воздействий
+//запись в Reference
+Zast->MClient->Start();
+ShowMessage(WriteVozd(true));
+Zast->MClient->Stop();
+}
+//---------------------------------------------------------------------------
+String TDocuments::WriteVozd(bool Pr)
+{
+if(Pr)
+{
+FProg->Label1->Caption="Запись воздействий";
+}
+if(UploadNodeBranch("Узлы_3","Ветви_3", Pr))
+{
+
+Zast->MClient->MergeNodeBranch("Reference", "Узлы_3","Ветви_3","Аспекты","Воздействия","Воздействие","Номер воздействия","Наименование воздействия");
+//                       база справочников  | узел  | ветвь |база аспектов |таблица | поле аспектов | ключ целевой таблицы | Наименование в целевой таблице
+
+//обновление в Aspects
+return "Завершено";
+}
+else
+{
+return "Ошибка";
+}
+}
+//---------------------------------------------------
+bool TDocuments::UploadNodeBranch(String NodeTable, String BranchTable, bool Pr)
+{
+bool Ret=false;
+Zast->MClient->WriteDiaryEvent("NetAspects","Начало сохранения узлов и ветвей справочников (главспец)","Узел: "+NodeTable+" Ветвь: "+BranchTable);
+
+try
+{
+Zast->MClient->SetCommandText("Reference","Delete * From TempNode");
+Zast->MClient->CommandExec("Reference");
+
+MP<TADODataSet>Node(this);
+Node->Connection=Zast->ADOConn;
+Node->CommandText="Select "+NodeTable+".[Номер узла], "+NodeTable+".[Родитель], "+NodeTable+".[Название] From "+NodeTable+" Order by [Родитель], [Номер узла]";
+Node->Active=true;
+
+Table* TempNode=Zast->MClient->CreateTable(this, Zast->ServerName, Zast->VDB[Zast->GetIDDBName("Reference")].ServerDB);
+
+TempNode->SetCommandText("Select TempNode.[Номер узла], TempNode.[Родитель], TempNode.[Название] From TempNode Order by [Родитель], [Номер узла]");
+TempNode->Active(true);
+
+Zast->MClient->LoadTable(Node, TempNode);
+
+if(Zast->MClient->VerifyTable(Node, TempNode)==0)
+{
+
+Zast->MClient->SetCommandText("Reference","Delete * From TempBranch");
+Zast->MClient->CommandExec("Reference");
+
+MP<TADODataSet>Branch(this);
+Branch->Connection=Zast->ADOConn;
+Branch->CommandText="Select "+BranchTable+".[Номер ветви], "+BranchTable+".[Номер родителя], "+BranchTable+".[Название], "+BranchTable+".[Показ] From "+BranchTable+" Order by [Номер родителя], [Номер ветви]";
+Branch->Active=true;
+
+Table* TempBranch=Zast->MClient->CreateTable(this, Zast->ServerName, Zast->VDB[Zast->GetIDDBName("Reference")].ServerDB);
+
+TempBranch->SetCommandText("Select TempBranch.[Номер ветви], TempBranch.[Номер родителя], TempBranch.[Название], TempBranch.[Показ] From TempBranch Order by [Номер родителя], [Номер ветви]");
+TempBranch->Active(true);
+
+if(Pr)
+{
+Zast->MClient->LoadTable(Branch, TempBranch, FProg->Label1, FProg->Progress);
+}
+else
+{
+Zast->MClient->LoadTable(Branch, TempBranch);
+}
+if(Zast->MClient->VerifyTable(Branch, TempBranch)==0)
+{
+
+Zast->MClient->WriteDiaryEvent("NetAspects","Конец сохранения узлов и ветвей справочников (главспец)","Узел: "+NodeTable+" Ветвь: "+BranchTable);
+
+Ret=true;
+}
+
+Zast->MClient->DeleteTable(this, TempBranch);
+
+if(!Ret)
+{
+Zast->MClient->WriteDiaryEvent("Ошибка NetAspects","Сбой сохранения узлов и ветвей справочников (главспец)","Узел: "+NodeTable+" Ветвь: "+BranchTable);
+
+}
+}
+Zast->MClient->DeleteTable(this, TempNode);
+}
+catch(...)
+{
+ Zast->MClient->WriteDiaryEvent("Ошибка NetAspects ","Ошибка сохранения узлов и ветвей справочников (главспец)","Узел: "+NodeTable+" Ветвь: "+BranchTable+" Ошибка "+IntToStr(GetLastError()));
+
+}
+return Ret;
+}
+//---------------------------------------------------------
+void __fastcall TDocuments::N33Click(TObject *Sender)
+{
+//запись видов мероприятий
+//запись в Reference
+Zast->MClient->Start();
+ShowMessage(WriteMeropr(true));
+Zast->MClient->Stop();
+}
+//---------------------------------------------------------------------------
+String TDocuments::WriteMeropr(bool Pr)
+{
+if(Pr)
+{
+FProg->Label1->Caption="Запись мероприятий";
+}
+if(UploadNodeBranch("Узлы_4","Ветви_4", Pr))
+{
+Zast->MClient->MergeNodeBranch("Reference", "Узлы_4","Ветви_4");
+//                       база справочников  | узел  | ветвь
+
+//обновление в Aspects
+return "Завершено";
+}
+else
+{
+return "Ошибка";
+}
+}
+//--------------------------------------------
+void __fastcall TDocuments::N34Click(TObject *Sender)
+{
+//запись видов территорий
+//запись в Reference
+Zast->MClient->Start();
+ShowMessage(WriteTerr(true));
+Zast->MClient->Stop();
+}
+//---------------------------------------------------------------------------
+String TDocuments::WriteTerr(bool Pr)
+{
+if(Pr)
+{
+FProg->Label1->Caption="Запись территорий";
+}
+if(UploadNodeBranch("Узлы_5","Ветви_5", Pr))
+{
+Zast->MClient->MergeNodeBranch("Reference", "Узлы_5","Ветви_5","Аспекты","Территория","Вид территории","Номер территории","Наименование территории");
+//                       база справочников  | узел  | ветвь |база аспектов |таблица | поле аспектов | ключ целевой таблицы | Наименование в целевой таблице
+
+//обновление в Aspects
+return "Завершено";
+}
+else
+{
+return "Ошибка";
+}
+}
+//------------------------------------------------------------
+void __fastcall TDocuments::N35Click(TObject *Sender)
+{
+//запись видов деятельности
+//запись в Reference
+Zast->MClient->Start();
+ShowMessage(WriteDeyat(true));
+Zast->MClient->Stop();
+}
+//---------------------------------------------------------------------------
+String TDocuments::WriteDeyat(bool Pr)
+{
+if(Pr)
+{
+FProg->Label1->Caption="Запись видов деятельности";
+}
+if(UploadNodeBranch("Узлы_6","Ветви_6", Pr))
+{
+Zast->MClient->MergeNodeBranch("Reference", "Узлы_6","Ветви_6","Аспекты","Деятельность","Деятельность","Номер деятельности","Наименование деятельности");
+//                       база справочников  | узел  | ветвь |база аспектов |таблица | поле аспектов | ключ целевой таблицы | Наименование в целевой таблице
+
+//обновление в Aspects
+return "Завершено";
+}
+else
+{
+return "Ошибка";
+}
+}
+//----------------------------------------------------
+void __fastcall TDocuments::N36Click(TObject *Sender)
+{
+//запись экологических аспектов
+//запись в Reference
+Zast->MClient->Start();
+ShowMessage(WriteAspect(true));
+Zast->MClient->Stop();
+}
+//---------------------------------------------------------------------------
+String TDocuments::WriteAspect(bool Pr)
+{
+if(Pr)
+{
+FProg->Label1->Caption="Запись видов аспектов";
+}
+if(UploadNodeBranch("Узлы_7","Ветви_7", Pr))
+{
+Zast->MClient->MergeNodeBranch("Reference", "Узлы_7","Ветви_7","Аспекты","Аспект","Аспект","Номер аспекта","Наименование аспекта");
+//                       база справочников  | узел  | ветвь |база аспектов |таблица | поле аспектов | ключ целевой таблицы | Наименование в целевой таблице
+
+//обновление в Aspects
+return "Завершено";
+}
+else
+{
+return "Ошибка";
+}
+}
+//-----------------------------------------------------
+void __fastcall TDocuments::N37Click(TObject *Sender)
+{
+DataSetRefresh2->Execute();
+DataSetPost2->Execute();
+Zast->MClient->Start();
+ShowMessage(WriteCryt(true));
+Zast->MClient->Stop();
+
+}
+//---------------------------------------------------------------------------
+String TDocuments::WriteCryt(bool Pr)
+{
+String Res="Ошибка";
+Zast->MClient->WriteDiaryEvent("NetAspects","Начало сохранения критериев (главспец)","");
+
+try
+{
+Zast->MClient->SetCommandText("Reference","Delete * From TempZn");
+Zast->MClient->CommandExec("Reference");
+
+MP<TADODataSet>Zn(this);
+Zn->Connection=Zast->ADOConn;
+Zn->CommandText="Select Значимость.[Номер значимости], Значимость.[Наименование значимости], Значимость.[Критерий1], Значимость.[Критерий], Значимость.[Мин граница], Значимость.[Макс граница], Значимость.[Необходимая мера] From Значимость Order by [Номер значимости]";
+Zn->Active=true;
+
+Table* TempZn=Zast->MClient->CreateTable(this, Zast->ServerName, Zast->VDB[Zast->GetIDDBName("Reference")].ServerDB);
+
+TempZn->SetCommandText("Select TempZn.[Номер значимости], TempZn.[Наименование значимости], TempZn.[Критерий1], TempZn.[Критерий], TempZn.[Мин граница], TempZn.[Макс граница], TempZn.[Необходимая мера] From TempZn Order by [Номер значимости]");
+TempZn->Active(true);
+if(Pr)
+{
+FProg->Label1->Caption="Запись критериев";
+Zast->MClient->LoadTable(Zn, TempZn, FProg->Label1, FProg->Progress);
+}
+else
+{
+Zast->MClient->LoadTable(Zn, TempZn);
+}
+
+if(Zast->MClient->VerifyTable(Zn, TempZn)==0)
+{
+Zast->MClient->MergeZn("Reference","Аспекты");
+
+Zast->MClient->WriteDiaryEvent("NetAspects","Конец сохранения критериев (главспец)","");
+Res="Завершено";
+}
+
+Zast->MClient->DeleteTable(this, TempZn);
+
+if(Res!="Завершено")
+{
+Zast->MClient->WriteDiaryEvent("Ошибка NetAspects","Сбой сохранения критериев (главспец)","");
+}
+}
+catch(...)
+{
+ Zast->MClient->WriteDiaryEvent("Ошибка NetAspects ","Ошибка сохранения критериев (главспец)","Ошибка "+IntToStr(GetLastError()));
+
+}
+return Res;
+}
+//--------------------------------------------
+void __fastcall TDocuments::N38Click(TObject *Sender)
+{
+//Запись подразделений
+DataSetRefresh3->Execute();
+DataSetPost3->Execute();
+Zast->MClient->Start();
+ShowMessage(WritePodr(true));
+Zast->MClient->Stop();
+
+}
+//---------------------------------------------------------------------------
+String TDocuments::WritePodr(bool Pr)
+{
+String Ret="Ошибка записи";
+
+Zast->MClient->WriteDiaryEvent("NetAspects","Начало сохранения подразделений (главспец)","");
+
+try
+{
+MP<TADODataSet>Podr(this);
+Podr->Connection=Zast->ADOAspect;
+Podr->CommandText="Select Подразделения.[Номер подразделения], Подразделения.[Название подразделения], Подразделения.[ServerNum] from Подразделения Order by [Номер подразделения]";
+Podr->Active=true;
+
+Zast->MClient->SetCommandText("Аспекты","Delete * From TempПодразделения");
+Zast->MClient->CommandExec("Аспекты");
+
+Table* TempPodr2=Zast->MClient->CreateTable(this, Zast->ServerName, Zast->VDB[Zast->GetIDDBName("Аспекты")].ServerDB);
+
+TempPodr2->SetCommandText("Select TempПодразделения.[Номер подразделения], TempПодразделения.[Название подразделения], TempПодразделения.[ServerNum] from TempПодразделения Order by [Номер подразделения]");
+TempPodr2->Active(true);
+
+Zast->MClient->LoadTable(Podr, TempPodr2);
+
+if(Zast->MClient->VerifyTable(Podr, TempPodr2)==0)
+{
+Zast->MClient->SavePodr("Аспекты");
+
+MP<TADODataSet>Temp(this);
+Temp->Connection=Zast->ADOAspect;
+Temp->CommandText="Select TempПодразделения.[Номер подразделения], TempПодразделения.[Название подразделения] from TempПодразделения Order by [Номер подразделения]";
+Temp->Active=true;
+
+Table* TempPodr=Zast->MClient->CreateTable(this, Zast->ServerName, Zast->VDB[Zast->GetIDDBName("Аспекты")].ServerDB);
+
+TempPodr->SetCommandText("Select TempПодразделения.[Номер подразделения], TempПодразделения.[Название подразделения] from TempПодразделения Order by [Номер подразделения]");
+TempPodr->Active(true);
+if(Pr)
+{
+ FProg->Label1->Caption="Запись подразделений";
+Zast->MClient->LoadTable(TempPodr, Temp, FProg->Label1, FProg->Progress);
+}
+else
+{
+Zast->MClient->LoadTable(TempPodr, Temp);
+}
+
+if(Zast->MClient->VerifyTable(Temp, TempPodr)==0)
+{
+Podr->Active=false;
+Podr->CommandText="Select Подразделения.[Номер подразделения], Подразделения.[Название подразделения], Подразделения.[ServerNum] from Подразделения  Where ServerNum=0 Order by [Номер подразделения]";
+Podr->Active=true;
+
+for(Podr->First();!Podr->Eof;Podr->Next())
+{
+int N=Podr->FieldByName("Номер подразделения")->Value;
+if(Temp->Locate("Номер подразделения", N, SO))
+{
+Podr->Edit();
+Podr->FieldByName("ServerNum")->Value=Temp->FieldByName("Номер подразделения")->Value;
+Podr->Post();
+}
+else
+{
+ShowMessage("Ошибка записи подразделений Номер="+IntToStr(N));
+}
+}
+
+Zast->MClient->SetCommandText("Аспекты","Delete * From TempПодразделения");
+Zast->MClient->CommandExec("Аспекты");
+
+Zast->MClient->WriteDiaryEvent("NetAspects","Конец сохранения подразделений (главспец)","");
+Ret="Завершено";
+}
+Zast->MClient->DeleteTable(this, TempPodr);
+}
+Zast->MClient->DeleteTable(this, TempPodr2);
+
+MP<TADOCommand>Comm(this);
+Comm->Connection=Zast->ADOAspect;
+Comm->CommandText="Delete * from TempПодразделения";
+Comm->Execute();
+
+if(Ret!="Завершено")
+{
+Zast->MClient->WriteDiaryEvent("Ошибка NetAspects","Сбой сохранения подразделений (главспец)","");
+}
+}
+catch(...)
+{
+ Zast->MClient->WriteDiaryEvent("Ошибка NetAspects ","Ошибка сохранения критериев (главспец)","Ошибка "+IntToStr(GetLastError()));
+
+}
+return Ret;
+}
+//--------------------------------------------------
+void __fastcall TDocuments::N39Click(TObject *Sender)
+{
+//Запись ситуаций
+DataSetRefresh1->Execute();
+DataSetPost4->Execute();
+Zast->MClient->Start();
+ShowMessage(WriteSit(true));
+Zast->MClient->Stop();
+
+}
+//---------------------------------------------------------------------------
+String TDocuments::WriteSit(bool Pr)
+{
+String Ret="Ошибка записи";
+Zast->MClient->WriteDiaryEvent("NetAspects","Начало сохранения ситуаций (главспец)","");
+
+try
+{
+Zast->MClient->SetCommandText("Reference","Delete * From TempSit");
+Zast->MClient->CommandExec("Reference");
+
+MP<TADODataSet>Sit(this);
+Sit->Connection=Zast->ADOConn;
+Sit->CommandText="Select Ситуации.[Номер ситуации], Ситуации.[Название ситуации] from Ситуации Order by [Номер ситуации]";
+Sit->Active=true;
+
+Table* TempSit=Zast->MClient->CreateTable(this, Zast->ServerName, Zast->VDB[Zast->GetIDDBName("Reference")].ServerDB);
+
+TempSit->SetCommandText("Select TempSit.[Номер ситуации], TempSit.[Название ситуации] from TempSit Order by [Номер ситуации]");
+TempSit->Active(true);
+
+Zast->MClient->LoadTable(Sit, TempSit);
+
+if(Zast->MClient->VerifyTable(Sit, TempSit)==0)
+{
+Zast->MClient->SetCommandText("Аспекты","Delete * From TempSit");
+Zast->MClient->CommandExec("Аспекты");
+
+Table* TempSit2=Zast->MClient->CreateTable(this, Zast->ServerName, Zast->VDB[Zast->GetIDDBName("Аспекты")].ServerDB);
+
+TempSit2->SetCommandText("Select TempSit.[Номер ситуации], TempSit.[Название ситуации] from TempSit Order by [Номер ситуации]");
+TempSit2->Active(true);
+if(Pr)
+{
+FProg->Label1->Caption="Запись ситуаций";
+Zast->MClient->LoadTable(Sit, TempSit2, FProg->Label1, FProg->Progress);
+}
+else
+{
+Zast->MClient->LoadTable(Sit, TempSit2);
+}
+
+if(Zast->MClient->VerifyTable(Sit, TempSit2)==0)
+{
+Zast->MClient->SaveSit("Reference","Аспекты");
+
+Zast->MClient->WriteDiaryEvent("NetAspects","Конец сохранения ситуаций (главспец)","");
+Ret="Завершено";
+}
+Zast->MClient->DeleteTable(this, TempSit2);
+}
+Zast->MClient->DeleteTable(this, TempSit);
+
+if(Ret!="Завершено")
+{
+Zast->MClient->WriteDiaryEvent("Ошибка NetAspects","Сбой сохранения ситуаций (главспец)","");
+}
+}
+catch(...)
+{
+ Zast->MClient->WriteDiaryEvent("Ошибка NetAspects ","Ошибка сохранения ситуаций (главспец)","Ошибка "+IntToStr(GetLastError()));
+
+}
+return Ret;
+}
+//------------------------------------------------
+void __fastcall TDocuments::N18Click(TObject *Sender)
+{
+//Запись методики
+DataSetRefresh4->Execute();
+DataSetPost1->Execute();
+
+Zast->MClient->Start();
+ShowMessage(WriteMet(true));
+Zast->MClient->Stop();
+
+
+}
+//---------------------------------------------------------------------------
+String TDocuments::WriteMet(bool Pr)
+{
+String Ret="Ошибка записи";
+
+Zast->MClient->WriteDiaryEvent("NetAspects","Начало сохранения методики (главспец)","");
+
+try
+{
+PrepareMet();
+
+Zast->MClient->SetCommandText("Reference","Delete * From TempMet");
+Zast->MClient->CommandExec("Reference");
+
+MP<TADODataSet>Local(this);
+Local->Connection=Zast->ADOConn;
+Local->CommandText="Select TempMet.Номер, TempMet.Методика from TempMet Order by номер";
+Local->Active=true;
+
+Table* Server=Zast->MClient->CreateTable(this, Zast->ServerName, Zast->VDB[Zast->GetIDDBName("Reference")].ServerDB);
+
+Server->SetCommandText("Select TempMet.Номер, TempMet.Методика from TempMet Order by номер");
+Server->Active(true);
+if(Pr)
+{
+FProg->Label1->Caption="Запись методики";
+Zast->MClient->LoadTable(Local, Server, FProg->Label1, FProg->Progress);
+}
+else
+{
+Zast->MClient->LoadTable(Local, Server);
+}
+
+if(Zast->MClient->VerifyTable(Local, Server)==0)
+{
+Zast->MClient->SaveMetod("Reference");
+
+Zast->MClient->WriteDiaryEvent("NetAspects","Конец сохранения методики (главспец)","");
+Ret="Завершено";
+}
+
+Zast->MClient->DeleteTable(this, Server);
+
+if(Ret!="Завершено")
+{
+Zast->MClient->WriteDiaryEvent("Ошибка NetAspects","Сбой сохранения методики (главспец)","");
+}
+}
+catch(...)
+{
+ Zast->MClient->WriteDiaryEvent("Ошибка NetAspects ","Ошибка сохранения методики (главспец)","Ошибка "+IntToStr(GetLastError()));
+
+}
+return Ret;
+}
+//-------------------------------------------------
+void TDocuments::PrepareMet()
+{
+Zast->MClient->WriteDiaryEvent("NetAspects","Начало подготовки к сохранению методики (главспец)","");
+
+try
+{
+MP<TADOCommand>Comm(this);
+Comm->Connection=Zast->ADOConn;
+Comm->CommandText="Delete * from TempMet";
+Comm->Execute();
+
+MP<TADODataSet>Tab(this);
+Tab->Connection=Zast->ADOConn;
+Tab->CommandText="Select * from TempMet Order by Номер";
+Tab->Active=true;
+
+MP<TADODataSet>Tab1(this);
+Tab1->Connection=Zast->ADOConn;
+Tab1->CommandText="Select * from Методика Order by Номер";
+Tab1->Active=true;
+Tab1->First();
+
+MP<TDataSource>DS(this);
+DS->DataSet=Tab1;
+DS->Enabled=true;
+
+MP<TDBMemo>TDBM(this);
+TDBM->Parent=this;
+TDBM->Visible=false;
+TDBM->Width=1009;
+TDBM->DataSource=DS;
+TDBM->DataField="Методика";
+
+
+TStrings* TS=TDBM->Lines;
+int N=TS->Count;
+for(int i=0;i<N;i++)
+{
+String S=TS->Strings[i];
+Tab->Insert();
+Tab->FieldByName("Номер")->Value=i;
+Tab->FieldByName("Методика")->Value=S;
+Tab->Post();
+}
+
+Zast->MClient->WriteDiaryEvent("NetAspects","Конец подготовки к сохранению методики (главспец)","");
+}
+catch(...)
+{
+Zast->MClient->WriteDiaryEvent("Ошибка NetAspects","Ошибка подготовки к сохранению методики (главспец)","");
+}
+
+}
+//------------------------------------------------------------------
+
+
+
+
+void __fastcall TDocuments::N31Click(TObject *Sender)
+{
+FProg->Visible=true;
+FProg->Progress->Position=0;
+FProg->Progress->Min=0;
+FProg->Progress->Max=10;
+FProg->Progress->Position++;
+
+Zast->MClient->Start();
+
+FProg->Progress->Position++;
+FProg->Label1->Caption="Чтение методики оценки...";
+FProg->Label1->Repaint();
+ReadMet(false);
+FProg->Progress->Position++;
+FProg->Label1->Caption="Чтение списка подразделений...";
+FProg->Label1->Repaint();
+ReadPodr(false);
+FProg->Progress->Position++;
+FProg->Label1->Caption="Чтение справочника критериев оценки...";
+FProg->Label1->Repaint();
+ReadCrit(false);
+
+FProg->Progress->Position++;
+FProg->Label1->Caption="Чтение списка видов воздействий...";
+FProg->Label1->Repaint();
+ReadVidVozd(false);
+FProg->Progress->Position++;
+FProg->Label1->Caption="Чтение списка мероприятий...";
+FProg->Label1->Repaint();
+ReadMeropr(false);
+FProg->Progress->Position++;
+FProg->Label1->Caption="Чтение списка территорий...";
+FProg->Label1->Repaint();
+ReadTerr(false);
+FProg->Progress->Position++;
+FProg->Label1->Caption="Чтение списка видов деятельности...";
+FProg->Label1->Repaint();
+ReadDeyat(false);
+FProg->Progress->Position++;
+FProg->Label1->Caption="Чтение справочника экологических аспектов... ";
+FProg->Label1->Repaint();
+ReadAspect(false);
+
+FProg->Progress->Position++;
+FProg->Label1->Caption="Чтение списка ситуаций...";
+FProg->Label1->Repaint();
+ReadSit(false);
+
+FProg->Visible=false;
+Zast->MClient->Stop();
+ShowMessage("Завершено");
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TDocuments::N41Click(TObject *Sender)
+{
+SaveAllTables(false);
+
+ShowMessage("Завершено");
+}
+//---------------------------------------------------------------------------
+void TDocuments::SaveAllTables(bool Full)
+{
+FProg->Visible=true;
+FProg->Progress->Position=0;
+Zast->MClient->Start();
+if(Full)
+{
+
+FProg->Progress->Max=10;
+}
+else
+{
+FProg->Progress->Max=9;
+}
+
+FProg->Progress->Position++;
+FProg->Label1->Caption="Запись методики оценки...";
+FProg->Label1->Repaint();
+WriteMet(false);
+FProg->Progress->Position++;
+FProg->Label1->Caption="Запись списка подразделений...";
+FProg->Label1->Repaint();
+WritePodr(false);
+FProg->Progress->Position++;
+FProg->Label1->Caption="Запись справочника критериев оценки...";
+FProg->Label1->Repaint();
+WriteCryt(false);
+FProg->Progress->Position++;
+FProg->Label1->Caption="Запись списка видов воздействий...";
+FProg->Label1->Repaint();
+WriteVozd(false);
+FProg->Progress->Position++;
+FProg->Label1->Caption="Запись списка мероприятий...";
+FProg->Label1->Repaint();
+WriteMeropr(false);
+FProg->Progress->Position++;
+FProg->Label1->Caption="Запись списка территорий...";
+FProg->Label1->Repaint();
+WriteTerr(false);
+FProg->Progress->Position++;
+FProg->Label1->Caption="Запись списка видов деятельности...";
+FProg->Label1->Repaint();
+WriteDeyat(false);
+FProg->Progress->Position++;
+FProg->Label1->Caption="Запись справочника экологических аспектов... ";
+FProg->Label1->Repaint();
+WriteAspect(false);
+
+
+FProg->Progress->Position++;
+FProg->Label1->Caption="Запись списка ситуаций...";
+FProg->Label1->Repaint();
+WriteSit(false);
+
+if(Full)
+{
+FProg->Progress->Position++;
+FProg->Label1->Caption="Запись аспектов...";
+Zast->MClient->RegForm(MAsp);
+MAsp->SaveAspects();
+
+}
+
+
+FProg->Visible=false;
+Zast->MClient->Stop();
+}
+//---------------------------------------------------------------------------
+
+
+void __fastcall TDocuments::Button1Click(TObject *Sender)
+{
+//Запись методики
+DataSetRefresh4->Execute();
+DataSetPost1->Execute();
+
+Zast->MClient->Start();
+ShowMessage(WriteMet(true));
+Zast->MClient->Stop();        
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TDocuments::Button2Click(TObject *Sender)
+{
+//Запись подразделений
+DataSetRefresh3->Execute();
+DataSetPost3->Execute();
+Zast->MClient->Start();
+ShowMessage(WritePodr(true));
+Zast->MClient->Stop();        
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TDocuments::Button3Click(TObject *Sender)
+{
+DataSetRefresh2->Execute();
+DataSetPost2->Execute();
+Zast->MClient->Start();
+ShowMessage(WriteCryt(true));
+Zast->MClient->Stop();        
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TDocuments::Button4Click(TObject *Sender)
+{
+//запись видов воздействий
+//запись в Reference
+Zast->MClient->Start();
+ShowMessage(WriteVozd(true));
+Zast->MClient->Stop();
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TDocuments::Button5Click(TObject *Sender)
+{
+//запись видов мероприятий
+//запись в Reference
+Zast->MClient->Start();
+ShowMessage(WriteMeropr(true));
+Zast->MClient->Stop();        
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TDocuments::Button6Click(TObject *Sender)
+{
+//запись видов территорий
+//запись в Reference
+Zast->MClient->Start();
+ShowMessage(WriteTerr(true));
+Zast->MClient->Stop();        
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TDocuments::Button7Click(TObject *Sender)
+{
+//запись видов деятельности
+//запись в Reference
+Zast->MClient->Start();
+ShowMessage(WriteDeyat(true));
+Zast->MClient->Stop();        
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TDocuments::Button8Click(TObject *Sender)
+{
+//запись экологических аспектов
+//запись в Reference
+Zast->MClient->Start();
+ShowMessage(WriteAspect(true));
+Zast->MClient->Stop();        
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TDocuments::Button9Click(TObject *Sender)
+{
+//Запись ситуаций
+DataSetRefresh1->Execute();
+DataSetPost4->Execute();
+Zast->MClient->Start();
+ShowMessage(WriteSit(true));
+Zast->MClient->Stop();
+}
+//---------------------------------------------------------------------------
+
+
+//---------------------------------------------------------------------------
+
+void __fastcall TDocuments::N19Click(TObject *Sender)
+{
+MAsp->ShowModal();
+}
+//---------------------------------------------------------------------------
+void __fastcall TDocuments::WMSysCommand(TMessage & Msg)
+{
+  switch (Msg.WParam)
+  {
+case SC_MINIMIZE:
+{
+Application->Minimize();
+break;
+}
+
+default:
+DefWindowProc(Handle,Msg.Msg,Msg.WParam,Msg.LParam);
+
+ }
+}
+
+
+
+
+
+
+
+//-------------------------------------------------------------------------------
+void __fastcall TDocuments::N00111Click(TObject *Sender)
+{
+//Ф001.1
+Report1->Role=2;
+Report1->Flt="";
+Report1->FltName="Отключен";
+Report1->PodrComText="select * From Подразделения Order by [Название подразделения]";
+
+Report1->NumRep=1;
+Report1->RepBase=Zast->ADOAspect;
+Report1->ShowModal();
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TDocuments::N00121Click(TObject *Sender)
+{
+//Ф001.2
+Report1->Role=2;
+Report1->Flt="";
+Report1->FltName="Отключен";
+Report1->PodrComText="select * From Подразделения Order by [Название подразделения]";
+
+Report1->NumRep=2;
+Report1->RepBase=Zast->ADOAspect;
+Report1->ShowModal();
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TDocuments::N22Click(TObject *Sender)
+{
+//Сводный отчет
+FSvod->ShowModal();
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TDocuments::N23Click(TObject *Sender)
+{
+FAbout->ShowModal();
+}
+//---------------------------------------------------------------------------
+
+
+
+
+
+void __fastcall TDocuments::FormKeyUp(TObject *Sender, WORD &Key,
+      TShiftState Shift)
+{
+if(Key==112)
+{
+Application->HelpFile=ExtractFilePath(Application->ExeName)+"NetAspects.HLP";
+switch (PageControl1->TabIndex)
+{
+ case 0:
+ {
+  Application->HelpJump("IDH_РЕДАКТИРОВАНИЕ_МЕТОДИКИ");
+  break;
+ }
+ case 1:
+ {
+  Application->HelpJump("IDH_РЕДАКТИРОВАНИЕ_ПОДРАЗДЕЛЕНИЙ");
+  break;
+ }
+ case 2:
+ {
+  Application->HelpJump("IDH_РЕДАКТИРОВАНИЕ_КРИТЕРИЕВ");
+  break;
+ }
+ case 3:
+ {
+  Application->HelpJump("IDH_РЕДАКТИРОВАНИЕ_СИТУАЦИЙ");
+  break;
+ }
+ case 4: case 5: case 6: case 7: case 8:
+ {
+  Application->HelpJump("IDH_РЕДАКТИРОВАНИЕ_СПРАВОЧНИКОВ");
+  break;
+ }
+}
+}
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TDocuments::N1Click(TObject *Sender)
+{
+Application->HelpFile=ExtractFilePath(Application->ExeName)+"NetAspects.HLP";
+  Application->HelpJump("IDH_СТАРТ_ГЛАВСПЕЦ");
+}
+//---------------------------------------------------------------------------
+

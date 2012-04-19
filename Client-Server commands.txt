@@ -1,0 +1,14 @@
+1 - Передача своего IP адреса серверу
+Command:1;IP
+2 - Передача имени клиента и пароля
+Command:2;NumRole,NumName,Password
+3 - Добавление базы данных
+Command:3;NameDatabase
+4 - get_DatabaseConnect запрос соединения с базой данных
+Command:4;IDDB
+5 - SetDatabaseConnect установление соединения с базой данных
+Command:5;IDDB,Connect
+6 - SetCommandText передача строки запроса
+Command:6;NameDB,SQLRext
+7 - CommandExec - Выполнение запроса на исполнение
+Command:7;NameDB
