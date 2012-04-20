@@ -1,0 +1,65 @@
+//---------------------------------------------------------------------------
+#include <vector>
+#include <ADODB.hpp>
+#include <DB.hpp>
+using namespace std;
+#ifndef ServerClassH
+#define ServerClassH
+//---------------------------------------------------------------------------
+struct DatabaseClient
+{
+long IDDB;
+TADOConnection *Database;
+TADOCommand* Command;
+String FileName;
+};
+//-----------------------------------------------------------------------
+class Client;
+class mForm;
+class mTable;
+class Diary;
+
+class Clients
+{
+ private:
+TComponent* pOwner;
+String DatabasePath;
+String DiaryBase;
+
+vector<Client*>VClients;
+vector<Client*>::iterator IVC;
+
+ public:
+Clients(TComponent* Owner, String DiaryBase);
+~Clients();
+
+};
+//-------------------------------------------------------------------------
+class Client
+{
+ private:
+
+
+ public:
+
+
+};
+//-------------------------------------------------------------------------
+class mForm
+{
+ public:
+
+ private:
+
+};
+//-------------------------------------------------------------------------
+class Diary
+{
+ private:
+
+
+ public:
+
+
+};
+#endif
