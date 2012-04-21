@@ -299,6 +299,8 @@ object Form1: TForm1
     ServerType = stNonBlocking
     OnClientConnect = ServerSocketClientConnect
     OnClientDisconnect = ServerSocketClientDisconnect
+    OnClientRead = ServerSocketClientRead
+    OnClientError = ServerSocketClientError
     Left = 248
     Top = 104
   end

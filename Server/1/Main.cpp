@@ -21,7 +21,7 @@ Block=-1;
 
 PageControl1->ActivePageIndex=0;
 
-String Path=ExtractFilePath(Application->ExeName);
+Path=ExtractFilePath(Application->ExeName);
 MP<TIniFile>Ini(Path+"Server.ini");
 int NumBase=Ini->ReadInteger("Main","NumDatabases",0);
 int DiaryStoreDays=Ini->ReadInteger("Main","DiaryStoreDays",0);
@@ -41,6 +41,19 @@ void __fastcall TForm1::ServerSocketClientConnect(TObject *Sender,
 Client *C=new Client();
 C->Socket=Socket;
 Cl->VClients.push_back(C);
+
+//Передача команды на запрос IP адреса
+String Mess="Command:1;0|";
+/*
+for(unsigned int i=0;i<Cl->VClients.size();i++)
+{
+ if(Socket==Cl->VClients[i]->Socket)
+ {
+  Cl->VClients[i]->Socket->SendText(Mess);
+ }
+}
+*/
+Socket->SendText(Mess);
 }
 //---------------------------------------------------------------------------
 void __fastcall TForm1::ServerSocketClientDisconnect(TObject *Sender,
@@ -54,6 +67,30 @@ for(unsigned int i=0;i<Cl->VClients.size();i++)
   Cl->VClients.erase(Cl->IVC);
  }
  Cl->IVC++;
+}
+}
+//---------------------------------------------------------------------------
+void __fastcall TForm1::ServerSocketClientError(TObject *Sender,
+      TCustomWinSocket *Socket, TErrorEvent ErrorEvent, int &ErrorCode)
+{
+//ErrorCode=0;
+}
+//---------------------------------------------------------------------------
+void __fastcall TForm1::ServerSocketClientRead(TObject *Sender,
+      TCustomWinSocket *Socket)
+{
+String Mess=Socket->ReceiveText();
+if(Mess.Length()!=0)
+{
+//Выделение параметров 
+for(unsigned int i=0;i<Cl->VClients.size();i++)
+{
+ if(Cl->VClients[i]->Socket==Socket)
+ {
+
+ }
+ Cl->IVC++;
+}
 }
 }
 //---------------------------------------------------------------------------

@@ -4,9 +4,7 @@
   <MACROS>
     <VERSION value="BCB.06.00"/>
     <PROJECT value="AdminARM.exe"/>
-    <OBJFILES value="AdminARM.obj Main.obj ..\..\..\Server\1\CodeText.obj 
-      ..\..\..\Server\1\MasterPointer.obj ..\..\..\Server\1\MDBConnector.obj 
-      ..\..\..\Server\1\ServerClass.obj"/>
+    <OBJFILES value="AdminARM.obj Main.obj ClientClass.obj MDBConnector.obj"/>
     <RESFILES value="AdminARM.res"/>
     <IDLFILES value=""/>
     <IDLGENFILES value=""/>
@@ -14,7 +12,7 @@
     <RESDEPEN value="$(RESFILES) Main.dfm"/>
     <LIBFILES value=""/>
     <LIBRARIES value="dclusr.lib"/>
-    <SPARELIBS value="vcl.lib rtl.lib dclusr.lib"/>
+    <SPARELIBS value="vcl.lib rtl.lib dclusr.lib dbrtl.lib adortl.lib"/>
     <PACKAGES value="vcl.bpi rtl.bpi dbrtl.bpi adortl.bpi vcldb.bpi vclx.bpi bdertl.bpi 
       vcldbx.bpi ibxpress.bpi dsnap.bpi cds.bpi bdecds.bpi qrpt.bpi teeui.bpi 
       teedb.bpi tee.bpi dss.bpi teeqr.bpi visualclx.bpi visualdbclx.bpi 
@@ -22,7 +20,7 @@
       inetdbbde.bpi inetdbxpress.bpi inetdb.bpi nmfast.bpi webdsnap.bpi 
       bcbie.bpi websnap.bpi soaprtl.bpi dclocx.bpi dbexpress.bpi dbxcds.bpi 
       indy.bpi bcb2kaxserver.bpi"/>
-    <PATHCPP value=".;..\..\..\Server\1;..\..\..\Server\1;..\..\..\Server\1;..\..\..\Server\1"/>
+    <PATHCPP value=".;"/>
     <PATHPAS value=".;"/>
     <PATHRC value=".;"/>
     <PATHASM value=".;"/>
@@ -61,10 +59,8 @@
       <FILE FILENAME="AdminARM.res" FORMNAME="" UNITNAME="AdminARM.res" CONTAINERID="ResTool" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="AdminARM.cpp" FORMNAME="" UNITNAME="AdminARM" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="Main.cpp" FORMNAME="Form1" UNITNAME="Main" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
-      <FILE FILENAME="..\..\..\Server\1\CodeText.cpp" FORMNAME="" UNITNAME="CodeText.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
-      <FILE FILENAME="..\..\..\Server\1\MasterPointer.cpp" FORMNAME="" UNITNAME="MasterPointer.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
-      <FILE FILENAME="..\..\..\Server\1\MDBConnector.cpp" FORMNAME="" UNITNAME="MDBConnector.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
-      <FILE FILENAME="..\..\..\Server\1\ServerClass.cpp" FORMNAME="" UNITNAME="ServerClass" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="ClientClass.cpp" FORMNAME="" UNITNAME="ClientClass" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="MDBConnector.cpp" FORMNAME="" UNITNAME="MDBConnector" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
   </FILELIST>
   <BUILDTOOLS>
   </BUILDTOOLS>

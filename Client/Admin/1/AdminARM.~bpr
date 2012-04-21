@@ -4,7 +4,7 @@
   <MACROS>
     <VERSION value="BCB.06.00"/>
     <PROJECT value="AdminARM.exe"/>
-    <OBJFILES value="AdminARM.obj Main.obj"/>
+    <OBJFILES value="AdminARM.obj Main.obj ClientClass.obj"/>
     <RESFILES value="AdminARM.res"/>
     <IDLFILES value=""/>
     <IDLGENFILES value=""/>
@@ -12,7 +12,7 @@
     <RESDEPEN value="$(RESFILES) Main.dfm"/>
     <LIBFILES value=""/>
     <LIBRARIES value="dclusr.lib"/>
-    <SPARELIBS value="vcl.lib rtl.lib dclusr.lib"/>
+    <SPARELIBS value="vcl.lib rtl.lib dclusr.lib dbrtl.lib adortl.lib"/>
     <PACKAGES value="vcl.bpi rtl.bpi dbrtl.bpi adortl.bpi vcldb.bpi vclx.bpi bdertl.bpi 
       vcldbx.bpi ibxpress.bpi dsnap.bpi cds.bpi bdecds.bpi qrpt.bpi teeui.bpi 
       teedb.bpi tee.bpi dss.bpi teeqr.bpi visualclx.bpi visualdbclx.bpi 
@@ -30,13 +30,13 @@
     <USERDEFINES value="_DEBUG"/>
     <SYSDEFINES value="_RTLDLL;NO_STRICT;USEPACKAGES"/>
     <MAINSOURCE value="AdminARM.cpp"/>
-    <INCLUDEPATH value="H_A_Sockets\Client\Admin\1;&quot;D:\Program Files (x86)\Borland\CBuilder6\Imports&quot;;&quot;D:\Program Files (x86)\Borland\CBuilder6\Projects&quot;;C:\Users\Алекс\Desktop\proba_Notify\Client2;$(BCB)\include;$(BCB)\include\vcl"/>
-    <LIBPATH value="H_A_Sockets\Client\Admin\1;&quot;D:\Program Files (x86)\Borland\CBuilder6\Imports&quot;;&quot;D:\Program Files (x86)\Borland\CBuilder6\Projects&quot;;C:\Users\Алекс\Desktop\proba_Notify\Client2;$(BCB)\Projects\Lib;$(BCB)\lib\obj;$(BCB)\lib"/>
+    <INCLUDEPATH value="..\..\..\..;..\..\..\Server\1;H_A_Sockets\Client\Admin\1;&quot;D:\Program Files (x86)\Borland\CBuilder6\Imports&quot;;&quot;D:\Program Files (x86)\Borland\CBuilder6\Projects&quot;;C:\Users\Алекс\Desktop\proba_Notify\Client2;$(BCB)\include;$(BCB)\include\vcl"/>
+    <LIBPATH value="..\..\..\..;..\..\..\Server\1;H_A_Sockets\Client\Admin\1;&quot;D:\Program Files (x86)\Borland\CBuilder6\Imports&quot;;&quot;D:\Program Files (x86)\Borland\CBuilder6\Projects&quot;;C:\Users\Алекс\Desktop\proba_Notify\Client2;$(BCB)\Projects\Lib;$(BCB)\lib\obj;$(BCB)\lib"/>
     <WARNINGS value="-w-par"/>
     <OTHERFILES value=""/>
   </MACROS>
   <OPTIONS>
-    <IDLCFLAGS value="-IH_A_Sockets\Client\Admin\1 
+    <IDLCFLAGS value="-I..\..\..\.. -I..\..\..\Server\1 -IH_A_Sockets\Client\Admin\1 
       -I&quot;D:\Program Files (x86)\Borland\CBuilder6\Imports&quot; 
       -I&quot;D:\Program Files (x86)\Borland\CBuilder6\Projects&quot; 
       -IC:\Users\Алекс\Desktop\proba_Notify\Client2 -I$(BCB)\include 
@@ -59,6 +59,7 @@
       <FILE FILENAME="AdminARM.res" FORMNAME="" UNITNAME="AdminARM.res" CONTAINERID="ResTool" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="AdminARM.cpp" FORMNAME="" UNITNAME="AdminARM" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="Main.cpp" FORMNAME="Form1" UNITNAME="Main" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="ClientClass.cpp" FORMNAME="" UNITNAME="ClientClass" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
   </FILELIST>
   <BUILDTOOLS>
   </BUILDTOOLS>

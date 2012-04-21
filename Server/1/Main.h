@@ -60,9 +60,15 @@ __published:	// IDE-managed Components
           TCustomWinSocket *Socket);
         void __fastcall ServerSocketClientDisconnect(TObject *Sender,
           TCustomWinSocket *Socket);
+        void __fastcall ServerSocketClientError(TObject *Sender,
+          TCustomWinSocket *Socket, TErrorEvent ErrorEvent,
+          int &ErrorCode);
+        void __fastcall ServerSocketClientRead(TObject *Sender,
+          TCustomWinSocket *Socket);
 private:	// User declarations
 int Block;
 Clients* Cl;
+String Path;
 public:		// User declarations
         __fastcall TForm1(TComponent* Owner);
 };
