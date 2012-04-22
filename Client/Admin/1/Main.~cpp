@@ -18,8 +18,7 @@ __fastcall TForm1::TForm1(TComponent* Owner)
 {
 Path=ExtractFilePath(Application->ExeName);
 MP<TIniFile>Ini(Path+"Admin.ini");
-String Server=Ini->ReadString("Main","Server","localhost");
-int Port=Ini->ReadInteger("Main","Port",2000);
+
 int AbsPathAspect=Ini->ReadInteger("Main","AbsPathAspect",1);
 String AspectBase=Ini->ReadString("Main","AspectBase","");
 if(AbsPathAspect==0)
@@ -51,10 +50,8 @@ Database->ClearArchive(Days);
 Database->PackDB();
 Database->Backup("Archive");
 
-ClientSocket->Address=Server;
-ClientSocket->Host=Server;
-ClientSocket->Port=Port;
-ClientSocket->Active=true;
+
+
 }
 //---------------------------------------------------------------------------
 void __fastcall TForm1::ClientSocketRead(TObject *Sender,
@@ -78,7 +75,7 @@ Parameters.clear();
 for(int i=0;i<NumPar;i++)
 {
 String Par;
- int M=S.Pos(",");
+ int M=S.Pos("|");
  if(M>0)
  {
  Par=S.SubString(1,M-1);
@@ -90,7 +87,7 @@ String Par;
  S=S.SubString(M+1,S.Length());
  Parameters.push_back(Par);
 }
-CommandExec(Comm, Parameters);
+MClient->CommandExec(Comm, Parameters);
 //}
 }
 }
@@ -102,20 +99,20 @@ void __fastcall TForm1::ClientSocketWrite(TObject *Sender,
 //
 }
 //---------------------------------------------------------------------------
-void TForm1::CommandExec(int Comm, vector<String>Parameters)
+void __fastcall TForm1::FormShow(TObject *Sender)
 {
-switch(Comm)
+Path=ExtractFilePath(Application->ExeName);
+MP<TIniFile>Ini(Path+"Admin.ini");
+String Server=Ini->ReadString("Main","Server","localhost");
+int Port=Ini->ReadInteger("Main","Port",2000);
+MClient=new Client(ClientSocket, ActionManager1);
+MClient->Connect(Server, Port);
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm1::Action1Execute(TObject *Sender)
 {
- case 1:
- {
-
-  break;
- }
- case 2:
- {
-
- break;
- }
+ShowMessage(this->Name);
 }
-}
-//------------------------------------------------------------------------
+//---------------------------------------------------------------------------
+

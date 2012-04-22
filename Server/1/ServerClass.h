@@ -1,4 +1,5 @@
 //---------------------------------------------------------------------------
+#include <vcl.h>
 #include <vector>
 #include <ADODB.hpp>
 #include <DB.hpp>
@@ -34,6 +35,8 @@ Clients(TComponent* Owner, String DiaryBase);
 ~Clients();
 vector<Client*>VClients;
 vector<Client*>::iterator IVC;
+
+
 };
 //-------------------------------------------------------------------------
 class Client
@@ -46,8 +49,10 @@ Client();
 ~Client();
 TCustomWinSocket *Socket;
 String IP;
+String AppPatch;
+int LastCommand;
 
-
+void CommandExec(int Comm, vector<String>);
 };
 //-------------------------------------------------------------------------
 class mForm

@@ -1,7 +1,23 @@
-1 - ѕередача своего IP адреса серверу
-Command:1;IP
+1 - ѕередача своего IP адреса и пути на сервер
+Command:1;2|IP|AppPatch
+3 - –егистраци€ формы на сервере
+Command:3;1|NameForm
+
+
+
+
+
 2 - ѕередача имени клиента и парол€
-Command:2;NumRole,NumName,Password
+Command:2;3|NumRole|NumName|Password
+
+
+
+
+
+
+
+
+
 3 - ƒобавление базы данных
 Command:3;NameDatabase
 4 - get_DatabaseConnect запрос соединени€ с базой данных
@@ -9,6 +25,6 @@ Command:4;IDDB
 5 - SetDatabaseConnect установление соединени€ с базой данных
 Command:5;IDDB,Connect
 6 - SetCommandText передача строки запроса
-Command:6;NameDB,SQLRext
+Command:6;NameDB,SQLText
 7 - CommandExec - ¬ыполнение запроса на исполнение
 Command:7;NameDB

@@ -35,3 +35,31 @@ Client::~Client()
 
 }
 //***************************************************
+void Client::CommandExec(int Comm, vector<String>Parameters)
+{
+if(LastCommand==Comm | LastCommand==0)
+{
+ switch(Comm)
+ {
+  case 1:
+  {
+   //Ответ на команду запроса IP у клиента
+   this->IP=Parameters[0];
+   this->AppPatch=Parameters[1];
+   //Передача сигнала готовности к дальнейшей работе
+   //Ответ на него не предусмотрен
+   LastCommand=0;
+   this->Socket->SendText("Command:2;0|");
+  break;
+  }
+  case 3:
+  {
+  //Организовать регистрацию формы на сервере
+   ShowMessage(Parameters[0]);
+   break;
+  }
+ }
+
+}
+}
+//---------------------------------------------------------------------------

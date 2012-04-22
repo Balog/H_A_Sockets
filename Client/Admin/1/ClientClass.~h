@@ -4,7 +4,10 @@
 #include <vector>
 #include <ADODB.hpp>
 #include <DB.hpp>
-
+#include <ScktComp.hpp>
+#include <ActnList.hpp>
+#include <ActnMan.hpp>
+using namespace std;
 #ifndef ClientClassH
 #define ClientClassH
 //---------------------------------------------------------------------------
@@ -17,19 +20,40 @@ struct DBItem
 class Form;
 class Table;
 //****************************************
+struct WaitAction
+{
+int WaitCommand;
+vector<String>ParamComm;
+};
+//******************************************
 class Client
 {
 public:
-Client();
+Client(TClientSocket *ClientSocket, TActionManager *ActMan);
 ~Client();
-private:
 
+void Connect(String ServerName, int Port);
+void CommandExec(int Comm, vector<String>);
+Form* RegForm(String FormName);
+private:
+String GetIP();
+TClientSocket *Socket;
+WaitAction Act;
+TActionManager *ActionManager;
+
+vector<Form*>VForms;
+vector<Form*>::iterator IVF;
+
+void StartAction(String NameAction);
 };
 //****************************************
 class Form
 {
 public:
+Form();
+~Form();
 
+void RegForm(String FormName);
 private:
 
 };
@@ -40,6 +64,6 @@ public:
 
 private:
 
-}
+};
 //****************************************
 #endif

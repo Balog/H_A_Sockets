@@ -4,7 +4,7 @@
   <MACROS>
     <VERSION value="BCB.06.00"/>
     <PROJECT value="AdminARM.exe"/>
-    <OBJFILES value="AdminARM.obj Main.obj ClientClass.obj"/>
+    <OBJFILES value="AdminARM.obj Main.obj ClientClass.obj MDBConnector.obj"/>
     <RESFILES value="AdminARM.res"/>
     <IDLFILES value=""/>
     <IDLGENFILES value=""/>
@@ -60,6 +60,7 @@
       <FILE FILENAME="AdminARM.cpp" FORMNAME="" UNITNAME="AdminARM" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="Main.cpp" FORMNAME="Form1" UNITNAME="Main" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="ClientClass.cpp" FORMNAME="" UNITNAME="ClientClass" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="MDBConnector.cpp" FORMNAME="" UNITNAME="MDBConnector" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
   </FILELIST>
   <BUILDTOOLS>
   </BUILDTOOLS>

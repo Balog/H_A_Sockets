@@ -9,7 +9,9 @@
 #include <ExtCtrls.hpp>
 #include <Menus.hpp>
 #include <ScktComp.hpp>
-//#include "ClientClass.h"
+#include "ClientClass.h"
+#include <ActnList.hpp>
+#include <ActnMan.hpp>
 #include <vector>
 #include "MDBConnector.h"
 #ifndef MainH
@@ -27,6 +29,7 @@ String ServerDB;
 int NumDatabase;
 };
 //---------------------------------------------------------------------------
+
 class TForm1 : public TForm
 {
 __published:	// IDE-managed Components
@@ -54,21 +57,28 @@ __published:	// IDE-managed Components
         TMenuItem *N9;
         TTimer *DBTimer;
         TClientSocket *ClientSocket;
+        TActionManager *ActionManager1;
+        TAction *Action1;
         void __fastcall ClientSocketRead(TObject *Sender,
           TCustomWinSocket *Socket);
         void __fastcall ClientSocketWrite(TObject *Sender,
           TCustomWinSocket *Socket);
+        void __fastcall FormShow(TObject *Sender);
+        void __fastcall Action1Execute(TObject *Sender);
 private:	// User declarations
 String Path;
 String AdminDatabase;
 int LicCount;
 
 vector<String>Parameters;
-void CommandExec(int Comm, vector<String>);
+
+String GetIP();
 public:		// User declarations
         __fastcall TForm1(TComponent* Owner);
 
 MDBConnector* Database;
+
+Client *MClient;
 };
 //---------------------------------------------------------------------------
 extern PACKAGE TForm1 *Form1;

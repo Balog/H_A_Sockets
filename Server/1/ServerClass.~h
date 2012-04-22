@@ -2,6 +2,7 @@
 #include <vector>
 #include <ADODB.hpp>
 #include <DB.hpp>
+#include <ScktComp.hpp>
 using namespace std;
 #ifndef ServerClassH
 #define ServerClassH
@@ -26,12 +27,14 @@ TComponent* pOwner;
 String DatabasePath;
 String DiaryBase;
 
-vector<Client*>VClients;
-vector<Client*>::iterator IVC;
+
 
  public:
 Clients(TComponent* Owner, String DiaryBase);
 ~Clients();
+vector<Client*>VClients;
+vector<Client*>::iterator IVC;
+
 
 };
 //-------------------------------------------------------------------------
@@ -41,8 +44,13 @@ class Client
 
 
  public:
+Client();
+~Client();
+TCustomWinSocket *Socket;
+String IP;
+int LastCommand;
 
-
+void CommandExec(int Comm, vector<String>);
 };
 //-------------------------------------------------------------------------
 class mForm

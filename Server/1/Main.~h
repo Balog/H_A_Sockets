@@ -63,10 +63,13 @@ __published:	// IDE-managed Components
         void __fastcall ServerSocketClientError(TObject *Sender,
           TCustomWinSocket *Socket, TErrorEvent ErrorEvent,
           int &ErrorCode);
+        void __fastcall ServerSocketClientRead(TObject *Sender,
+          TCustomWinSocket *Socket);
 private:	// User declarations
 int Block;
 Clients* Cl;
 String Path;
+vector<String>Parameters;
 public:		// User declarations
         __fastcall TForm1(TComponent* Owner);
 };

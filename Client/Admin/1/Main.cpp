@@ -18,8 +18,7 @@ __fastcall TForm1::TForm1(TComponent* Owner)
 {
 Path=ExtractFilePath(Application->ExeName);
 MP<TIniFile>Ini(Path+"Admin.ini");
-String Server=Ini->ReadString("Main","Server","localhost");
-int Port=Ini->ReadInteger("Main","Port",2000);
+
 int AbsPathAspect=Ini->ReadInteger("Main","AbsPathAspect",1);
 String AspectBase=Ini->ReadString("Main","AspectBase","");
 if(AbsPathAspect==0)
@@ -51,10 +50,8 @@ Database->ClearArchive(Days);
 Database->PackDB();
 Database->Backup("Archive");
 
-ClientSocket->Address=Server;
-ClientSocket->Host=Server;
-ClientSocket->Port=Port;
-ClientSocket->Active=true;
+
+
 }
 //---------------------------------------------------------------------------
 void __fastcall TForm1::ClientSocketRead(TObject *Sender,
@@ -78,7 +75,7 @@ Parameters.clear();
 for(int i=0;i<NumPar;i++)
 {
 String Par;
- int M=S.Pos(",");
+ int M=S.Pos("|");
  if(M>0)
  {
  Par=S.SubString(1,M-1);
@@ -90,7 +87,7 @@ String Par;
  S=S.SubString(M+1,S.Length());
  Parameters.push_back(Par);
 }
-CommandExec(Comm, Parameters);
+MClient->CommandExec(Comm, Parameters);
 //}
 }
 }
@@ -102,50 +99,22 @@ void __fastcall TForm1::ClientSocketWrite(TObject *Sender,
 //
 }
 //---------------------------------------------------------------------------
-void TForm1::CommandExec(int Comm, vector<String>Parameters)
+void __fastcall TForm1::FormShow(TObject *Sender)
 {
-switch(Comm)
+Path=ExtractFilePath(Application->ExeName);
+MP<TIniFile>Ini(Path+"Admin.ini");
+String Server=Ini->ReadString("Main","Server","localhost");
+int Port=Ini->ReadInteger("Main","Port",2000);
+MClient=new Client(ClientSocket, ActionManager1);
+MClient->Connect(Server, Port);
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm1::RegFormExecute(TObject *Sender)
 {
- case 1:
- {
-  //ShowMessage(GetIP());
-  String Mess="Command:1;1|"+GetIP();
-  ClientSocket->Socket->SendText(Mess);
-  break;
- }
- case 2:
- {
+//ShowMessage(this->Name);
 
- break;
- }
+MClient->RegForm(this->Name);
 }
-}
-//------------------------------------------------------------------------
-String TForm1::GetIP()
-{
-    String addr="";
+//---------------------------------------------------------------------------
 
-    const int WSVer = 0x101;
-    WSAData wsaData;
-    hostent *h;
-    char Buf[128];
-    if (WSAStartup(WSVer, &wsaData) == 0)
-    {
-    if (gethostname(&Buf[0], 128) == 0)
-    {
-    h = gethostbyname(&Buf[0]);
-    if (h != NULL)
-    {
-    //ShowMessage(inet_ntoa (*(reinterpret_cast<in_addr *>(*(h->h_addr_list)))));
-    addr=inet_ntoa (*(reinterpret_cast<in_addr *>(*(h->h_addr_list))));
-
-    }
-    else MessageBox(0,"Вы не в сети. И IP адреса у вас нет.",0,0);
-    }
-    WSACleanup;
-    }
-
-
-    return addr;
-}
-//-------------------------------------------------------------------------

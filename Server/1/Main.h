@@ -69,6 +69,7 @@ private:	// User declarations
 int Block;
 Clients* Cl;
 String Path;
+vector<String>Parameters;
 public:		// User declarations
         __fastcall TForm1(TComponent* Owner);
 };

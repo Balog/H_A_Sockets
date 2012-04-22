@@ -12,6 +12,7 @@ object Form1: TForm1
   Font.Style = []
   Menu = MainMenu1
   OldCreateOrder = False
+  OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 13
   object Label1: TLabel
@@ -138,5 +139,13 @@ object Form1: TForm1
     OnWrite = ClientSocketWrite
     Left = 32
     Top = 128
+  end
+  object ActionManager1: TActionManager
+    Left = 72
+    Top = 128
+    object RegForm: TAction
+      Caption = 'RegForm'
+      OnExecute = RegFormExecute
+    end
   end
 end
