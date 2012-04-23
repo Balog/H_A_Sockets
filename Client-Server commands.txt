@@ -2,6 +2,8 @@
 Command:1;2|IP|AppPatch
 3 - Регистрация формы на сервере
 Command:3;1|NameForm
+4 - Подключение базы данных
+Command:4;2|NameDatabase|Connect
 
 
 

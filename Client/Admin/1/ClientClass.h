@@ -23,6 +23,7 @@ class Table;
 struct WaitAction
 {
 int WaitCommand;
+int NextCommand;
 vector<String>ParamComm;
 };
 //******************************************
@@ -35,16 +36,23 @@ Client(TClientSocket *ClientSocket, TActionManager *ActMan);
 void Connect(String ServerName, int Port);
 void CommandExec(int Comm, vector<String>);
 Form* RegForm(String FormName);
-private:
-String GetIP();
-TClientSocket *Socket;
-WaitAction Act;
-TActionManager *ActionManager;
 
+WaitAction Act;
 vector<Form*>VForms;
 vector<Form*>::iterator IVF;
 
 void StartAction(String NameAction);
+void ConnectDatabase(String Name, bool Connect);
+void ReadTable(String NameDB, String ServerSQL, String ClientSQL); 
+private:
+String GetIP();
+TClientSocket *Socket;
+
+TActionManager *ActionManager;
+
+
+
+
 };
 //****************************************
 class Form
@@ -53,6 +61,7 @@ public:
 Form();
 ~Form();
 String FormName;
+int IDF;
 
 void RegForm(String FormName);
 private:

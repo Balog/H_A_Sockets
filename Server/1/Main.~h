@@ -1,7 +1,6 @@
 //---------------------------------------------------------------------------
 
-#ifndef MainH
-#define MainH
+
 //---------------------------------------------------------------------------
 #include <Classes.hpp>
 #include <Controls.hpp>
@@ -14,11 +13,16 @@
 #include <Menus.hpp>
 #include <ScktComp.hpp>
 #include "ServerClass.h"
+#include <stdio.h>
+#include <ActnList.hpp>
+#include <ActnMan.hpp>
 #include <vector>
 using namespace std;
 const MyTrayIcon = WM_USER+1;
 
 //---------------------------------------------------------------------------
+#ifndef MainH
+/*
 struct BaseItem
 {
 String Name;
@@ -27,6 +31,9 @@ bool MainSpec;
 String FileName;
 int LicCount;
 };
+*/
+#define MainH
+
 //-----------------------------------------
 class TForm1 : public TForm
 {
@@ -56,6 +63,8 @@ __published:	// IDE-managed Components
         TPopupMenu *PopupMenu2;
         TMenuItem *N5;
         TServerSocket *ServerSocket;
+        TActionManager *ActionManager1;
+        TAction *ConnectDatabase;
         void __fastcall ServerSocketClientConnect(TObject *Sender,
           TCustomWinSocket *Socket);
         void __fastcall ServerSocketClientDisconnect(TObject *Sender,
@@ -65,11 +74,18 @@ __published:	// IDE-managed Components
           int &ErrorCode);
         void __fastcall ServerSocketClientRead(TObject *Sender,
           TCustomWinSocket *Socket);
+        void __fastcall FormDestroy(TObject *Sender);
 private:	// User declarations
 int Block;
 Clients* Cl;
 String Path;
 vector<String>Parameters;
+//vector<BaseItem>VBases;
+
+int AnalizLic(String Text, String Pass);
+String GetFileDatabase(String NameDatabase);
+int ReadRes(String Key1, String Key2);
+int Propis(String S);
 public:		// User declarations
         __fastcall TForm1(TComponent* Owner);
 };

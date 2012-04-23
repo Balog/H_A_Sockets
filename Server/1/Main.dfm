@@ -1,6 +1,6 @@
 object Form1: TForm1
-  Left = 192
-  Top = 107
+  Left = 240
+  Top = 143
   Width = 310
   Height = 320
   Caption = #1057#1077#1088#1074#1077#1088
@@ -11,6 +11,7 @@ object Form1: TForm1
   Font.Name = 'MS Sans Serif'
   Font.Style = []
   OldCreateOrder = False
+  OnDestroy = FormDestroy
   PixelsPerInch = 96
   TextHeight = 13
   object PageControl1: TPageControl
@@ -303,5 +304,12 @@ object Form1: TForm1
     OnClientError = ServerSocketClientError
     Left = 248
     Top = 104
+  end
+  object ActionManager1: TActionManager
+    Left = 248
+    Top = 152
+    object ConnectDatabase: TAction
+      Caption = 'ConnectDatabase'
+    end
   end
 end

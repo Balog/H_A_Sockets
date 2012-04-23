@@ -32,13 +32,119 @@ ServerSocket->Port=Port;
 Cl=new Clients(this, "");
 
 
+Cl->VBases.clear();
+Base->Clear();
+for(int i=0;i<NumBase;i++)
+{
+ String NameSect="Base"+IntToStr(i+1);
+ BaseItem BI;
+
+ BI.Name=Ini->ReadString(NameSect,"Name","");
+
+int MS=Ini->ReadInteger(NameSect,"MainSpec",0);
+if(MS==0)
+{
+BI.MainSpec=false;
+ Base->Items->Add(BI.Name);
+
+ String Lic=Ini->ReadString(NameSect,"License","");
+
+ FILE *F;
+String File=ExtractFilePath(Application->ExeName)+Lic;
+//Form1->MyClients->DiaryEvent->WriteEvent(Now(),"Не определен", "Еще не определен", "Лицензия", "Открываю файл лицензии", File);
+
+if ((F = fopen(File.c_str(), "rt")) == NULL)
+{
+ //ShowMessage("Файл лицензии не удается открыть");
+//Form1->MyClients->DiaryEvent->WriteEvent(Now(),"Не определен", "Еще не определен" "Ошибка лицензии", "Файл неудалось открыть", File);
+
+ BI.LicCount=0;
+}
+else
+{
+//Form1->MyClients->DiaryEvent->WriteEvent(Now(),"Не определен", "Еще не определен" "Лицензия", "Файл лицензии открыт", File); //ShowMessage("Файл лицензии открыт");
+ char S[256];
+ fgets(S, 257, F);
+ String Text=S;
+ int LC=AnalizLic(Text, BI.Name);
+//Form1->MyClients->DiaryEvent->WriteEvent(Now(),"Не определен", "Еще не определен" "Лицензия", "Файл лицензии расшифрован", "DB: "+BI.Name+" NumUsers="+IntToStr(LC)); //ShowMessage("Файл лицензии открыт");
+
+ BI.LicCount=LC;
+
+}
+
+}
+else
+{
+BI.MainSpec=true;
+}
+int AbsPath=Ini->ReadInteger(NameSect, "AbsPath",0);
+
+if(AbsPath==0)
+{
+ BI.Patch=Path+Ini->ReadString(NameSect,"Base","");
+}
+else
+{
+ BI.Patch= Ini->ReadString(NameSect,"Base","");
+}
+String FN=ExtractFileName(BI.Patch);
+String FN1=FN.SubString(0,FN.Length()-ExtractFileExt(BI.Patch).Length());
+BI.FileName=FN1;
+
+
+MDBConnector* ADOConn=new MDBConnector(ExtractFilePath(BI.Patch), FN1, this);
+ADOConn->SetPatchBackUp("Archive");
+BI.Database=ADOConn;
+//BI.Database->Connected=true;
+Cl->VBases.push_back(BI);
+
+ADOConn->ClearArchive(Days);
+ADOConn->PackDB();
+ADOConn->Backup("Archive");
+
+if(BI.Name=="Diary")
+{
+MP<TADOCommand>Comm(this);
+Comm->Connection=ADOConn;
+Comm->CommandText="DELETE Now()-[Date_Time] AS Days FROM Events WHERE (((Now()-[Date_Time])>"+IntToStr(DiaryStoreDays)+"));";
+Comm->Execute();
+}
+//delete ADOConn;
+}
+
+Base->ItemIndex=0;
+
+String File=GetFileDatabase(Base->Text);
+//int Num;
+//int LicCount;
+for(unsigned int i=0;i<Cl->VBases.size();i++)
+{
+ if(Cl->VBases[i].FileName==File)
+ {
+Database->Connected=false;
+Database->ConnectionString="Provider=Microsoft.Jet.OLEDB.4.0;Data Source="+Cl->VBases[i].Patch+";Persist Security Info=False";
+Database->LoginPrompt=false;
+Database->Connected=true;
+  //LicCount=VBases[i].LicCount;
+  break;
+ }
+}
+
+/*
+
+*/
+
+
+
+
 ServerSocket->Active=true;
 }
 //---------------------------------------------------------------------------
 void __fastcall TForm1::ServerSocketClientConnect(TObject *Sender,
       TCustomWinSocket *Socket)
 {
-Client *C=new Client();
+Client *C=new Client(Cl);
 C->Socket=Socket;
 C->LastCommand=1;
 Cl->VClients.push_back(C);
@@ -98,7 +204,7 @@ Parameters.clear();
 for(int i=0;i<NumPar;i++)
 {
 String Par;
- int M=S.Pos(",");
+ int M=S.Pos("|");
  if(M>0)
  {
  Par=S.SubString(1,M-1);
@@ -110,6 +216,8 @@ String Par;
  S=S.SubString(M+1,S.Length());
  Parameters.push_back(Par);
 
+
+}
 for(unsigned int i=0;i<Cl->VClients.size();i++)
 {
  if(Cl->VClients[i]->Socket==Socket)
@@ -120,6 +228,131 @@ for(unsigned int i=0;i<Cl->VClients.size();i++)
 }
 }
 }
+//---------------------------------------------------------------------------
+int TForm1::AnalizLic(String Text, String Pass)
+{
+int Ret=0;
+CodeText *CT=new CodeText();
+String DText=CT->EnCrypt(Text,Pass, 256);
+String DCopy=DText;
+int Pos1=DText.AnsiPos("+");
+String Key1=DText.SubString(1,Pos1-1);
+DText=DText.SubString(Pos1+1,DText.Length());
+int Pos2=DText.AnsiPos("+");
+String Key2=DText.SubString(1,Pos2-1);
+
+String Key1_2="+"+Key1+"+"+Key2;
+int Pos3=DCopy.AnsiPos(Key1_2);
+
+//ShowMessage("Pos3="+IntToStr(Pos3));
+if(Pos3!=0)
+{
+//Лицензия верна
+if(Key1=="Неограниченая" & Key2=="версия")
+{
+//Неограниченая лицензия
+Ret=-1;
+}
+else
+{
+//Ограниченая лицензия
+Ret=ReadRes(Key1, Key2);
+}
+}
+else
+{
+Ret=0;
+}
+//ShowMessage("Ret="+IntToStr(Ret));
+return Ret;
+}
+//---------------------------------------------------------------------------
+String TForm1::GetFileDatabase(String NameDatabase)
+{
+String Ret="";
+for(unsigned int i=0;i<Cl->VBases.size();i++)
+{
+ if(Cl->VBases[i].Name==NameDatabase)
+ {
+  Ret=Cl->VBases[i].FileName;
+ }
+}
+
+return Ret;
+}
+//---------------------------------------------------------------------------
+int TForm1::ReadRes(String Key1, String Key2)
+{
+ int N1=Propis(Key1);
+ int N2=Propis(Key2);
+ int Res=N1*10+N2;
+ return Res;
+}
+//---------------------------------------------------------------------------
+int TForm1::Propis(String S)
+{
+int Res;
+if(S=="Нуль")
+{
+  Res=0;
+  return Res;
+}
+if(S=="Один")
+{
+  Res=1;
+  return Res;
+}
+if(S=="Два")
+{
+  Res=2;
+  return Res;
+}
+if(S=="Три")
+{
+  Res=3;
+  return Res;
+}
+if(S=="Четыре")
+{
+  Res=4;
+  return Res;
+}
+if(S=="Пять")
+{
+  Res=5;
+  return Res;
+}
+if(S=="Шесть")
+{
+  Res=6;
+  return Res;
+}
+if(S=="Семь")
+{
+  Res=7;
+  return Res;
+}
+if(S=="Восемь")
+{
+  Res=8;
+  return Res;
+}
+if(S=="Девять")
+{
+  Res=9;
+  return Res;
+}
+
+return Res;
+}
+//------------------------------------------------------------------------
+
+
+void __fastcall TForm1::FormDestroy(TObject *Sender)
+{
+
+
+delete Cl;
 }
 //---------------------------------------------------------------------------
 

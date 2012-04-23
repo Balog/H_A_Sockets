@@ -1,6 +1,6 @@
 object Form1: TForm1
-  Left = 192
-  Top = 107
+  Left = 240
+  Top = 143
   Width = 427
   Height = 309
   Caption = 'Form1'
@@ -143,9 +143,33 @@ object Form1: TForm1
   object ActionManager1: TActionManager
     Left = 72
     Top = 128
-    object Action1: TAction
-      Caption = 'Action1'
-      OnExecute = Action1Execute
+    object RegForm_Form1: TAction
+      Caption = 'RegForm_Form1'
+      OnExecute = RegForm_Form1Execute
+    end
+    object RegForm_Form2: TAction
+      Caption = 'RegForm_Form2'
+      OnExecute = RegForm_Form2Execute
+    end
+    object PostRegForm_Form1: TAction
+      Caption = 'PostRegForm_Form1'
+      OnExecute = PostRegForm_Form1Execute
+    end
+    object PostRegForm_Form2: TAction
+      Caption = 'PostRegForm_Form2'
+      OnExecute = PostRegForm_Form2Execute
+    end
+    object AspectsConnect: TAction
+      Caption = 'AspectsConnect'
+      OnExecute = AspectsConnectExecute
+    end
+    object DiaryConnect: TAction
+      Caption = 'DiaryConnect'
+      OnExecute = DiaryConnectExecute
+    end
+    object LoadLogins: TAction
+      Caption = 'LoadLogins'
+      OnExecute = LoadLoginsExecute
     end
   end
 end

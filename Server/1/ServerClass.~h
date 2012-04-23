@@ -1,4 +1,5 @@
 //---------------------------------------------------------------------------
+#include <vcl.h>
 #include <vector>
 #include <ADODB.hpp>
 #include <DB.hpp>
@@ -7,6 +8,18 @@ using namespace std;
 #ifndef ServerClassH
 #define ServerClassH
 //---------------------------------------------------------------------------
+struct BaseItem
+{
+String Name;
+String Patch;
+bool MainSpec;
+String FileName;
+int LicCount;
+TADOConnection *Database;
+TADOCommand* Command;
+};
+//------------------------------------------------------------------------
+/*
 struct DatabaseClient
 {
 long IDDB;
@@ -14,6 +27,7 @@ TADOConnection *Database;
 TADOCommand* Command;
 String FileName;
 };
+*/
 //-----------------------------------------------------------------------
 class Client;
 class mForm;
@@ -34,20 +48,23 @@ Clients(TComponent* Owner, String DiaryBase);
 ~Clients();
 vector<Client*>VClients;
 vector<Client*>::iterator IVC;
-
+vector<BaseItem>VBases;
 
 };
 //-------------------------------------------------------------------------
 class Client
 {
  private:
-
+vector<mForm*>VForm;
+vector<mForm*>::iterator IFC;
+Clients* Parent;
 
  public:
-Client();
+Client(Clients*);
 ~Client();
 TCustomWinSocket *Socket;
 String IP;
+String AppPatch;
 int LastCommand;
 
 void CommandExec(int Comm, vector<String>);
@@ -56,7 +73,11 @@ void CommandExec(int Comm, vector<String>);
 class mForm
 {
  public:
+ mForm();
+ ~mForm();
 
+ int IDF;
+ String NameForm;
  private:
 
 };

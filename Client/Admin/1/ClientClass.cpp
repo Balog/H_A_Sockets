@@ -32,7 +32,7 @@ Socket->Active=true;
 //********************************************************************
 void Client::CommandExec(int Comm, vector<String>Parameters)
 {
-if(Act.WaitCommand==Comm)
+if(Act.WaitCommand==Comm | Act.WaitCommand==0)
 {
 switch(Comm)
 {
@@ -48,9 +48,38 @@ switch(Comm)
  }
  case 2:
  {
- StartAction("RegForm");
- //ActionManager->Actions[0]->Execute();
+ //После сигнала что сервер готов к дальнейшей после идентификации клиента работе регистрируем формы
+ //Запускаем действие - регистрация главной формы.
+ //Далее ожидается еще регистрация формы
+ Act.WaitCommand=Act.NextCommand;
+ StartAction("RegForm_Form1");
+
  break;
+ }
+ case 3:
+ {
+
+
+ //Читаем записи о дальнейших действиях
+ String Action=Act.ParamComm[0];
+
+ Act.ParamComm.clear();
+
+ Act.WaitCommand=0;
+ String NumPrevForm=Parameters[0];
+ Act.ParamComm.push_back(NumPrevForm);
+ StartAction(Action);
+ break;
+ }
+ case 4:
+ {
+ String Action=Act.ParamComm[0];
+ StartAction(Action);
+ break;
+ }
+ case 5:
+ {
+
  }
 }
 }
@@ -113,10 +142,37 @@ for(int i=0;i<ActionManager->ActionCount;i++)
 }
 }
 //***************************************************************************
+void Client::ConnectDatabase(String Name, bool Connect)
+{
+String C;
+if(Connect)
+{
+C="true";
+}
+else
+{
+C="false";
+}
+
+String Mess="Command:4;2|"+Name+"|"+C+"|";
+Socket->Socket->SendText(Mess);
+
+}
+//*************************************************************************
+void Client::ReadTable(String NameDB, String ServerSQL, String ClientSQL)
+{
+ Act.ParamComm.clear();
+ Act.WaitCommand=5;
+ Act.ParamComm.push_back(ClientSQL);
+
+ Socket->Socket->SendText("Command:5;2|"+NameDB+"|"+ServerSQL+"|");
+}
+//*************************************************************************
 /////////////////////////////////////////////////////////////////////////////
 Form::Form()
 {
-
+IDF=-1;
+FormName="-";
 }
 //////////////////////////////////////////////////////////////////////////////
 Form::~Form()

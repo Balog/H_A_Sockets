@@ -4,7 +4,8 @@
   <MACROS>
     <VERSION value="BCB.06.00"/>
     <PROJECT value="Server.exe"/>
-    <OBJFILES value="Server.obj Main.obj"/>
+    <OBJFILES value="Server.obj Main.obj CodeText.obj MasterPointer.obj MDBConnector.obj 
+      ServerClass.obj"/>
     <RESFILES value="Server.res"/>
     <IDLFILES value=""/>
     <IDLGENFILES value=""/>
@@ -12,7 +13,7 @@
     <RESDEPEN value="$(RESFILES) Main.dfm"/>
     <LIBFILES value=""/>
     <LIBRARIES value="dclusr.lib"/>
-    <SPARELIBS value="vcl.lib rtl.lib dclusr.lib"/>
+    <SPARELIBS value="vcl.lib rtl.lib dclusr.lib dbrtl.lib adortl.lib"/>
     <PACKAGES value="vcl.bpi rtl.bpi dbrtl.bpi adortl.bpi vcldb.bpi vclx.bpi bdertl.bpi 
       vcldbx.bpi ibxpress.bpi dsnap.bpi cds.bpi bdecds.bpi qrpt.bpi teeui.bpi 
       teedb.bpi tee.bpi dss.bpi teeqr.bpi visualclx.bpi visualdbclx.bpi 
@@ -59,6 +60,10 @@
       <FILE FILENAME="Server.res" FORMNAME="" UNITNAME="Server.res" CONTAINERID="ResTool" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="Server.cpp" FORMNAME="" UNITNAME="Server" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="Main.cpp" FORMNAME="Form1" UNITNAME="Main" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="CodeText.cpp" FORMNAME="" UNITNAME="CodeText.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="MasterPointer.cpp" FORMNAME="" UNITNAME="MasterPointer.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="MDBConnector.cpp" FORMNAME="" UNITNAME="MDBConnector.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="ServerClass.cpp" FORMNAME="" UNITNAME="ServerClass.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
   </FILELIST>
   <BUILDTOOLS>
   </BUILDTOOLS>

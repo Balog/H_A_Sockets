@@ -4,6 +4,7 @@
 #pragma hdrstop
 //---------------------------------------------------------------------------
 USEFORM("Main.cpp", Form1);
+USEFORM("..\..\..\..\IP адрес\PassForm.cpp", Pass);
 //---------------------------------------------------------------------------
 WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 {
@@ -11,6 +12,7 @@ WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
         {
                  Application->Initialize();
                  Application->CreateForm(__classid(TForm1), &Form1);
+                 Application->CreateForm(__classid(TPass), &Pass);
                  Application->Run();
         }
         catch (Exception &exception)

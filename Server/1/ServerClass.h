@@ -8,6 +8,18 @@ using namespace std;
 #ifndef ServerClassH
 #define ServerClassH
 //---------------------------------------------------------------------------
+struct BaseItem
+{
+String Name;
+String Patch;
+bool MainSpec;
+String FileName;
+int LicCount;
+TADOConnection *Database;
+TADOCommand* Command;
+};
+//------------------------------------------------------------------------
+/*
 struct DatabaseClient
 {
 long IDDB;
@@ -15,6 +27,7 @@ TADOConnection *Database;
 TADOCommand* Command;
 String FileName;
 };
+*/
 //-----------------------------------------------------------------------
 class Client;
 class mForm;
@@ -24,7 +37,7 @@ class Diary;
 class Clients
 {
  private:
-TComponent* pOwner;
+
 String DatabasePath;
 String DiaryBase;
 
@@ -35,17 +48,20 @@ Clients(TComponent* Owner, String DiaryBase);
 ~Clients();
 vector<Client*>VClients;
 vector<Client*>::iterator IVC;
-
+vector<BaseItem>VBases;
+TComponent* pOwner;
 
 };
 //-------------------------------------------------------------------------
 class Client
 {
  private:
-
-
+vector<mForm*>VForm;
+vector<mForm*>::iterator IFC;
+Clients* Parent;
+TADOConnection* GetDatabase(String NameDB);
  public:
-Client();
+Client(Clients*);
 ~Client();
 TCustomWinSocket *Socket;
 String IP;
@@ -58,7 +74,11 @@ void CommandExec(int Comm, vector<String>);
 class mForm
 {
  public:
+ mForm();
+ ~mForm();
 
+ int IDF;
+ String NameForm;
  private:
 
 };

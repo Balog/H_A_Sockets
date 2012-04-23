@@ -7,6 +7,7 @@
 #include "inifiles.hpp";
 #include "CodeText.h"
 #include "MasterPointer.h"
+#include "PassForm.h"
 using namespace std;
 //---------------------------------------------------------------------------
 #pragma package(smart_init)
@@ -105,16 +106,108 @@ Path=ExtractFilePath(Application->ExeName);
 MP<TIniFile>Ini(Path+"Admin.ini");
 String Server=Ini->ReadString("Main","Server","localhost");
 int Port=Ini->ReadInteger("Main","Port",2000);
+
+VDB.clear();
+CBDatabase->Clear();
+ServerName=Ini->ReadString("Server","ServerName","");
+int Num=Ini->ReadInteger("Server","NumServerBase",0);
+for(int i=0;i<Num;i++)
+{
+String S="Base"+IntToStr(i+1);
+String ServerBase=Ini->ReadString(S,"ServerDatabase","");
+String Name=Ini->ReadString(S,"Name","");
+
+//MClient->AddDatabase(ServerBase);
+
+CDBItem DBI;
+DBI.Name=Name;
+DBI.ServerDB=ServerBase;
+DBI.Num=i;
+DBI.NumDatabase=Ini->ReadInteger(S,"NumDatabase",-1);
+if(DBI.NumDatabase>=0)
+{
+CBDatabase->Items->Add(Name);
+}
+
+VDB.push_back(DBI);
+}
+CBDatabase->ItemIndex=0;
+
 MClient=new Client(ClientSocket, ActionManager1);
 MClient->Connect(Server, Port);
 }
 //---------------------------------------------------------------------------
 
-void __fastcall TForm1::RegFormExecute(TObject *Sender)
+void __fastcall TForm1::RegForm_Form1Execute(TObject *Sender)
 {
-//ShowMessage(this->Name);
+MClient->Act.WaitCommand=3;
+MClient->Act.NextCommand=3;
+String Par="PostRegForm_Form1";
+MClient->Act.ParamComm.clear();
+MClient->Act.ParamComm.push_back(Par);
 
 MClient->RegForm(this->Name);
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm1::RegForm_Form2Execute(TObject *Sender)
+{
+MClient->Act.NextCommand=4;
+String Par="PostRegForm_Form2";
+MClient->Act.ParamComm.clear();
+MClient->Act.ParamComm.push_back(Par);
+
+MClient->RegForm(Pass->Name);
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm1::PostRegForm_Form1Execute(TObject *Sender)
+{
+int max=MClient->VForms.size()-1;
+MClient->VForms[max]->IDF=StrToInt(MClient->Act.ParamComm[0]);
+
+MClient->StartAction("RegForm_Form2");
+
+
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm1::PostRegForm_Form2Execute(TObject *Sender)
+{
+int max=MClient->VForms.size()-1;
+MClient->VForms[max]->IDF=StrToInt(MClient->Act.ParamComm[0]);
+
+MClient->StartAction("AspectsConnect");
+}
+//---------------------------------------------------------------------------
+
+
+void __fastcall TForm1::AspectsConnectExecute(TObject *Sender)
+{
+MClient->Act.NextCommand=4;
+String Par="DiaryConnect";
+MClient->Act.ParamComm.clear();
+MClient->Act.ParamComm.push_back(Par);
+
+MClient->ConnectDatabase("Аспекты", true);
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm1::DiaryConnectExecute(TObject *Sender)
+{
+MClient->Act.NextCommand=0;
+String Par="LoadLogins";
+MClient->Act.ParamComm.clear();
+MClient->Act.ParamComm.push_back(Par);
+
+MClient->ConnectDatabase("Diary", true);
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm1::LoadLoginsExecute(TObject *Sender)
+{
+//
+Pass->ShowModal();
 }
 //---------------------------------------------------------------------------
 

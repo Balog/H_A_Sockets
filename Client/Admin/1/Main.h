@@ -58,13 +58,25 @@ __published:	// IDE-managed Components
         TTimer *DBTimer;
         TClientSocket *ClientSocket;
         TActionManager *ActionManager1;
-        TAction *RegForm;
+        TAction *RegForm_Form1;
+        TAction *RegForm_Form2;
+        TAction *PostRegForm_Form1;
+        TAction *PostRegForm_Form2;
+        TAction *AspectsConnect;
+        TAction *DiaryConnect;
+        TAction *LoadLogins;
         void __fastcall ClientSocketRead(TObject *Sender,
           TCustomWinSocket *Socket);
         void __fastcall ClientSocketWrite(TObject *Sender,
           TCustomWinSocket *Socket);
         void __fastcall FormShow(TObject *Sender);
-        void __fastcall RegFormExecute(TObject *Sender);
+        void __fastcall RegForm_Form1Execute(TObject *Sender);
+        void __fastcall RegForm_Form2Execute(TObject *Sender);
+        void __fastcall PostRegForm_Form1Execute(TObject *Sender);
+        void __fastcall PostRegForm_Form2Execute(TObject *Sender);
+        void __fastcall AspectsConnectExecute(TObject *Sender);
+        void __fastcall DiaryConnectExecute(TObject *Sender);
+        void __fastcall LoadLoginsExecute(TObject *Sender);
 private:	// User declarations
 String Path;
 String AdminDatabase;
@@ -73,6 +85,8 @@ int LicCount;
 vector<String>Parameters;
 
 String GetIP();
+vector<CDBItem>VDB;
+String ServerName;
 public:		// User declarations
         __fastcall TForm1(TComponent* Owner);
 
