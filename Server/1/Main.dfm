@@ -19,9 +19,9 @@ object Form1: TForm1
     Top = 0
     Width = 302
     Height = 293
-    ActivePage = TabSheet2
+    ActivePage = TabSheet1
     Align = alClient
-    TabIndex = 1
+    TabIndex = 0
     TabOrder = 0
     object TabSheet1: TTabSheet
       Caption = #1055#1086#1076#1082#1083#1102#1095#1077#1085#1080#1103

@@ -207,6 +207,7 @@ MClient->ConnectDatabase("Diary", true);
 void __fastcall TForm1::LoadLoginsExecute(TObject *Sender)
 {
 //
+Pass->ShowModal();
 }
 //---------------------------------------------------------------------------
 

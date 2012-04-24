@@ -60,6 +60,7 @@ vector<mForm*>VForm;
 vector<mForm*>::iterator IFC;
 Clients* Parent;
 TADOConnection* GetDatabase(String NameDB);
+String TableToStr(String NameDB, String SQLText);
  public:
 Client(Clients*);
 ~Client();

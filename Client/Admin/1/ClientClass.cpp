@@ -4,14 +4,15 @@
 #pragma hdrstop
 
 #include "ClientClass.h"
-
+#include "MasterPointer.h"
 //---------------------------------------------------------------------------
 
 #pragma package(smart_init)
-Client::Client(TClientSocket *ClientSocket, TActionManager *ActMan)
+Client::Client(TClientSocket *ClientSocket, TActionManager *ActMan, TForm *Form)
 {
 Socket=ClientSocket;
 ActionManager=ActMan;
+Owner=Form;
 }
 //********************************************************************
 Client::~Client()
@@ -79,7 +80,8 @@ switch(Comm)
  }
  case 5:
  {
-
+ //ShowMessage(Parameters[0]);
+ DecodeTable(Act.ParamComm[0],Act.ParamComm[1],Parameters[0]);
  }
 }
 }
@@ -163,9 +165,16 @@ void Client::ReadTable(String NameDB, String ServerSQL, String ClientSQL)
 {
  Act.ParamComm.clear();
  Act.WaitCommand=5;
+ Act.ParamComm.push_back(NameDB);
  Act.ParamComm.push_back(ClientSQL);
 
- Socket->Socket->SendText("Command:5;2|"+NameDB+"|"+ServerSQL+"|");
+ Socket->Socket->SendText("Command:5;3|"+NameDB+"|"+ServerSQL+"|");
+}
+//*************************************************************************
+void Client::DecodeTable(String NameDB, String ClientSQL, String Text)
+{
+ MP<TADODataSet>Tab(Owner);
+ 
 }
 //*************************************************************************
 /////////////////////////////////////////////////////////////////////////////

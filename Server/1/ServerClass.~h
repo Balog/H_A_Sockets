@@ -37,7 +37,7 @@ class Diary;
 class Clients
 {
  private:
-TComponent* pOwner;
+
 String DatabasePath;
 String DiaryBase;
 
@@ -49,6 +49,7 @@ Clients(TComponent* Owner, String DiaryBase);
 vector<Client*>VClients;
 vector<Client*>::iterator IVC;
 vector<BaseItem>VBases;
+TComponent* pOwner;
 
 };
 //-------------------------------------------------------------------------
@@ -58,7 +59,8 @@ class Client
 vector<mForm*>VForm;
 vector<mForm*>::iterator IFC;
 Clients* Parent;
-
+TADOConnection* GetDatabase(String NameDB);
+String TableToStr(String NameDB, String SQLText);
  public:
 Client(Clients*);
 ~Client();

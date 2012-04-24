@@ -30,7 +30,7 @@ vector<String>ParamComm;
 class Client
 {
 public:
-Client(TClientSocket *ClientSocket, TActionManager *ActMan);
+Client(TClientSocket *ClientSocket, TActionManager *ActMan, TForm *Form);
 ~Client();
 
 void Connect(String ServerName, int Port);
@@ -43,13 +43,14 @@ vector<Form*>::iterator IVF;
 
 void StartAction(String NameAction);
 void ConnectDatabase(String Name, bool Connect);
-void ReadTable(String NameDB, String ServerSQL, String ClientSQL); 
+void ReadTable(String NameDB, String ServerSQL, String ClientSQL);
+void DecodeTable(String NameDB, String ClientSQL, String Text);
 private:
 String GetIP();
 TClientSocket *Socket;
 
 TActionManager *ActionManager;
-
+TForm *Owner;
 
 
 

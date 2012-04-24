@@ -109,6 +109,7 @@ MP<TADOCommand>Comm(this);
 Comm->Connection=ADOConn;
 Comm->CommandText="DELETE Now()-[Date_Time] AS Days FROM Events WHERE (((Now()-[Date_Time])>"+IntToStr(DiaryStoreDays)+"));";
 Comm->Execute();
+ADOConn->Connected=false;
 }
 //delete ADOConn;
 }
@@ -125,8 +126,8 @@ for(unsigned int i=0;i<Cl->VBases.size();i++)
 Database->Connected=false;
 Database->ConnectionString="Provider=Microsoft.Jet.OLEDB.4.0;Data Source="+Cl->VBases[i].Patch+";Persist Security Info=False";
 Database->LoginPrompt=false;
-Database->Connected=true;
-  //LicCount=VBases[i].LicCount;
+//Database->Connected=true;
+
   break;
  }
 }

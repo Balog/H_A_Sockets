@@ -43,6 +43,7 @@ vector<Form*>::iterator IVF;
 
 void StartAction(String NameAction);
 void ConnectDatabase(String Name, bool Connect);
+void ReadTable(String NameDB, String ServerSQL, String ClientSQL); 
 private:
 String GetIP();
 TClientSocket *Socket;
