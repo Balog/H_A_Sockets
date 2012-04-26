@@ -3,9 +3,9 @@ Command:1;0|
 2 - –егистраци€ IP адреса в экземпл€ре класса клиента, передача сигнала готовности к дальнейшей работе
 Command:2;0|
 3 - ќтвет на регистрацию формы
-Command:3;1|IDDB
+Command:3;1|Lenght1#IDDB
 4 - ответ на подключение базы данных
-Command:4;2|NameDatabase|Result
+Command:4;2|Lenght1#NameDatabase|Lenght2#Result
 
 
 

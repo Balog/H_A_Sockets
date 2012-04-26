@@ -103,7 +103,8 @@ if(LastCommand==Comm | LastCommand==0)
    {
    //Прием команды чтения таблицы
    String Text=TableToStr(Parameters[0], Parameters[1]);
-
+   //ShowMessage(Text);
+   this->Socket->SendText("Command:5;1|"+Text+"|");
    break;
    }
  }

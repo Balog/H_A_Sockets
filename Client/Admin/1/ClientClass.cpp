@@ -41,7 +41,9 @@ switch(Comm)
  {
 
   //Отвечаем на команду 1
-  String Mess="Command:1;2|"+GetIP()+"|"+Application->ExeName;
+  String S1=GetIP();
+  String S2=Application->ExeName;
+  String Mess="Command:1;2|"+IntToStr(S1.Length())+"#"+GetIP()+"|"+IntToStr(S2.Length())+"#"+Application->ExeName;
   //Необходимо запомнить что ожидается команда номер 2
   Act.WaitCommand=2;
   Socket->Socket->SendText(Mess);
@@ -125,7 +127,7 @@ Form* F=new Form();
 F->RegForm(FormName);
 VForms.push_back(F);
 //Процедура регистрации формы на сервере, команда 3
-  String Mess="Command:3;1|"+FormName;
+  String Mess="Command:3;1|"+IntToStr(FormName.Length())+"#"+FormName;
   //Необходимо запомнить что ожидается команда номер 3
   Act.WaitCommand=3;
   Socket->Socket->SendText(Mess);
@@ -156,7 +158,7 @@ else
 C="false";
 }
 
-String Mess="Command:4;2|"+Name+"|"+C+"|";
+String Mess="Command:4;2|"+IntToStr(Name.Length())+"#"+Name+"|"+C.Length()+"#"+C+"|";
 Socket->Socket->SendText(Mess);
 
 }
@@ -168,7 +170,7 @@ void Client::ReadTable(String NameDB, String ServerSQL, String ClientSQL)
  Act.ParamComm.push_back(NameDB);
  Act.ParamComm.push_back(ClientSQL);
 
- Socket->Socket->SendText("Command:5;3|"+NameDB+"|"+ServerSQL+"|");
+ Socket->Socket->SendText("Command:5;2|"+IntToStr(NameDB.Length())+"#"+NameDB+"|"+ServerSQL.Length()+"#"+ServerSQL+"|");
 }
 //*************************************************************************
 void Client::DecodeTable(String NameDB, String ClientSQL, String Text)

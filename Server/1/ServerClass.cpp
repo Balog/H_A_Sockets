@@ -74,7 +74,7 @@ if(LastCommand==Comm | LastCommand==0)
    F->NameForm=Parameters[0];
    VForm.push_back(F);
    //Пока передаем один и тот же параметр а должен передаваться номер формы на сервере
-   this->Socket->SendText("Command:3;1|"+IntToStr(F->IDF)+"|");
+   this->Socket->SendText("Command:3;1|"+IntToStr(IntToStr(F->IDF).Length())+"#"+IntToStr(F->IDF)+"|");
    break;
   }
   case 4:
@@ -93,7 +93,7 @@ if(LastCommand==Comm | LastCommand==0)
      Parent->VBases[i].Database->Connected=false;
     }
    //удачное открытие базы
-   this->Socket->SendText("Command:4;1|1|");
+   this->Socket->SendText("Command:4;1|1#1|");
    break;
       }
   }
@@ -104,7 +104,7 @@ if(LastCommand==Comm | LastCommand==0)
    //Прием команды чтения таблицы
    String Text=TableToStr(Parameters[0], Parameters[1]);
    //ShowMessage(Text);
-   this->Socket->SendText("Command:5;1|"+Text+"|");
+   this->Socket->SendText("Command:5;1|"+IntToStr(Text.Length())+"#"+Text+"|");
    break;
    }
  }

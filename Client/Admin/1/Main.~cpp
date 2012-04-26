@@ -34,6 +34,11 @@ AdminDatabase= AspectBase;
 Database=new MDBConnector(ExtractFilePath(AdminDatabase), ExtractFileName(AdminDatabase), this);
 Database->SetPatchBackUp("Archive");
 
+int Days=Ini->ReadInteger("Main","StoreArchive",0);
+Database->ClearArchive(Days);
+Database->PackDB();
+Database->Backup("Archive");
+
 
 MP<TADODataSet>Roles(this);
 Roles->CommandText="Select * from Roles order by Num";
@@ -46,10 +51,7 @@ Role->Items->Add(Roles->FieldByName("Name")->AsString);
 }
 Role->ItemIndex=0;
 
-int Days=Ini->ReadInteger("Main","StoreArchive",0);
-Database->ClearArchive(Days);
-Database->PackDB();
-Database->Backup("Archive");
+
 
 
 
