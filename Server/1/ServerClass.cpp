@@ -134,7 +134,7 @@ String Client::TableToStr(String NameDB, String SQLText)
 
    //Формат передачи таблицы
    //Начало таблицы 27 1
-   int Esc=27;
+   //int Esc=27;
    int S1=1;
    int S2=2;
    int S3=3;
@@ -185,7 +185,7 @@ String Client::TableToStr(String NameDB, String SQLText)
      {
       case ftWideString:
       {
-      Ret=Ret+(String)C1+FieldSeparator+Tab->FieldList->Fields[i]->AsString;
+      Ret=Ret+(String)C1+Tab->FieldList->Fields[i]->AsString;
       break;
       }
       case ftInteger:

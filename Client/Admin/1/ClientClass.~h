@@ -7,6 +7,7 @@
 #include <ScktComp.hpp>
 #include <ActnList.hpp>
 #include <ActnMan.hpp>
+#include "MDBConnector.h"
 using namespace std;
 #ifndef ClientClassH
 #define ClientClassH
@@ -16,7 +17,15 @@ struct DBItem
  int Num;
  String Name;
 };
-
+//****************************************
+struct CDBItem
+{
+int Num;
+String Name;
+String ServerDB;
+int NumDatabase;
+};
+//****************************************
 class Form;
 class Table;
 //****************************************
@@ -45,13 +54,17 @@ void StartAction(String NameAction);
 void ConnectDatabase(String Name, bool Connect);
 void ReadTable(String NameDB, String ServerSQL, String ClientSQL);
 void DecodeTable(String NameDB, String ClientSQL, String Text);
+vector<CDBItem>VDB;
+
+MDBConnector* Database;
+MDBConnector* Diary;
+
 private:
 String GetIP();
 TClientSocket *Socket;
 
 TActionManager *ActionManager;
 TForm *Owner;
-
 
 
 };

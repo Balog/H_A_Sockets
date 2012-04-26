@@ -21,14 +21,7 @@ using namespace std;
 
 
 //---------------------------------------------------------------------------
-struct CDBItem
-{
-int Num;
-String Name;
-String ServerDB;
-int NumDatabase;
-};
-//---------------------------------------------------------------------------
+
 
 class TForm1 : public TForm
 {
@@ -65,11 +58,11 @@ __published:	// IDE-managed Components
         TAction *AspectsConnect;
         TAction *DiaryConnect;
         TAction *LoadLogins;
+        TAction *ViewLogins;
         void __fastcall ClientSocketRead(TObject *Sender,
           TCustomWinSocket *Socket);
         void __fastcall ClientSocketWrite(TObject *Sender,
           TCustomWinSocket *Socket);
-        void __fastcall FormShow(TObject *Sender);
         void __fastcall RegForm_Form1Execute(TObject *Sender);
         void __fastcall RegForm_Form2Execute(TObject *Sender);
         void __fastcall PostRegForm_Form1Execute(TObject *Sender);
@@ -77,20 +70,22 @@ __published:	// IDE-managed Components
         void __fastcall AspectsConnectExecute(TObject *Sender);
         void __fastcall DiaryConnectExecute(TObject *Sender);
         void __fastcall LoadLoginsExecute(TObject *Sender);
+        void __fastcall ViewLoginsExecute(TObject *Sender);
+        void __fastcall FormCreate(TObject *Sender);
 private:	// User declarations
 String Path;
 String AdminDatabase;
+String DiaryDatabase;
 int LicCount;
 
 vector<String>Parameters;
 
 String GetIP();
-vector<CDBItem>VDB;
+
 String ServerName;
 public:		// User declarations
         __fastcall TForm1(TComponent* Owner);
 
-MDBConnector* Database;
 
 Client *MClient;
 };

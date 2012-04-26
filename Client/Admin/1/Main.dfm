@@ -12,7 +12,7 @@ object Form1: TForm1
   Font.Style = []
   Menu = MainMenu1
   OldCreateOrder = False
-  OnShow = FormShow
+  OnCreate = FormCreate
   PixelsPerInch = 96
   TextHeight = 13
   object Label1: TLabel
@@ -170,6 +170,10 @@ object Form1: TForm1
     object LoadLogins: TAction
       Caption = 'LoadLogins'
       OnExecute = LoadLoginsExecute
+    end
+    object ViewLogins: TAction
+      Caption = 'ViewLogins'
+      OnExecute = ViewLoginsExecute
     end
   end
 end

@@ -4,12 +4,12 @@
   <MACROS>
     <VERSION value="BCB.06.00"/>
     <PROJECT value="AdminARM.exe"/>
-    <OBJFILES value="AdminARM.obj Main.obj ClientClass.obj MDBConnector.obj &quot;..\..\..\..\IP адрес\Pass.obj&quot;"/>
+    <OBJFILES value="AdminARM.obj Main.obj ClientClass.obj MDBConnector.obj &quot;..\..\..\..\IP адрес\PassForm.obj&quot;"/>
     <RESFILES value="AdminARM.res"/>
     <IDLFILES value=""/>
     <IDLGENFILES value=""/>
     <DEFFILE value=""/>
-    <RESDEPEN value="$(RESFILES) Main.dfm &quot;..\..\..\..\IP адрес\Pass.dfm&quot;"/>
+    <RESDEPEN value="$(RESFILES) Main.dfm &quot;..\..\..\..\IP адрес\PassForm.dfm&quot;"/>
     <LIBFILES value=""/>
     <LIBRARIES value="dclusr.lib"/>
     <SPARELIBS value="vcl.lib rtl.lib dclusr.lib dbrtl.lib adortl.lib vclx.lib"/>
@@ -62,7 +62,7 @@
       <FILE FILENAME="Main.cpp" FORMNAME="Form1" UNITNAME="Main" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="ClientClass.cpp" FORMNAME="" UNITNAME="ClientClass" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="MDBConnector.cpp" FORMNAME="" UNITNAME="MDBConnector" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
-      <FILE FILENAME="..\..\..\..\IP адрес\Pass.cpp" FORMNAME="Form2" UNITNAME="Pass" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\..\..\IP адрес\PassForm.cpp" FORMNAME="Pass" UNITNAME="PassForm" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
   </FILELIST>
   <BUILDTOOLS>
   </BUILDTOOLS>
