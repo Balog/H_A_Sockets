@@ -4,7 +4,7 @@
 #pragma hdrstop
 //---------------------------------------------------------------------------
 USEFORM("Main.cpp", Form1);
-USEFORM("..\..\..\..\IP адрес\PassForm.cpp", Pass);
+USEFORM("PassForm.cpp", Pass);
 //---------------------------------------------------------------------------
 WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 {
