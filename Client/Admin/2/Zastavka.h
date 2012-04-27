@@ -130,6 +130,9 @@ __published:	// IDE-managed Components
         void __fastcall DiaryConnectExecute(TObject *Sender);
         void __fastcall LoadLoginsExecute(TObject *Sender);
         void __fastcall ViewLoginsExecute(TObject *Sender);
+        void __fastcall ClientSocketError(TObject *Sender,
+          TCustomWinSocket *Socket, TErrorEvent ErrorEvent,
+          int &ErrorCode);
 private:	// User declarations
 String Path;
 TLocateOptions SO;
@@ -151,8 +154,8 @@ vector<String>Parameters;
 int Role;
 vector<CDBItem>VDB;
         __fastcall TZast(TComponent* Owner);
-MDBConnector* Database;
-MDBConnector* Diary;
+//MDBConnector* Database;
+//MDBConnector* Diary;
 //MDBConnector* ADOUsrAspect;
 //MDBConnector* ADOSvod;
 String ServerName;

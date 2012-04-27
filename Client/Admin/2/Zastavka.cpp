@@ -871,3 +871,16 @@ Pass->ViewLogins();
 }
 //---------------------------------------------------------------------------
 
+void __fastcall TZast::ClientSocketError(TObject *Sender,
+      TCustomWinSocket *Socket, TErrorEvent ErrorEvent, int &ErrorCode)
+{
+if(ErrorCode==10061)
+{
+ this->Hide();
+ ShowMessage("Не найден сервер!");
+ ErrorCode=0;
+ this->Close();
+}
+}
+//---------------------------------------------------------------------------
+

@@ -188,9 +188,8 @@ void __fastcall TForm1::ServerSocketClientRead(TObject *Sender,
       TCustomWinSocket *Socket)
 {
 String Mess=Socket->ReceiveText();
-if(Mess.Length()!=0)
+if (Mess.Length()!=0)
 {
-//Выделение параметров
 int N0=Mess.Pos(":");
 int N=Mess.Pos(";");
 int N1=Mess.Pos("|");
@@ -205,6 +204,7 @@ Parameters.clear();
 for(int i=0;i<NumPar;i++)
 {
 String Par;
+String Par1;
  int M=S.Pos("|");
  if(M>0)
  {
@@ -214,8 +214,11 @@ String Par;
  {
  Par=S;
  }
+ int NLen=Par.Pos("#");
+ int Len=StrToInt(Par.SubString(1,NLen-1));
+ Par1=S.SubString(NLen+1,Len);
  S=S.SubString(M+1,S.Length());
- Parameters.push_back(Par);
+ Parameters.push_back(Par1);
 
 
 }

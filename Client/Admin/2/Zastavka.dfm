@@ -9907,6 +9907,7 @@ object Zast: TZast
     ClientType = ctNonBlocking
     Port = 0
     OnRead = ClientSocketRead
+    OnError = ClientSocketError
     Left = 32
     Top = 128
   end

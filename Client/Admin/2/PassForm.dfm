@@ -55,6 +55,7 @@ object Pass: TPass
     Height = 21
     PasswordChar = '*'
     TabOrder = 1
+    OnKeyPress = EdPassKeyPress
   end
   object Button1: TButton
     Left = 210

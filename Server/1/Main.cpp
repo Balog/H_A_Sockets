@@ -357,6 +357,7 @@ void __fastcall TForm1::FormDestroy(TObject *Sender)
 
 
 delete Cl;
+Parameters.clear();
 }
 //---------------------------------------------------------------------------
 
