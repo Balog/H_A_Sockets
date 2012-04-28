@@ -1,7 +1,7 @@
 object Form1: TForm1
   Left = 240
   Top = 143
-  Width = 310
+  Width = 308
   Height = 320
   Caption = #1057#1077#1088#1074#1077#1088
   Color = clBtnFace
@@ -10,18 +10,20 @@ object Form1: TForm1
   Font.Height = -11
   Font.Name = 'MS Sans Serif'
   Font.Style = []
+  Menu = MainMenu1
   OldCreateOrder = False
+  OnCreate = FormCreate
   OnDestroy = FormDestroy
   PixelsPerInch = 96
   TextHeight = 13
   object PageControl1: TPageControl
     Left = 0
     Top = 0
-    Width = 302
-    Height = 293
-    ActivePage = TabSheet1
+    Width = 300
+    Height = 274
+    ActivePage = TabSheet2
     Align = alClient
-    TabIndex = 0
+    TabIndex = 1
     TabOrder = 0
     object TabSheet1: TTabSheet
       Caption = #1055#1086#1076#1082#1083#1102#1095#1077#1085#1080#1103
@@ -52,18 +54,9 @@ object Form1: TForm1
         Top = 24
         Width = 291
         Height = 241
-        Columns = 2
+        Columns = 1
         ItemHeight = 13
         TabOrder = 0
-      end
-      object ListBox2: TListBox
-        Left = 8
-        Top = -16
-        Width = 33
-        Height = 25
-        ItemHeight = 13
-        TabOrder = 1
-        Visible = False
       end
     end
     object TabSheet2: TTabSheet
@@ -75,8 +68,9 @@ object Form1: TForm1
         Width = 129
         Height = 21
         Style = csDropDownList
-        ItemHeight = 0
+        ItemHeight = 13
         TabOrder = 0
+        OnClick = RoleClick
       end
       object Otdels: TListBox
         Left = 132
@@ -86,6 +80,7 @@ object Form1: TForm1
         ItemHeight = 13
         PopupMenu = FreeOtdel
         TabOrder = 1
+        OnMouseDown = OtdelsMouseDown
       end
       object Users: TListBox
         Left = 0
@@ -95,6 +90,8 @@ object Form1: TForm1
         ItemHeight = 13
         PopupMenu = PopupMenu1
         TabOrder = 2
+        OnClick = UsersClick
+        OnMouseDown = UsersMouseDown
       end
       object Button1: TButton
         Left = 1
@@ -103,6 +100,7 @@ object Form1: TForm1
         Height = 20
         Caption = #1055#1088#1086#1074#1077#1088#1080#1090#1100
         TabOrder = 3
+        OnClick = Button1Click
       end
       object Edit1: TEdit
         Left = 134
@@ -117,8 +115,9 @@ object Form1: TForm1
         Width = 157
         Height = 21
         Style = csDropDownList
-        ItemHeight = 0
+        ItemHeight = 13
         TabOrder = 5
+        OnClick = BaseClick
       end
     end
   end
@@ -132,15 +131,19 @@ object Form1: TForm1
     Left = 192
     object N1: TMenuItem
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1083#1086#1075#1080#1085
+      OnClick = N1Click
     end
     object N2: TMenuItem
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1083#1086#1075#1080#1085
+      OnClick = N2Click
     end
     object N3: TMenuItem
       Caption = #1059#1076#1072#1083#1080#1090#1100' '#1083#1086#1075#1080#1085
+      OnClick = N3Click
     end
     object N4: TMenuItem
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1086#1083#1100
+      OnClick = N4Click
     end
   end
   object ImageList1: TImageList
@@ -288,12 +291,6 @@ object Form1: TForm1
   object FreeOtdel: TPopupMenu
     Left = 256
   end
-  object PopupMenu2: TPopupMenu
-    Left = 288
-    object N5: TMenuItem
-      Caption = #1047#1072#1082#1088#1099#1090#1100
-    end
-  end
   object ServerSocket: TServerSocket
     Active = False
     Port = 0
@@ -310,6 +307,26 @@ object Form1: TForm1
     Top = 152
     object ConnectDatabase: TAction
       Caption = 'ConnectDatabase'
+    end
+  end
+  object PopupMenu2: TPopupMenu
+    Left = 168
+    Top = 56
+    object N5: TMenuItem
+      Caption = #1047#1072#1082#1088#1099#1090#1100
+      OnClick = N5Click
+    end
+  end
+  object MainMenu1: TMainMenu
+    Left = 176
+    Top = 112
+    object N6: TMenuItem
+      Caption = #1046#1091#1088#1085#1072#1083' '#1089#1086#1073#1099#1090#1080#1081
+      OnClick = N6Click
+    end
+    object N7: TMenuItem
+      Caption = #1054#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1089#1077#1088#1074#1077#1088
+      OnClick = N7Click
     end
   end
 end

@@ -5,15 +5,15 @@
     <VERSION value="BCB.06.00"/>
     <PROJECT value="Server.exe"/>
     <OBJFILES value="Server.obj Main.obj CodeText.obj MasterPointer.obj MDBConnector.obj 
-      ServerClass.obj"/>
+      ServerClass.obj EditLogin.obj Diary.obj"/>
     <RESFILES value="Server.res"/>
     <IDLFILES value=""/>
     <IDLGENFILES value=""/>
     <DEFFILE value=""/>
-    <RESDEPEN value="$(RESFILES) Main.dfm"/>
+    <RESDEPEN value="$(RESFILES) Main.dfm EditLogin.dfm Diary.dfm"/>
     <LIBFILES value=""/>
     <LIBRARIES value="dclusr.lib"/>
-    <SPARELIBS value="vcl.lib rtl.lib dclusr.lib dbrtl.lib adortl.lib vclx.lib"/>
+    <SPARELIBS value="vcl.lib rtl.lib dclusr.lib dbrtl.lib adortl.lib vclx.lib vcldb.lib"/>
     <PACKAGES value="vcl.bpi rtl.bpi dbrtl.bpi adortl.bpi vcldb.bpi vclx.bpi bdertl.bpi 
       vcldbx.bpi ibxpress.bpi dsnap.bpi cds.bpi bdecds.bpi qrpt.bpi teeui.bpi 
       teedb.bpi tee.bpi dss.bpi teeqr.bpi visualclx.bpi visualdbclx.bpi 
@@ -64,6 +64,8 @@
       <FILE FILENAME="MasterPointer.cpp" FORMNAME="" UNITNAME="MasterPointer.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="MDBConnector.cpp" FORMNAME="" UNITNAME="MDBConnector.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="ServerClass.cpp" FORMNAME="" UNITNAME="ServerClass.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="EditLogin.cpp" FORMNAME="EditLogins" UNITNAME="EditLogin" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="Diary.cpp" FORMNAME="FDiary" UNITNAME="Diary" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
   </FILELIST>
   <BUILDTOOLS>
   </BUILDTOOLS>

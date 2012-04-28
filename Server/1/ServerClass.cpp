@@ -5,6 +5,7 @@
 
 #include "ServerClass.h"
 #include "MasterPointer.h"
+#include "Main.h"
 //---------------------------------------------------------------------------
 
 #pragma package(smart_init)
@@ -21,7 +22,7 @@ Clients::~Clients()
 for(unsigned int i=0; i<VBases.size();i++)
 {
   delete VBases[i].Database;
-  delete VBases[i].Command;
+//  delete VBases[i].Command;
 }
 VBases.clear();
 
@@ -55,6 +56,9 @@ if(LastCommand==Comm | LastCommand==0)
  {
   case 1:
   {
+
+
+
    //Ответ на команду запроса IP у клиента
    this->IP=Parameters[0];
    this->AppPatch=Parameters[1];
@@ -62,6 +66,25 @@ if(LastCommand==Comm | LastCommand==0)
    //Ответ на него не предусмотрен
    LastCommand=0;
    this->Socket->SendText("Command:2;0|");
+
+  Form1->ListBox1->Clear();
+for(unsigned int i=0; i<Parent->VClients.size();i++)
+{
+String App;
+if(ExtractFileName(Parent->VClients[i]->AppPatch)=="AdminARM.exe")
+{
+ App="Админ";
+}
+if(ExtractFileName(Parent->VClients[i]->AppPatch)=="NetAspects.exe")
+{
+ App="Аспекты";
+}
+if(ExtractFileName(Parent->VClients[i]->AppPatch)=="Hazards.exe")
+{
+ App="Опасности";
+}
+ Form1->ListBox1->Items->Add(Parent->VClients[i]->IP+" "+App);
+}
   break;
   }
   case 3:

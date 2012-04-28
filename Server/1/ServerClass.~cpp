@@ -5,6 +5,7 @@
 
 #include "ServerClass.h"
 #include "MasterPointer.h"
+#include "Main.h"
 //---------------------------------------------------------------------------
 
 #pragma package(smart_init)
@@ -21,7 +22,7 @@ Clients::~Clients()
 for(unsigned int i=0; i<VBases.size();i++)
 {
   delete VBases[i].Database;
-  delete VBases[i].Command;
+//  delete VBases[i].Command;
 }
 VBases.clear();
 
@@ -55,6 +56,9 @@ if(LastCommand==Comm | LastCommand==0)
  {
   case 1:
   {
+
+
+
    //Ответ на команду запроса IP у клиента
    this->IP=Parameters[0];
    this->AppPatch=Parameters[1];
@@ -62,6 +66,12 @@ if(LastCommand==Comm | LastCommand==0)
    //Ответ на него не предусмотрен
    LastCommand=0;
    this->Socket->SendText("Command:2;0|");
+
+  Form1->ListBox1->Clear();
+for(unsigned int i=0; i<Parent->VClients.size();i++)
+{
+ Form1->ListBox1->Items->Add(Parent->VClients[i]->IP);
+}
   break;
   }
   case 3:
@@ -185,7 +195,7 @@ String Client::TableToStr(String NameDB, String SQLText)
      {
       case ftWideString:
       {
-      Ret=Ret+(String)C1+FieldSeparator+Tab->FieldList->Fields[i]->AsString;
+      Ret=Ret+(String)C1+Tab->FieldList->Fields[i]->AsString;
       break;
       }
       case ftInteger:

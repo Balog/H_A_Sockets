@@ -16,7 +16,7 @@ bool MainSpec;
 String FileName;
 int LicCount;
 TADOConnection *Database;
-TADOCommand* Command;
+//TADOCommand* Command;
 };
 //------------------------------------------------------------------------
 /*
