@@ -1,6 +1,6 @@
 object Zast: TZast
   Left = 191
-  Top = 103
+  Top = 135
   BorderIcons = []
   BorderStyle = bsNone
   Caption = 'Zast'
@@ -9930,13 +9930,13 @@ object Zast: TZast
       Caption = 'PostRegForm_Form2'
       OnExecute = PostRegForm_Form2Execute
     end
-    object AspectsConnect: TAction
-      Caption = 'AspectsConnect'
-      OnExecute = AspectsConnectExecute
+    object PrepareConnectBase: TAction
+      Caption = 'PrepareConnectBase'
+      OnExecute = PrepareConnectBaseExecute
     end
-    object DiaryConnect: TAction
-      Caption = 'DiaryConnect'
-      OnExecute = DiaryConnectExecute
+    object ConnectBase: TAction
+      Caption = 'ConnectBase'
+      OnExecute = ConnectBaseExecute
     end
     object LoadLogins: TAction
       Caption = 'LoadLogins'

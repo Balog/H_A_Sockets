@@ -1,6 +1,6 @@
 object Zast: TZast
-  Left = 191
-  Top = 103
+  Left = 193
+  Top = 112
   BorderIcons = []
   BorderStyle = bsNone
   Caption = 'Zast'

@@ -1,6 +1,6 @@
 object Form1: TForm1
-  Left = 240
-  Top = 143
+  Left = 196
+  Top = 113
   Width = 308
   Height = 320
   Caption = #1057#1077#1088#1074#1077#1088
@@ -12,6 +12,7 @@ object Form1: TForm1
   Font.Style = []
   Menu = MainMenu1
   OldCreateOrder = False
+  Position = poScreenCenter
   OnCreate = FormCreate
   OnDestroy = FormDestroy
   PixelsPerInch = 96

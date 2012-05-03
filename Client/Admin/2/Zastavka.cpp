@@ -816,29 +816,57 @@ void __fastcall TZast::PostRegForm_Form2Execute(TObject *Sender)
 int max=MClient->VForms.size()-1;
 MClient->VForms[max]->IDF=StrToInt(MClient->Act.ParamComm[0]);
 
-MClient->StartAction("AspectsConnect");        
+MClient->StartAction("PrepareConnectBase");
 }
 //---------------------------------------------------------------------------
 
-void __fastcall TZast::AspectsConnectExecute(TObject *Sender)
+void __fastcall TZast::PrepareConnectBaseExecute(TObject *Sender)
 {
+/*
 MClient->Act.NextCommand=4;
 String Par="DiaryConnect";
 MClient->Act.ParamComm.clear();
 MClient->Act.ParamComm.push_back(Par);
 
-MClient->ConnectDatabase("Àñïåêòû", true);        
+MClient->ConnectDatabase("Àñïåêòû", true);
+*/
+MClient->Act.NextCommand=4;
+String Par="ConnectBase";
+MClient->Act.ParamComm.clear();
+String Path=ExtractFilePath(Application->ExeName);
+MP<TIniFile>Ini(Path+"NetAspects.ini");
+int MaxBase=Ini->ReadInteger("Server","NumServerBase",1);
+MClient->Act.ParamComm.push_back(IntToStr(MaxBase));
+MClient->Act.ParamComm.push_back("1");
+MClient->StartAction("ConnectBase");
+
 }
 //---------------------------------------------------------------------------
 
-void __fastcall TZast::DiaryConnectExecute(TObject *Sender)
+void __fastcall TZast::ConnectBaseExecute(TObject *Sender)
 {
+/*
 MClient->Act.NextCommand=0;
 String Par="LoadLogins";
 MClient->Act.ParamComm.clear();
 MClient->Act.ParamComm.push_back(Par);
 
-MClient->ConnectDatabase("Diary", true);        
+MClient->ConnectDatabase("Diary", true);
+*/
+int MaxBase=StrToInt(MClient->Act.ParamComm[0]);
+int TekNumBase=StrToInt(MClient->Act.ParamComm[1]);
+MClient->Act.ParamComm.clear();
+String Path=ExtractFilePath(Application->ExeName);
+MP<TIniFile>Ini(Path+"NetAspects.ini");
+int NumDatabase=Ini->ReadInteger("Base"+IntToStr(TerNumBase),"NumDatabase",-1);
+String NameDatabase=Ini->ReadString("Base"+IntToStr(TerNumBase),"Name","");
+
+/////////////////////////////////////////////////
+//ÍÀÏÈÑÀÒÜ ÖÈÊËÈ×ÅÑÊÎÅ ÏÎÄÊËÞ×ÅÍÈÅ ÁÀÇ
+//ÈÇ Ini ÔÀÉËÀ Ñ ÏÎËÓ×ÅÍÈÅÌ ×ÈÑËÀ ËÈÖÅÍÇÈÉ
+//×ÅÐÅÇ ÊÎÌÀÍÄÓ 4                                                 
+/////////////////////////////////////////////////
+MClient->Act.ParamComm.push_back("1");
 }
 //---------------------------------------------------------------------------
 

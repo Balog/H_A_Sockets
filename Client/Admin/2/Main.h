@@ -51,6 +51,9 @@ __published:	// IDE-managed Components
         TTimer *DBTimer;
         void __fastcall FormCreate(TObject *Sender);
         void __fastcall FormClose(TObject *Sender, TCloseAction &Action);
+        void __fastcall RoleChange(TObject *Sender);
+        void __fastcall FormShow(TObject *Sender);
+        void __fastcall CBDatabaseClick(TObject *Sender);
 private:	// User declarations
 String Path;
 String AdminDatabase;
@@ -62,6 +65,9 @@ vector<String>Parameters;
 String GetIP();
 
 String ServerName;
+void UpdateTempLogin();
+void UpdateOtdel(int NumLogin);
+
 public:		// User declarations
         __fastcall TForm1(TComponent* Owner);
 

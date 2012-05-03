@@ -110,8 +110,8 @@ __published:	// IDE-managed Components
         TAction *RegForm_Form2;
         TAction *PostRegForm_Form1;
         TAction *PostRegForm_Form2;
-        TAction *AspectsConnect;
-        TAction *DiaryConnect;
+        TAction *PrepareConnectBase;
+        TAction *ConnectBase;
         TAction *LoadLogins;
         TAction *ViewLogins;
         TAction *UpdateOtdels;
@@ -127,8 +127,8 @@ __published:	// IDE-managed Components
         void __fastcall RegForm_Form2Execute(TObject *Sender);
         void __fastcall PostRegForm_Form1Execute(TObject *Sender);
         void __fastcall PostRegForm_Form2Execute(TObject *Sender);
-        void __fastcall AspectsConnectExecute(TObject *Sender);
-        void __fastcall DiaryConnectExecute(TObject *Sender);
+        void __fastcall PrepareConnectBaseExecute(TObject *Sender);
+        void __fastcall ConnectBaseExecute(TObject *Sender);
         void __fastcall LoadLoginsExecute(TObject *Sender);
         void __fastcall ViewLoginsExecute(TObject *Sender);
         void __fastcall ClientSocketError(TObject *Sender,

@@ -91,7 +91,7 @@ switch(Comm)
  }
  case 6:
  {
- Form1->Show();
+
  //далее - обновление списка подразделений
  //Может быть стоит показывать Form1 после обновления.
  Zast->MClient->Act.ParamComm.clear();
@@ -353,6 +353,22 @@ else
 {
 Socket->Socket->SendText("Command:6;3|"+IntToStr(Login.Length())+"#"+Login+"|"+IntToStr(Pass.Length())+"#"+Pass+"|"+"1#0"+"|");
 }
+}
+//***************************************************************************
+int Client::GetIDDBName(String Name)
+{
+
+int Ret=-1;
+for(unsigned int i=0;i<VDB.size();i++)
+{
+ if(VDB[i].Name==Name)
+ {
+  Ret=i;
+  break;
+ }
+}
+return Ret;
+
 }
 //***************************************************************************
 /////////////////////////////////////////////////////////////////////////////

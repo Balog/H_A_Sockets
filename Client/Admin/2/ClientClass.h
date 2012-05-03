@@ -24,6 +24,7 @@ int Num;
 String Name;
 String ServerDB;
 int NumDatabase;
+int NumLicense;
 };
 //****************************************
 class Form;
@@ -60,6 +61,7 @@ int GetIDDBName(String Name);
 MDBConnector* Database;
 MDBConnector* Diary;
 void LoginResult(String Login, String Pass, bool Ok);
+int GetLicenseCount(String DBName);
 private:
 String GetIP();
 TClientSocket *Socket;

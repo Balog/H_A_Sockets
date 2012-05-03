@@ -174,3 +174,64 @@ Zast->Close();
 }
 //---------------------------------------------------------------------------
 
+void __fastcall TForm1::RoleChange(TObject *Sender)
+{
+UpdateTempLogin();
+Users->ItemIndex=0;
+UpdateOtdel(0);
+}
+//---------------------------------------------------------------------------
+void TForm1::UpdateTempLogin()
+{
+MP<TADODataSet>Tab(this);
+Tab->Connection=Zast->MClient->Database;
+Tab->CommandText="Select * From Logins where Role="+IntToStr(Role->ItemIndex+1)+" AND NumDatabase="+IntToStr(Zast->MClient->VDB[Zast->MClient->GetIDDBName(Form1->CBDatabase->Text)].NumDatabase)+" order by Login";
+Tab->Active=true;
+
+Users->Clear();
+for(Tab->First();!Tab->Eof;Tab->Next())
+{
+ Users->Items->Add(Tab->FieldByName("Login")->AsString);
+}
+}
+//-----------------------------------------------------------------
+void TForm1::UpdateOtdel(int NumLogin)
+{
+if(NumLogin<0)
+{
+Otdels->Clear();
+}
+else
+{
+MP<TADODataSet>Tab(this);
+Tab->Connection=Zast->MClient->Database;
+Tab->CommandText="Select * From Logins where Role="+IntToStr(Role->ItemIndex+1)+" AND NumDatabase="+IntToStr(Zast->MClient->VDB[Zast->MClient->GetIDDBName(Form1->CBDatabase->Text)].NumDatabase)+" order by Login";
+Tab->Active=true;
+Tab->First();
+Tab->MoveBy(NumLogin);
+int N1=Tab->FieldByName("Num")->AsInteger;
+
+//int NumLogin=TempLogin->FieldByName("Num")->Value;
+MP<TADODataSet>Verify(this);
+Verify->Connection=Zast->MClient->Database;
+
+Verify->Active=false;
+Verify->CommandText="SELECT ObslOtdel.Login, Подразделения.[Название подразделения] FROM Подразделения INNER JOIN ObslOtdel ON Подразделения.[Номер подразделения] = ObslOtdel.NumObslOtdel  where Login="+IntToStr(N1)+" Order by NumObslOtdel";
+//Verify->CommandText="SELECT ObslOtdel.Login, Подразделения.[Название подразделения], Подразделения.NumDatabase, ObslOtdel.NumObslOtdel FROM Подразделения INNER JOIN ObslOtdel ON (Подразделения.NumDatabase = ObslOtdel.NumDatabase) AND (Подразделения.[Номер подразделения] = ObslOtdel.NumObslOtdel) WHERE Подразделения.NumDatabase="+IntToStr(Main->VDB[Main->GetIDDBName(Main->CBDatabase->Text)].NumDatabase)+" ORDER BY ObslOtdel.NumObslOtdel;";
+Verify->Active=true;
+Otdels->Clear();
+for(Verify->First();!Verify->Eof;Verify->Next())
+{
+Otdels->Items->Add(Verify->FieldByName("Название подразделения")->AsString);
+}
+}
+}
+//----------------------------------------------------------------
+
+void __fastcall TForm1::FormShow(TObject *Sender)
+{
+UpdateTempLogin();
+Users->ItemIndex=0;        
+}
+//---------------------------------------------------------------------------
+

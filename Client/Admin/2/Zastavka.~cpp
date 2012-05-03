@@ -463,22 +463,7 @@ MClient->Connect(Server, Port);
 Timer1->Enabled=true;
 }
 //---------------------------------------------------------------------------
-int TZast::GetIDDBName(String Name)
-{
-/*
-int Ret=-1;
-for(unsigned int i=0;i<VDB.size();i++)
-{
- if(VDB[i].Name==Name)
- {
-  Ret=i;
-  break;
- }
-}
-return Ret;
-*/
-}
-//---------------------------------------------------------------------------
+
 bool TZast::LoadLogin(MDBConnector* DB)
 {
 /*
@@ -644,7 +629,7 @@ Comm->Execute();
 
 MP<TADODataSet>Otdels(this);
 Otdels->Connection=MClient->Database;
-Otdels->CommandText="Select * From Подразделения where NumDatabase="+IntToStr(Main->VDB[Main->GetIDDBName(Main->CBDatabase->Text)].NumDatabase)+" Order by [Номер подразделения]";
+Otdels->CommandText="Select * From Подразделения where NumDatabase="+IntToStr(Zast->MClient->VDB[Zast->MClient->GetIDDBName(Form1->CBDatabase->Text)].NumDatabase)+" Order by [Номер подразделения]";
 Otdels->Active=true;
 
 MP<TADODataSet>Temp(this);
@@ -684,7 +669,7 @@ Comm->Execute();
 //если в TempПодразделения остались записи то это новые подразделения на сервере
 //Перенести их в Подразделения
 
-Comm->CommandText="INSERT INTO Подразделения ( ServerNum, [Название подразделения], NumDatabase ) SELECT TempПодразделения.[Номер подразделения], TempПодразделения.[Название подразделения], "+IntToStr(Main->VDB[Main->GetIDDBName(Main->CBDatabase->Text)].NumDatabase)+" AS [Database] FROM TempПодразделения;";
+Comm->CommandText="INSERT INTO Подразделения ( ServerNum, [Название подразделения], NumDatabase ) SELECT TempПодразделения.[Номер подразделения], TempПодразделения.[Название подразделения], "+IntToStr(Zast->MClient->VDB[Zast->MClient->GetIDDBName(Form1->CBDatabase->Text)].NumDatabase)+" AS [Database] FROM TempПодразделения;";
 Comm->Execute();
 //Main->MClient->WriteDiaryEvent("AdminARM","Конец объединения подразделений","");
 }
@@ -886,9 +871,12 @@ if(ErrorCode==10061)
 
 void __fastcall TZast::UpdateOtdelsExecute(TObject *Sender)
 {
-
+/*
 ShowMessage(MClient->Act.ParamComm[1]);
 ShowMessage(MClient->Act.ParamComm[2]);
+*/
+MergeOtdels();
+ Form1->Show();
 }
 //---------------------------------------------------------------------------
 

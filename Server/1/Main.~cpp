@@ -217,7 +217,7 @@ for(unsigned int i=0;i<Cl->VClients.size();i++)
 {
  if(Cl->VClients[i]->Socket==Socket)
  {
-//Cl->DiaryEvent->WriteEvent(Now(),Cl->VClients[i]->IP,Cl->VClients[i]-> , "Служебное", "Клиент одключен","Путь: "+Cl->VClients[i]->AppPatch);
+Cl->DiaryEvent->WriteEvent(Now(),Cl->VClients[i]->IP,Cl->VClients[i]->Login , "Служебное", "Клиент одключен","Путь: "+Cl->VClients[i]->AppPatch);
   Cl->VClients.erase(Cl->IVC);
  }
  Cl->IVC++;

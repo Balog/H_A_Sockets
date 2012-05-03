@@ -1,6 +1,6 @@
 object Form1: TForm1
-  Left = 240
-  Top = 143
+  Left = 226
+  Top = 158
   BorderStyle = bsDialog
   Caption = 'Form1'
   ClientHeight = 263
@@ -16,6 +16,7 @@ object Form1: TForm1
   Position = poScreenCenter
   OnClose = FormClose
   OnCreate = FormCreate
+  OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 13
   object Label1: TLabel
@@ -54,6 +55,7 @@ object Form1: TForm1
     Style = csDropDownList
     ItemHeight = 13
     TabOrder = 0
+    OnChange = RoleChange
   end
   object Users: TListBox
     Left = 2
@@ -81,6 +83,7 @@ object Form1: TForm1
     Style = csDropDownList
     ItemHeight = 13
     TabOrder = 3
+    OnClick = CBDatabaseClick
   end
   object Database1: TADOConnection
     Left = 24

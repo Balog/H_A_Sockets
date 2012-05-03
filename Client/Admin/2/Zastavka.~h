@@ -154,7 +154,7 @@ void MergeLogins(MDBConnector* DB);
 vector<String>Parameters;
 
 int Role;
-vector<CDBItem>VDB;
+//vector<CDBItem>VDB;
         __fastcall TZast(TComponent* Owner);
 //MDBConnector* Database;
 //MDBConnector* Diary;
