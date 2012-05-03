@@ -1,0 +1,376 @@
+//---------------------------------------------------------------------------
+
+
+#pragma hdrstop
+
+#include "ClientClass.h"
+#include "MasterPointer.h"
+#include "Main.h"
+#include "Zastavka.h"
+//---------------------------------------------------------------------------
+
+#pragma package(smart_init)
+Client::Client(TClientSocket *ClientSocket, TActionManager *ActMan, TForm *Form)
+{
+Socket=ClientSocket;
+ActionManager=ActMan;
+Owner=Form;
+}
+//********************************************************************
+Client::~Client()
+{
+
+}
+//********************************************************************
+void Client::Connect(String ServerName, int Port)
+{
+//Ожидается ответ на команду 1
+
+Act.WaitCommand=1;
+Socket->Address=ServerName;
+Socket->Host=ServerName;
+Socket->Port=Port;
+Socket->Active=true;
+}
+//********************************************************************
+void Client::CommandExec(int Comm, vector<String>Parameters)
+{
+if(Act.WaitCommand==Comm | Act.WaitCommand==0)
+{
+switch(Comm)
+{
+ case 1:
+ {
+
+  //Отвечаем на команду 1
+  String S1=GetIP();
+  String S2=Application->ExeName;
+  String Mess="Command:1;2|"+IntToStr(S1.Length())+"#"+GetIP()+"|"+IntToStr(S2.Length())+"#"+Application->ExeName;
+  //Необходимо запомнить что ожидается команда номер 2
+  Act.WaitCommand=2;
+  Socket->Socket->SendText(Mess);
+  break;
+ }
+ case 2:
+ {
+ //После сигнала что сервер готов к дальнейшей после идентификации клиента работе регистрируем формы
+ //Запускаем действие - регистрация главной формы.
+ //Далее ожидается еще регистрация формы
+ Act.WaitCommand=Act.NextCommand;
+ StartAction("RegForm_Form1");
+
+ break;
+ }
+ case 3:
+ {
+
+
+ //Читаем записи о дальнейших действиях
+ String Action=Act.ParamComm[0];
+
+ Act.ParamComm.clear();
+
+ Act.WaitCommand=0;
+ String NumPrevForm=Parameters[0];
+ Act.ParamComm.push_back(NumPrevForm);
+ StartAction(Action);
+ break;
+ }
+ case 4:
+ {
+ String Action=Act.ParamComm[0];
+ StartAction(Action);
+ break;
+ }
+ case 5:
+ {
+ //ShowMessage(Parameters[0]);
+ DecodeTable(Act.ParamComm[1],Act.ParamComm[2],Parameters[0]);
+ StartAction(Act.ParamComm[0]);
+ break;
+ }
+ case 6:
+ {
+ Form1->Show();
+ //далее - обновление списка подразделений
+ //Может быть стоит показывать Form1 после обновления.
+ Zast->MClient->Act.ParamComm.clear();
+ Zast->MClient->Act.ParamComm.push_back("UpdateOtdels");
+
+ Zast->MClient->ReadTable("Аспекты","Select [Номер подразделения], [Название подразделения] from Подразделения", "Select [Номер подразделения], [Название подразделения] from TempПодразделения");
+
+ break;
+ }
+}
+}
+else
+{
+ ShowMessage("Ожидалась команда "+IntToStr(Act.WaitCommand)+" а пришел ответ на команду "+IntToStr(Comm));
+}
+}
+//*********************************************************************
+String Client::GetIP()
+{
+    String addr="";
+
+    const int WSVer = 0x101;
+    WSAData wsaData;
+    hostent *h;
+    char Buf[128];
+    if (WSAStartup(WSVer, &wsaData) == 0)
+    {
+    if (gethostname(&Buf[0], 128) == 0)
+    {
+    h = gethostbyname(&Buf[0]);
+    if (h != NULL)
+    {
+    //ShowMessage(inet_ntoa (*(reinterpret_cast<in_addr *>(*(h->h_addr_list)))));
+    addr=inet_ntoa (*(reinterpret_cast<in_addr *>(*(h->h_addr_list))));
+
+    }
+    else MessageBox(0,"Вы не в сети. И IP адреса у вас нет.",0,0);
+    }
+    WSACleanup;
+    }
+
+
+    return addr;
+}
+//**************************************************************************
+Form* Client::RegForm(String FormName)
+{
+Form* F=new Form();
+F->RegForm(FormName);
+VForms.push_back(F);
+//Процедура регистрации формы на сервере, команда 3
+  String Mess="Command:3;1|"+IntToStr(FormName.Length())+"#"+FormName;
+  //Необходимо запомнить что ожидается команда номер 3
+  Act.WaitCommand=3;
+  Socket->Socket->SendText(Mess);
+
+return F;
+}
+//****************************************************************************
+void Client::StartAction(String NameAction)
+{
+for(int i=0;i<ActionManager->ActionCount;i++)
+{
+ if(ActionManager->Actions[i]->Name==NameAction)
+ {
+  ActionManager->Actions[i]->Execute();
+ }
+}
+}
+//***************************************************************************
+void Client::ConnectDatabase(String Name, bool Connect)
+{
+String C;
+if(Connect)
+{
+C="true";
+}
+else
+{
+C="false";
+}
+
+String Mess="Command:4;2|"+IntToStr(Name.Length())+"#"+Name+"|"+C.Length()+"#"+C+"|";
+Socket->Socket->SendText(Mess);
+
+}
+//*************************************************************************
+void Client::ReadTable(String NameDB, String ServerSQL, String ClientSQL)
+{
+ //Act.ParamComm.clear();
+ Act.WaitCommand=5;
+ Act.ParamComm.push_back(NameDB);
+ Act.ParamComm.push_back(ClientSQL);
+
+ Socket->Socket->SendText("Command:5;2|"+IntToStr(NameDB.Length())+"#"+NameDB+"|"+ServerSQL.Length()+"#"+ServerSQL+"|");
+}
+//*************************************************************************
+void Client::DecodeTable(String NameDB, String ClientSQL, String Text)
+{
+MDBConnector* DB;
+if(NameDB=="Аспекты")
+{
+DB=Database;
+}
+else
+{
+DB=Diary;
+}
+int FromPos=ClientSQL.LowerCase().Pos("from");
+String DelText="Delete * "+ClientSQL.SubString(FromPos, ClientSQL.Length());
+
+ MP<TADOCommand>Comm(Owner);
+ Comm->Connection=DB;
+ Comm->CommandText=DelText;
+ Comm->Execute();
+
+ MP<TADODataSet>Tab(Owner);
+ Tab->Connection=DB;
+ Tab->CommandText=ClientSQL;
+ Tab->Active=true;
+
+    //Формат передачи таблицы
+   //Начало таблицы 27 1
+   //int Esc=27;
+   int S1=1;
+   int S2=2;
+   int S3=3;
+   int S4=4;
+   int S5=5;
+   int S6=6;
+   int S7=7;
+
+   char C=VK_ESCAPE;
+   char C1=((char)S1);
+   char C2=((char)S2);
+   char C3=((char)S3);
+   char C4=((char)S4);
+   char C5=((char)S5);
+   char C6=((char)S6);
+   char C7=((char)S7);
+
+   String BeginTable=(String)C+(String)C1;
+   //Конец таблицы 27 2
+   String EndTable=(String)C+(String)C2;
+   //Начало записи 27 3
+   String BeginRecord=(String)C+(String)C3;
+   //Конец записи 27 4
+   String EndRecord=(String)C+(String)C4;
+   //Начало поля 27 5
+   String BeginField=(String)C+(String)C5;
+   //Конец поля 27 6
+   String EndField=(String)C+(String)C6;
+   //Поле состоит из типа поля и значения разделенного символами 27 6
+   String FieldSeparator=(String)C+(String)C7;
+   //Типы полей
+   //ftString - 1
+   //ftInteger - 2
+   //ftBoolean - 3
+   //ftFloat - 4
+   //ftDateTime - 5
+   //ftMemo - 6
+   //Поле Memo пока представляется как строка а там посмотрим
+   //Все поля имеют текстовое предстваление, Boolean true - 1, false - 0
+
+   if(Text.SubString(1,2)==BeginTable | Text.SubString(Text.Length()-2,2)==EndTable)
+   {
+    Text=Text.SubString(3,Text.Length()-4);
+    do
+    {
+    if(Text.SubString(1,2)==BeginRecord)
+    {
+     int EndRecordPos=Text.Pos(EndRecord);
+     String Record=Text.SubString(3,EndRecordPos-3);
+
+     Tab->Insert();
+     int i=0;
+     do
+     {
+      if(Record.SubString(1,2)==BeginField)
+      {
+       int EndFieldPos=Record.Pos(EndField);
+       String Field=Record.SubString(3, EndFieldPos-3);
+
+       char T=Field[1];
+       int Type=T;
+
+       switch(Type)
+       {
+        case 1:
+        {
+        Tab->FieldList->Fields[i]->Value=Field.SubString(2, Field.Length());
+        break;
+        }
+        case 2:
+        {
+        String F=Field.SubString(4, Field.Length());
+        Tab->FieldList->Fields[i]->Value=StrToInt(F);
+        break;
+        }
+        case 3:
+        {
+
+        break;
+        }
+        case 4:
+        {
+
+        }
+        case 5:
+        {
+
+        break;
+        }
+        case 6:
+        {
+
+        break;
+        }
+       }
+       i++;
+
+       Record=Record.SubString(EndFieldPos+2, Record.Length());
+      }
+      else
+      {
+       ShowMessage("Нет знака начала поля");
+      }
+     }
+     while(Record.Length()!=0);
+       Tab->Post();
+     Text=Text.SubString(EndRecordPos+2, Text.Length());
+    }
+    else
+    {
+     ShowMessage("Нет знака начала записи");
+    }
+    }
+    while(Text.Length()!=0);
+   }
+   else
+   {
+    ShowMessage("Нет знаков начала и конца таблицы "+ClientSQL+" базы "+NameDB);
+   }
+}
+//**************************************************************************
+void Client::LoginResult(String Login, String Pass, bool Ok)
+{
+//Передача на сервер выбраного логина, введенного пароля (если проверка не прошла) и результата проверки.
+//Проверку пароля произвожу на клиенте для компактности кода и быстродействия
+//От сервера ожидаем только квитанции о прохождении команды. Если пароль неверен то назад ничего не отсылается вообще.
+ Act.ParamComm.clear();
+ Act.WaitCommand=6;
+
+if(Ok)
+{
+Socket->Socket->SendText("Command:6;3|"+IntToStr(Login.Length())+"#"+Login+"|"+"4#Pass"+"|"+"1#1"+"|");
+}
+else
+{
+Socket->Socket->SendText("Command:6;3|"+IntToStr(Login.Length())+"#"+Login+"|"+IntToStr(Pass.Length())+"#"+Pass+"|"+"1#0"+"|");
+}
+}
+//***************************************************************************
+/////////////////////////////////////////////////////////////////////////////
+Form::Form()
+{
+IDF=-1;
+FormName="-";
+}
+//////////////////////////////////////////////////////////////////////////////
+Form::~Form()
+{
+
+}
+/////////////////////////////////////////////////////////////////////////////
+void Form::RegForm(String FormName)
+{
+this->FormName=FormName;
+
+}
+//////////////////////////////////////////////////////////////////////////////
+

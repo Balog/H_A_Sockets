@@ -55,10 +55,11 @@ void ConnectDatabase(String Name, bool Connect);
 void ReadTable(String NameDB, String ServerSQL, String ClientSQL);
 void DecodeTable(String NameDB, String ClientSQL, String Text);
 vector<CDBItem>VDB;
+int GetIDDBName(String Name);
 
 MDBConnector* Database;
 MDBConnector* Diary;
-
+void LoginResult(String Login, String Pass, bool Ok);
 private:
 String GetIP();
 TClientSocket *Socket;

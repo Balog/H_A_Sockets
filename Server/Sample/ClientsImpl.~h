@@ -88,6 +88,7 @@ public:
       long W1, long W2, long W3, long W4, int* Ret));
   STDMETHOD(PrepareLoadAspectsH(BSTR NameDatabase, long IDC, long Podr,
       long Width1, long Width2, long Width3, long Width4, int* Ret));
+  STDMETHOD(MergeAspectsMainSpecH(long IDC, int* Ret));
 };
 
 #endif //ClientsImplH

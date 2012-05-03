@@ -33,7 +33,7 @@ class Client;
 class mForm;
 class mTable;
 class Diary;
-
+//-----------------------------------------------------------------------
 class Clients
 {
  private:
@@ -44,13 +44,16 @@ String DiaryBase;
 
 
  public:
-Clients(TComponent* Owner, String DiaryBase);
+Clients(TComponent* Owner);
 ~Clients();
+Diary* DiaryEvent;
 vector<Client*>VClients;
 vector<Client*>::iterator IVC;
 vector<BaseItem>VBases;
 TComponent* pOwner;
-
+void WriteDiaryEvent(String Comp, String Login, String Type, String Name, String Prim);
+void WriteDiaryEvent(String Comp, String Login, String Type, String Name);
+void ConnectDiary(String DiaryPatch);
 };
 //-------------------------------------------------------------------------
 class Client
@@ -61,6 +64,7 @@ vector<mForm*>::iterator IFC;
 Clients* Parent;
 TADOConnection* GetDatabase(String NameDB);
 String TableToStr(String NameDB, String SQLText);
+
  public:
 Client(Clients*);
 ~Client();
@@ -70,6 +74,9 @@ String AppPatch;
 int LastCommand;
 
 void CommandExec(int Comm, vector<String>);
+
+String Login;
+
 };
 //-------------------------------------------------------------------------
 class mForm
@@ -86,11 +93,17 @@ class mForm
 //-------------------------------------------------------------------------
 class Diary
 {
- private:
-
-
- public:
-
+private:
+String DiaryBasePath;
+TForm* Form;
+TADOConnection *DiaryBase;
+TLocateOptions SO;
+TComponent* Owner;
+public:
+Diary(TComponent* Owner, String Patch);
+~Diary();
+void WriteEvent(TDateTime DT, String Comp, String Login, String Type, String Name);
+void WriteEvent(TDateTime DT, String Comp, String Login, String Type, String Name, String Prim);
 
 };
 #endif

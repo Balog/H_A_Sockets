@@ -114,6 +114,7 @@ __published:	// IDE-managed Components
         TAction *DiaryConnect;
         TAction *LoadLogins;
         TAction *ViewLogins;
+        TAction *UpdateOtdels;
         void __fastcall Timer1Timer(TObject *Sender);
         void __fastcall Image1Click(TObject *Sender);
         void __fastcall FormCreate(TObject *Sender);
@@ -133,6 +134,7 @@ __published:	// IDE-managed Components
         void __fastcall ClientSocketError(TObject *Sender,
           TCustomWinSocket *Socket, TErrorEvent ErrorEvent,
           int &ErrorCode);
+        void __fastcall UpdateOtdelsExecute(TObject *Sender);
 private:	// User declarations
 String Path;
 TLocateOptions SO;
@@ -147,15 +149,15 @@ bool Start;
 public:		// User declarations
 bool Reg;
 bool LoadLogin(MDBConnector* DB);
-void MergeOtdels(MDBConnector* DB);
+void MergeOtdels();
 void MergeLogins(MDBConnector* DB);
 vector<String>Parameters;
 
 int Role;
 vector<CDBItem>VDB;
         __fastcall TZast(TComponent* Owner);
-MDBConnector* Database;
-MDBConnector* Diary;
+//MDBConnector* Database;
+//MDBConnector* Diary;
 //MDBConnector* ADOUsrAspect;
 //MDBConnector* ADOSvod;
 String ServerName;

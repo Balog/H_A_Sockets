@@ -5,6 +5,8 @@
 
 #include "ClientClass.h"
 #include "MasterPointer.h"
+#include "Main.h"
+#include "Zastavka.h"
 //---------------------------------------------------------------------------
 
 #pragma package(smart_init)
@@ -85,6 +87,19 @@ switch(Comm)
  //ShowMessage(Parameters[0]);
  DecodeTable(Act.ParamComm[1],Act.ParamComm[2],Parameters[0]);
  StartAction(Act.ParamComm[0]);
+ break;
+ }
+ case 6:
+ {
+
+ //далее - обновление списка подразделений
+ //Может быть стоит показывать Form1 после обновления.
+ Zast->MClient->Act.ParamComm.clear();
+ Zast->MClient->Act.ParamComm.push_back("UpdateOtdels");
+
+ Zast->MClient->ReadTable("Аспекты","Select [Номер подразделения], [Название подразделения] from Подразделения", "Select [Номер подразделения], [Название подразделения] from TempПодразделения");
+
+ break;
  }
 }
 }
@@ -208,7 +223,7 @@ String DelText="Delete * "+ClientSQL.SubString(FromPos, ClientSQL.Length());
    int S5=5;
    int S6=6;
    int S7=7;
-   
+
    char C=VK_ESCAPE;
    char C1=((char)S1);
    char C2=((char)S2);
@@ -272,7 +287,8 @@ String DelText="Delete * "+ClientSQL.SubString(FromPos, ClientSQL.Length());
         }
         case 2:
         {
-
+        String F=Field.SubString(4, Field.Length());
+        Tab->FieldList->Fields[i]->Value=StrToInt(F);
         break;
         }
         case 3:
@@ -321,6 +337,40 @@ String DelText="Delete * "+ClientSQL.SubString(FromPos, ClientSQL.Length());
    }
 }
 //**************************************************************************
+void Client::LoginResult(String Login, String Pass, bool Ok)
+{
+//Передача на сервер выбраного логина, введенного пароля (если проверка не прошла) и результата проверки.
+//Проверку пароля произвожу на клиенте для компактности кода и быстродействия
+//От сервера ожидаем только квитанции о прохождении команды. Если пароль неверен то назад ничего не отсылается вообще.
+ Act.ParamComm.clear();
+ Act.WaitCommand=6;
+
+if(Ok)
+{
+Socket->Socket->SendText("Command:6;3|"+IntToStr(Login.Length())+"#"+Login+"|"+"4#Pass"+"|"+"1#1"+"|");
+}
+else
+{
+Socket->Socket->SendText("Command:6;3|"+IntToStr(Login.Length())+"#"+Login+"|"+IntToStr(Pass.Length())+"#"+Pass+"|"+"1#0"+"|");
+}
+}
+//***************************************************************************
+int Client::GetIDDBName(String Name)
+{
+
+int Ret=-1;
+for(unsigned int i=0;i<VDB.size();i++)
+{
+ if(VDB[i].Name==Name)
+ {
+  Ret=i;
+  break;
+ }
+}
+return Ret;
+
+}
+//***************************************************************************
 /////////////////////////////////////////////////////////////////////////////
 Form::Form()
 {

@@ -21,6 +21,7 @@ __published:	// IDE-managed Components
         TButton *Button1;
         void __fastcall FormShow(TObject *Sender);
         void __fastcall Button1Click(TObject *Sender);
+        void __fastcall EdPassKeyPress(TObject *Sender, char &Key);
 private:	// User declarations
 public:		// User declarations
         __fastcall TPass(TComponent* Owner);

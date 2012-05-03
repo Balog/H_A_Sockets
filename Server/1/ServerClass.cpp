@@ -10,11 +10,10 @@
 
 #pragma package(smart_init)
 
-Clients::Clients(TComponent* Owner, String DiaryBase)
+Clients::Clients(TComponent* Owner)
 {
 pOwner=Owner;
-this->DiaryBase=DiaryBase;
-//VBases=VB;
+
 }
 //-------------------------------------------------------
 Clients::~Clients()
@@ -33,10 +32,32 @@ delete VClients[i];
 VClients.clear();
 }
 //-------------------------------------------------------
+void Clients::WriteDiaryEvent(String Comp, String Login, String Type, String Name, String Prim)
+{
+DiaryEvent->WriteEvent(Now(), Comp, Login, Type, Name,Prim);
+
+}
+//----------------------------------------------------
+void Clients::WriteDiaryEvent(String Comp, String Login, String Type, String Name)
+{
+DiaryEvent->WriteEvent(Now(), Comp, Login, Type, Name,"");
+
+}
+//----------------------------------------------------
+void Clients::ConnectDiary(String DiaryPatch)
+{
+this->DiaryBase=DiaryPatch;
+
+DiaryEvent=new Diary(pOwner, DiaryPatch);
+}
+//----------------------------------------------------
 //********************************************************
 Client::Client(Clients* Cls)
 {
  Parent=Cls;
+ Login="Неизвестен";
+// Role=-1;
+
 }
 //**************************************************
 Client::~Client()
@@ -73,15 +94,15 @@ for(unsigned int i=0; i<Parent->VClients.size();i++)
 String App;
 if(ExtractFileName(Parent->VClients[i]->AppPatch)=="AdminARM.exe")
 {
- App="Админ";
+ App="AdminARM";
 }
 if(ExtractFileName(Parent->VClients[i]->AppPatch)=="NetAspects.exe")
 {
- App="Аспекты";
+ App="Aspects";
 }
 if(ExtractFileName(Parent->VClients[i]->AppPatch)=="Hazards.exe")
 {
- App="Опасности";
+ App="Hazards";
 }
  Form1->ListBox1->Items->Add(Parent->VClients[i]->IP+" "+App);
 }
@@ -128,6 +149,23 @@ if(ExtractFileName(Parent->VClients[i]->AppPatch)=="Hazards.exe")
    String Text=TableToStr(Parameters[0], Parameters[1]);
    //ShowMessage(Text);
    this->Socket->SendText("Command:5;1|"+IntToStr(Text.Length())+"#"+Text+"|");
+   break;
+   }
+   case 6:
+   {
+
+   if(Parameters[2]=="1")
+   {
+   Parent->WriteDiaryEvent(this->IP, Parameters[0], "Служебное","Пользователь идентифицирован");
+   this->Login=Parameters[0];
+   this->Socket->SendText("Command:6;0|");
+
+   }
+   else
+   {
+   //Parent->WriteDiaryEvent(this->IP, Parameters[0], "Служебное","Идентификация пользователя");
+   Parent->WriteDiaryEvent(this->IP, Parameters[0], "Служебное","Пользователь не идентифицирован","Pass: "+Parameters[1]);
+   }
    break;
    }
  }
@@ -216,6 +254,11 @@ String Client::TableToStr(String NameDB, String SQLText)
       Ret=Ret+(String)C2+FieldSeparator+IntToStr(Tab->FieldList->Fields[i]->AsInteger);
       break;
       }
+      case ftAutoInc:
+      {
+      Ret=Ret+(String)C2+FieldSeparator+IntToStr(Tab->FieldList->Fields[i]->AsInteger);
+      break;
+      }
       case ftBoolean:
       {
       if(Tab->FieldList->Fields[i]->AsBoolean)
@@ -263,3 +306,96 @@ String Client::TableToStr(String NameDB, String SQLText)
 
  }
  //**************************************************************************
+ //.........................................................................
+ Diary::Diary(TComponent* Owner, String PatchDiary)
+{
+this->Form=(TForm*)Owner;
+
+
+
+DiaryBase=new TADOConnection(this->Form);
+
+DiaryBase->ConnectionString="Provider=Microsoft.Jet.OLEDB.4.0;User ID=Admin;Data Source="+PatchDiary+";Mode=Share Deny None;Extended Properties="";Jet OLEDB:System database="";Jet OLEDB:Registry Path="";Jet OLEDB:Database Password="";Jet OLEDB:Engine Type=5;Jet OLEDB:Database Locking Mode=1;Jet OLEDB:Global Partial Bulk Ops=2;Jet OLEDB:Global Bulk Transactions=1;Jet OLEDB:New Database Password="";Jet OLEDB:Create System Database=False;Jet OLEDB:Encrypt Database=False;Jet OLEDB:Don't Copy Locale on Compact=False;Jet OLEDB:Compact Without Replica Repair=False;Jet OLEDB:SFP=False";
+DiaryBase->LoginPrompt=false;
+DiaryBase->Connected=true;
+}
+//................................................
+Diary::~Diary()
+{
+delete DiaryBase;
+}
+//.................................................
+void Diary::WriteEvent(TDateTime DT, String Comp, String Login, String Type, String Name, String Prim)
+{
+MP<TADODataSet>TypeOp(Form);
+TypeOp->Connection=DiaryBase;
+TypeOp->CommandText="Select * From TypeOp order by Num";
+TypeOp->Active=true;
+
+int NumType;
+if(TypeOp->Locate("NameType",Type, SO))
+{
+//Найдено, прочитать
+NumType=TypeOp->FieldByName("Num")->Value;
+}
+else
+{
+//Не найдено, записать
+TypeOp->Insert();
+TypeOp->FieldByName("NameType")->Value=Type;
+TypeOp->Post();
+TypeOp->Active=false;
+TypeOp->Active=true;
+TypeOp->Last();
+NumType=TypeOp->FieldByName("Num")->Value;
+}
+
+MP<TADODataSet>Operation(Form);
+Operation->Connection=DiaryBase;
+Operation->CommandText="Select * From Operations order by Num";
+Operation->Active=true;
+
+/*
+Variant locvalues[] = {EDep->Text, EFam->Text};
+Table1->Locate("Dep;Fam", VarArrayOf(locvalues,1),      SearchOptions<<loPartialKey<<loCaseInsensitive);
+*/
+int NumOp;
+Variant locvalues[] = {Name, NumType};
+if(Operation->Locate("NameOperation;Type",VarArrayOf(locvalues,1),SO))
+{
+//найдено, читать
+NumOp=Operation->FieldByName("Num")->Value;
+}
+else
+{
+//Ненайдено, записать
+Operation->Insert();
+Operation->FieldByName("NameOperation")->Value=Name;
+Operation->FieldByName("Type")->Value=NumType;
+Operation->Post();
+Operation->Active=false;
+Operation->Active=true;
+Operation->Last();
+NumOp=Operation->FieldByName("Num")->Value;
+}
+
+MP<TADODataSet>Event(Form);
+Event->Connection=DiaryBase;
+Event->CommandText="Select * From Events order by Num";
+Event->Active=true;
+
+Event->Insert();
+Event->FieldByName("Date_Time")->Value=DT;
+Event->FieldByName("Comp")->Value=Comp;
+Event->FieldByName("Login")->Value=Login;
+Event->FieldByName("Operation")->Value=NumOp;
+Event->FieldByName("Prim")->Value=Prim;
+Event->Post();
+}
+//................................................
+void Diary::WriteEvent(TDateTime DT, String Comp, String Login, String Type, String Name)
+{
+WriteEvent(DT, Comp, Login, Type, Name, "");
+}
+//.................................................
+

@@ -463,22 +463,7 @@ MClient->Connect(Server, Port);
 Timer1->Enabled=true;
 }
 //---------------------------------------------------------------------------
-int TZast::GetIDDBName(String Name)
-{
-/*
-int Ret=-1;
-for(unsigned int i=0;i<VDB.size();i++)
-{
- if(VDB[i].Name==Name)
- {
-  Ret=i;
-  break;
- }
-}
-return Ret;
-*/
-}
-//---------------------------------------------------------------------------
+
 bool TZast::LoadLogin(MDBConnector* DB)
 {
 /*
@@ -630,29 +615,31 @@ return Mess;
 */
 }
 //--------------------------------------------------------------------------
-void TZast::MergeOtdels(MDBConnector* DB)
+void TZast::MergeOtdels()
 {
-/*
+//Main->MClient->WriteDiaryEvent("AdminARM","Начало объединения подразделений","");
+try
+{
 TLocateOptions SO;
 
 MP<TADOCommand>Comm(this);
-Comm->Connection=DB;
+Comm->Connection=MClient->Database;
 Comm->CommandText="UPDATE Подразделения SET Подразделения.Del = False;";
 Comm->Execute();
 
 MP<TADODataSet>Otdels(this);
-Otdels->Connection=DB;
-Otdels->CommandText="Select * From Подразделения Order by [Номер подразделения]";
+Otdels->Connection=MClient->Database;
+Otdels->CommandText="Select * From Подразделения where NumDatabase="+IntToStr(Zast->MClient->VDB[Zast->MClient->GetIDDBName(Form1->CBDatabase->Text)].NumDatabase)+" Order by [Номер подразделения]";
 Otdels->Active=true;
 
 MP<TADODataSet>Temp(this);
-Temp->Connection=DB;
+Temp->Connection=MClient->Database;
 Temp->CommandText="Select * From TempПодразделения Order by [Номер подразделения]";
 Temp->Active=true;
 
 for(Otdels->First();!Otdels->Eof;Otdels->Next())
 {
-int SNum=Otdels->FieldByName("ServerNum")->AsInteger;
+int SNum=Otdels->FieldByName("ServerNum")->Value;
 if(Temp->Locate("Номер подразделения", SNum, SO))
 {
 //найден
@@ -682,21 +669,18 @@ Comm->Execute();
 //если в TempПодразделения остались записи то это новые подразделения на сервере
 //Перенести их в Подразделения
 
-for(Temp->First();!Temp->Eof;Temp->Next())
-{
-Otdels->Insert();
-Otdels->FieldByName("Название подразделения")->Value=Temp-> FieldByName("Название подразделения")->Value;
-Otdels->FieldByName("ServerNum")->Value=Temp-> FieldByName("Номер подразделения")->Value;
-Otdels->FieldByName("Del")->Value=false;
-Otdels->Post();
-}
-//очистить TempПодразделения
-Comm->CommandText="Delete * from TempПодразделения";
+Comm->CommandText="INSERT INTO Подразделения ( ServerNum, [Название подразделения], NumDatabase ) SELECT TempПодразделения.[Номер подразделения], TempПодразделения.[Название подразделения], "+IntToStr(Zast->MClient->VDB[Zast->MClient->GetIDDBName(Form1->CBDatabase->Text)].NumDatabase)+" AS [Database] FROM TempПодразделения;";
 Comm->Execute();
-
-*/
+//Main->MClient->WriteDiaryEvent("AdminARM","Конец объединения подразделений","");
 }
-//----------------------------------------------------
+catch(...)
+{
+//Main->MClient->WriteDiaryEvent("AdminARM ошибка","Ошибка объединения подразделений"," Ошибка "+IntToStr(GetLastError()));
+
+}
+
+}
+//--------------------------------------------------------
 void TZast::MergeLogins(MDBConnector* DB)
 {
 /*
@@ -746,7 +730,7 @@ Comm->Execute();
 
 void __fastcall TZast::FormDestroy(TObject *Sender)
 {
-//delete MClient;
+delete MClient;
 }
 //---------------------------------------------------------------------------
 
@@ -881,6 +865,18 @@ if(ErrorCode==10061)
  ErrorCode=0;
  this->Close();
 }
+}
+//---------------------------------------------------------------------------
+
+
+void __fastcall TZast::UpdateOtdelsExecute(TObject *Sender)
+{
+/*
+ShowMessage(MClient->Act.ParamComm[1]);
+ShowMessage(MClient->Act.ParamComm[2]);
+*/
+MergeOtdels();
+ Form1->Show();
 }
 //---------------------------------------------------------------------------
 

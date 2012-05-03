@@ -63,16 +63,20 @@ String TLogin=Str.SubString(256-TabLogin.Length()*2+1,TabLogin.Length()*2);
 String LG=TLogin.SubString(1,TLogin.Length()/2);
 if(LG==TabLogin)
 {
+Zast->MClient->LoginResult(TabLogin,EdPass->Text, true);
+
+
 //Main->MClient->WriteDiaryEvent("AdminARM","Пароль принят","");
 //Zast->MClient->SetLogin(TabLogin);
 //Main->Start=true;
 //Main->InputPass=true;
 this->Close();
-Form1->Show();
+
 }
 else
 {
 //Main->Start=false;
+Zast->MClient->LoginResult(TabLogin,EdPass->Text, false);
 this->Hide();
 //Main->MClient->WriteDiaryEvent("AdminARM","Неверный пароль","Pass="+EdPass->Text);
 ShowMessage("Пароль ошибочен");
@@ -84,7 +88,7 @@ Zast->Close();
 
 
 this->Hide();
-Form1->Show();
+//Form1->Show();
 }
 //---------------------------------------------------------------------------
 

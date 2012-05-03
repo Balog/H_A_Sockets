@@ -9946,5 +9946,9 @@ object Zast: TZast
       Caption = 'ViewLogins'
       OnExecute = ViewLoginsExecute
     end
+    object UpdateOtdels: TAction
+      Caption = 'UpdateOtdels'
+      OnExecute = UpdateOtdelsExecute
+    end
   end
 end

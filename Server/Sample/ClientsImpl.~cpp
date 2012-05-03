@@ -452,3 +452,21 @@ else
 }
 
 
+STDMETHODIMP TClientsImpl::MergeAspectsMainSpecH(long IDC, int* Ret)
+{ 
+if(Form1->Block<0 | Form1->Block==IDC)
+{
+Form1->Block=IDC;
+Form1->MyClients->MergeAspectsMainSpecH(IDC);
+*Ret=true;
+Form1->Block=-1;
+}
+else
+{
+*Ret=false;
+}
+
+  return S_OK;
+}
+
+

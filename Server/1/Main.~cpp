@@ -32,7 +32,7 @@ int Days=Ini->ReadInteger("Main","StoreArchive",0);
 int Port=Ini->ReadInteger("Main","Port",2000);
 ServerSocket->Port=Port;
 
-Cl=new Clients(this, "");
+Cl=new Clients(this);
 
 
 Cl->VBases.clear();
@@ -113,6 +113,8 @@ Comm->Connection=ADOConn;
 Comm->CommandText="DELETE Now()-[Date_Time] AS Days FROM Events WHERE (((Now()-[Date_Time])>"+IntToStr(DiaryStoreDays)+"));";
 Comm->Execute();
 ADOConn->Connected=false;
+
+Cl->ConnectDiary(BI.Patch);
 }
 //delete ADOConn;
 }
@@ -178,6 +180,8 @@ VerifyLicense();
 
 
 ServerSocket->Active=true;
+Cl->DiaryEvent->WriteEvent(Now(),"Неопределен", "Неизвестен", "Служебное", "Сервер инициирован", "");
+
 }
 //---------------------------------------------------------------------------
 void __fastcall TForm1::ServerSocketClientConnect(TObject *Sender,
@@ -202,6 +206,7 @@ for(unsigned int i=0;i<Cl->VClients.size();i++)
 Socket->SendText(Mess);
 
 Label1->Caption=IntToStr(Cl->VClients.size());
+Cl->DiaryEvent->WriteEvent(Now(),"Неопределен", "Неизвестен", "Служебное", "Клиент подключен");
 }
 //---------------------------------------------------------------------------
 void __fastcall TForm1::ServerSocketClientDisconnect(TObject *Sender,
@@ -212,6 +217,7 @@ for(unsigned int i=0;i<Cl->VClients.size();i++)
 {
  if(Cl->VClients[i]->Socket==Socket)
  {
+//Cl->DiaryEvent->WriteEvent(Now(),Cl->VClients[i]->IP,Cl->VClients[i]-> , "Служебное", "Клиент одключен","Путь: "+Cl->VClients[i]->AppPatch);
   Cl->VClients.erase(Cl->IVC);
  }
  Cl->IVC++;
@@ -235,6 +241,8 @@ if(ExtractFileName(Cl->VClients[i]->AppPatch)=="Hazards.exe")
  App="Опасности";
 }
  Form1->ListBox1->Items->Add(Cl->VClients[i]->IP+" "+App);
+
+
 }
 }
 //---------------------------------------------------------------------------
@@ -418,6 +426,8 @@ void __fastcall TForm1::FormDestroy(TObject *Sender)
 
 delete Cl;
 Parameters.clear();
+
+Shell_NotifyIcon(NIM_DELETE, &NID);
 }
 //---------------------------------------------------------------------------
 
@@ -1030,9 +1040,15 @@ DefWindowProc(Handle,Msg.Msg,Msg.WParam,Msg.LParam);
 //------------------------------------------------------------------
 void __fastcall TForm1::N7Click(TObject *Sender)
 {
-Form1->MyClients->DiaryEvent->WriteEvent(Now(),Form1->MyClients->NameComp, Form1->MyClients->Login, "Служебное", "Ручной останов сервера", "");
+//Form1->MyClients->DiaryEvent->WriteEvent(Now(),Form1->MyClients->NameComp, Form1->MyClients->Login, "Служебное", "Ручной останов сервера", "");
 
 this->Close();
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm1::N6Click(TObject *Sender)
+{
+FDiary->ShowModal();        
 }
 //---------------------------------------------------------------------------
 
