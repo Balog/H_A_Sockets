@@ -52,11 +52,12 @@ vector<Form*>VForms;
 vector<Form*>::iterator IVF;
 
 void StartAction(String NameAction);
-void ConnectDatabase(String Name, bool Connect);
+void ConnectDatabase(String Name,int Number,  bool Connect);
 void ReadTable(String NameDB, String ServerSQL, String ClientSQL);
 void DecodeTable(String NameDB, String ClientSQL, String Text);
 vector<CDBItem>VDB;
 int GetIDDBName(String Name);
+void RegisterDatabase(String Name, int NumLic);
 
 MDBConnector* Database;
 MDBConnector* Diary;
@@ -68,7 +69,7 @@ TClientSocket *Socket;
 
 TActionManager *ActionManager;
 TForm *Owner;
-
+void VerifyLicense(String NameDB);
 
 };
 //****************************************

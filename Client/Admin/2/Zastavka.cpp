@@ -106,13 +106,18 @@ this->Hide();
 
 this->BorderStyle=bsSingle;
 
-Timer1->Enabled=false;
+
 Timer2->Enabled=false;
 //ShowMessage("Çàïóñê");
 if(Start)
 {
 Timer1->Enabled=false;
 Pass->Show();
+
+Timer1->Enabled=false;
+}
+else
+{
 Timer1->Interval=1000;
 }
 }
@@ -834,11 +839,14 @@ MClient->Act.NextCommand=4;
 String Par="ConnectBase";
 MClient->Act.ParamComm.clear();
 String Path=ExtractFilePath(Application->ExeName);
-MP<TIniFile>Ini(Path+"NetAspects.ini");
+MP<TIniFile>Ini(Path+"Admin.ini");
 int MaxBase=Ini->ReadInteger("Server","NumServerBase",1);
 MClient->Act.ParamComm.push_back(IntToStr(MaxBase));
 MClient->Act.ParamComm.push_back("1");
-MClient->StartAction("ConnectBase");
+MClient->Act.ParamComm.push_back("ConnectBase");
+MClient->Act.ParamComm.push_back("LoadLogins");
+
+MClient->StartAction("Trigger");
 
 }
 //---------------------------------------------------------------------------
@@ -853,20 +861,21 @@ MClient->Act.ParamComm.push_back(Par);
 
 MClient->ConnectDatabase("Diary", true);
 */
-int MaxBase=StrToInt(MClient->Act.ParamComm[0]);
 int TekNumBase=StrToInt(MClient->Act.ParamComm[1]);
-MClient->Act.ParamComm.clear();
+//MClient->Act.ParamComm.clear();
 String Path=ExtractFilePath(Application->ExeName);
-MP<TIniFile>Ini(Path+"NetAspects.ini");
-int NumDatabase=Ini->ReadInteger("Base"+IntToStr(TerNumBase),"NumDatabase",-1);
-String NameDatabase=Ini->ReadString("Base"+IntToStr(TerNumBase),"Name","");
+MP<TIniFile>Ini(Path+"Admin.ini");
+int NumDatabase=Ini->ReadInteger("Base"+IntToStr(TekNumBase),"NumDatabase",-1);
+String NameDatabase=Ini->ReadString("Base"+IntToStr(TekNumBase),"Name","");
 
 /////////////////////////////////////////////////
 //ÍÀÏÈÑÀÒÜ ÖÈÊËÈ×ÅÑÊÎÅ ÏÎÄÊËÞ×ÅÍÈÅ ÁÀÇ
 //ÈÇ Ini ÔÀÉËÀ Ñ ÏÎËÓ×ÅÍÈÅÌ ×ÈÑËÀ ËÈÖÅÍÇÈÉ
-//×ÅÐÅÇ ÊÎÌÀÍÄÓ 4                                                 
+//×ÅÐÅÇ ÊÎÌÀÍÄÓ 4
 /////////////////////////////////////////////////
-MClient->Act.ParamComm.push_back("1");
+MClient->ConnectDatabase(NameDatabase, NumDatabase, true);
+
+MClient->Act.ParamComm[1]=IntToStr(StrToInt(MClient->Act.ParamComm[1])+1);
 }
 //---------------------------------------------------------------------------
 
@@ -905,6 +914,30 @@ ShowMessage(MClient->Act.ParamComm[2]);
 */
 MergeOtdels();
  Form1->Show();
+
+Form1->Users->ItemIndex=0;
+Form1->UpdateOtdel(0);
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TZast::TriggerExecute(TObject *Sender)
+{
+if(StrToInt(MClient->Act.ParamComm[1]-1)<StrToInt(MClient->Act.ParamComm[0]))
+{
+ MClient->StartAction(MClient->Act.ParamComm[2]);
+}
+else
+{
+ MClient->StartAction(MClient->Act.ParamComm[3]);
+}
+}
+//---------------------------------------------------------------------------
+
+
+void __fastcall TZast::UpdateLoginsExecute(TObject *Sender)
+{
+Form1->UpdateTempLogin();
+Form1->Users->ItemIndex=0;
 }
 //---------------------------------------------------------------------------
 

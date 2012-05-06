@@ -115,6 +115,8 @@ __published:	// IDE-managed Components
         TAction *LoadLogins;
         TAction *ViewLogins;
         TAction *UpdateOtdels;
+        TAction *Trigger;
+        TAction *UpdateLogins;
         void __fastcall Timer1Timer(TObject *Sender);
         void __fastcall Image1Click(TObject *Sender);
         void __fastcall FormCreate(TObject *Sender);
@@ -135,6 +137,8 @@ __published:	// IDE-managed Components
           TCustomWinSocket *Socket, TErrorEvent ErrorEvent,
           int &ErrorCode);
         void __fastcall UpdateOtdelsExecute(TObject *Sender);
+        void __fastcall TriggerExecute(TObject *Sender);
+        void __fastcall UpdateLoginsExecute(TObject *Sender);
 private:	// User declarations
 String Path;
 TLocateOptions SO;

@@ -54,6 +54,8 @@ __published:	// IDE-managed Components
         void __fastcall RoleChange(TObject *Sender);
         void __fastcall FormShow(TObject *Sender);
         void __fastcall CBDatabaseClick(TObject *Sender);
+        void __fastcall UsersMouseDown(TObject *Sender,
+          TMouseButton Button, TShiftState Shift, int X, int Y);
 private:	// User declarations
 String Path;
 String AdminDatabase;
@@ -65,13 +67,14 @@ vector<String>Parameters;
 String GetIP();
 
 String ServerName;
-void UpdateTempLogin();
-void UpdateOtdel(int NumLogin);
+
+
 
 public:		// User declarations
         __fastcall TForm1(TComponent* Owner);
-
-
+bool Reg;
+void UpdateTempLogin();
+void UpdateOtdel(int NumLogin);
 //Client *MClient;
 };
 //---------------------------------------------------------------------------

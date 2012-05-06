@@ -78,8 +78,23 @@ switch(Comm)
  }
  case 4:
  {
+ /*
  String Action=Act.ParamComm[0];
  StartAction(Action);
+ */
+
+ /*
+ ShowMessage(Act.ParamComm[0]);
+ ShowMessage(Act.ParamComm[1]);
+ ShowMessage(Act.ParamComm[2]);
+ ShowMessage(Act.ParamComm[3]);
+ ShowMessage(Act.ParamComm[4]);
+ ShowMessage(Act.ParamComm[5]);
+ ShowMessage(Act.ParamComm[6]);
+ */
+ RegisterDatabase(Act.ParamComm[6], StrToInt(Act.ParamComm[5]));
+ StartAction("Trigger");
+
  break;
  }
  case 5:
@@ -97,7 +112,7 @@ switch(Comm)
  Zast->MClient->Act.ParamComm.clear();
  Zast->MClient->Act.ParamComm.push_back("UpdateOtdels");
 
- Zast->MClient->ReadTable("Аспекты","Select [Номер подразделения], [Название подразделения] from Подразделения", "Select [Номер подразделения], [Название подразделения] from TempПодразделения");
+ Zast->MClient->ReadTable(Form1->CBDatabase->Text,"Select [Номер подразделения], [Название подразделения] from Подразделения", "Select [Номер подразделения], [Название подразделения] from TempПодразделения");
 
  break;
  }
@@ -162,7 +177,7 @@ for(int i=0;i<ActionManager->ActionCount;i++)
 }
 }
 //***************************************************************************
-void Client::ConnectDatabase(String Name, bool Connect)
+void Client::ConnectDatabase(String Name,int Number, bool Connect)
 {
 String C;
 if(Connect)
@@ -174,7 +189,7 @@ else
 C="false";
 }
 
-String Mess="Command:4;2|"+IntToStr(Name.Length())+"#"+Name+"|"+C.Length()+"#"+C+"|";
+String Mess="Command:4;3|"+IntToStr(Name.Length())+"#"+Name+"|"+IntToStr(Number).Length()+"#"+IntToStr(Number)+"|"+C.Length()+"#"+C+"|";
 Socket->Socket->SendText(Mess);
 
 }
@@ -192,7 +207,7 @@ void Client::ReadTable(String NameDB, String ServerSQL, String ClientSQL)
 void Client::DecodeTable(String NameDB, String ClientSQL, String Text)
 {
 MDBConnector* DB;
-if(NameDB=="Аспекты")
+if(NameDB!="Diary")
 {
 DB=Database;
 }
@@ -373,10 +388,70 @@ return Ret;
 //***************************************************************************
 int Client::GetLicenseCount(String DBName)
 {
-
+int Res=-1;
+for(unsigned int i=0;i<VDB.size();i++)
+{
+ if(VDB[i].Name==DBName)
+ {
+  Res=VDB[i].NumLicense;
+  break;
+ }
+}
 return Res;
 }
 //*************************************************************************
+void Client::RegisterDatabase(String Name, int NumLic)
+{
+for(unsigned int i=0;i<VDB.size();i++)
+{
+ if(VDB[i].Name==Name)
+ {
+  VDB[i].NumLicense=NumLic;
+  break;
+ }
+}
+}
+//*************************************************************************
+void Client::VerifyLicense(String NameDB)
+{
+int NumDB;
+int LicCount;
+for(unsigned int i=0;i<VDB.size();i++)
+{
+ if(VDB[i].Name==NameDB)
+ {
+  NumDB=VDB[i].NumDatabase;
+  LicCount=VDB[i].NumLicense;
+  break;
+ }
+}
+
+MP<TADODataSet>Log3(Owner);
+Log3->Connection=Database;
+Log3->CommandText="Select * From Logins Where Role=3 AND NumDatabase="+IntToStr(NumDB);
+Log3->Active=true;
+
+if(LicCount==-1)
+{
+//Main->MClient->WriteDiaryEvent("AdminARM лицензия","Неограниченая лицензия","База данных: "+CBDatabase->Text);
+
+}
+else
+{
+if(Log3->RecordCount>LicCount)
+{
+//Main->MClient->WriteDiaryEvent("AdminARM лицензия","Удалено часть пользователей по причине лицензии","База данных: "+CBDatabase->Text+" Было: "+IntToStr(Log3->RecordCount)+" Стало: "+IntToStr(LicCount));
+//Main->MClient->WriteDiaryEvent("AdminARM лицензия","Чтение списка логинов","База данных: "+CBDatabase->Text+" Было: "+IntToStr(Log3->RecordCount)+" Стало: "+IntToStr(LicCount));
+
+StartAction("LoadLogins");
+//LoadLogins();
+ //загрузка логинов
+// Main->MClient->WriteDiaryEvent("AdminARM лицензия","Загрузка логинов завершена","База данных: "+CBDatabase->Text);
+
+}
+}
+}
+//************************************************************************
 /////////////////////////////////////////////////////////////////////////////
 Form::Form()
 {

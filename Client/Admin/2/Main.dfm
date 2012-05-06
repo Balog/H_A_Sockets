@@ -1,6 +1,6 @@
 object Form1: TForm1
-  Left = 226
-  Top = 158
+  Left = 209
+  Top = 136
   BorderStyle = bsDialog
   Caption = 'Form1'
   ClientHeight = 263
@@ -65,6 +65,7 @@ object Form1: TForm1
     ItemHeight = 13
     PopupMenu = PopupMenu1
     TabOrder = 1
+    OnMouseDown = UsersMouseDown
   end
   object Otdels: TListBox
     Left = 239

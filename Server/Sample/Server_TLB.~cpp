@@ -10,10 +10,10 @@
 // ************************************************************************ //
 
 // C++ TLBWRTR : $Revision:   1.151.1.0.1.27  $
-// File generated on 14.02.2012 0:07:16 from Type Library described below.
+// File generated on 02.05.2012 11:24:53 from Type Library described below.
 
 // ************************************************************************  //
-// Type Lib: D:\Program Files (x86)\Borland\CBuilder6\Projects\Сервер-клиент аспекты и опасности\Сервер\3\Server.tlb (1)
+// Type Lib: D:\Program Files (x86)\Borland\CBuilder6\Projects\H_A_Sockets\Server\Sample\Server.tlb (1)
 // LIBID: {22FD94F8-3ADB-429C-B80F-17DB209F386E}
 // LCID: 0
 // Helpfile: 

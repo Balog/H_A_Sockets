@@ -110,11 +110,12 @@ __published:	// IDE-managed Components
         TAction *RegForm_Form2;
         TAction *PostRegForm_Form1;
         TAction *PostRegForm_Form2;
-        TAction *AspectsConnect;
-        TAction *DiaryConnect;
+        TAction *PrepareConnectBase;
+        TAction *ConnectBase;
         TAction *LoadLogins;
         TAction *ViewLogins;
         TAction *UpdateOtdels;
+        TAction *Trigger;
         void __fastcall Timer1Timer(TObject *Sender);
         void __fastcall Image1Click(TObject *Sender);
         void __fastcall FormCreate(TObject *Sender);
@@ -127,14 +128,15 @@ __published:	// IDE-managed Components
         void __fastcall RegForm_Form2Execute(TObject *Sender);
         void __fastcall PostRegForm_Form1Execute(TObject *Sender);
         void __fastcall PostRegForm_Form2Execute(TObject *Sender);
-        void __fastcall AspectsConnectExecute(TObject *Sender);
-        void __fastcall DiaryConnectExecute(TObject *Sender);
+        void __fastcall PrepareConnectBaseExecute(TObject *Sender);
+        void __fastcall ConnectBaseExecute(TObject *Sender);
         void __fastcall LoadLoginsExecute(TObject *Sender);
         void __fastcall ViewLoginsExecute(TObject *Sender);
         void __fastcall ClientSocketError(TObject *Sender,
           TCustomWinSocket *Socket, TErrorEvent ErrorEvent,
           int &ErrorCode);
         void __fastcall UpdateOtdelsExecute(TObject *Sender);
+        void __fastcall TriggerExecute(TObject *Sender);
 private:	// User declarations
 String Path;
 TLocateOptions SO;

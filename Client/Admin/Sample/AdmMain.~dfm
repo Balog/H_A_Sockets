@@ -12,11 +12,13 @@ object Main: TMain
   Font.Height = -11
   Font.Name = 'MS Sans Serif'
   Font.Style = []
+  KeyPreview = True
   Menu = MainMenu1
   OldCreateOrder = False
   Position = poScreenCenter
   OnClose = FormClose
   OnDestroy = FormDestroy
+  OnKeyUp = FormKeyUp
   OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 13
@@ -131,6 +133,10 @@ object Main: TMain
     object N7: TMenuItem
       Caption = #1046#1091#1088#1085#1072#1083' '#1089#1086#1073#1099#1090#1080#1081
       OnClick = N7Click
+    end
+    object N10: TMenuItem
+      Caption = #1055#1086#1084#1086#1097#1100
+      OnClick = N10Click
     end
     object N8: TMenuItem
       Caption = #1054' '#1087#1088#1086#1075#1088#1072#1084#1084#1077

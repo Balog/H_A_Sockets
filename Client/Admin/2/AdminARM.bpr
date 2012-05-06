@@ -5,12 +5,12 @@
     <VERSION value="BCB.06.00"/>
     <PROJECT value="AdminARM.exe"/>
     <OBJFILES value="AdminARM.obj Zastavka.obj ClientClass.obj Main.obj MDBConnector.obj 
-      PassForm.obj CodeText.obj"/>
+      PassForm.obj CodeText.obj EditLogin.obj"/>
     <RESFILES value="AdminARM.res"/>
     <IDLFILES value=""/>
     <IDLGENFILES value=""/>
     <DEFFILE value=""/>
-    <RESDEPEN value="$(RESFILES) Zastavka.dfm Main.dfm PassForm.dfm"/>
+    <RESDEPEN value="$(RESFILES) Zastavka.dfm Main.dfm PassForm.dfm EditLogin.dfm"/>
     <LIBFILES value=""/>
     <LIBRARIES value="vclx.lib adortl.lib dbrtl.lib dclusr.lib rtl.lib vcl.lib"/>
     <SPARELIBS value="vcl.lib rtl.lib dclusr.lib dbrtl.lib adortl.lib vclx.lib"/>
@@ -65,6 +65,7 @@
       <FILE FILENAME="MDBConnector.cpp" FORMNAME="" UNITNAME="MDBConnector.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="PassForm.cpp" FORMNAME="Pass" UNITNAME="PassForm" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="CodeText.cpp" FORMNAME="" UNITNAME="CodeText" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="EditLogin.cpp" FORMNAME="EditLogins" UNITNAME="EditLogin" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
   </FILELIST>
   <BUILDTOOLS>
   </BUILDTOOLS>

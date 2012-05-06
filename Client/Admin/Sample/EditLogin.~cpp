@@ -55,3 +55,14 @@ Main->SaveCode(Log->Text, Pass1->Text);
 this->Close();
 }
 //---------------------------------------------------------------------------
+void __fastcall TEditLogins::FormKeyUp(TObject *Sender, WORD &Key,
+      TShiftState Shift)
+{
+if(Key==112)
+{
+Application->HelpFile=ExtractFilePath(Application->ExeName)+"ADMINARM.HLP";
+Application->HelpJump("IDH_тнплю_педюйрхпнбюмхъ_свермни_гюохях");
+}
+}
+//---------------------------------------------------------------------------
+

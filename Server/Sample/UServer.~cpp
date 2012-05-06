@@ -1031,11 +1031,11 @@ Logins->Active=true;
 Form1->MyClients->DiaryEvent->WriteEvent(Now(),Form1->MyClients->NameComp, Form1->MyClients->Login, "Лицензия", "Проверка числа пользователей", "DB: "+VBases[i].Name+" Разрешено="+IntToStr(LicCount)+" Имеется="+IntToStr(Logins->RecordCount)); //ShowMessage("Файл лицензии открыт");
 if(LicCount<Logins->RecordCount)
 {
-int i=0;
+int j=0;
 for(Logins->First();!Logins->Eof;Logins->Next())
 {
 //ShowMessage("i="+IntToStr(i)+" LicCount="+IntToStr(LicCount));
-if(i>=LicCount)
+if(j>=LicCount)
 {
 Form1->MyClients->DiaryEvent->WriteEvent(Now(),Form1->MyClients->NameComp, Form1->MyClients->Login, "Лицензия ошибка", "Удаление избыточных пользователей", "DB: "+VBases[i].Name+" Login: "+Logins->FieldByName("Login")->AsString); //ShowMessage("Файл лицензии открыт");
 
@@ -1044,7 +1044,7 @@ Logins->Edit();
 Logins->FieldByName("Del")->Value=true;
 Logins->Post();
 }
-i++;
+j++;
 }
 
 MP<TADOCommand>Comm(this);

@@ -1,6 +1,6 @@
 object Form1: TForm1
-  Left = 226
-  Top = 158
+  Left = 209
+  Top = 136
   BorderStyle = bsDialog
   Caption = 'Form1'
   ClientHeight = 263
@@ -83,6 +83,7 @@ object Form1: TForm1
     Style = csDropDownList
     ItemHeight = 13
     TabOrder = 3
+    OnClick = CBDatabaseClick
   end
   object Database1: TADOConnection
     Left = 24

@@ -128,7 +128,7 @@ if(ExtractFileName(Parent->VClients[i]->AppPatch)=="Hazards.exe")
   {
    if(Parent->VBases[i].Name==Parameters[0])
    {
-    if(Parameters[1]=="true")
+    if(Parameters[2]=="true")
     {
     Parent->VBases[i].Database->Connected=true;
     }
@@ -137,7 +137,17 @@ if(ExtractFileName(Parent->VClients[i]->AppPatch)=="Hazards.exe")
      Parent->VBases[i].Database->Connected=false;
     }
    //удачное открытие базы
-   this->Socket->SendText("Command:4;1|1#1|");
+    if(Parameters[1]!="-1")
+    {
+
+   this->Socket->SendText("Command:4;3|1#1|"+IntToStr(IntToStr(Parent->VBases[i].LicCount).Length())+"#"+IntToStr(Parent->VBases[i].LicCount)+"|"+IntToStr(Parent->VBases[i].Name.Length())+"#"+Parent->VBases[i].Name+"|");
+    }
+    else
+    {
+   this->Socket->SendText("Command:4;3|1#1|2#-1|1#" "");
+    }
+
+
    break;
       }
   }

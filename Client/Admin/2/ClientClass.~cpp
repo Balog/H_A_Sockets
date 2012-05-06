@@ -78,8 +78,23 @@ switch(Comm)
  }
  case 4:
  {
+ /*
  String Action=Act.ParamComm[0];
  StartAction(Action);
+ */
+
+ /*
+ ShowMessage(Act.ParamComm[0]);
+ ShowMessage(Act.ParamComm[1]);
+ ShowMessage(Act.ParamComm[2]);
+ ShowMessage(Act.ParamComm[3]);
+ ShowMessage(Act.ParamComm[4]);
+ ShowMessage(Act.ParamComm[5]);
+ ShowMessage(Act.ParamComm[6]);
+ */
+ RegisterDatabase(Act.ParamComm[6], StrToInt(Act.ParamComm[5]));
+ StartAction("Trigger");
+
  break;
  }
  case 5:
@@ -162,7 +177,7 @@ for(int i=0;i<ActionManager->ActionCount;i++)
 }
 }
 //***************************************************************************
-void Client::ConnectDatabase(String Name, bool Connect)
+void Client::ConnectDatabase(String Name,int Number, bool Connect)
 {
 String C;
 if(Connect)
@@ -174,7 +189,7 @@ else
 C="false";
 }
 
-String Mess="Command:4;2|"+IntToStr(Name.Length())+"#"+Name+"|"+C.Length()+"#"+C+"|";
+String Mess="Command:4;3|"+IntToStr(Name.Length())+"#"+Name+"|"+IntToStr(Number).Length()+"#"+IntToStr(Number)+"|"+C.Length()+"#"+C+"|";
 Socket->Socket->SendText(Mess);
 
 }
@@ -371,6 +386,24 @@ return Ret;
 
 }
 //***************************************************************************
+int Client::GetLicenseCount(String DBName)
+{
+
+//return Res;
+}
+//*************************************************************************
+void Client::RegisterDatabase(String Name, int NumLic)
+{
+for(unsigned int i=0;i<VDB.size();i++)
+{
+ if(VDB[i].Name==Name)
+ {
+  VDB[i].NumLicense=NumLic;
+  break;
+ }
+}
+}
+//*************************************************************************
 /////////////////////////////////////////////////////////////////////////////
 Form::Form()
 {

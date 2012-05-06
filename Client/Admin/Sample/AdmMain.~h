@@ -51,6 +51,7 @@ __published:	// IDE-managed Components
         TMenuItem *N7;
         TMenuItem *N8;
         TMenuItem *N9;
+        TMenuItem *N10;
         void __fastcall RoleClick(TObject *Sender);
         void __fastcall UsersClick(TObject *Sender);
         void __fastcall UsersMouseDown(TObject *Sender,
@@ -70,6 +71,9 @@ __published:	// IDE-managed Components
         void __fastcall N7Click(TObject *Sender);
         void __fastcall N8Click(TObject *Sender);
         void __fastcall N9Click(TObject *Sender);
+        void __fastcall FormKeyUp(TObject *Sender, WORD &Key,
+          TShiftState Shift);
+        void __fastcall N10Click(TObject *Sender);
 private:	// User declarations
 TLocateOptions SO;
 void UpdateTempLogin();

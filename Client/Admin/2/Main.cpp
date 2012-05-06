@@ -18,6 +18,7 @@ TForm1 *Form1;
 __fastcall TForm1::TForm1(TComponent* Owner)
         : TForm(Owner)
 {
+Reg=false;
 /*
 Path=ExtractFilePath(Application->ExeName);
 MP<TIniFile>Ini(Path+"Admin.ini");
@@ -230,33 +231,91 @@ Otdels->Items->Add(Verify->FieldByName("Название подразделения")->AsString);
 
 void __fastcall TForm1::FormShow(TObject *Sender)
 {
-UpdateTempLogin();
-Users->ItemIndex=0;        
+Zast->UpdateLogins->Execute();
 }
 //---------------------------------------------------------------------------
 
 void __fastcall TForm1::CBDatabaseClick(TObject *Sender)
 {
+
 //Main->MClient->WriteDiaryEvent("AdminARM","Переключение базы данных","База данных: "+CBDatabase->Text);
-LicCount=Zast->MClient->GetLicenseCount(CBDatabase->Text);
+//LicCount=Zast->MClient->GetLicenseCount(CBDatabase->Text);
 Reg=LicCount!=0;
 //MClient->SetDatabaseConnect(MClient->IDC(), CBDatabase->ItemIndex, true);
 try
 {
-VerifyLicense();
+//Zast->MClient->
+//VerifyLicense(CBDatabase->Text);
 
-UpdateOtdels();
+//UpdateOtdels();
+Zast->UpdateLogins->Execute();
 
+ Zast->MClient->Act.ParamComm.clear();
+ Zast->MClient->Act.ParamComm.push_back("UpdateOtdels");
+
+ Zast->MClient->ReadTable(CBDatabase->Text,"Select [Номер подразделения], [Название подразделения] from Подразделения", "Select [Номер подразделения], [Название подразделения] from TempПодразделения");
+
+//Zast->UpdateOtdels->Execute();
+/*
 int N=Users->ItemIndex;
 
 UpdateTempLogin();
 Users->ItemIndex=N;
 UpdateOtdel(N);
+*/
 //Main->MClient->WriteDiaryEvent("AdminARM","Переключение базы данных завершено","База данных: "+CBDatabase->Text);
 }
 catch(...)
 {
 //Main->MClient->WriteDiaryEvent("AdminARM ошибка","Ошибка переключения базы данных","База данных: "+CBDatabase->Text);
+}
+
+}
+//---------------------------------------------------------------------------
+
+
+void __fastcall TForm1::UsersMouseDown(TObject *Sender,
+      TMouseButton Button, TShiftState Shift, int X, int Y)
+{
+int N=Users->ItemAtPos(Point(X,Y), true);
+Users->ItemIndex=N;
+UpdateOtdel(N);
+if(Button==mbRight)
+{
+if(Role->ItemIndex>1)
+{
+if(N>=0)
+{
+N1->Enabled=true;
+N2->Enabled=true;
+N3->Enabled=true;
+N4->Enabled=true;
+}
+else
+{
+N1->Enabled=true;
+N2->Enabled=false;
+N3->Enabled=false;
+N4->Enabled=false;
+}
+}
+else
+{
+if(N>=0)
+{
+N1->Enabled=false;
+N2->Enabled=true;
+N3->Enabled=false;
+N4->Enabled=true;
+}
+else
+{
+N1->Enabled=false;
+N2->Enabled=false;
+N3->Enabled=false;
+N4->Enabled=false;
+}
+}
 }
 }
 //---------------------------------------------------------------------------

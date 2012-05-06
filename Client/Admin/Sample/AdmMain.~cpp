@@ -1410,3 +1410,21 @@ LoadLogins();
 }
 }
 //-------------------------------------------------------------------------
+void __fastcall TMain::FormKeyUp(TObject *Sender, WORD &Key,
+      TShiftState Shift)
+{
+if(Key==112)
+{
+Application->HelpFile=ExtractFilePath(Application->ExeName)+"ADMINARM.HLP";
+Application->HelpJump("IDH_цкюбмюъ_тнплю");
+}
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TMain::N10Click(TObject *Sender)
+{
+Application->HelpFile=ExtractFilePath(Application->ExeName)+"ADMINARM.HLP";
+Application->HelpJump("IDH_псйнбндярбн");        
+}
+//---------------------------------------------------------------------------
+
