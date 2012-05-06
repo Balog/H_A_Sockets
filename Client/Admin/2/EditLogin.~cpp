@@ -16,7 +16,15 @@ TEditLogins *EditLogins;
 __fastcall TEditLogins::TEditLogins(TComponent* Owner)
         : TForm(Owner)
 {
-
+Button1->Enabled=false;
+if(Mode)
+{
+Log->Enabled=false;
+}
+else
+{
+Log->Enabled=true;
+}
 }
 //---------------------------------------------------------------------------
 void TEditLogins::NewLogin()
@@ -108,18 +116,5 @@ else
 {
  Button1->Enabled=false;
 }
-}
-//---------------------------------------------------------------------------
-void __fastcall TEditLogins::FormShow(TObject *Sender)
-{
-Button1->Enabled=false;
-if(Mode)
-{
-Log->Enabled=false;
-}
-else
-{
-Log->Enabled=true;
-}        
 }
 //---------------------------------------------------------------------------

@@ -75,6 +75,7 @@ object Form1: TForm1
     ItemHeight = 13
     PopupMenu = FreeOtdel
     TabOrder = 2
+    OnMouseDown = OtdelsMouseDown
   end
   object CBDatabase: TComboBox
     Left = 315
@@ -95,15 +96,19 @@ object Form1: TForm1
     Top = 64
     object N1: TMenuItem
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1103
+      OnClick = N1Click
     end
     object N2: TMenuItem
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1083#1086#1075#1080#1085
-    end
-    object N3: TMenuItem
-      Caption = #1059#1076#1072#1083#1080#1090#1100' '#1087#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1103
+      OnClick = N2Click
     end
     object N4: TMenuItem
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1086#1083#1100
+      OnClick = N4Click
+    end
+    object N3: TMenuItem
+      Caption = #1059#1076#1072#1083#1080#1090#1100' '#1087#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1103
+      OnClick = N3Click
     end
   end
   object FreeOtdel: TPopupMenu

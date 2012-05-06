@@ -56,6 +56,12 @@ __published:	// IDE-managed Components
         void __fastcall CBDatabaseClick(TObject *Sender);
         void __fastcall UsersMouseDown(TObject *Sender,
           TMouseButton Button, TShiftState Shift, int X, int Y);
+        void __fastcall N3Click(TObject *Sender);
+        void __fastcall N1Click(TObject *Sender);
+        void __fastcall N2Click(TObject *Sender);
+        void __fastcall N4Click(TObject *Sender);
+        void __fastcall OtdelsMouseDown(TObject *Sender,
+          TMouseButton Button, TShiftState Shift, int X, int Y);
 private:	// User declarations
 String Path;
 String AdminDatabase;
@@ -67,7 +73,7 @@ vector<String>Parameters;
 String GetIP();
 
 String ServerName;
-
+void __fastcall SelectOtdel(TObject *Sender);
 
 
 public:		// User declarations
