@@ -117,6 +117,9 @@ __published:	// IDE-managed Components
         TAction *UpdateOtdels;
         TAction *Trigger;
         TAction *UpdateLogins;
+        TAction *UpdateOtdelsMan;
+        TAction *UpdateLoginsMan;
+        TAction *UpdateObslOtdelMan;
         void __fastcall Timer1Timer(TObject *Sender);
         void __fastcall Image1Click(TObject *Sender);
         void __fastcall FormCreate(TObject *Sender);
@@ -139,6 +142,9 @@ __published:	// IDE-managed Components
         void __fastcall UpdateOtdelsExecute(TObject *Sender);
         void __fastcall TriggerExecute(TObject *Sender);
         void __fastcall UpdateLoginsExecute(TObject *Sender);
+        void __fastcall UpdateOtdelsManExecute(TObject *Sender);
+        void __fastcall UpdateLoginsManExecute(TObject *Sender);
+        void __fastcall UpdateObslOtdelManExecute(TObject *Sender);
 private:	// User declarations
 String Path;
 TLocateOptions SO;
@@ -152,9 +158,10 @@ bool Start;
 
 public:		// User declarations
 bool Reg;
-bool LoadLogin(MDBConnector* DB);
+//bool LoadLogin(MDBConnector* DB);
 void MergeOtdels();
-void MergeLogins(MDBConnector* DB);
+void MergeLogins();
+//void MergeLogins(MDBConnector* DB);
 vector<String>Parameters;
 
 int Role;

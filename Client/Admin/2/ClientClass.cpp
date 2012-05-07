@@ -15,6 +15,8 @@ Client::Client(TClientSocket *ClientSocket, TActionManager *ActMan, TForm *Form)
 Socket=ClientSocket;
 ActionManager=ActMan;
 Owner=Form;
+IP="Не определено";
+Login="Не задан";
 }
 //********************************************************************
 Client::~Client()
@@ -44,6 +46,7 @@ switch(Comm)
 
   //Отвечаем на команду 1
   String S1=GetIP();
+  IP=S1;
   String S2=Application->ExeName;
   String Mess="Command:1;2|"+IntToStr(S1.Length())+"#"+GetIP()+"|"+IntToStr(S2.Length())+"#"+Application->ExeName;
   //Необходимо запомнить что ожидается команда номер 2
@@ -114,6 +117,14 @@ switch(Comm)
 
  Zast->MClient->ReadTable(Form1->CBDatabase->Text,"Select [Номер подразделения], [Название подразделения] from Подразделения", "Select [Номер подразделения], [Название подразделения] from TempПодразделения");
 
+ break;
+ }
+ case 7:
+ {
+  //Ответ на запись в журнал
+  //Информация назад не передается
+
+ StartAction(Act.ParamComm[0]);
  break;
  }
 }
@@ -450,6 +461,19 @@ StartAction("LoadLogins");
 
 }
 }
+}
+//************************************************************************
+void Client::WriteDiaryEvent(String Type, String Name, String Prim)
+{
+Act.WaitCommand=7;
+Act.ParamComm.clear();
+Socket->Socket->SendText("Command:7;5|"+IntToStr(IP.Length())+"#"+IP+"|"+IntToStr(Login.Length())+"#"+Login+"|"+IntToStr(Type.Length())+"#"+Type+"|"+IntToStr(Name.Length())+"#"+Name+"|"+IntToStr(Prim.Length())+"#"+Prim+"|");
+
+}
+//************************************************************************
+void Client::WriteDiaryEvent(String Type, String Name)
+{
+WriteDiaryEvent(Type, Name, "");
 }
 //************************************************************************
 /////////////////////////////////////////////////////////////////////////////

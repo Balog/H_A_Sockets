@@ -63,6 +63,9 @@ MDBConnector* Database;
 MDBConnector* Diary;
 void LoginResult(String Login, String Pass, bool Ok);
 int GetLicenseCount(String DBName);
+void WriteDiaryEvent(String Type, String Name, String Prim);
+void WriteDiaryEvent(String Type, String Name);
+String Login;
 private:
 String GetIP();
 TClientSocket *Socket;
@@ -70,6 +73,7 @@ TClientSocket *Socket;
 TActionManager *ActionManager;
 TForm *Owner;
 void VerifyLicense(String NameDB);
+String IP;
 
 };
 //****************************************

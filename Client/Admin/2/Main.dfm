@@ -1,7 +1,7 @@
 object Form1: TForm1
   Left = 209
   Top = 136
-  BorderStyle = bsDialog
+  BorderStyle = bsSingle
   Caption = 'Form1'
   ClientHeight = 263
   ClientWidth = 419
@@ -120,6 +120,7 @@ object Form1: TForm1
     Top = 16
     object N5: TMenuItem
       Caption = #1063#1090#1077#1085#1080#1077
+      OnClick = N5Click
     end
     object N6: TMenuItem
       Caption = #1047#1072#1087#1080#1089#1100

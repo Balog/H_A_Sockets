@@ -469,157 +469,6 @@ Timer1->Enabled=true;
 }
 //---------------------------------------------------------------------------
 
-bool TZast::LoadLogin(MDBConnector* DB)
-{
-/*
-bool Mess=true;
-MP<TADOCommand>Comm(this);
-Comm->Connection=DB;
-
-//Перенос данных о подразделениях
-Comm->CommandText="Delete * From TempПодразделения";
-Comm->Execute();
-MP<TADODataSet>Local(this);
-Local->Connection=DB;
-Local->CommandText="Select TempПодразделения.[Номер подразделения], TempПодразделения.[Название подразделения] From TempПодразделения Order by [Номер подразделения]";
-Local->Active=true;
-
-
-//CDBItem Item=VDB[CBDatabase->ItemIndex];
-Table* Remote=Zast->MClient->CreateTable(this, Zast->ServerName, Zast->VDB[Zast->GetIDDBName("Аспекты")].ServerDB);
-
-Remote->SetCommandText("Select Подразделения.[Номер подразделения], Подразделения.[Название подразделения] From Подразделения Order by [Номер подразделения]");
-Remote->Active(true);
-
-MClient->LoadTable(Remote, Local);
-//Проверить качество переноса подразделений
-
-if(MClient->VerifyTable(Remote, Local)==0)
-{
-
-MergeOtdels(DB);
-
-
-
-MP<TADODataSet>LTable(this);
-LTable->Connection=DB;
-LTable->CommandText="Select TempLogins.Num, TempLogins.Login, TempLogins.Role From TempLogins Order by Num";
-LTable->Active=true;
-
-//CDBItem Item=VDB[CBDatabase->ItemIndex];
-Table* RTable=Zast->MClient->CreateTable(this, Zast->ServerName, Zast->VDB[Zast->GetIDDBName("Аспекты")].ServerDB);
-//
-RTable->SetCommandText("Select Logins.Num, Logins.Login, Logins.Role From Logins Order by Num");
-RTable->Active(true);
-
-
-Comm->CommandText="Delete * From TempLogins";
-Comm->Execute();
-
-Comm->CommandText="Delete * From TempObslOtdel";
-Comm->Execute();
-//Перенести таблицу логинов
-MClient->LoadTable(RTable, LTable);
-//Проверить качество переноса логинов
-LTable->Active=false;
-LTable->Active=true;
-if(MClient->VerifyTable(LTable, RTable)==0)
-{
-//Перенести таблицу обслуживаеиых подразделений
-MP<TADODataSet>ToTable(this);
-ToTable->Connection=DB;
-ToTable->CommandText="Select TempObslOtdel.Login, TempObslOtdel.NumObslOtdel From TempObslOtdel Order by Login, NumObslOtdel";
-ToTable->Active=true;
-
-//CDBItem Item=VDB[CBDatabase->ItemIndex];
-Table* FromTable=Zast->MClient->CreateTable(this, Zast->ServerName, Zast->VDB[Zast->GetIDDBName("Аспекты")].ServerDB);
-//
-FromTable->SetCommandText("Select ObslOtdel.Login, ObslOtdel.NumObslOtdel From ObslOtdel Order by Login, NumObslOtdel");
-FromTable->Active(true);
-MClient->LoadTable(FromTable, ToTable);
-//Проверить качество переноса таблицы обслуживаемых подразделений
-if(MClient->VerifyTable(FromTable, ToTable)==0)
-{
-//Объединить таблицу логинов, одновременно корректируя таблицу TempObslOtdel
-MergeLogins(DB);
-
-//Объединить таблицу обслуживаемых подразделений
-Comm->CommandText="Delete * From ObslOtdel";
-Comm->Execute();
-
-MP<TADODataSet>Logins(this);
-Logins->Connection=DB;
-Logins->CommandText="Select * from Logins";
-Logins->Active=true;
-
-MP<TADODataSet>Podr(this);
-Podr->Connection=DB;
-Podr->CommandText="Select * from Подразделения";
-Podr->Active=true;
-
-int Log;
-int Pod;
-for(ToTable->First();!ToTable->Eof;ToTable->Next())
-{
- int N=ToTable->FieldByName("Login")->Value;
-
- if(Logins->Locate("ServerNum", N, SO))
- {
-  Log=Logins->FieldByName("Num")->Value;
-
- int N1=ToTable->FieldByName("NumObslOtdel")->Value;
-
- if(Podr->Locate("ServerNum", N1, SO))
- {
-  Pod=Podr->FieldByName("Номер подразделения")->Value;
-
-  ToTable->Edit();
-  ToTable->FieldByName("Login")->Value=Log;
-  ToTable->FieldByName("NumObslOtdel")->Value=Pod;
-  ToTable->Post();
- }
- else
- {
-  ShowMessage("Ошибка перекодировки подразделений N="+IntToStr(N1));
- }
- }
- else
- {
-  ShowMessage("Ошибка перекодировки логинов N="+IntToStr(N));
- }
-
-
-
-
-}
-
-
-Comm->CommandText="INSERT INTO ObslOtdel ( Login, NumObslOtdel) SELECT TempObslOtdel.Login, TempObslOtdel.NumObslOtdel FROM TempObslOtdel;";
-Comm->Execute();
-}
-else
-{
-Mess=false;
-}
-MClient->DeleteTable(this, FromTable);
-
-}
-else
-{
-Mess=false;
-}
-MClient->DeleteTable(this, RTable);
-
-}
-else
-{
-Mess=false;
-}
-MClient->DeleteTable(this, Remote);
-return Mess;
-*/
-}
-//--------------------------------------------------------------------------
 void TZast::MergeOtdels()
 {
 //Main->MClient->WriteDiaryEvent("AdminARM","Начало объединения подразделений","");
@@ -677,61 +526,16 @@ Comm->Execute();
 Comm->CommandText="INSERT INTO Подразделения ( ServerNum, [Название подразделения], NumDatabase ) SELECT TempПодразделения.[Номер подразделения], TempПодразделения.[Название подразделения], "+IntToStr(Zast->MClient->VDB[Zast->MClient->GetIDDBName(Form1->CBDatabase->Text)].NumDatabase)+" AS [Database] FROM TempПодразделения;";
 Comm->Execute();
 //Main->MClient->WriteDiaryEvent("AdminARM","Конец объединения подразделений","");
+MClient->WriteDiaryEvent("AdminARM","Конец объединения подразделений");
 }
 catch(...)
 {
 //Main->MClient->WriteDiaryEvent("AdminARM ошибка","Ошибка объединения подразделений"," Ошибка "+IntToStr(GetLastError()));
-
+MClient->WriteDiaryEvent("AdminARM ошибка","Ошибка объединения подразделений"," Ошибка "+IntToStr(GetLastError()));
 }
 
 }
 //--------------------------------------------------------
-void TZast::MergeLogins(MDBConnector* DB)
-{
-/*
-MP<TADOCommand>Comm(this);
-Comm->Connection=DB;
-Comm->CommandText="UPDATE Logins SET Logins.Del = False;";
-Comm->Execute();
-
-MP<TADODataSet>TempLogins(this);
-TempLogins->Connection=DB;
-TempLogins->CommandText="Select * From TempLogins";
-TempLogins->Active=true;
-
-MP<TADODataSet>Logins(this);
-Logins->Connection=DB;
-Logins->CommandText="Select * From Logins";
-Logins->Active=true;
-
-for(Logins->First();!Logins->Eof;Logins->Next())
-{
- int N=Logins->FieldByName("ServerNum")->Value;
- if(TempLogins->Locate("Num", N, SO))
- {
-  Logins->Edit();
-  Logins->FieldByName("Login")->Value=TempLogins->FieldByName("Login")->Value;
-  Logins->FieldByName("Role")->Value=TempLogins->FieldByName("Role")->Value;
-  Logins->Post();
-
-  TempLogins->Delete();
- }
- else
- {
-  Logins->Edit();
-  Logins->FieldByName("Del")->Value=true;
-  Logins->Post();
- }
-}
-
-Comm->CommandText="Delete * From Logins Where Logins.Del = true;";
-Comm->Execute();
-
-Comm->CommandText="INSERT INTO Logins ( ServerNum, Login, Role ) SELECT TempLogins.Num, TempLogins.Login, TempLogins.Role FROM TempLogins;";
-Comm->Execute();
-*/
-}
-//---------------------------------------------------------------
 
 void __fastcall TZast::FormDestroy(TObject *Sender)
 {
@@ -941,3 +745,182 @@ Form1->Users->ItemIndex=0;
 }
 //---------------------------------------------------------------------------
 
+
+void __fastcall TZast::UpdateOtdelsManExecute(TObject *Sender)
+{
+MP<TADOCommand>Comm(this);
+Comm->Connection=MClient->Database;
+
+
+
+Comm->CommandText="Delete * From TempLogins";
+Comm->Execute();
+//Чтение таблицы логинов
+ Zast->MClient->Act.ParamComm.clear();
+ Zast->MClient->Act.ParamComm.push_back("UpdateLoginsMan");
+ Zast->MClient->Act.NextCommand=5;
+
+ Zast->MClient->ReadTable(Form1->CBDatabase->Text,"Select [Num], [Login], [Code1], [Code2], Role from Logins", "Select [ServerNum], [Login], [Code1], [Code2], Role from TempLogins");
+
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TZast::UpdateLoginsManExecute(TObject *Sender)
+{
+//Чтение таблицы распределения
+MP<TADOCommand>Comm(this);
+Comm->Connection=MClient->Database;
+Comm->CommandText="Delete * From TempObslOtdel";
+Comm->Execute();
+
+ Zast->MClient->Act.ParamComm.clear();
+ Zast->MClient->Act.ParamComm.push_back("UpdateObslOtdelMan");
+ Zast->MClient->Act.NextCommand=5;
+
+ Zast->MClient->ReadTable(Form1->CBDatabase->Text,"Select [Login], [NumObslOtdel] from ObslOtdel", "Select [Login], [NumObslOtdel] from TempObslOtdel");
+
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TZast::UpdateObslOtdelManExecute(TObject *Sender)
+{
+MP<TADOCommand>Comm(this);
+Comm->Connection=MClient->Database;
+
+MergeLogins();
+MergeOtdels();
+Form1->Users->ItemIndex=0;
+Form1->UpdateOtdel(0);
+
+MP<TADODataSet>Otdel(this);
+Otdel->Connection=MClient->Database;
+Otdel->CommandText="Select * from Подразделения Where Numdatabase="+IntToStr(Zast->MClient->VDB[Zast->MClient->GetIDDBName(Form1->CBDatabase->Text)].NumDatabase);
+Otdel->Active=true;
+
+MP<TADODataSet>TempObslOtd(this);
+TempObslOtd->Connection=MClient->Database;
+TempObslOtd->CommandText="Select * From TempObslOtdel";
+TempObslOtd->Active=true;
+
+MP<TADODataSet>Login(this);
+Login->Connection=MClient->Database;
+Login->CommandText="Select * From Logins  Where Numdatabase="+IntToStr(Zast->MClient->VDB[Zast->MClient->GetIDDBName(Form1->CBDatabase->Text)].NumDatabase);
+Login->Active=true;
+
+for(TempObslOtd->First();!TempObslOtd->Eof;TempObslOtd->Next())
+{
+int Log2;
+int Otd2;
+int Log1=TempObslOtd->FieldByName("Login")->Value;
+if(Login->Locate("ServerNum", Log1, SO))
+{
+Log2=Login->FieldByName("Num")->Value;
+}
+else
+{
+//Main->MClient->WriteDiaryEvent("AdminARM ошибка","Сбой объединения списка обслуживаемых подразделений","Номер логина: "+IntToStr(Log1));
+//Mess="Ошибка передачи";
+}
+
+int Otd1=TempObslOtd->FieldByName("NumObslOtdel")->Value;
+if(Otdel->Locate("ServerNum", Otd1, SO))
+{
+Otd2=Otdel->FieldByName("Номер подразделения")->Value;
+}
+else
+{
+//Main->MClient->WriteDiaryEvent("AdminARM ошибка","Сбой объединения списка обслуживаемых подразделений","Номер подразделения: "+IntToStr(Otd1));
+
+//Mess="Ошибка передачи";
+}
+
+TempObslOtd->Edit();
+TempObslOtd->FieldByName("Login")->Value=Log2;
+TempObslOtd->FieldByName("NumObslOtdel")->Value=Otd2;
+TempObslOtd->Post();
+}
+
+Comm->CommandText="Delete * From ObslOtdel Where Numdatabase="+IntToStr(Zast->MClient->VDB[Zast->MClient->GetIDDBName(Form1->CBDatabase->Text)].NumDatabase);
+Comm->Execute();
+
+Comm->CommandText="INSERT INTO ObslOtdel ( Login, NumObslOtdel, Numdatabase ) SELECT TempObslOtdel.Login, TempObslOtdel.NumObslOtdel, "+IntToStr(Zast->MClient->VDB[Zast->MClient->GetIDDBName(Form1->CBDatabase->Text)].NumDatabase)+" AS [Database] FROM TempObslOtdel;";
+Comm->Execute();
+
+Comm->CommandText="Delete * From TempObslOtdel";
+Comm->Execute();
+
+
+
+}
+//---------------------------------------------------------------------------
+void TZast::MergeLogins()
+{
+//Main->MClient->WriteDiaryEvent("AdminARM","Начало объединения логинов","");
+try
+{
+MP<TADOCommand>Comm(this);
+Comm->Connection=MClient->Database;
+Comm->CommandText="UPDATE Logins SET Logins.Del = False;";
+Comm->Execute();
+
+
+MP<TADODataSet>TempLogins(this);
+TempLogins->Connection=MClient->Database;
+TempLogins->CommandText="Select * From TempLogins";
+TempLogins->Active=true;
+
+MP<TADODataSet>Logins(this);
+Logins->Connection=MClient->Database;
+Logins->CommandText="Select * From Logins where Numdatabase="+IntToStr(Zast->MClient->VDB[Zast->MClient->GetIDDBName(Form1->CBDatabase->Text)].NumDatabase)+" Order by Num";
+Logins->Active=true;
+
+MP<TADODataSet>TempObslOtdel(this);
+TempObslOtdel->Connection=MClient->Database;
+
+//Пройти по Logins, переписать данные совпадающих логинов,удаляя строки из TempLogins
+//пометить к удалению те, у которых нет совпадений в TempLogins и удалить их в конце
+
+for(Logins->First();!Logins->Eof;Logins->Next())
+{
+int N= Logins->FieldByName("ServerNum")->Value;
+
+bool B=TempLogins->Locate("Num",N,SO);
+if(B)
+{
+//есть совпадение
+
+Logins->Edit();
+Logins->FieldByName("Code1")->Value=TempLogins->FieldByName("Code1")->Value;
+Logins->FieldByName("Code2")->Value=TempLogins->FieldByName("Code2")->Value;
+Logins->FieldByName("Role")->Value=TempLogins->FieldByName("Role")->Value;
+Logins->Post();
+
+TempLogins->Delete();
+}
+else
+{
+Logins->Edit();
+Logins->FieldByName("Del")->Value=true;
+Logins->Post();
+}
+}
+Comm->CommandText="Delete * from Logins where Del=true AND Numdatabase="+IntToStr(Zast->MClient->VDB[Zast->MClient->GetIDDBName(Form1->CBDatabase->Text)].NumDatabase);
+Comm->Execute();
+
+Comm->CommandText="INSERT INTO Logins ( ServerNum, Login, Code1, Code2, Role, NumDatabase ) SELECT TempLogins.Num, TempLogins.Login, TempLogins.Code1, TempLogins.Code2, TempLogins.Role, "+IntToStr(Zast->MClient->VDB[Zast->MClient->GetIDDBName(Form1->CBDatabase->Text)].NumDatabase)+" AS [Database] FROM TempLogins;";
+Comm->Execute();
+//пройти по TempLogins и перенести в Logins оставшиеся
+
+
+//очистить TempLogins
+Comm->CommandText="Delete * from TempLogins";
+Comm->Execute();
+//Main->MClient->WriteDiaryEvent("AdminARM","Конец объединения логинов","");
+}
+catch(...)
+{
+//Main->MClient->WriteDiaryEvent("Ошибка AdminARM","Ошибка объединения логинов"," Ошибка "+IntToStr(GetLastError()));
+
+}
+}
+//---------------------------------------------------------------

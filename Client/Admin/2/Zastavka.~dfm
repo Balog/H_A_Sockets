@@ -1,6 +1,6 @@
 object Zast: TZast
-  Left = 490
-  Top = 393
+  Left = 218
+  Top = 163
   BorderIcons = []
   BorderStyle = bsNone
   Caption = 'Zast'
@@ -9953,6 +9953,22 @@ object Zast: TZast
     object Trigger: TAction
       Caption = 'Trigger'
       OnExecute = TriggerExecute
+    end
+    object UpdateLogins: TAction
+      Caption = 'UpdateLogins'
+      OnExecute = UpdateLoginsExecute
+    end
+    object UpdateOtdelsMan: TAction
+      Caption = 'UpdateOtdelsMan'
+      OnExecute = UpdateOtdelsManExecute
+    end
+    object UpdateLoginsMan: TAction
+      Caption = 'UpdateLoginsMan'
+      OnExecute = UpdateLoginsManExecute
+    end
+    object UpdateObslOtdelMan: TAction
+      Caption = 'UpdateObslOtdelMan'
+      OnExecute = UpdateObslOtdelManExecute
     end
   end
 end

@@ -62,6 +62,7 @@ __published:	// IDE-managed Components
         void __fastcall N4Click(TObject *Sender);
         void __fastcall OtdelsMouseDown(TObject *Sender,
           TMouseButton Button, TShiftState Shift, int X, int Y);
+        void __fastcall N5Click(TObject *Sender);
 private:	// User declarations
 String Path;
 String AdminDatabase;

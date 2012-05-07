@@ -139,7 +139,8 @@ if(ExtractFileName(Parent->VClients[i]->AppPatch)=="Hazards.exe")
    //удачное открытие базы
     if(Parameters[1]!="-1")
     {
-   this->Socket->SendText("Command:4;3|1#1|"+IntToStr(Parent->VBases[i].LicCount).Length()+"#"+IntToStr(Parent->VBases[i].LicCount)+"|"+Parent->VBases[i].Name.Length()+"#"+Parent->VBases[i].Name+"|");
+
+   this->Socket->SendText("Command:4;3|1#1|"+IntToStr(IntToStr(Parent->VBases[i].LicCount).Length())+"#"+IntToStr(Parent->VBases[i].LicCount)+"|"+IntToStr(Parent->VBases[i].Name.Length())+"#"+Parent->VBases[i].Name+"|");
     }
     else
     {
@@ -175,6 +176,17 @@ if(ExtractFileName(Parent->VClients[i]->AppPatch)=="Hazards.exe")
    //Parent->WriteDiaryEvent(this->IP, Parameters[0], "Служебное","Идентификация пользователя");
    Parent->WriteDiaryEvent(this->IP, Parameters[0], "Служебное","Пользователь не идентифицирован","Pass: "+Parameters[1]);
    }
+   break;
+   }
+   case 7:
+   {
+   ShowMessage(Parameters[0]);
+   ShowMessage(Parameters[1]);
+   ShowMessage(Parameters[2]);
+   ShowMessage(Parameters[3]);
+   ShowMessage(Parameters[4]);
+
+   this->Socket->SendText("Command:7;0|");
    break;
    }
  }

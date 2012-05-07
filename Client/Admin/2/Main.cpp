@@ -507,3 +507,22 @@ UpdateOtdel(Users->ItemIndex);
 }
 }
 //--------------------------------------------------------------------------
+void __fastcall TForm1::N5Click(TObject *Sender)
+{
+//Чтение подразделений, логинов и таблицы распределения
+
+//Чтение подразделений
+MP<TADOCommand>Comm(this);
+Comm->Connection=Zast->MClient->Database;
+Comm->CommandText="Delete * From TempПодразделения";
+Comm->Execute();
+
+ Zast->MClient->Act.ParamComm.clear();
+ Zast->MClient->Act.ParamComm.push_back("UpdateOtdelsMan");
+ Zast->MClient->Act.NextCommand=5;
+
+ Zast->MClient->ReadTable(CBDatabase->Text,"Select [Номер подразделения], [Название подразделения] from Подразделения", "Select [Номер подразделения], [Название подразделения] from TempПодразделения");
+
+}
+//---------------------------------------------------------------------------
+
