@@ -760,7 +760,7 @@ Comm->Execute();
  Zast->MClient->Act.ParamComm.push_back("UpdateLoginsMan");
  Zast->MClient->Act.NextCommand=5;
 
- Zast->MClient->ReadTable(Form1->CBDatabase->Text,"Select [Num], [Login], [Code1], [Code2], Role from Logins", "Select [ServerNum], [Login], [Code1], [Code2], Role from TempLogins");
+ Zast->MClient->ReadTable(Form1->CBDatabase->Text,"Select [Num], [Login], [Code1], [Code2], Role from Logins", "Select [Num], [Login], [Code1], [Code2], Role from TempLogins");
 
 }
 //---------------------------------------------------------------------------
@@ -849,8 +849,9 @@ Comm->Execute();
 Comm->CommandText="Delete * From TempObslOtdel";
 Comm->Execute();
 
-
-
+Form1->UpdateTempLogin();
+Form1->Users->ItemIndex=0;
+Form1->UpdateTempLogin();
 }
 //---------------------------------------------------------------------------
 void TZast::MergeLogins()

@@ -752,16 +752,15 @@ MP<TADOCommand>Comm(this);
 Comm->Connection=MClient->Database;
 
 
-MergeOtdels();
-Form1->Users->ItemIndex=0;
-Form1->UpdateOtdel(0);
+
 Comm->CommandText="Delete * From TempLogins";
 Comm->Execute();
 //Чтение таблицы логинов
  Zast->MClient->Act.ParamComm.clear();
  Zast->MClient->Act.ParamComm.push_back("UpdateLoginsMan");
+ Zast->MClient->Act.NextCommand=5;
 
- Zast->MClient->ReadTable(Form1->CBDatabase->Text,"Select [Num], [Logins], [Code1], [Code2], Role from Logins", "Select [ServerNum], [Logins], [Code1], [Code2], Role from TempLogins");
+ Zast->MClient->ReadTable(Form1->CBDatabase->Text,"Select [Num], [Login], [Code1], [Code2], Role from Logins", "Select [Num], [Login], [Code1], [Code2], Role from TempLogins");
 
 }
 //---------------------------------------------------------------------------
@@ -776,6 +775,7 @@ Comm->Execute();
 
  Zast->MClient->Act.ParamComm.clear();
  Zast->MClient->Act.ParamComm.push_back("UpdateObslOtdelMan");
+ Zast->MClient->Act.NextCommand=5;
 
  Zast->MClient->ReadTable(Form1->CBDatabase->Text,"Select [Login], [NumObslOtdel] from ObslOtdel", "Select [Login], [NumObslOtdel] from TempObslOtdel");
 
@@ -786,6 +786,11 @@ void __fastcall TZast::UpdateObslOtdelManExecute(TObject *Sender)
 {
 MP<TADOCommand>Comm(this);
 Comm->Connection=MClient->Database;
+
+MergeLogins();
+MergeOtdels();
+Form1->Users->ItemIndex=0;
+Form1->UpdateOtdel(0);
 
 MP<TADODataSet>Otdel(this);
 Otdel->Connection=MClient->Database;
@@ -844,8 +849,79 @@ Comm->Execute();
 Comm->CommandText="Delete * From TempObslOtdel";
 Comm->Execute();
 
-
-
+Form1->UpdateTempLogin();
+Form1->UpdateTempLogin();
+Form1->Users->ItemIndex=0;
 }
 //---------------------------------------------------------------------------
+void TZast::MergeLogins()
+{
+//Main->MClient->WriteDiaryEvent("AdminARM","Начало объединения логинов","");
+try
+{
+MP<TADOCommand>Comm(this);
+Comm->Connection=MClient->Database;
+Comm->CommandText="UPDATE Logins SET Logins.Del = False;";
+Comm->Execute();
 
+
+MP<TADODataSet>TempLogins(this);
+TempLogins->Connection=MClient->Database;
+TempLogins->CommandText="Select * From TempLogins";
+TempLogins->Active=true;
+
+MP<TADODataSet>Logins(this);
+Logins->Connection=MClient->Database;
+Logins->CommandText="Select * From Logins where Numdatabase="+IntToStr(Zast->MClient->VDB[Zast->MClient->GetIDDBName(Form1->CBDatabase->Text)].NumDatabase)+" Order by Num";
+Logins->Active=true;
+
+MP<TADODataSet>TempObslOtdel(this);
+TempObslOtdel->Connection=MClient->Database;
+
+//Пройти по Logins, переписать данные совпадающих логинов,удаляя строки из TempLogins
+//пометить к удалению те, у которых нет совпадений в TempLogins и удалить их в конце
+
+for(Logins->First();!Logins->Eof;Logins->Next())
+{
+int N= Logins->FieldByName("ServerNum")->Value;
+
+bool B=TempLogins->Locate("Num",N,SO);
+if(B)
+{
+//есть совпадение
+
+Logins->Edit();
+Logins->FieldByName("Code1")->Value=TempLogins->FieldByName("Code1")->Value;
+Logins->FieldByName("Code2")->Value=TempLogins->FieldByName("Code2")->Value;
+Logins->FieldByName("Role")->Value=TempLogins->FieldByName("Role")->Value;
+Logins->Post();
+
+TempLogins->Delete();
+}
+else
+{
+Logins->Edit();
+Logins->FieldByName("Del")->Value=true;
+Logins->Post();
+}
+}
+Comm->CommandText="Delete * from Logins where Del=true AND Numdatabase="+IntToStr(Zast->MClient->VDB[Zast->MClient->GetIDDBName(Form1->CBDatabase->Text)].NumDatabase);
+Comm->Execute();
+
+Comm->CommandText="INSERT INTO Logins ( ServerNum, Login, Code1, Code2, Role, NumDatabase ) SELECT TempLogins.Num, TempLogins.Login, TempLogins.Code1, TempLogins.Code2, TempLogins.Role, "+IntToStr(Zast->MClient->VDB[Zast->MClient->GetIDDBName(Form1->CBDatabase->Text)].NumDatabase)+" AS [Database] FROM TempLogins;";
+Comm->Execute();
+//пройти по TempLogins и перенести в Logins оставшиеся
+
+
+//очистить TempLogins
+Comm->CommandText="Delete * from TempLogins";
+Comm->Execute();
+//Main->MClient->WriteDiaryEvent("AdminARM","Конец объединения логинов","");
+}
+catch(...)
+{
+//Main->MClient->WriteDiaryEvent("Ошибка AdminARM","Ошибка объединения логинов"," Ошибка "+IntToStr(GetLastError()));
+
+}
+}
+//---------------------------------------------------------------

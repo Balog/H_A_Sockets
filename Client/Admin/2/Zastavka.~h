@@ -160,6 +160,7 @@ public:		// User declarations
 bool Reg;
 //bool LoadLogin(MDBConnector* DB);
 void MergeOtdels();
+void MergeLogins();
 //void MergeLogins(MDBConnector* DB);
 vector<String>Parameters;
 
