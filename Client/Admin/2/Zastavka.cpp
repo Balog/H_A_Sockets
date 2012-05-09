@@ -928,22 +928,23 @@ catch(...)
 
 void __fastcall TZast::SaveLoginsExecute(TObject *Sender)
 {
-Zast->MClient->Act.ParamComm.clear();
-Zast->MClient->Act.ParamComm.push_back("SaveObslOtd");
-Zast->MClient->Act.NextCommand=8;
+//Zast->MClient->Act.ParamComm.clear();
+//ShowMessage(MClient->VDB.size());
+Zast->MClient->Act.ParamComm[4]="SaveObslOtd";
+Zast->MClient->Act.WaitCommand=8;
 
-Zast->MClient->WriteTable("Аспекты","Select [Num], [Login], [Code1], [Code2], [Role], [ServerNum] From Logins Where NumDatabase="+IntToStr(Zast->MClient->VDB[Zast->MClient->GetIDDBName(Form1->CBDatabase->Text)].NumDatabase), "Select [Num], [Login], [Code1], [Code2], [Role], [ServerNum] From TempLogins");
+Zast->MClient->WriteTable(Zast->MClient->VDB[StrToInt(Zast->MClient->Act.ParamComm[1])].Name,"Select [Num], [Login], [Code1], [Code2], [Role], [ServerNum] From Logins Where NumDatabase="+IntToStr(Zast->MClient->VDB[StrToInt(Zast->MClient->Act.ParamComm[1])].NumDatabase), "Select [Num], [Login], [Code1], [Code2], [Role], [ServerNum] From TempLogins");
 
 }
 //---------------------------------------------------------------------------
 
 void __fastcall TZast::SaveObslOtdExecute(TObject *Sender)
 {
-Zast->MClient->Act.ParamComm.clear();
-Zast->MClient->Act.ParamComm.push_back("SendMergeSave");
-Zast->MClient->Act.NextCommand=8;
+//Zast->MClient->Act.ParamComm.clear();
+Zast->MClient->Act.ParamComm[4]="SaveTempPodr";
+Zast->MClient->Act.WaitCommand=8;
 
-Zast->MClient->WriteTable("Аспекты","Select [Login], [NumObslOtdel] From ObslOtdel Where NumDatabase="+IntToStr(Zast->MClient->VDB[Zast->MClient->GetIDDBName(Form1->CBDatabase->Text)].NumDatabase), "Select [Login], [NumObslOtdel] From TempObslOtdel");
+Zast->MClient->WriteTable(Zast->MClient->VDB[StrToInt(Zast->MClient->Act.ParamComm[1])].Name,"Select [Login], [NumObslOtdel] From ObslOtdel Where NumDatabase="+IntToStr(Zast->MClient->VDB[StrToInt(Zast->MClient->Act.ParamComm[1])].NumDatabase), "Select [Login], [NumObslOtdel] From TempObslOtdel");
 
 }
 //---------------------------------------------------------------------------
@@ -951,9 +952,71 @@ Zast->MClient->WriteTable("Аспекты","Select [Login], [NumObslOtdel] From ObslOtd
 void __fastcall TZast::SendMergeSaveExecute(TObject *Sender)
 {
 //отослать команду на начало объединения данных на сервере
+//Zast->MClient->Act.ParamComm.clear();
+Zast->MClient->Act.WaitCommand=9;
+
+ClientSocket->Socket->SendText("Command:9;1|"+IntToStr(Zast->MClient->VDB[StrToInt(Zast->MClient->Act.ParamComm[1])].Name.Length())+"#"+Zast->MClient->VDB[StrToInt(Zast->MClient->Act.ParamComm[1])].Name+"|");
+
+int i=StrToInt(Zast->MClient->Act.ParamComm[1]);
+do
+{
+i++;
+}
+while (Zast->MClient->VDB[i].NumDatabase<0);
+Zast->MClient->Act.ParamComm[1]=IntToStr(i);
+
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TZast::PrepareSaveLoginsExecute(TObject *Sender)
+{
 Zast->MClient->Act.ParamComm.clear();
-Zast->MClient->Act.NextCommand=9;
-ClientSocket->Socket->SendText("Command:9;0|");
+/*
+ShowMessage(MClient->VDB[0].NumDatabase);
+ShowMessage(MClient->VDB[1].NumDatabase);
+ShowMessage(MClient->VDB[2].NumDatabase);
+*/
+
+Zast->MClient->Act.ParamComm.push_back(IntToStr(MClient->VDB.size()-1));
+Zast->MClient->Act.ParamComm.push_back("0");
+Zast->MClient->Act.ParamComm.push_back("SaveLogins");
+Zast->MClient->Act.ParamComm.push_back("PostSaveLogins");
+Zast->MClient->Act.ParamComm.push_back("Action");
+SaveLogins->Execute();
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TZast::PostSaveLoginsExecute(TObject *Sender)
+{
+Zast->MClient->Act.ParamComm.clear();
+Zast->MClient->Act.WaitCommand=0;
+ShowMessage("Запись данных завершена");
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TZast::SaveTempPodrExecute(TObject *Sender)
+{
+Zast->MClient->Act.ParamComm[4]="SendMergeSave";
+Zast->MClient->Act.WaitCommand=8;
+
+Zast->MClient->WriteTable(Zast->MClient->VDB[StrToInt(Zast->MClient->Act.ParamComm[1])].Name,"Select [Номер подразделения], [Название подразделения], [ServerNum] From Подразделения Where NumDatabase="+IntToStr(Zast->MClient->VDB[StrToInt(Zast->MClient->Act.ParamComm[1])].NumDatabase), "Select [Номер подразделения], [Название подразделения], [ServerNum] From TempПодразделения");
+
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TZast::LoadNewLoginsExecute(TObject *Sender)
+{
+// 
+
+
+
+
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TZast::CorrectNewLoginsExecute(TObject *Sender)
+{
+//
 }
 //---------------------------------------------------------------------------
 

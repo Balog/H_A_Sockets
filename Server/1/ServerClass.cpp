@@ -208,7 +208,8 @@ Parent->WriteDiaryEvent(Parameters[0], Parameters[1], Parameters[2], Parameters[
    case 9:
    {
    //Команда для объединения данных от админа
-   
+   MergeLogins(Parameters[0]);
+   this->Socket->SendText("Command:9;0|");
    break;
    }
  }
@@ -482,6 +483,287 @@ String DelText="Delete * "+ServerSQL.SubString(FromPos, ServerSQL.Length());
    }
 }
 //--------------------------------------------------------------------------
+void Client::MergeLogins(String NameDB)
+{
+//DiaryEvent->WriteEvent(Now(), this->pNameComp, this->Login, "Администратор", "Объединение логинов", "IDC="+IntToStr(IDC())+"IDDB="+IntToStr(IDDB));
+TLocateOptions SO;
+//try
+//{
+/*
+TADOConnection *Database=NULL;
+for(unsigned int i=0;i<VDatabase.size();i++)
+{
+ if(VDatabase[i]->IDDB==IDDB)
+ {
+  Database=VDatabase[i]->Database;
+  break;
+ }
+}
+*/
+//if(Database!=NULL)
+//{
+
+MP<TADOCommand>Comm((TForm*)Parent->pOwner);
+Comm->Connection=GetDatabase(NameDB);;
+Comm->CommandText="UPDATE Logins SET Logins.Del = False;";
+Comm->Execute();
+
+MP<TADODataSet>TempLogins((TForm*)Parent->pOwner);
+TempLogins->Connection=GetDatabase(NameDB);;
+TempLogins->CommandText="Select * From TempLogins";
+TempLogins->Active=true;
+
+MP<TADODataSet>Logins((TForm*)Parent->pOwner);
+Logins->Connection=GetDatabase(NameDB);;
+Logins->CommandText="Select * From Logins Order by Num";
+Logins->Active=true;
+
+MP<TADODataSet>TempObslOtdel((TForm*)Parent->pOwner);
+TempObslOtdel->Connection=GetDatabase(NameDB);;
+TempObslOtdel->CommandText="Select * from TempObslOtdel";
+TempObslOtdel->Active=true;
+
+MP<TADODataSet>ObslOtdel((TForm*)Parent->pOwner);
+ObslOtdel->Connection=GetDatabase(NameDB);;
+ObslOtdel->CommandText="Select * from ObslOtdel";
+ObslOtdel->Active=true;
+
+MP<TADODataSet>TempPodr((TForm*)Parent->pOwner);
+TempPodr->Connection=GetDatabase(NameDB);;
+TempPodr->CommandText="Select * from TempПодразделения";
+TempPodr->Active=true;
+
+for(TempLogins->First();!TempLogins->Eof;TempLogins->Next())
+{
+ String Log=TempLogins->FieldByName("Login")->Value;
+ if(Logins->Locate("Login",Log,SO))
+ {
+  int Role=Logins->FieldByName("Role")->Value;
+  int TempRole=TempLogins->FieldByName("Role")->Value;
+  if(Role==4 & TempRole!=Role)
+  {
+   Logins->Delete();
+  }
+ }
+}
+
+for( Logins->First();!Logins->Eof;Logins->Next())
+{
+ int N=Logins->FieldByName("Num")->AsInteger;
+ if(TempLogins->Locate("ServerNum",N,SO))
+ {
+Logins->Edit();
+Logins->FieldByName("Login")->Value=TempLogins->FieldByName("Login")->Value;
+Logins->FieldByName("Code1")->Value=TempLogins->FieldByName("Code1")->Value;
+Logins->FieldByName("Code2")->Value=TempLogins->FieldByName("Code2")->Value;
+Logins->FieldByName("Role")->Value=TempLogins->FieldByName("Role")->Value;
+Logins->Post();
+
+TempLogins->Edit();
+TempLogins->FieldByName("Del")->Value=true;
+TempLogins->Post();
+ }
+ else
+ {
+  Logins->Edit();
+  Logins->FieldByName("Del")->Value=true;
+  Logins->Post();
+ }
+}
+
+Comm->CommandText="DELETE Logins.Del FROM Logins WHERE (((Logins.Del)=True));";
+Comm->Execute();
+
+TempLogins->Active=false;
+TempLogins->CommandText="Select * From TempLogins Where Del=false";
+TempLogins->Active=true;
+
+
+for(TempLogins->First();!TempLogins->Eof;TempLogins->Next())
+{
+Logins->Insert();
+Logins->FieldByName("Login")->Value=TempLogins->FieldByName("Login")->Value;
+Logins->FieldByName("Code1")->Value=TempLogins->FieldByName("Code1")->Value;
+Logins->FieldByName("Code2")->Value=TempLogins->FieldByName("Code2")->Value;
+Logins->FieldByName("Role")->Value=TempLogins->FieldByName("Role")->Value;
+Logins->Post();
+
+Logins->Active=false;
+Logins->Active=true;
+Logins->Last();
+
+TempLogins->Edit();
+TempLogins->FieldByName("ServerNum")->Value=Logins->FieldByName("Num")->Value;
+TempLogins->Post();
+}
+
+
+Comm->CommandText="Delete * from ObslOtdel";
+Comm->Execute();
+
+TempLogins->Active=false;
+TempLogins->CommandText="Select * From TempLogins";
+TempLogins->Active=true;
+int Log2;
+int Otd2;
+for(TempObslOtdel->First();!TempObslOtdel->Eof;TempObslOtdel->Next())
+{
+ int Log1=TempObslOtdel->FieldByName("Login")->Value;
+ if(TempLogins->Locate("Num", Log1, SO))
+ {
+  Log2=TempLogins->FieldByName("ServerNum")->Value;
+ }
+ else
+ {
+//DiaryEvent->WriteEvent(Now(), this->pNameComp, this->Login, "Служебная ошибка", "Ошибка объединения таблицы ObslOtdel по логинам", "IDC="+IntToStr(IDC())+" Log1="+IntToStr(Log1)+" Log2="+IntToStr(Log2));
+ }
+
+ int Otd1=TempObslOtdel->FieldByName("NumObslOtdel")->Value;
+ if(TempPodr->Locate("Номер подразделения", Otd1, SO))
+ {
+  Otd2=TempPodr->FieldByName("ServerNum")->Value;
+
+  TempObslOtdel->Edit();
+  TempObslOtdel->FieldByName("Login")->Value=Log2;
+  TempObslOtdel->FieldByName("NumObslOtdel")->Value=Otd2;
+  TempObslOtdel->Post();
+ }
+ else
+ {
+  TempObslOtdel->Edit();
+  TempObslOtdel->FieldByName("Del")->Value=True;
+  TempObslOtdel->Post();
+
+//DiaryEvent->WriteEvent(Now(), this->pNameComp, this->Login, "Служебная ошибка", "Ошибка объединения таблицы ObslOtdel по подразделениям", "IDC="+IntToStr(IDC())+" Log1="+IntToStr(Otd1)+" Log2="+IntToStr(Otd2));
+
+ }
+}
+
+Comm->CommandText="DELETE * From TempObslOtdel where Del=true";
+Comm->Execute();
+
+Comm->CommandText="DELETE * From ObslOtdel";
+Comm->Execute();
+
+Comm->CommandText="DELETE * From TempПодразделения";
+Comm->Execute();
+
+Comm->CommandText="INSERT INTO ObslOtdel ( Login, NumObslOtdel ) SELECT TempObslOtdel.Login, TempObslOtdel.NumObslOtdel FROM TempObslOtdel;";
+Comm->Execute();
+
+//return true;
+//}
+//else
+//{
+//DiaryEvent->WriteEvent(Now(), this->pNameComp, this->Login, "Служебная ошибка", "Ошибка объединения логинов (нет базы данных)", "IDC="+IntToStr(IDC())+" IDDB="+IntToStr(IDDB));
+
+//return false;
+//}
+//}
+//catch(...)
+//{
+//Form1->Block=-1;
+//DiaryEvent->WriteEvent(Now(), this->pNameComp, this->Login, "Служебная ошибка", "Ошибка объединения логинов", "IDC="+IntToStr(IDC())+" IDDB="+IntToStr(IDDB));
+
+//return false;
+//}
+/*
+TLocateOptions SO;
+MP<TADOCommand>Comm((TForm*)Parent->pOwner);
+Comm->Connection=GetDatabase(NameDB);
+Comm->CommandText="Delete * from Logins where Del=true";
+
+
+MP<TADODataSet>TempLogins((TForm*)Parent->pOwner);
+TempLogins->Connection=GetDatabase(NameDB);
+TempLogins->CommandText="Select * From TempLogins";
+TempLogins->Active=true;
+
+MP<TADODataSet>Logins((TForm*)Parent->pOwner);
+Logins->Connection=GetDatabase(NameDB);
+Logins->CommandText="Select * From Logins Order by Num";
+Logins->Active=true;
+
+MP<TADODataSet>TempObslOtdel((TForm*)Parent->pOwner);
+TempObslOtdel->Connection=GetDatabase(NameDB);
+
+//Пройти по Logins, переписать данные совпадающих логинов,удаляя строки из TempLogins
+//пометить к удалению те, у которых нет совпадений в TempLogins и удалить их в конце
+
+for(Logins->First();!Logins->Eof;Logins->Next())
+{
+Logins->Edit();
+Logins->FieldByName("Del")->Value=false;
+Logins->Post();
+
+String Log=Logins->FieldByName("Login")->Value;
+bool B=TempLogins->Locate("Login",Log,SO);
+if(B)
+{
+//есть совпадение
+int NumLogin=Logins->FieldByName("Num")->Value;
+int NumTempLogin= TempLogins->FieldByName("Num")->Value;
+
+TempObslOtdel->Active=false;
+TempObslOtdel->CommandText="Select * From TempObslOtdel where Login="+IntToStr(NumTempLogin);
+TempObslOtdel->Active=true;
+for(TempObslOtdel->First();!TempObslOtdel->Eof;TempObslOtdel->Next())
+{
+TempObslOtdel->Edit();
+TempObslOtdel->FieldByName("Login")->Value=NumLogin;
+TempObslOtdel->Post();
+}
+
+Logins->Edit();
+Logins->FieldByName("Code1")->Value=TempLogins->FieldByName("Code1")->Value;
+Logins->FieldByName("Code2")->Value=TempLogins->FieldByName("Code2")->Value;
+Logins->FieldByName("Role")->Value=TempLogins->FieldByName("Role")->Value;
+Logins->Post();
+TempLogins->Delete();
+}
+else
+{
+Logins->Edit();
+Logins->FieldByName("Del")->Value=true;
+Logins->Post();
+}
+}
+Comm->Execute();
+//пройти по TempLogins и перенести в Logins оставшиеся
+for(TempLogins->First();!TempLogins->Eof;TempLogins->Next())
+{
+Logins->Insert();
+Logins->FieldByName("Login")->Value=TempLogins->FieldByName("Login")->Value;
+Logins->FieldByName("Code1")->Value=TempLogins->FieldByName("Code1")->Value;
+Logins->FieldByName("Code2")->Value=TempLogins->FieldByName("Code2")->Value;
+Logins->FieldByName("Role")->Value=TempLogins->FieldByName("Role")->Value;
+Logins->Post();
+
+Logins->Active=false;
+Logins->Active=true;
+Logins->Last();
+
+int NumLogin=Logins->FieldByName("Num")->Value;
+int NumTempLogin= TempLogins->FieldByName("Num")->Value;
+
+TempObslOtdel->Active=false;
+TempObslOtdel->CommandText="Select * From TempObslOtdel where Login="+IntToStr(NumTempLogin);
+TempObslOtdel->Active=true;
+for(TempObslOtdel->First();!TempObslOtdel->Eof;TempObslOtdel->Next())
+{
+TempObslOtdel->Edit();
+TempObslOtdel->FieldByName("Login")->Value=NumLogin;
+TempObslOtdel->Post();
+}
+}
+
+//очистить TempLogins
+Comm->CommandText="Delete * from TempLogins";
+Comm->Execute();
+*/
+}
+//--------------------------------------------------------------------------
+
 //***************************************************************************
  mForm::mForm()
  {

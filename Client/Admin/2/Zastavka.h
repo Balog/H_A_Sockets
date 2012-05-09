@@ -123,6 +123,11 @@ __published:	// IDE-managed Components
         TAction *SaveLogins;
         TAction *SaveObslOtd;
         TAction *SendMergeSave;
+        TAction *PrepareSaveLogins;
+        TAction *PostSaveLogins;
+        TAction *SaveTempPodr;
+        TAction *LoadNewLogins;
+        TAction *CorrectNewLogins;
         void __fastcall Timer1Timer(TObject *Sender);
         void __fastcall Image1Click(TObject *Sender);
         void __fastcall FormCreate(TObject *Sender);
@@ -151,6 +156,11 @@ __published:	// IDE-managed Components
         void __fastcall SaveLoginsExecute(TObject *Sender);
         void __fastcall SaveObslOtdExecute(TObject *Sender);
         void __fastcall SendMergeSaveExecute(TObject *Sender);
+        void __fastcall PrepareSaveLoginsExecute(TObject *Sender);
+        void __fastcall PostSaveLoginsExecute(TObject *Sender);
+        void __fastcall SaveTempPodrExecute(TObject *Sender);
+        void __fastcall LoadNewLoginsExecute(TObject *Sender);
+        void __fastcall CorrectNewLoginsExecute(TObject *Sender);
 private:	// User declarations
 String Path;
 TLocateOptions SO;

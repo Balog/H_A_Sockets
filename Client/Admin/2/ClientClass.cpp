@@ -130,12 +130,13 @@ switch(Comm)
  case 8:
  {
  //ответ на команду записи таблицы
- StartAction(Act.ParamComm[0]);
+ StartAction(Act.ParamComm[4]);
  break;
  }
  case 9:
  {
- ShowMessage("«апись данных завершена");
+ //ShowMessage("«апись данных завершена");
+ StartAction("LoadNewLogins");
  break;
  }
 }

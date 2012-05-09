@@ -66,6 +66,7 @@ Clients* Parent;
 TADOConnection* GetDatabase(String NameDB);
 String TableToStr(String NameDB, String SQLText);
 void DecodeTable(String NameDB, String ServerSQL, String Text);
+void MergeLogins(String NameDB);
  public:
 Client(Clients*);
 ~Client();

@@ -9982,5 +9982,25 @@ object Zast: TZast
       Caption = 'SendMergeSave'
       OnExecute = SendMergeSaveExecute
     end
+    object PrepareSaveLogins: TAction
+      Caption = 'PrepareSaveLogins'
+      OnExecute = PrepareSaveLoginsExecute
+    end
+    object PostSaveLogins: TAction
+      Caption = 'PostSaveLogins'
+      OnExecute = PostSaveLoginsExecute
+    end
+    object SaveTempPodr: TAction
+      Caption = 'SaveTempPodr'
+      OnExecute = SaveTempPodrExecute
+    end
+    object LoadNewLogins: TAction
+      Caption = 'LoadNewLogins'
+      OnExecute = LoadNewLoginsExecute
+    end
+    object CorrectNewLogins: TAction
+      Caption = 'CorrectNewLogins'
+      OnExecute = CorrectNewLoginsExecute
+    end
   end
 end

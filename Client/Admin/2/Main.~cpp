@@ -527,9 +527,10 @@ Comm->Execute();
 //---------------------------------------------------------------------------
 
 
+
 void __fastcall TForm1::N6Click(TObject *Sender)
 {
-Zast->MClient->WriteTable("Аспекты","Select [Num], [Login], [Code1], [Code2], [Role], [ServerNum] From Logins Where NumDatabase="+IntToStr(Zast->MClient->VDB[Zast->MClient->GetIDDBName(Form1->CBDatabase->Text)].NumDatabase), "Select [Num], [Login], [Code1], [Code2], [Role], [ServerNum] From TempLogins");
+Zast->SaveLogins->Execute();
 }
 //---------------------------------------------------------------------------
 

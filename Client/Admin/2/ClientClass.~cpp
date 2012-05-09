@@ -130,7 +130,13 @@ switch(Comm)
  case 8:
  {
  //ответ на команду записи таблицы
- StartAction(Act.ParamComm[0]);
+ StartAction(Act.ParamComm[4]);
+ break;
+ }
+ case 9:
+ {
+ //ShowMessage("Запись данных завершена");
+ StartAction("Trigger");
  break;
  }
 }

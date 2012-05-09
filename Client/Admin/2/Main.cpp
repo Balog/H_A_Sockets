@@ -530,7 +530,7 @@ Comm->Execute();
 
 void __fastcall TForm1::N6Click(TObject *Sender)
 {
-Zast->SaveLogins->Execute();
+Zast->PrepareSaveLogins->Execute();
 }
 //---------------------------------------------------------------------------
 

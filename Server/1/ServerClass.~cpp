@@ -205,6 +205,13 @@ Parent->WriteDiaryEvent(Parameters[0], Parameters[1], Parameters[2], Parameters[
    this->Socket->SendText("Command:8;0|");
    break;
    }
+   case 9:
+   {
+   // оманда дл€ объединени€ данных от админа
+   MergeLogins(Parameters[0]);
+   this->Socket->SendText("Command:9;0|");
+   break;
+   }
  }
 
 }
@@ -476,6 +483,104 @@ String DelText="Delete * "+ServerSQL.SubString(FromPos, ServerSQL.Length());
    }
 }
 //--------------------------------------------------------------------------
+void Client::MergeLogins(String NameDB)
+{
+TLocateOptions SO;
+MP<TADOCommand>Comm((TForm*)Parent->pOwner);
+Comm->Connection=GetDatabase(NameDB);
+Comm->CommandText="Delete * from Logins where Del=true";
+
+
+MP<TADODataSet>TempLogins((TForm*)Parent->pOwner);
+TempLogins->Connection=GetDatabase(NameDB);
+TempLogins->CommandText="Select * From TempLogins";
+TempLogins->Active=true;
+
+MP<TADODataSet>Logins((TForm*)Parent->pOwner);
+Logins->Connection=GetDatabase(NameDB);
+Logins->CommandText="Select * From Logins Order by Num";
+Logins->Active=true;
+
+MP<TADODataSet>TempObslOtdel((TForm*)Parent->pOwner);
+TempObslOtdel->Connection=GetDatabase(NameDB);
+
+//ѕройти по Logins, переписать данные совпадающих логинов,удал€€ строки из TempLogins
+//пометить к удалению те, у которых нет совпадений в TempLogins и удалить их в конце
+
+for(Logins->First();!Logins->Eof;Logins->Next())
+{
+Logins->Edit();
+Logins->FieldByName("Del")->Value=false;
+Logins->Post();
+
+String Log=Logins->FieldByName("Login")->Value;
+bool B=TempLogins->Locate("Login",Log,SO);
+if(B)
+{
+//есть совпадение
+int NumLogin=Logins->FieldByName("Num")->Value;
+int NumTempLogin= TempLogins->FieldByName("Num")->Value;
+
+TempObslOtdel->Active=false;
+TempObslOtdel->CommandText="Select * From TempObslOtdel where Login="+IntToStr(NumTempLogin);
+TempObslOtdel->Active=true;
+for(TempObslOtdel->First();!TempObslOtdel->Eof;TempObslOtdel->Next())
+{
+TempObslOtdel->Edit();
+TempObslOtdel->FieldByName("Login")->Value=NumLogin;
+TempObslOtdel->Post();
+}
+
+Logins->Edit();
+Logins->FieldByName("Code1")->Value=TempLogins->FieldByName("Code1")->Value;
+Logins->FieldByName("Code2")->Value=TempLogins->FieldByName("Code2")->Value;
+Logins->FieldByName("Role")->Value=TempLogins->FieldByName("Role")->Value;
+Logins->Post();
+TempLogins->Delete();
+}
+else
+{
+Logins->Edit();
+Logins->FieldByName("Del")->Value=true;
+Logins->Post();
+}
+}
+Comm->Execute();
+//пройти по TempLogins и перенести в Logins оставшиес€
+for(TempLogins->First();!TempLogins->Eof;TempLogins->Next())
+{
+Logins->Insert();
+Logins->FieldByName("Login")->Value=TempLogins->FieldByName("Login")->Value;
+Logins->FieldByName("Code1")->Value=TempLogins->FieldByName("Code1")->Value;
+Logins->FieldByName("Code2")->Value=TempLogins->FieldByName("Code2")->Value;
+Logins->FieldByName("Role")->Value=TempLogins->FieldByName("Role")->Value;
+Logins->Post();
+
+Logins->Active=false;
+Logins->Active=true;
+Logins->Last();
+
+int NumLogin=Logins->FieldByName("Num")->Value;
+int NumTempLogin= TempLogins->FieldByName("Num")->Value;
+
+TempObslOtdel->Active=false;
+TempObslOtdel->CommandText="Select * From TempObslOtdel where Login="+IntToStr(NumTempLogin);
+TempObslOtdel->Active=true;
+for(TempObslOtdel->First();!TempObslOtdel->Eof;TempObslOtdel->Next())
+{
+TempObslOtdel->Edit();
+TempObslOtdel->FieldByName("Login")->Value=NumLogin;
+TempObslOtdel->Post();
+}
+}
+
+//очистить TempLogins
+Comm->CommandText="Delete * from TempLogins";
+Comm->Execute();
+
+}
+//--------------------------------------------------------------------------
+
 //***************************************************************************
  mForm::mForm()
  {
