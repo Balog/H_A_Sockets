@@ -120,6 +120,9 @@ __published:	// IDE-managed Components
         TAction *UpdateOtdelsMan;
         TAction *UpdateLoginsMan;
         TAction *UpdateObslOtdelMan;
+        TAction *SaveLogins;
+        TAction *SaveObslOtd;
+        TAction *SendMergeSave;
         void __fastcall Timer1Timer(TObject *Sender);
         void __fastcall Image1Click(TObject *Sender);
         void __fastcall FormCreate(TObject *Sender);
@@ -145,6 +148,9 @@ __published:	// IDE-managed Components
         void __fastcall UpdateOtdelsManExecute(TObject *Sender);
         void __fastcall UpdateLoginsManExecute(TObject *Sender);
         void __fastcall UpdateObslOtdelManExecute(TObject *Sender);
+        void __fastcall SaveLoginsExecute(TObject *Sender);
+        void __fastcall SaveObslOtdExecute(TObject *Sender);
+        void __fastcall SendMergeSaveExecute(TObject *Sender);
 private:	// User declarations
 String Path;
 TLocateOptions SO;

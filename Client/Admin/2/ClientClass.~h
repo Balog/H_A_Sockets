@@ -66,6 +66,7 @@ int GetLicenseCount(String DBName);
 void WriteDiaryEvent(String Type, String Name, String Prim);
 void WriteDiaryEvent(String Type, String Name);
 String Login;
+void WriteTable(String Database, String ClientSQLText, String ServerSQLText);
 private:
 String GetIP();
 TClientSocket *Socket;
@@ -74,6 +75,7 @@ TActionManager *ActionManager;
 TForm *Owner;
 void VerifyLicense(String NameDB);
 String IP;
+String TableToStr(String SQLText);
 
 };
 //****************************************

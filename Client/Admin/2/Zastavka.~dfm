@@ -9970,5 +9970,17 @@ object Zast: TZast
       Caption = 'UpdateObslOtdelMan'
       OnExecute = UpdateObslOtdelManExecute
     end
+    object SaveLogins: TAction
+      Caption = 'SaveLogins'
+      OnExecute = SaveLoginsExecute
+    end
+    object SaveObslOtd: TAction
+      Caption = 'SaveObslOtd'
+      OnExecute = SaveObslOtdExecute
+    end
+    object SendMergeSave: TAction
+      Caption = 'SendMergeSave'
+      OnExecute = SendMergeSaveExecute
+    end
   end
 end

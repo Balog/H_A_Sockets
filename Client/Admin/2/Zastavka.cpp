@@ -925,3 +925,35 @@ catch(...)
 }
 }
 //---------------------------------------------------------------
+
+void __fastcall TZast::SaveLoginsExecute(TObject *Sender)
+{
+Zast->MClient->Act.ParamComm.clear();
+Zast->MClient->Act.ParamComm.push_back("SaveObslOtd");
+Zast->MClient->Act.NextCommand=8;
+
+Zast->MClient->WriteTable("Аспекты","Select [Num], [Login], [Code1], [Code2], [Role], [ServerNum] From Logins Where NumDatabase="+IntToStr(Zast->MClient->VDB[Zast->MClient->GetIDDBName(Form1->CBDatabase->Text)].NumDatabase), "Select [Num], [Login], [Code1], [Code2], [Role], [ServerNum] From TempLogins");
+
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TZast::SaveObslOtdExecute(TObject *Sender)
+{
+Zast->MClient->Act.ParamComm.clear();
+Zast->MClient->Act.ParamComm.push_back("SendMergeSave");
+Zast->MClient->Act.NextCommand=8;
+
+Zast->MClient->WriteTable("Аспекты","Select [Login], [NumObslOtdel] From ObslOtdel Where NumDatabase="+IntToStr(Zast->MClient->VDB[Zast->MClient->GetIDDBName(Form1->CBDatabase->Text)].NumDatabase), "Select [Login], [NumObslOtdel] From TempObslOtdel");
+
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TZast::SendMergeSaveExecute(TObject *Sender)
+{
+//отослать команду на начало объединения данных на сервере
+Zast->MClient->Act.ParamComm.clear();
+Zast->MClient->Act.NextCommand=9;
+ClientSocket->Socket->SendText("Command:9;0|");
+}
+//---------------------------------------------------------------------------
+

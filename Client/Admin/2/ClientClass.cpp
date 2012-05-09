@@ -127,6 +127,17 @@ switch(Comm)
  StartAction(Act.ParamComm[0]);
  break;
  }
+ case 8:
+ {
+ //ответ на команду записи таблицы
+ StartAction(Act.ParamComm[0]);
+ break;
+ }
+ case 9:
+ {
+ ShowMessage("Запись данных завершена");
+ break;
+ }
 }
 }
 else
@@ -336,6 +347,7 @@ String DelText="Delete * "+ClientSQL.SubString(FromPos, ClientSQL.Length());
 
         break;
         }
+
        }
        i++;
 
@@ -476,6 +488,121 @@ void Client::WriteDiaryEvent(String Type, String Name)
 WriteDiaryEvent(Type, Name, "");
 }
 //************************************************************************
+String Client::TableToStr(String SQLText)
+{
+   MP<TADODataSet>Tab(Owner);
+   Tab->Connection=Database;
+   Tab->CommandText=SQLText;
+   Tab->Active=true;
+
+   //Формат передачи таблицы
+   //Начало таблицы 27 1
+   //int Esc=27;
+   int S1=1;
+   int S2=2;
+   int S3=3;
+   int S4=4;
+   int S5=5;
+   int S6=6;
+   int S7=7;
+   
+   char C=VK_ESCAPE;
+   char C1=((char)S1);
+   char C2=((char)S2);
+   char C3=((char)S3);
+   char C4=((char)S4);
+   char C5=((char)S5);
+   char C6=((char)S6);
+   char C7=((char)S7);
+
+   String BeginTable=(String)C+(String)C1;
+   //Конец таблицы 27 2
+   String EndTable=(String)C+(String)C2;
+   //Начало записи 27 3
+   String BeginRecord=(String)C+(String)C3;
+   //Конец записи 27 4
+   String EndRecord=(String)C+(String)C4;
+   //Начало поля 27 5
+   String BeginField=(String)C+(String)C5;
+   //Конец поля 27 6
+   String EndField=(String)C+(String)C6;
+   //Поле состоит из типа поля и значения разделенного символами 27 6
+   String FieldSeparator=(String)C+(String)C7;
+   //Типы полей
+   //ftString - 1
+   //ftInteger - 2
+   //ftBoolean - 3
+   //ftFloat - 4
+   //ftDateTime - 5
+   //ftMemo - 6
+   //Поле Memo пока представляется как строка а там посмотрим
+   //Все поля имеют текстовое предстваление, Boolean true - 1, false - 0
+   String Ret=BeginTable;
+   for(Tab->First();!Tab->Eof;Tab->Next())
+   {
+   Ret=Ret+BeginRecord;
+    for(int i=0; i<Tab->FieldCount;i++)
+    {
+    Ret=Ret+BeginField;
+     switch (Tab->FieldList->Fields[i]->DataType)
+     {
+      case ftWideString:
+      {
+      Ret=Ret+(String)C1+Tab->FieldList->Fields[i]->AsString;
+      break;
+      }
+      case ftInteger:
+      {
+      Ret=Ret+(String)C2+FieldSeparator+IntToStr(Tab->FieldList->Fields[i]->AsInteger);
+      break;
+      }
+      case ftAutoInc:
+      {
+      Ret=Ret+(String)C2+FieldSeparator+IntToStr(Tab->FieldList->Fields[i]->AsInteger);
+      break;
+      }
+      case ftBoolean:
+      {
+      if(Tab->FieldList->Fields[i]->AsBoolean)
+      {
+      Ret=Ret+(String)C3+FieldSeparator+((char)1);
+      }
+      else
+      {
+      Ret=Ret+(String)C3+FieldSeparator+((char)0);
+      }
+      break;
+      }
+      case ftFloat:
+      {
+      Ret=Ret+(String)C4+FieldSeparator+FloatToStr(Tab->FieldList->Fields[i]->AsFloat);
+      break;
+      }
+      case ftDateTime:
+      {
+      Ret=Ret+(String)C5+FieldSeparator+Tab->FieldList->Fields[i]->AsDateTime.DateTimeString();
+      break;
+      }
+      case ftMemo:
+      {
+      Ret=Ret+(String)C6+FieldSeparator+Tab->FieldList->Fields[i]->AsString;
+      break;
+      }
+     }
+     Ret=Ret+EndField;
+    }
+    Ret=Ret+EndRecord;
+   }
+   Ret=Ret+EndTable;
+   return Ret;
+}
+//****************************************************************************
+void Client::WriteTable(String Database, String ClientSQLText, String ServerSQLText)
+{
+ String Text=TableToStr(ClientSQLText);
+ Socket->Socket->SendText("Command:8;3|"+IntToStr(Database.Length())+"#"+Database+"|"+IntToStr(ServerSQLText.Length())+"#"+ServerSQLText+"|"+IntToStr(Text.Length())+"#"+Text+"|");
+}
+//***************************************************************************
 /////////////////////////////////////////////////////////////////////////////
 Form::Form()
 {

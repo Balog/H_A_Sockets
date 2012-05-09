@@ -519,9 +519,17 @@ Comm->Execute();
 
  Zast->MClient->Act.ParamComm.clear();
  Zast->MClient->Act.ParamComm.push_back("UpdateOtdelsMan");
+ Zast->MClient->Act.NextCommand=5;
 
  Zast->MClient->ReadTable(CBDatabase->Text,"Select [Номер подразделения], [Название подразделения] from Подразделения", "Select [Номер подразделения], [Название подразделения] from TempПодразделения");
 
+}
+//---------------------------------------------------------------------------
+
+
+void __fastcall TForm1::N6Click(TObject *Sender)
+{
+Zast->MClient->WriteTable("Аспекты","Select [Num], [Login], [Code1], [Code2], [Role], [ServerNum] From Logins Where NumDatabase="+IntToStr(Zast->MClient->VDB[Zast->MClient->GetIDDBName(Form1->CBDatabase->Text)].NumDatabase), "Select [Num], [Login], [Code1], [Code2], [Role], [ServerNum] From TempLogins");
 }
 //---------------------------------------------------------------------------
 

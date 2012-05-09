@@ -4,6 +4,7 @@
 #include <ADODB.hpp>
 #include <DB.hpp>
 #include <ScktComp.hpp>
+//#include "MDBConnector.h"
 using namespace std;
 #ifndef ServerClassH
 #define ServerClassH
@@ -64,7 +65,7 @@ vector<mForm*>::iterator IFC;
 Clients* Parent;
 TADOConnection* GetDatabase(String NameDB);
 String TableToStr(String NameDB, String SQLText);
-
+void DecodeTable(String NameDB, String ServerSQL, String Text);
  public:
 Client(Clients*);
 ~Client();
