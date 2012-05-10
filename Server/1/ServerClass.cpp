@@ -472,7 +472,7 @@ String DelText="Delete * "+ServerSQL.SubString(FromPos, ServerSQL.Length());
     }
     else
     {
-     ShowMessage("Нет знака начала записи");
+//     ShowMessage("Нет знака начала записи");
     }
     }
     while(Text.Length()!=0);

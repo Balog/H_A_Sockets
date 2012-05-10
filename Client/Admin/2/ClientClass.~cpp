@@ -96,6 +96,7 @@ switch(Comm)
  ShowMessage(Act.ParamComm[6]);
  */
  RegisterDatabase(Parameters[2], StrToInt(Parameters[1]));
+ this->VTrigger[0].Var++;
  this->ActTrigger(0);
 
  break;
@@ -130,7 +131,7 @@ switch(Comm)
  case 8:
  {
  //ответ на команду записи таблицы
- StartAction(Act.ParamComm[4]);
+ StartAction(Act.ParamComm[0]);
  break;
  }
  case 9:
@@ -609,8 +610,9 @@ void Client::ActTrigger(int NumTrigger)
 
 if(VTrigger[NumTrigger].Var<VTrigger[NumTrigger].Max)
 {
+
  StartAction(VTrigger[NumTrigger].TrueAction);
- VTrigger[NumTrigger].Var++;
+ //VTrigger[NumTrigger].Var++;
 }
 else
 {

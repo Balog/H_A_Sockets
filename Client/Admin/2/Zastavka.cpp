@@ -203,9 +203,10 @@ DBI.NumDatabase=Ini->ReadInteger(S,"NumDatabase",-1);
 if(DBI.NumDatabase>=0)
 {
 Form1->CBDatabase->Items->Add(Name);
+MClient->VDB.push_back(DBI);
 }
 
-MClient->VDB.push_back(DBI);
+
 }
 Form1->CBDatabase->ItemIndex=0;
 
@@ -644,10 +645,10 @@ String Par="ConnectBase";
 MClient->Act.ParamComm.clear();
 String Path=ExtractFilePath(Application->ExeName);
 MP<TIniFile>Ini(Path+"Admin.ini");
-int MaxBase=Ini->ReadInteger("Server","NumServerBase",1);
+int MaxBase=MClient->VDB.size();//Ini->ReadInteger("Server","NumServerBase",1);
 
 Trig T;
-T.Var=1;
+T.Var=0;
 T.Max=MaxBase;
 T.TrueAction="ConnectBase";
 T.FalseAction="LoadLogins";
@@ -678,8 +679,8 @@ int TekNumBase=StrToInt(MClient->VTrigger[0].Var);
 //MClient->Act.ParamComm.clear();
 String Path=ExtractFilePath(Application->ExeName);
 MP<TIniFile>Ini(Path+"Admin.ini");
-int NumDatabase=Ini->ReadInteger("Base"+IntToStr(TekNumBase),"NumDatabase",-1);
-String NameDatabase=Ini->ReadString("Base"+IntToStr(TekNumBase),"Name","");
+int NumDatabase=MClient->VDB[TekNumBase].Num;//Ini->ReadInteger("Base"+IntToStr(TekNumBase),"NumDatabase",-1);
+String NameDatabase=MClient->VDB[TekNumBase].Name;//Ini->ReadString("Base"+IntToStr(TekNumBase),"Name","");
 
 /////////////////////////////////////////////////
 //ÍÀÏÈÑÀÒÜ ÖÈÊËÈ×ÅÑÊÎÅ ÏÎÄÊËÞ×ÅÍÈÅ ÁÀÇ
@@ -969,6 +970,7 @@ Zast->MClient->Act.WaitCommand=9;
 
 ClientSocket->Socket->SendText("Command:9;1|"+IntToStr(Zast->MClient->VDB[StrToInt(MClient->VTrigger[0].Var)].Name.Length())+"#"+Zast->MClient->VDB[StrToInt(MClient->VTrigger[0].Var)].Name+"|");
 
+/*
 int i=MClient->VTrigger[0].Var;
 do
 {
@@ -976,6 +978,7 @@ i++;
 }
 while (Zast->MClient->VDB[i].NumDatabase<0);
 MClient->VTrigger[0].Var=i;
+*/
 
 }
 //---------------------------------------------------------------------------
@@ -1004,7 +1007,8 @@ T.Max=MClient->VDB.size();
 T.TrueAction="SaveLogins";
 T.FalseAction="PostSaveLogins";
 Zast->MClient->VTrigger.push_back(T);
-SaveLogins->Execute();
+//SaveLogins->Execute();
+MClient->ActTrigger(0);
 }
 //---------------------------------------------------------------------------
 
@@ -1077,7 +1081,7 @@ for(TempLogin->First();!TempLogin->Eof;TempLogin->Next())
   ShowMessage("Îøèáêà ïîëó÷åíèÿ ServerNum äëÿ íîâûõ ëîãèíîâ N="+IntToStr(N));
  }
 }
-
+  MClient->VTrigger[0].Var++;
   MClient->ActTrigger(0);
  //MClient->StartAction("Trigger");
 }

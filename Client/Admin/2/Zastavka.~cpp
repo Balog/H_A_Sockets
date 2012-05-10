@@ -1000,7 +1000,7 @@ Zast->MClient->VTrigger.clear();
 
 Trig T;
 T.Var=0;
-T.Max=MClient->VDB.size()-1;
+T.Max=MClient->VDB.size();
 T.TrueAction="SaveLogins";
 T.FalseAction="PostSaveLogins";
 Zast->MClient->VTrigger.push_back(T);

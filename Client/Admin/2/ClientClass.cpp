@@ -96,6 +96,7 @@ switch(Comm)
  ShowMessage(Act.ParamComm[6]);
  */
  RegisterDatabase(Parameters[2], StrToInt(Parameters[1]));
+ this->VTrigger[0].Var++;
  this->ActTrigger(0);
 
  break;
@@ -365,7 +366,7 @@ String DelText="Delete * "+ClientSQL.SubString(FromPos, ClientSQL.Length());
     }
     else
     {
-     ShowMessage("Нет знака начала записи");
+//     ShowMessage("Нет знака начала записи");
     }
     }
     while(Text.Length()!=0);
@@ -539,9 +540,10 @@ String Client::TableToStr(String SQLText)
    //Поле Memo пока представляется как строка а там посмотрим
    //Все поля имеют текстовое предстваление, Boolean true - 1, false - 0
    String Ret=BeginTable;
+
    for(Tab->First();!Tab->Eof;Tab->Next())
    {
-   Ret=Ret+BeginRecord;
+      Ret=Ret+BeginRecord;
     for(int i=0; i<Tab->FieldCount;i++)
     {
     Ret=Ret+BeginField;
@@ -609,8 +611,9 @@ void Client::ActTrigger(int NumTrigger)
 
 if(VTrigger[NumTrigger].Var<VTrigger[NumTrigger].Max)
 {
+
  StartAction(VTrigger[NumTrigger].TrueAction);
- VTrigger[NumTrigger].Var++;
+ //VTrigger[NumTrigger].Var++;
 }
 else
 {
