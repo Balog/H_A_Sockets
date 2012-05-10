@@ -645,12 +645,21 @@ MClient->Act.ParamComm.clear();
 String Path=ExtractFilePath(Application->ExeName);
 MP<TIniFile>Ini(Path+"Admin.ini");
 int MaxBase=Ini->ReadInteger("Server","NumServerBase",1);
+
+Trig T;
+T.Var=1;
+T.Max=MaxBase;
+T.TrueAction="ConnectBase";
+T.FalseAction="LoadLogins";
+MClient->VTrigger.push_back(T);
+/*
 MClient->Act.ParamComm.push_back(IntToStr(MaxBase));
 MClient->Act.ParamComm.push_back("1");
 MClient->Act.ParamComm.push_back("ConnectBase");
 MClient->Act.ParamComm.push_back("LoadLogins");
-
-MClient->StartAction("Trigger");
+*/
+//MClient->StartAction("Trigger");
+MClient->ActTrigger(0);
 
 }
 //---------------------------------------------------------------------------
@@ -665,7 +674,7 @@ MClient->Act.ParamComm.push_back(Par);
 
 MClient->ConnectDatabase("Diary", true);
 */
-int TekNumBase=StrToInt(MClient->Act.ParamComm[1]);
+int TekNumBase=StrToInt(MClient->VTrigger[0].Var);
 //MClient->Act.ParamComm.clear();
 String Path=ExtractFilePath(Application->ExeName);
 MP<TIniFile>Ini(Path+"Admin.ini");
@@ -679,7 +688,7 @@ String NameDatabase=Ini->ReadString("Base"+IntToStr(TekNumBase),"Name","");
 /////////////////////////////////////////////////
 MClient->ConnectDatabase(NameDatabase, NumDatabase, true);
 
-MClient->Act.ParamComm[1]=IntToStr(StrToInt(MClient->Act.ParamComm[1])+1);
+//MClient->Act.ParamComm[1]=IntToStr(StrToInt(MClient->Act.ParamComm[1])+1);
 }
 //---------------------------------------------------------------------------
 
@@ -726,6 +735,7 @@ Form1->UpdateOtdel(0);
 
 void __fastcall TZast::TriggerExecute(TObject *Sender)
 {
+/*
 if(StrToInt(MClient->Act.ParamComm[1]-1)<StrToInt(MClient->Act.ParamComm[0]))
 {
  MClient->StartAction(MClient->Act.ParamComm[2]);
@@ -734,6 +744,7 @@ else
 {
  MClient->StartAction(MClient->Act.ParamComm[3]);
 }
+*/
 }
 //---------------------------------------------------------------------------
 
@@ -930,10 +941,11 @@ void __fastcall TZast::SaveLoginsExecute(TObject *Sender)
 {
 //Zast->MClient->Act.ParamComm.clear();
 //ShowMessage(MClient->VDB.size());
-Zast->MClient->Act.ParamComm[4]="SaveObslOtd";
+Zast->MClient->Act.ParamComm.clear();
+Zast->MClient->Act.ParamComm.push_back("SaveObslOtd");
 Zast->MClient->Act.WaitCommand=8;
 
-Zast->MClient->WriteTable("Аспекты","Select [Num], [Login], [Code1], [Code2], [Role], [ServerNum] From Logins Where NumDatabase="+IntToStr(Zast->MClient->VDB[StrToInt(Zast->MClient->Act.ParamComm[1])].NumDatabase), "Select [Num], [Login], [Code1], [Code2], [Role], [ServerNum] From TempLogins");
+Zast->MClient->WriteTable(Zast->MClient->VDB[StrToInt(MClient->VTrigger[0].Var)].Name,"Select [Num], [Login], [Code1], [Code2], [Role], [ServerNum] From Logins Where NumDatabase="+IntToStr(Zast->MClient->VDB[StrToInt(MClient->VTrigger[0].Var)].NumDatabase), "Select [Num], [Login], [Code1], [Code2], [Role], [ServerNum] From TempLogins");
 
 }
 //---------------------------------------------------------------------------
@@ -941,10 +953,10 @@ Zast->MClient->WriteTable("Аспекты","Select [Num], [Login], [Code1], [Code2], [R
 void __fastcall TZast::SaveObslOtdExecute(TObject *Sender)
 {
 //Zast->MClient->Act.ParamComm.clear();
-Zast->MClient->Act.ParamComm[4]="SaveTempPodr";
+Zast->MClient->Act.ParamComm[0]="SaveTempPodr";
 Zast->MClient->Act.WaitCommand=8;
 
-Zast->MClient->WriteTable("Аспекты","Select [Login], [NumObslOtdel] From ObslOtdel Where NumDatabase="+IntToStr(Zast->MClient->VDB[StrToInt(Zast->MClient->Act.ParamComm[1])].NumDatabase), "Select [Login], [NumObslOtdel] From TempObslOtdel");
+Zast->MClient->WriteTable(Zast->MClient->VDB[StrToInt(MClient->VTrigger[0].Var)].Name,"Select [Login], [NumObslOtdel] From ObslOtdel Where NumDatabase="+IntToStr(Zast->MClient->VDB[StrToInt(MClient->VTrigger[0].Var)].NumDatabase), "Select [Login], [NumObslOtdel] From TempObslOtdel");
 
 }
 //---------------------------------------------------------------------------
@@ -955,15 +967,15 @@ void __fastcall TZast::SendMergeSaveExecute(TObject *Sender)
 //Zast->MClient->Act.ParamComm.clear();
 Zast->MClient->Act.WaitCommand=9;
 
-ClientSocket->Socket->SendText("Command:9;1|"+IntToStr(Zast->MClient->VDB[StrToInt(Zast->MClient->Act.ParamComm[1])].Name.Length())+"#"+Zast->MClient->VDB[StrToInt(Zast->MClient->Act.ParamComm[1])].Name+"|");
+ClientSocket->Socket->SendText("Command:9;1|"+IntToStr(Zast->MClient->VDB[StrToInt(MClient->VTrigger[0].Var)].Name.Length())+"#"+Zast->MClient->VDB[StrToInt(MClient->VTrigger[0].Var)].Name+"|");
 
-int i=StrToInt(Zast->MClient->Act.ParamComm[1]);
+int i=MClient->VTrigger[0].Var;
 do
 {
 i++;
 }
 while (Zast->MClient->VDB[i].NumDatabase<0);
-Zast->MClient->Act.ParamComm[1]=IntToStr(i);
+MClient->VTrigger[0].Var=i;
 
 }
 //---------------------------------------------------------------------------
@@ -977,11 +989,21 @@ ShowMessage(MClient->VDB[1].NumDatabase);
 ShowMessage(MClient->VDB[2].NumDatabase);
 */
 
+/*
 Zast->MClient->Act.ParamComm.push_back(IntToStr(MClient->VDB.size()-1));
 Zast->MClient->Act.ParamComm.push_back("0");
 Zast->MClient->Act.ParamComm.push_back("SaveLogins");
 Zast->MClient->Act.ParamComm.push_back("PostSaveLogins");
 Zast->MClient->Act.ParamComm.push_back("Action");
+*/
+Zast->MClient->VTrigger.clear();
+
+Trig T;
+T.Var=0;
+T.Max=MClient->VDB.size()-1;
+T.TrueAction="SaveLogins";
+T.FalseAction="PostSaveLogins";
+Zast->MClient->VTrigger.push_back(T);
 SaveLogins->Execute();
 }
 //---------------------------------------------------------------------------
@@ -996,11 +1018,68 @@ ShowMessage("Запись данных завершена");
 
 void __fastcall TZast::SaveTempPodrExecute(TObject *Sender)
 {
-Zast->MClient->Act.ParamComm[4]="SendMergeSave";
+Zast->MClient->Act.ParamComm[0]="SendMergeSave";
 Zast->MClient->Act.WaitCommand=8;
 
-Zast->MClient->WriteTable("Аспекты","Select [Номер подразделения], [Название подразделения], [ServerNum] From Подразделения Where NumDatabase="+IntToStr(Zast->MClient->VDB[StrToInt(Zast->MClient->Act.ParamComm[1])].NumDatabase), "Select [Номер подразделения], [Название подразделения], [ServerNum] From TempПодразделения");
+Zast->MClient->WriteTable(Zast->MClient->VDB[StrToInt(MClient->VTrigger[0].Var)].Name,"Select [Номер подразделения], [Название подразделения], [ServerNum] From Подразделения Where NumDatabase="+IntToStr(Zast->MClient->VDB[StrToInt(MClient->VTrigger[0].Var)].NumDatabase), "Select [Номер подразделения], [Название подразделения], [ServerNum] From TempПодразделения");
 
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TZast::LoadNewLoginsExecute(TObject *Sender)
+{
+// Чтение временной таблицы логинов с сервера для получения сервернух номеров новых логинов
+//Очистка клиентской временной таблицы логинов
+
+MP<TADOCommand>Comm(this);
+Comm->Connection=MClient->Database;
+Comm->CommandText="Delete * From TempLogins";
+Comm->Execute();
+
+String NameDB=Zast->MClient->VDB[StrToInt(MClient->VTrigger[0].Var)].Name;
+Zast->MClient->Act.ParamComm[0]="CorrectNewLogins";
+MClient->ReadTable(NameDB, "SELECT TempLogins.Num, TempLogins.ServerNum FROM TempLogins", "SELECT TempLogins.Num, TempLogins.ServerNum FROM TempLogins");
+
+
+
+
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TZast::CorrectNewLoginsExecute(TObject *Sender)
+{
+//запись новых номеров логинов в базу
+
+TLocateOptions SO;
+
+MP<TADODataSet>CLogins(this);
+CLogins->Connection=MClient->Database;
+CLogins->CommandText="Select  * From Logins where NumDatabase="+IntToStr(Zast->MClient->VDB[StrToInt(MClient->VTrigger[0].Var)].NumDatabase)+" Order by Num";
+CLogins->Active=true;
+
+MP<TADODataSet>TempLogin(this);
+TempLogin->Connection=MClient->Database;
+TempLogin->CommandText="Select  * From TempLogins Order by Num";
+TempLogin->Active=true;
+
+for(TempLogin->First();!TempLogin->Eof;TempLogin->Next())
+{
+ int N=TempLogin->FieldByName("Num")->Value;
+ if(CLogins->Locate("Num",N,SO))
+ {
+  CLogins->Edit();
+  CLogins->FieldByName("ServerNum")->Value=TempLogin->FieldByName("ServerNum")->Value;
+  CLogins->Post();
+ }
+ else
+ {
+// Main->MClient->WriteDiaryEvent("AdminARM ошибка","Сбой чтения с сервера номеров новых логинов","База данных: "+CBDatabase->Text);
+  ShowMessage("Ошибка получения ServerNum для новых логинов N="+IntToStr(N));
+ }
+}
+
+  MClient->ActTrigger(0);
+ //MClient->StartAction("Trigger");
 }
 //---------------------------------------------------------------------------
 

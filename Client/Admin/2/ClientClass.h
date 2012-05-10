@@ -27,6 +27,14 @@ int NumDatabase;
 int NumLicense;
 };
 //****************************************
+struct Trig
+{
+ int Var;
+ int Max;
+ String TrueAction;
+ String FalseAction;
+};
+//****************************************
 class Form;
 class Table;
 //****************************************
@@ -55,7 +63,11 @@ void StartAction(String NameAction);
 void ConnectDatabase(String Name,int Number,  bool Connect);
 void ReadTable(String NameDB, String ServerSQL, String ClientSQL);
 void DecodeTable(String NameDB, String ClientSQL, String Text);
+
 vector<CDBItem>VDB;
+vector<Trig>VTrigger;
+void ActTrigger(int NumTrigger);
+
 int GetIDDBName(String Name);
 void RegisterDatabase(String Name, int NumLic);
 

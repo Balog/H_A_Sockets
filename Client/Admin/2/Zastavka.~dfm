@@ -9994,5 +9994,13 @@ object Zast: TZast
       Caption = 'SaveTempPodr'
       OnExecute = SaveTempPodrExecute
     end
+    object LoadNewLogins: TAction
+      Caption = 'LoadNewLogins'
+      OnExecute = LoadNewLoginsExecute
+    end
+    object CorrectNewLogins: TAction
+      Caption = 'CorrectNewLogins'
+      OnExecute = CorrectNewLoginsExecute
+    end
   end
 end

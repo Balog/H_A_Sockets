@@ -95,8 +95,8 @@ switch(Comm)
  ShowMessage(Act.ParamComm[5]);
  ShowMessage(Act.ParamComm[6]);
  */
- RegisterDatabase(Act.ParamComm[6], StrToInt(Act.ParamComm[5]));
- StartAction("Trigger");
+ RegisterDatabase(Parameters[2], StrToInt(Parameters[1]));
+ this->ActTrigger(0);
 
  break;
  }
@@ -130,7 +130,7 @@ switch(Comm)
  case 8:
  {
  //ответ на команду записи таблицы
- StartAction(Act.ParamComm[4]);
+ StartAction(Act.ParamComm[0]);
  break;
  }
  case 9:
@@ -604,6 +604,20 @@ void Client::WriteTable(String Database, String ClientSQLText, String ServerSQLT
  Socket->Socket->SendText("Command:8;3|"+IntToStr(Database.Length())+"#"+Database+"|"+IntToStr(ServerSQLText.Length())+"#"+ServerSQLText+"|"+IntToStr(Text.Length())+"#"+Text+"|");
 }
 //***************************************************************************
+void Client::ActTrigger(int NumTrigger)
+{
+
+if(VTrigger[NumTrigger].Var<VTrigger[NumTrigger].Max)
+{
+ StartAction(VTrigger[NumTrigger].TrueAction);
+ VTrigger[NumTrigger].Var++;
+}
+else
+{
+ StartAction(VTrigger[NumTrigger].FalseAction);
+}
+}
+//****************************************************************************
 /////////////////////////////////////////////////////////////////////////////
 Form::Form()
 {
