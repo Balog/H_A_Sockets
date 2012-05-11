@@ -113,11 +113,7 @@ switch(Comm)
 
  //далее - обновление списка подразделений
  //Может быть стоит показывать Form1 после обновления.
- Zast->MClient->Act.ParamComm.clear();
- Zast->MClient->Act.ParamComm.push_back("UpdateOtdels");
-
- Zast->MClient->ReadTable(Form1->CBDatabase->Text,"Select [Номер подразделения], [Название подразделения] from Подразделения", "Select [Номер подразделения], [Название подразделения] from TempПодразделения");
-
+Zast->PrepareUpdateOtd->Execute();
  break;
  }
  case 7:

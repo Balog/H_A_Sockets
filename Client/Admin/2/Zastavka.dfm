@@ -10002,5 +10002,29 @@ object Zast: TZast
       Caption = 'CorrectNewLogins'
       OnExecute = CorrectNewLoginsExecute
     end
+    object ReadOtdels: TAction
+      Caption = 'ReadOtdels'
+      OnExecute = ReadOtdelsExecute
+    end
+    object PrepareRead: TAction
+      Caption = 'PrepareRead'
+      OnExecute = PrepareReadExecute
+    end
+    object PostRead: TAction
+      Caption = 'PostRead'
+      OnExecute = PostReadExecute
+    end
+    object PrepareUpdateOtd: TAction
+      Caption = 'PrepareUpdateOtd'
+      OnExecute = PrepareUpdateOtdExecute
+    end
+    object PostUpdateOtd: TAction
+      Caption = 'PostUpdateOtd'
+      OnExecute = PostUpdateOtdExecute
+    end
+    object ReadOtdelsAuto: TAction
+      Caption = 'ReadOtdelsAuto'
+      OnExecute = ReadOtdelsAutoExecute
+    end
   end
 end

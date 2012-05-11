@@ -64,6 +64,7 @@ __published:	// IDE-managed Components
           TMouseButton Button, TShiftState Shift, int X, int Y);
         void __fastcall N5Click(TObject *Sender);
         void __fastcall N6Click(TObject *Sender);
+        void __fastcall UsersClick(TObject *Sender);
 private:	// User declarations
 String Path;
 String AdminDatabase;

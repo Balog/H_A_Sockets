@@ -484,7 +484,7 @@ Comm->Execute();
 
 MP<TADODataSet>Otdels(this);
 Otdels->Connection=MClient->Database;
-Otdels->CommandText="Select * From Подразделения where NumDatabase="+IntToStr(Zast->MClient->VDB[Zast->MClient->GetIDDBName(Form1->CBDatabase->Text)].NumDatabase)+" Order by [Номер подразделения]";
+Otdels->CommandText="Select * From Подразделения where NumDatabase="+IntToStr(Zast->MClient->VDB[StrToInt(MClient->VTrigger[0].Var)].NumDatabase)+" Order by [Номер подразделения]";
 Otdels->Active=true;
 
 MP<TADODataSet>Temp(this);
@@ -527,11 +527,13 @@ Comm->Execute();
 Comm->CommandText="INSERT INTO Подразделения ( ServerNum, [Название подразделения], NumDatabase ) SELECT TempПодразделения.[Номер подразделения], TempПодразделения.[Название подразделения], "+IntToStr(Zast->MClient->VDB[Zast->MClient->GetIDDBName(Form1->CBDatabase->Text)].NumDatabase)+" AS [Database] FROM TempПодразделения;";
 Comm->Execute();
 //Main->MClient->WriteDiaryEvent("AdminARM","Конец объединения подразделений","");
-MClient->WriteDiaryEvent("AdminARM","Конец объединения подразделений");
+  Zast->MClient->Act.NextCommand=0;
+MClient->WriteDiaryEvent("AdminARM","Конец объединения подразделений",Zast->MClient->VDB[StrToInt(MClient->VTrigger[0].Var)].Name);
 }
 catch(...)
 {
 //Main->MClient->WriteDiaryEvent("AdminARM ошибка","Ошибка объединения подразделений"," Ошибка "+IntToStr(GetLastError()));
+  Zast->MClient->Act.WaitCommand=0;
 MClient->WriteDiaryEvent("AdminARM ошибка","Ошибка объединения подразделений"," Ошибка "+IntToStr(GetLastError()));
 }
 
@@ -726,11 +728,12 @@ void __fastcall TZast::UpdateOtdelsExecute(TObject *Sender)
 ShowMessage(MClient->Act.ParamComm[1]);
 ShowMessage(MClient->Act.ParamComm[2]);
 */
-MergeOtdels();
- Form1->Show();
 
-Form1->Users->ItemIndex=0;
-Form1->UpdateOtdel(0);
+
+MergeOtdels();
+
+  MClient->VTrigger[0].Var++;
+  MClient->ActTrigger(0);
 }
 //---------------------------------------------------------------------------
 
@@ -772,7 +775,8 @@ Comm->Execute();
  Zast->MClient->Act.ParamComm.push_back("UpdateLoginsMan");
  Zast->MClient->Act.NextCommand=5;
 
- Zast->MClient->ReadTable(Form1->CBDatabase->Text,"Select [Num], [Login], [Code1], [Code2], Role from Logins", "Select [Num], [Login], [Code1], [Code2], Role from TempLogins");
+ Zast->MClient->ReadTable(Zast->MClient->VDB[StrToInt(MClient->VTrigger[0].Var)].Name,"Select [Num], [Login], [Code1], [Code2], Role from Logins", "Select [Num], [Login], [Code1], [Code2], Role from TempLogins");
+
 
 }
 //---------------------------------------------------------------------------
@@ -789,24 +793,23 @@ Comm->Execute();
  Zast->MClient->Act.ParamComm.push_back("UpdateObslOtdelMan");
  Zast->MClient->Act.NextCommand=5;
 
- Zast->MClient->ReadTable(Form1->CBDatabase->Text,"Select [Login], [NumObslOtdel] from ObslOtdel", "Select [Login], [NumObslOtdel] from TempObslOtdel");
+ Zast->MClient->ReadTable(Zast->MClient->VDB[StrToInt(MClient->VTrigger[0].Var)].Name,"Select [Login], [NumObslOtdel] from ObslOtdel", "Select [Login], [NumObslOtdel] from TempObslOtdel");
 
 }
 //---------------------------------------------------------------------------
-
 void __fastcall TZast::UpdateObslOtdelManExecute(TObject *Sender)
 {
 MP<TADOCommand>Comm(this);
 Comm->Connection=MClient->Database;
 
-MergeLogins();
+//MergeLogins();
 MergeOtdels();
 Form1->Users->ItemIndex=0;
 Form1->UpdateOtdel(0);
 
 MP<TADODataSet>Otdel(this);
 Otdel->Connection=MClient->Database;
-Otdel->CommandText="Select * from Подразделения Where Numdatabase="+IntToStr(Zast->MClient->VDB[Zast->MClient->GetIDDBName(Form1->CBDatabase->Text)].NumDatabase);
+Otdel->CommandText="Select * from Подразделения Where Numdatabase="+IntToStr(Zast->MClient->VDB[StrToInt(MClient->VTrigger[0].Var)].NumDatabase);
 Otdel->Active=true;
 
 MP<TADODataSet>TempObslOtd(this);
@@ -816,7 +819,7 @@ TempObslOtd->Active=true;
 
 MP<TADODataSet>Login(this);
 Login->Connection=MClient->Database;
-Login->CommandText="Select * From Logins  Where Numdatabase="+IntToStr(Zast->MClient->VDB[Zast->MClient->GetIDDBName(Form1->CBDatabase->Text)].NumDatabase);
+Login->CommandText="Select * From Logins  Where Numdatabase="+IntToStr(Zast->MClient->VDB[StrToInt(MClient->VTrigger[0].Var)].NumDatabase);
 Login->Active=true;
 
 for(TempObslOtd->First();!TempObslOtd->Eof;TempObslOtd->Next())
@@ -852,10 +855,10 @@ TempObslOtd->FieldByName("NumObslOtdel")->Value=Otd2;
 TempObslOtd->Post();
 }
 
-Comm->CommandText="Delete * From ObslOtdel Where Numdatabase="+IntToStr(Zast->MClient->VDB[Zast->MClient->GetIDDBName(Form1->CBDatabase->Text)].NumDatabase);
+Comm->CommandText="Delete * From ObslOtdel Where Numdatabase="+IntToStr(Zast->MClient->VDB[StrToInt(MClient->VTrigger[0].Var)].NumDatabase);
 Comm->Execute();
 
-Comm->CommandText="INSERT INTO ObslOtdel ( Login, NumObslOtdel, Numdatabase ) SELECT TempObslOtdel.Login, TempObslOtdel.NumObslOtdel, "+IntToStr(Zast->MClient->VDB[Zast->MClient->GetIDDBName(Form1->CBDatabase->Text)].NumDatabase)+" AS [Database] FROM TempObslOtdel;";
+Comm->CommandText="INSERT INTO ObslOtdel ( Login, NumObslOtdel, Numdatabase ) SELECT TempObslOtdel.Login, TempObslOtdel.NumObslOtdel, "+IntToStr(Zast->MClient->VDB[StrToInt(MClient->VTrigger[0].Var)].NumDatabase)+" AS [Database] FROM TempObslOtdel;";
 Comm->Execute();
 
 Comm->CommandText="Delete * From TempObslOtdel";
@@ -863,7 +866,9 @@ Comm->Execute();
 
 Form1->UpdateTempLogin();
 Form1->Users->ItemIndex=0;
-Form1->UpdateTempLogin();
+
+  MClient->VTrigger[0].Var++;
+  MClient->ActTrigger(0);
 }
 //---------------------------------------------------------------------------
 void TZast::MergeLogins()
@@ -1084,6 +1089,92 @@ for(TempLogin->First();!TempLogin->Eof;TempLogin->Next())
   MClient->VTrigger[0].Var++;
   MClient->ActTrigger(0);
  //MClient->StartAction("Trigger");
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TZast::ReadOtdelsExecute(TObject *Sender)
+{
+//Чтение подразделений
+MP<TADOCommand>Comm(this);
+Comm->Connection=Zast->MClient->Database;
+Comm->CommandText="Delete * From TempПодразделения";
+Comm->Execute();
+
+ Zast->MClient->Act.ParamComm.clear();
+ Zast->MClient->Act.ParamComm.push_back("UpdateOtdelsMan");
+ Zast->MClient->Act.NextCommand=5;
+
+ Zast->MClient->ReadTable(Zast->MClient->VDB[StrToInt(MClient->VTrigger[0].Var)].Name,"Select [Номер подразделения], [Название подразделения] from Подразделения", "Select [Номер подразделения], [Название подразделения] from TempПодразделения");
+
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TZast::PrepareReadExecute(TObject *Sender)
+{
+Zast->MClient->Act.ParamComm.clear();
+
+Zast->MClient->VTrigger.clear();
+
+Trig T;
+T.Var=0;
+T.Max=MClient->VDB.size();
+T.TrueAction="ReadOtdels";
+T.FalseAction="PostRead";
+Zast->MClient->VTrigger.push_back(T);
+//SaveLogins->Execute();
+MClient->ActTrigger(0);
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TZast::PostReadExecute(TObject *Sender)
+{
+Zast->MClient->Act.ParamComm.clear();
+
+Zast->MClient->VTrigger.clear();
+ Zast->MClient->Act.ParamComm.clear();
+  Zast->MClient->Act.WaitCommand=0;
+ShowMessage("Чтение завершено!");
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TZast::PrepareUpdateOtdExecute(TObject *Sender)
+{
+Zast->MClient->VTrigger.clear();
+Trig T;
+T.Var=0;
+T.Max=MClient->VDB.size();
+T.TrueAction="ReadOtdelsAuto";
+T.FalseAction="PostUpdateOtd";
+Zast->MClient->VTrigger.push_back(T);
+//SaveLogins->Execute();
+MClient->ActTrigger(0);
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TZast::PostUpdateOtdExecute(TObject *Sender)
+{
+//
+ Form1->Show();
+
+Form1->Users->ItemIndex=0;
+Form1->UpdateOtdel(0);
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TZast::ReadOtdelsAutoExecute(TObject *Sender)
+{
+//Чтение подразделений
+MP<TADOCommand>Comm(this);
+Comm->Connection=Zast->MClient->Database;
+Comm->CommandText="Delete * From TempПодразделения";
+Comm->Execute();
+
+ Zast->MClient->Act.ParamComm.clear();
+ Zast->MClient->Act.ParamComm.push_back("UpdateOtdels");
+ Zast->MClient->Act.NextCommand=5;
+
+ Zast->MClient->ReadTable(Zast->MClient->VDB[StrToInt(MClient->VTrigger[0].Var)].Name,"Select [Номер подразделения], [Название подразделения] from Подразделения", "Select [Номер подразделения], [Название подразделения] from TempПодразделения");
+
 }
 //---------------------------------------------------------------------------
 

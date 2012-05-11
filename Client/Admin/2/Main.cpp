@@ -238,7 +238,10 @@ Zast->UpdateLogins->Execute();
 
 void __fastcall TForm1::CBDatabaseClick(TObject *Sender)
 {
-
+UpdateTempLogin();
+Form1->Users->ItemIndex=0;
+UpdateOtdel(0);
+/*
 //Main->MClient->WriteDiaryEvent("AdminARM","Переключение базы данных","База данных: "+CBDatabase->Text);
 //LicCount=Zast->MClient->GetLicenseCount(CBDatabase->Text);
 Reg=LicCount!=0;
@@ -251,26 +254,29 @@ try
 //UpdateOtdels();
 Zast->UpdateLogins->Execute();
 
+Zast->MClient->VTrigger.clear();
+Trig T;
+T.Var=CBDatabase->ItemIndex;
+T.Max=Zast->MClient->VDB.size();
+T.TrueAction="";
+T.FalseAction="";
+Zast->MClient->VTrigger.push_back(T);
+//SaveLogins->Execute();
+Zast->MClient->ActTrigger(0);
+
  Zast->MClient->Act.ParamComm.clear();
  Zast->MClient->Act.ParamComm.push_back("UpdateOtdels");
 
  Zast->MClient->ReadTable(CBDatabase->Text,"Select [Номер подразделения], [Название подразделения] from Подразделения", "Select [Номер подразделения], [Название подразделения] from TempПодразделения");
 
-//Zast->UpdateOtdels->Execute();
-/*
-int N=Users->ItemIndex;
 
-UpdateTempLogin();
-Users->ItemIndex=N;
-UpdateOtdel(N);
-*/
 //Main->MClient->WriteDiaryEvent("AdminARM","Переключение базы данных завершено","База данных: "+CBDatabase->Text);
 }
 catch(...)
 {
 //Main->MClient->WriteDiaryEvent("AdminARM ошибка","Ошибка переключения базы данных","База данных: "+CBDatabase->Text);
 }
-
+*/
 }
 //---------------------------------------------------------------------------
 
@@ -531,6 +537,14 @@ Comm->Execute();
 void __fastcall TForm1::N6Click(TObject *Sender)
 {
 Zast->PrepareSaveLogins->Execute();
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm1::UsersClick(TObject *Sender)
+{
+int N=Users->ItemIndex;
+
+UpdateOtdel(N);        
 }
 //---------------------------------------------------------------------------
 

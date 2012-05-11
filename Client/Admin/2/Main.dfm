@@ -65,6 +65,7 @@ object Form1: TForm1
     ItemHeight = 13
     PopupMenu = PopupMenu1
     TabOrder = 1
+    OnClick = UsersClick
     OnMouseDown = UsersMouseDown
   end
   object Otdels: TListBox
