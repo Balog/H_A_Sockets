@@ -240,6 +240,7 @@ void __fastcall TForm1::CBDatabaseClick(TObject *Sender)
 {
 UpdateTempLogin();
 Form1->Users->ItemIndex=0;
+UpdateOtdel(0);
 /*
 //Main->MClient->WriteDiaryEvent("AdminARM","Переключение базы данных","База данных: "+CBDatabase->Text);
 //LicCount=Zast->MClient->GetLicenseCount(CBDatabase->Text);

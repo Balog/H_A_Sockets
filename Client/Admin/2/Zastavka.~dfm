@@ -10022,5 +10022,9 @@ object Zast: TZast
       Caption = 'PostUpdateOtd'
       OnExecute = PostUpdateOtdExecute
     end
+    object ReadOtdelsAuto: TAction
+      Caption = 'ReadOtdelsAuto'
+      OnExecute = ReadOtdelsAutoExecute
+    end
   end
 end

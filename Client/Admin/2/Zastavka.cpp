@@ -802,10 +802,9 @@ void __fastcall TZast::UpdateObslOtdelManExecute(TObject *Sender)
 MP<TADOCommand>Comm(this);
 Comm->Connection=MClient->Database;
 
-//MergeLogins();
+MergeLogins();
 MergeOtdels();
-Form1->Users->ItemIndex=0;
-Form1->UpdateOtdel(0);
+
 
 MP<TADODataSet>Otdel(this);
 Otdel->Connection=MClient->Database;
@@ -889,7 +888,7 @@ TempLogins->Active=true;
 
 MP<TADODataSet>Logins(this);
 Logins->Connection=MClient->Database;
-Logins->CommandText="Select * From Logins where Numdatabase="+IntToStr(Zast->MClient->VDB[Zast->MClient->GetIDDBName(Form1->CBDatabase->Text)].NumDatabase)+" Order by Num";
+Logins->CommandText="Select * From Logins where Numdatabase="+IntToStr(Zast->MClient->VDB[StrToInt(MClient->VTrigger[0].Var)].NumDatabase)+" Order by Num";
 Logins->Active=true;
 
 MP<TADODataSet>TempObslOtdel(this);
@@ -922,10 +921,10 @@ Logins->FieldByName("Del")->Value=true;
 Logins->Post();
 }
 }
-Comm->CommandText="Delete * from Logins where Del=true AND Numdatabase="+IntToStr(Zast->MClient->VDB[Zast->MClient->GetIDDBName(Form1->CBDatabase->Text)].NumDatabase);
+Comm->CommandText="Delete * from Logins where Del=true AND Numdatabase="+IntToStr(Zast->MClient->VDB[StrToInt(MClient->VTrigger[0].Var)].NumDatabase);
 Comm->Execute();
 
-Comm->CommandText="INSERT INTO Logins ( ServerNum, Login, Code1, Code2, Role, NumDatabase ) SELECT TempLogins.Num, TempLogins.Login, TempLogins.Code1, TempLogins.Code2, TempLogins.Role, "+IntToStr(Zast->MClient->VDB[Zast->MClient->GetIDDBName(Form1->CBDatabase->Text)].NumDatabase)+" AS [Database] FROM TempLogins;";
+Comm->CommandText="INSERT INTO Logins ( ServerNum, Login, Code1, Code2, Role, NumDatabase ) SELECT TempLogins.Num, TempLogins.Login, TempLogins.Code1, TempLogins.Code2, TempLogins.Role, "+IntToStr(Zast->MClient->VDB[StrToInt(MClient->VTrigger[0].Var)].NumDatabase)+" AS [Database] FROM TempLogins;";
 Comm->Execute();
 //пройти по TempLogins и перенести в Logins оставшиеся
 
@@ -1128,6 +1127,9 @@ MClient->ActTrigger(0);
 
 void __fastcall TZast::PostReadExecute(TObject *Sender)
 {
+Form1->Users->ItemIndex=0;
+Form1->UpdateOtdel(0);
+
 Zast->MClient->Act.ParamComm.clear();
 
 Zast->MClient->VTrigger.clear();

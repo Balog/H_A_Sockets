@@ -133,6 +133,7 @@ __published:	// IDE-managed Components
         TAction *PostRead;
         TAction *PrepareUpdateOtd;
         TAction *PostUpdateOtd;
+        TAction *ReadOtdelsAuto;
         void __fastcall Timer1Timer(TObject *Sender);
         void __fastcall Image1Click(TObject *Sender);
         void __fastcall FormCreate(TObject *Sender);
@@ -171,6 +172,7 @@ __published:	// IDE-managed Components
         void __fastcall PostReadExecute(TObject *Sender);
         void __fastcall PrepareUpdateOtdExecute(TObject *Sender);
         void __fastcall PostUpdateOtdExecute(TObject *Sender);
+        void __fastcall ReadOtdelsAutoExecute(TObject *Sender);
 private:	// User declarations
 String Path;
 TLocateOptions SO;
