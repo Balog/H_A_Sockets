@@ -4,8 +4,8 @@ object Zast: TZast
   BorderIcons = []
   BorderStyle = bsNone
   Caption = 'Zast'
-  ClientHeight = 466
-  ClientWidth = 478
+  ClientHeight = 471
+  ClientWidth = 481
   Color = clBtnFace
   TransparentColor = True
   TransparentColorValue = clRed
@@ -25,8 +25,8 @@ object Zast: TZast
   object Image1: TImage
     Left = 0
     Top = 0
-    Width = 478
-    Height = 466
+    Width = 481
+    Height = 471
     Align = alClient
     Picture.Data = {
       0A544A504547496D616765B98E0400FFD8FFE000104A46494600010101009600
@@ -10025,6 +10025,45 @@ object Zast: TZast
     object ReadOtdelsAuto: TAction
       Caption = 'ReadOtdelsAuto'
       OnExecute = ReadOtdelsAutoExecute
+    end
+    object LoadTypeOp: TAction
+      Caption = 'LoadTypeOp'
+      OnExecute = LoadTypeOpExecute
+    end
+    object LoadOperation: TAction
+      Caption = 'LoadOperation'
+      OnExecute = LoadOperationExecute
+    end
+    object MergeType_Op: TAction
+      Caption = 'MergeType_Op'
+      OnExecute = MergeType_OpExecute
+    end
+    object LoadEvents: TAction
+      Caption = 'LoadEvents'
+      OnExecute = LoadEventsExecute
+    end
+    object MergeEvents: TAction
+      Caption = 'MergeEvents'
+      OnExecute = MergeEventsExecute
+    end
+  end
+  object ActionManager2: TActionManager
+    Left = 112
+    Top = 128
+    object LoadTypeOp1: TAction
+      Caption = 'LoadTypeOp1'
+    end
+    object LoadOperation1: TAction
+      Caption = 'LoadOperation1'
+    end
+    object MergeType_Op1: TAction
+      Caption = 'MergeType_Op1'
+    end
+    object LoadEvents1: TAction
+      Caption = 'LoadEvents1'
+    end
+    object MergeEvents1: TAction
+      Caption = 'MergeEvents1'
     end
   end
 end

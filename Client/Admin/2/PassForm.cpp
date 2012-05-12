@@ -7,6 +7,7 @@
 #include "Main.h"
 #include "Zastavka.h"
 #include "CodeText.h"
+
 //---------------------------------------------------------------------------
 #pragma package(smart_init)
 #pragma resource "*.dfm"

@@ -134,6 +134,17 @@ __published:	// IDE-managed Components
         TAction *PrepareUpdateOtd;
         TAction *PostUpdateOtd;
         TAction *ReadOtdelsAuto;
+        TActionManager *ActionManager2;
+        TAction *LoadTypeOp1;
+        TAction *LoadOperation1;
+        TAction *MergeType_Op1;
+        TAction *LoadEvents1;
+        TAction *MergeEvents1;
+        TAction *LoadTypeOp;
+        TAction *LoadOperation;
+        TAction *MergeType_Op;
+        TAction *LoadEvents;
+        TAction *MergeEvents;
         void __fastcall Timer1Timer(TObject *Sender);
         void __fastcall Image1Click(TObject *Sender);
         void __fastcall FormCreate(TObject *Sender);
@@ -173,6 +184,11 @@ __published:	// IDE-managed Components
         void __fastcall PrepareUpdateOtdExecute(TObject *Sender);
         void __fastcall PostUpdateOtdExecute(TObject *Sender);
         void __fastcall ReadOtdelsAutoExecute(TObject *Sender);
+        void __fastcall LoadTypeOpExecute(TObject *Sender);
+        void __fastcall LoadOperationExecute(TObject *Sender);
+        void __fastcall MergeType_OpExecute(TObject *Sender);
+        void __fastcall LoadEventsExecute(TObject *Sender);
+        void __fastcall MergeEventsExecute(TObject *Sender);
 private:	// User declarations
 String Path;
 TLocateOptions SO;

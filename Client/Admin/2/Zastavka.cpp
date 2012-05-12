@@ -13,6 +13,7 @@
 #include "Main.h"
 #include <FileCtrl.hpp>
 #include "PassForm.h"
+#include "Diary.h"
 //---------------------------------------------------------------------------
 #pragma package(smart_init)
 #pragma resource "*.dfm"
@@ -1178,6 +1179,124 @@ Comm->Execute();
 
  Zast->MClient->ReadTable(Zast->MClient->VDB[StrToInt(MClient->VTrigger[0].Var)].Name,"Select [Номер подразделения], [Название подразделения] from Подразделения", "Select [Номер подразделения], [Название подразделения] from TempПодразделения");
 
+}
+
+//---------------------------------------------------------------------------
+
+void __fastcall TZast::LoadTypeOpExecute(TObject *Sender)
+{
+ Zast->MClient->Act.ParamComm.clear();
+ Zast->MClient->Act.ParamComm.push_back("LoadOperation");
+ Zast->MClient->Act.NextCommand=5;
+
+ Zast->MClient->ReadTable("Diary","Select Num, NameType from TypeOp order by Num;", "Select Num, NameType from TempTypeOp order by Num;");
+
+}
+//---------------------------------------------------------------------------
+void __fastcall TZast::LoadOperationExecute(TObject *Sender)
+{
+ Zast->MClient->Act.ParamComm.clear();
+ Zast->MClient->Act.ParamComm.push_back("MergeType_Op");
+ Zast->MClient->Act.NextCommand=5;
+
+ Zast->MClient->ReadTable("Diary","Select Num, Type, NameOperation from Operations order by Num", "Select Num, Type, NameOperation from TempOperations order by Num");
+
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TZast::MergeType_OpExecute(TObject *Sender)
+{
+FDiary->MergeTypeOp();
+
+FDiary->MergeOperations();
+
+LoadEvents->Execute();
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TZast::LoadEventsExecute(TObject *Sender)
+{
+Word Y;
+Word M;
+Word D;
+
+int Year;
+int Month;
+int Day;
+String Dat, Dat1;
+
+DecodeDate(FDiary->NDate->Date, Y, M, D);
+Year=(int)Y;
+Month=(int)M;
+Day=(int)D;
+Dat=IntToStr(Month)+"/"+IntToStr(Day)+"/"+IntToStr(Year);
+
+DecodeDate(FDiary->KDate->Date+1, Y, M, D);
+Year=(int)Y;
+Month=(int)M;
+Day=(int)D;
+Dat1=IntToStr(Month)+"/"+IntToStr(Day)+"/"+IntToStr(Year);
+
+String ClientSQL;
+String ServerSQL;
+
+if(FDiary->EnNDate->Checked & FDiary->EnKDate->Checked)
+{
+//ShowMessage("Включены оба");
+//Включены оба
+
+
+ClientSQL="SELECT Events.Num,  Events.Date_Time, Events.Comp, Events.Login, Events.Operation, Events.Prim FROM TempEvents WHERE (((Events.Date_Time)>=#"+Dat+"#) AND ((Events.Date_Time)<=#"+Dat1+"#));";
+
+ServerSQL="SELECT Events.Num,  Events.Date_Time, Events.Comp, Events.Login, Events.Operation, Events.Prim FROM Events WHERE (((Events.Date_Time)>=#"+Dat+"#) AND ((Events.Date_Time)<=#"+Dat1+"#))";
+
+}
+else
+{
+if(FDiary->EnNDate->Checked)
+{
+//ShowMessage("Включен начальный");
+//включен только начальный
+ClientSQL="SELECT Events.Num,  Events.Date_Time, Events.Comp, Events.Login, Events.Operation, Events.Prim FROM TempEvents WHERE (((Events.Date_Time)>=#"+Dat+"#));";
+
+ServerSQL="SELECT Events.Num,  Events.Date_Time, Events.Comp, Events.Login, Events.Operation, Events.Prim FROM Events WHERE (((Events.Date_Time)>=#"+Dat+"#));";
+
+}
+else
+{
+if(FDiary->EnKDate->Checked)
+{
+//ShowMessage("Включен конечный");
+//включен только конечный
+ClientSQL="SELECT Events.Num,  Events.Date_Time, Events.Comp, Events.Login, Events.Operation, Events.Prim FROM TempEvents WHERE (((Events.Date_Time)<=#"+Dat1+"#));";
+
+ServerSQL="SELECT Events.Num,  Events.Date_Time, Events.Comp, Events.Login, Events.Operation, Events.Prim FROM Events WHERE (((Events.Date_Time)<=#"+Dat1+"#))";
+
+}
+else
+{
+//ShowMessage("Выключены оба");
+//не включен ниодин
+ClientSQL="SELECT Events.Num,  Events.Date_Time, Events.Comp, Events.Login, Events.Operation, Events.Prim FROM TempEvents;";
+
+ServerSQL="SELECT Events.Num,  Events.Date_Time, Events.Comp, Events.Login, Events.Operation, Events.Prim FROM Events ";
+
+}
+}
+}
+
+ Zast->MClient->Act.ParamComm.clear();
+ Zast->MClient->Act.ParamComm.push_back("MergeEvents");
+ Zast->MClient->Act.NextCommand=5;
+
+ Zast->MClient->ReadTable("Diary", ServerSQL, ClientSQL);
+
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TZast::MergeEventsExecute(TObject *Sender)
+{
+//
 }
 //---------------------------------------------------------------------------
 

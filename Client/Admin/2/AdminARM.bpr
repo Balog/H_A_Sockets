@@ -5,15 +5,15 @@
     <VERSION value="BCB.06.00"/>
     <PROJECT value="AdminARM.exe"/>
     <OBJFILES value="AdminARM.obj Zastavka.obj ClientClass.obj Main.obj MDBConnector.obj 
-      PassForm.obj CodeText.obj EditLogin.obj"/>
+      PassForm.obj CodeText.obj EditLogin.obj Diary.obj"/>
     <RESFILES value="AdminARM.res"/>
     <IDLFILES value=""/>
     <IDLGENFILES value=""/>
     <DEFFILE value=""/>
-    <RESDEPEN value="$(RESFILES) Zastavka.dfm Main.dfm PassForm.dfm EditLogin.dfm"/>
+    <RESDEPEN value="$(RESFILES) Zastavka.dfm Main.dfm PassForm.dfm EditLogin.dfm Diary.dfm"/>
     <LIBFILES value=""/>
-    <LIBRARIES value="vclx.lib adortl.lib dbrtl.lib dclusr.lib rtl.lib vcl.lib"/>
-    <SPARELIBS value="vcl.lib rtl.lib dclusr.lib dbrtl.lib adortl.lib vclx.lib"/>
+    <LIBRARIES value="vcldb.lib vclx.lib adortl.lib dbrtl.lib dclusr.lib rtl.lib vcl.lib"/>
+    <SPARELIBS value="vcl.lib rtl.lib dclusr.lib dbrtl.lib adortl.lib vclx.lib vcldb.lib"/>
     <PACKAGES value="vcl.bpi rtl.bpi dbrtl.bpi adortl.bpi vcldb.bpi vclx.bpi bdertl.bpi 
       vcldbx.bpi ibxpress.bpi dsnap.bpi cds.bpi bdecds.bpi qrpt.bpi teeui.bpi 
       teedb.bpi tee.bpi dss.bpi teeqr.bpi visualclx.bpi visualdbclx.bpi 
@@ -66,6 +66,7 @@
       <FILE FILENAME="PassForm.cpp" FORMNAME="Pass" UNITNAME="PassForm" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="CodeText.cpp" FORMNAME="" UNITNAME="CodeText" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="EditLogin.cpp" FORMNAME="EditLogins" UNITNAME="EditLogin" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="Diary.cpp" FORMNAME="FDiary" UNITNAME="Diary" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
   </FILELIST>
   <BUILDTOOLS>
   </BUILDTOOLS>

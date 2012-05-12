@@ -237,6 +237,11 @@ DB=Diary;
 }
 int FromPos=ClientSQL.LowerCase().Pos("from");
 String DelText="Delete * "+ClientSQL.SubString(FromPos, ClientSQL.Length());
+FromPos=DelText.Pos("order");
+if(FromPos>0)
+{
+DelText=DelText.SubString(0, FromPos-2);
+}
 
  MP<TADOCommand>Comm(Owner);
  Comm->Connection=DB;

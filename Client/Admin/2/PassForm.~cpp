@@ -64,6 +64,8 @@ String LG=TLogin.SubString(1,TLogin.Length()/2);
 if(LG==TabLogin)
 {
 
+
+
 Zast->MClient->Login=TabLogin;
 Zast->MClient->LoginResult(TabLogin,EdPass->Text, true);
 
