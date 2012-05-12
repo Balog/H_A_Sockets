@@ -863,8 +863,7 @@ Comm->Execute();
 Comm->CommandText="Delete * From TempObslOtdel";
 Comm->Execute();
 
-Form1->UpdateTempLogin();
-Form1->Users->ItemIndex=0;
+
 
   MClient->VTrigger[0].Var++;
   MClient->ActTrigger(0);
@@ -907,6 +906,7 @@ if(B)
 //есть совпадение
 
 Logins->Edit();
+Logins->FieldByName("Login")->Value=TempLogins->FieldByName("Login")->Value;
 Logins->FieldByName("Code1")->Value=TempLogins->FieldByName("Code1")->Value;
 Logins->FieldByName("Code2")->Value=TempLogins->FieldByName("Code2")->Value;
 Logins->FieldByName("Role")->Value=TempLogins->FieldByName("Role")->Value;
@@ -1127,6 +1127,7 @@ MClient->ActTrigger(0);
 
 void __fastcall TZast::PostReadExecute(TObject *Sender)
 {
+Form1->UpdateTempLogin();
 Form1->Users->ItemIndex=0;
 Form1->UpdateOtdel(0);
 
