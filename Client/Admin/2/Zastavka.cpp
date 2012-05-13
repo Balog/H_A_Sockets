@@ -1246,7 +1246,7 @@ if(FDiary->EnNDate->Checked & FDiary->EnKDate->Checked)
 //Включены оба
 
 
-ClientSQL="SELECT Events.Num,  Events.Date_Time, Events.Comp, Events.Login, Events.Operation, Events.Prim FROM TempEvents WHERE (((Events.Date_Time)>=#"+Dat+"#) AND ((Events.Date_Time)<=#"+Dat1+"#));";
+ClientSQL="SELECT TempEvents.Num,  TempEvents.Date_Time, TempEvents.Comp, TempEvents.Login, TempEvents.Operation, TempEvents.Prim FROM TempEvents WHERE (((TempEvents.Date_Time)>=#"+Dat+"#) AND ((TempEvents.Date_Time)<=#"+Dat1+"#));";
 
 ServerSQL="SELECT Events.Num,  Events.Date_Time, Events.Comp, Events.Login, Events.Operation, Events.Prim FROM Events WHERE (((Events.Date_Time)>=#"+Dat+"#) AND ((Events.Date_Time)<=#"+Dat1+"#))";
 
@@ -1257,7 +1257,7 @@ if(FDiary->EnNDate->Checked)
 {
 //ShowMessage("Включен начальный");
 //включен только начальный
-ClientSQL="SELECT Events.Num,  Events.Date_Time, Events.Comp, Events.Login, Events.Operation, Events.Prim FROM TempEvents WHERE (((Events.Date_Time)>=#"+Dat+"#));";
+ClientSQL="SELECT TempEvents.Num,  TempEvents.Date_Time, TempEvents.Comp, TempEvents.Login, TempEvents.Operation, TempEvents.Prim FROM TempEvents WHERE (((TempEvents.Date_Time)>=#"+Dat+"#));";
 
 ServerSQL="SELECT Events.Num,  Events.Date_Time, Events.Comp, Events.Login, Events.Operation, Events.Prim FROM Events WHERE (((Events.Date_Time)>=#"+Dat+"#));";
 
@@ -1268,7 +1268,7 @@ if(FDiary->EnKDate->Checked)
 {
 //ShowMessage("Включен конечный");
 //включен только конечный
-ClientSQL="SELECT Events.Num,  Events.Date_Time, Events.Comp, Events.Login, Events.Operation, Events.Prim FROM TempEvents WHERE (((Events.Date_Time)<=#"+Dat1+"#));";
+ClientSQL="SELECT TempEvents.Num,  TempEvents.Date_Time, TempEvents.Comp, TempEvents.Login, TempEvents.Operation, TempEvents.Prim FROM TempEvents WHERE (((TempEvents.Date_Time)<=#"+Dat1+"#));";
 
 ServerSQL="SELECT Events.Num,  Events.Date_Time, Events.Comp, Events.Login, Events.Operation, Events.Prim FROM Events WHERE (((Events.Date_Time)<=#"+Dat1+"#))";
 
@@ -1277,7 +1277,7 @@ else
 {
 //ShowMessage("Выключены оба");
 //не включен ниодин
-ClientSQL="SELECT Events.Num,  Events.Date_Time, Events.Comp, Events.Login, Events.Operation, Events.Prim FROM TempEvents;";
+ClientSQL="SELECT TempEvents.Num,  TempEvents.Date_Time, TempEvents.Comp, TempEvents.Login, TempEvents.Operation, TempEvents.Prim FROM TempEvents;";
 
 ServerSQL="SELECT Events.Num,  Events.Date_Time, Events.Comp, Events.Login, Events.Operation, Events.Prim FROM Events ";
 
@@ -1297,6 +1297,13 @@ ServerSQL="SELECT Events.Num,  Events.Date_Time, Events.Comp, Events.Login, Even
 void __fastcall TZast::MergeEventsExecute(TObject *Sender)
 {
 //
+MP<TADOCommand>Comm(this);
+Comm->Connection=MClient->Diary;
+Comm->CommandText="Delete * From Events";
+Comm->Execute();
+
+Comm->CommandText="INSERT INTO Events ( Num, Date_Time, [Comp], Login, Operation, Prim ) SELECT TempEvents.Num, TempEvents.Date_Time, TempEvents.Comp, TempEvents.Login, TempEvents.Operation, TempEvents.Prim FROM TempEvents;";
+//Comm->Execute();
 }
 //---------------------------------------------------------------------------
 
