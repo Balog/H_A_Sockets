@@ -179,8 +179,8 @@ void __fastcall TZast::FormShow(TObject *Sender)
 {
 Path=ExtractFilePath(Application->ExeName);
 MP<TIniFile>Ini(Path+"Admin.ini");
-Server=Ini->ReadString("Main","Server","localhost");
-Port=Ini->ReadInteger("Main","Port",2000);
+Server=Ini->ReadString("Server","Server","localhost");
+Port=Ini->ReadInteger("Server","Port",2000);
 //MClient=new Client(ClientSocket, ActionManager1, this);
 
 MClient->VDB.clear();

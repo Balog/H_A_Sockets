@@ -14,6 +14,7 @@
 #include <ActnMan.hpp>
 #include <vector>
 #include "MDBConnector.h"
+#include "Diary.h"
 #ifndef MainH
 #define MainH
 //---------------------------------------------------------------------------
@@ -65,6 +66,7 @@ __published:	// IDE-managed Components
         void __fastcall N5Click(TObject *Sender);
         void __fastcall N6Click(TObject *Sender);
         void __fastcall UsersClick(TObject *Sender);
+        void __fastcall N7Click(TObject *Sender);
 private:	// User declarations
 String Path;
 String AdminDatabase;
