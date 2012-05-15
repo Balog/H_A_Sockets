@@ -342,7 +342,8 @@ DelText=DelText.SubString(0, FromPos-2);
         }
         case 5:
         {
-
+        String F=Field.SubString(4, Field.Length());
+        Tab->FieldList->Fields[i]->Value=StrToDateTime(F);
         break;
         }
         case 6:

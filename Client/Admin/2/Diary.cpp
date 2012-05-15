@@ -70,7 +70,7 @@ try
 {
 LoadDiary();
 
-Initialize();
+
 
 
 }
@@ -78,7 +78,7 @@ catch(...)
 {
 
 }
-Refresh();
+
 }
 //---------------------------------------------------------------------------
 void __fastcall TFDiary::EnNDateClick(TObject *Sender)
@@ -648,6 +648,18 @@ Comm->Execute();
 //----------------------------------------------------------------------------
 void TFDiary::MergeOperations()
 {
+
+MP<TADOCommand>Comm(this);
+Comm->Connection=ADODiary;
+Comm->CommandText="Delete * from Operations";
+Comm->Execute();
+
+Comm->CommandText="INSERT INTO Operations ( Num, Type, NameOperation ) SELECT TempOperations.Num, TempOperations.Type, TempOperations.NameOperation FROM TempOperations;";
+Comm->Execute();
+
+Comm->CommandText="Delete * from TempOperations";
+Comm->Execute();
+/*
 MP<TADODataSet>Op(this);
 Op->Connection=ADODiary;
 Op->CommandText="select * From Operations";
@@ -676,6 +688,7 @@ MP<TADOCommand>Comm(this);
 Comm->Connection=ADODiary;
 Comm->CommandText="DELETE Operations.* FROM Operations LEFT JOIN TempOperations ON Operations.[Num] = TempOperations.[Num] WHERE (((TempOperations.Num) Is Null));";
 Comm->Execute();
+*/
 }
 //-----------------------------------------------------------------------------
 void __fastcall TFDiary::CompsClickCheck(TObject *Sender)

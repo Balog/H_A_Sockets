@@ -179,8 +179,8 @@ void __fastcall TZast::FormShow(TObject *Sender)
 {
 Path=ExtractFilePath(Application->ExeName);
 MP<TIniFile>Ini(Path+"Admin.ini");
-Server=Ini->ReadString("Main","Server","localhost");
-Port=Ini->ReadInteger("Main","Port",2000);
+Server=Ini->ReadString("Server","Server","localhost");
+Port=Ini->ReadInteger("Server","Port",2000);
 //MClient=new Client(ClientSocket, ActionManager1, this);
 
 MClient->VDB.clear();
@@ -553,7 +553,16 @@ void __fastcall TZast::ClientSocketRead(TObject *Sender,
       TCustomWinSocket *Socket)
 {
 //
-String Mess=Socket->ReceiveText();
+String Mess="";
+String Mess1="";
+do
+{
+Mess1=Socket->ReceiveText();
+//String Mess1=Socket->ReceiveText();
+Mess=Mess+Mess1;
+}
+while(Mess1.Length()!=0);
+
 if (Mess.Length()!=0)
 {
 int N0=Mess.Pos(":");
@@ -1246,9 +1255,8 @@ if(FDiary->EnNDate->Checked & FDiary->EnKDate->Checked)
 //¬ключены оба
 
 
-ClientSQL="SELECT TempEvents.Num,  TempEvents.Date_Time, TempEvents.Comp, TempEvents.Login, TempEvents.Operation, TempEvents.Prim FROM TempEvents WHERE (((TempEvents.Date_Time)>=#"+Dat+"#) AND ((TempEvents.Date_Time)<=#"+Dat1+"#));";
-
-ServerSQL="SELECT Events.Num,  Events.Date_Time, Events.Comp, Events.Login, Events.Operation, Events.Prim FROM Events WHERE (((Events.Date_Time)>=#"+Dat+"#) AND ((Events.Date_Time)<=#"+Dat1+"#))";
+ClientSQL="SELECT TempEvents.Num,  TempEvents.Date_Time, TempEvents.Comp, TempEvents.Login, TempEvents.Operation, TempEvents.Prim FROM TempEvents;";
+ServerSQL="SELECT Events.Num,  Events.Date_Time, Events.Comp, Events.Login, Events.Operation, Events.Prim FROM Events WHERE (((Events.Date_Time)>=#"+Dat+"#) AND ((Events.Date_Time)<=#"+Dat1+"#)) order by Events.Num";
 
 }
 else
@@ -1257,9 +1265,8 @@ if(FDiary->EnNDate->Checked)
 {
 //ShowMessage("¬ключен начальный");
 //включен только начальный
-ClientSQL="SELECT TempEvents.Num,  TempEvents.Date_Time, TempEvents.Comp, TempEvents.Login, TempEvents.Operation, TempEvents.Prim FROM TempEvents WHERE (((TempEvents.Date_Time)>=#"+Dat+"#));";
-
-ServerSQL="SELECT Events.Num,  Events.Date_Time, Events.Comp, Events.Login, Events.Operation, Events.Prim FROM Events WHERE (((Events.Date_Time)>=#"+Dat+"#));";
+ClientSQL="SELECT TempEvents.Num,  TempEvents.Date_Time, TempEvents.Comp, TempEvents.Login, TempEvents.Operation, TempEvents.Prim FROM TempEvents;";
+ServerSQL="SELECT Events.Num,  Events.Date_Time, Events.Comp, Events.Login, Events.Operation, Events.Prim FROM Events WHERE (((Events.Date_Time)>=#"+Dat+"#)) order by Events.Num;";
 
 }
 else
@@ -1268,9 +1275,8 @@ if(FDiary->EnKDate->Checked)
 {
 //ShowMessage("¬ключен конечный");
 //включен только конечный
-ClientSQL="SELECT TempEvents.Num,  TempEvents.Date_Time, TempEvents.Comp, TempEvents.Login, TempEvents.Operation, TempEvents.Prim FROM TempEvents WHERE (((TempEvents.Date_Time)<=#"+Dat1+"#));";
-
-ServerSQL="SELECT Events.Num,  Events.Date_Time, Events.Comp, Events.Login, Events.Operation, Events.Prim FROM Events WHERE (((Events.Date_Time)<=#"+Dat1+"#))";
+ClientSQL="SELECT TempEvents.Num,  TempEvents.Date_Time, TempEvents.Comp, TempEvents.Login, TempEvents.Operation, TempEvents.Prim FROM TempEvents;";
+ServerSQL="SELECT Events.Num,  Events.Date_Time, Events.Comp, Events.Login, Events.Operation, Events.Prim FROM Events WHERE (((Events.Date_Time)<=#"+Dat1+"#)) order by Events.Num";
 
 }
 else
@@ -1279,7 +1285,7 @@ else
 //не включен ниодин
 ClientSQL="SELECT TempEvents.Num,  TempEvents.Date_Time, TempEvents.Comp, TempEvents.Login, TempEvents.Operation, TempEvents.Prim FROM TempEvents;";
 
-ServerSQL="SELECT Events.Num,  Events.Date_Time, Events.Comp, Events.Login, Events.Operation, Events.Prim FROM Events ";
+ServerSQL="SELECT Events.Num,  Events.Date_Time, Events.Comp, Events.Login, Events.Operation, Events.Prim FROM Events order by Events.Num";
 
 }
 }
@@ -1304,6 +1310,9 @@ Comm->Execute();
 
 Comm->CommandText="INSERT INTO Events ( Num, Date_Time, [Comp], Login, Operation, Prim ) SELECT TempEvents.Num, TempEvents.Date_Time, TempEvents.Comp, TempEvents.Login, TempEvents.Operation, TempEvents.Prim FROM TempEvents;";
 //Comm->Execute();
+
+//FDiary->Initialize();
+//FDiary->Refresh();
 }
 //---------------------------------------------------------------------------
 

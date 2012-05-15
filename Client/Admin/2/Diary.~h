@@ -38,12 +38,6 @@ __published:	// IDE-managed Components
         TButton *Button1;
         TProgressBar *PB;
         TButton *Button2;
-        TActionManager *ActionManager1;
-        TAction *LoadTypeOp;
-        TAction *LoadOperation;
-        TAction *MergeType_Op;
-        TAction *LoadEvents;
-        TAction *MergeEvents;
         void __fastcall FormShow(TObject *Sender);
         void __fastcall EnNDateClick(TObject *Sender);
         void __fastcall EnKDateClick(TObject *Sender);
@@ -54,11 +48,9 @@ __published:	// IDE-managed Components
         void __fastcall Button2Click(TObject *Sender);
         void __fastcall FormKeyUp(TObject *Sender, WORD &Key,
           TShiftState Shift);
-        void __fastcall MergeEventsExecute(TObject *Sender);
 private:	// User declarations
 TLocateOptions SO;
-void Refresh();
-void Initialize();
+
 void LoadDiary();
 bool Register;
 
@@ -69,6 +61,8 @@ public:		// User declarations
         __fastcall TFDiary(TComponent* Owner);
 void MergeTypeOp();
 void MergeOperations();
+void Refresh();
+void Initialize();
 };
 //---------------------------------------------------------------------------
 extern PACKAGE TFDiary *FDiary;

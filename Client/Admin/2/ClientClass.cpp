@@ -226,6 +226,10 @@ void Client::ReadTable(String NameDB, String ServerSQL, String ClientSQL)
 //*************************************************************************
 void Client::DecodeTable(String NameDB, String ClientSQL, String Text)
 {
+String Record;
+String Field;
+try
+{
 MDBConnector* DB;
 if(NameDB!="Diary")
 {
@@ -304,7 +308,7 @@ DelText=DelText.SubString(0, FromPos-2);
     if(Text.SubString(1,2)==BeginRecord)
     {
      int EndRecordPos=Text.Pos(EndRecord);
-     String Record=Text.SubString(3,EndRecordPos-3);
+     Record=Text.SubString(3,EndRecordPos-3);
 
      Tab->Insert();
      int i=0;
@@ -313,7 +317,7 @@ DelText=DelText.SubString(0, FromPos-2);
       if(Record.SubString(1,2)==BeginField)
       {
        int EndFieldPos=Record.Pos(EndField);
-       String Field=Record.SubString(3, EndFieldPos-3);
+       Field=Record.SubString(3, EndFieldPos-3);
 
        char T=Field[1];
        int Type=T;
@@ -377,6 +381,13 @@ DelText=DelText.SubString(0, FromPos-2);
    {
     ShowMessage("Ќет знаков начала и конца таблицы "+ClientSQL+" базы "+NameDB);
    }
+}
+catch (...)
+{
+ ShowMessage(Text);
+ ShowMessage(Record);
+ ShowMessage(Field);
+}
 }
 //**************************************************************************
 void Client::LoginResult(String Login, String Pass, bool Ok)

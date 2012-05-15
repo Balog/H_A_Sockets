@@ -50,8 +50,7 @@ __published:	// IDE-managed Components
           TShiftState Shift);
 private:	// User declarations
 TLocateOptions SO;
-void Refresh();
-void Initialize();
+
 void LoadDiary();
 bool Register;
 
@@ -62,6 +61,8 @@ public:		// User declarations
         __fastcall TFDiary(TComponent* Owner);
 void MergeTypeOp();
 void MergeOperations();
+void Refresh();
+void Initialize();
 };
 //---------------------------------------------------------------------------
 extern PACKAGE TFDiary *FDiary;

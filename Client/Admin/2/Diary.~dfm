@@ -59,7 +59,7 @@ object FDiary: TFDiary
     Top = 21
     Width = 155
     Height = 154
-    Date = 40897.6512341319
+    Date = 40897.3916392361
     TabOrder = 0
     OnClick = NDateClick
   end
@@ -68,7 +68,7 @@ object FDiary: TFDiary
     Top = 21
     Width = 155
     Height = 154
-    Date = 40897.6512341319
+    Date = 40897.3916392361
     TabOrder = 1
     OnClick = NDateClick
   end
@@ -222,25 +222,5 @@ object FDiary: TFDiary
     Provider = 'Microsoft.Jet.OLEDB.4.0'
     Left = 416
     Top = 240
-  end
-  object ActionManager1: TActionManager
-    Left = 488
-    Top = 240
-    object LoadTypeOp: TAction
-      Caption = 'LoadTypeOp'
-    end
-    object LoadOperation: TAction
-      Caption = 'LoadOperation'
-    end
-    object MergeType_Op: TAction
-      Caption = 'MergeType_Op'
-    end
-    object LoadEvents: TAction
-      Caption = 'LoadEvents'
-    end
-    object MergeEvents: TAction
-      Caption = 'MergeEvents'
-      OnExecute = MergeEventsExecute
-    end
   end
 end

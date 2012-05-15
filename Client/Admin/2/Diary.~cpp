@@ -70,7 +70,7 @@ try
 {
 LoadDiary();
 
-Initialize();
+
 
 
 }
@@ -78,7 +78,7 @@ catch(...)
 {
 
 }
-Refresh();
+
 }
 //---------------------------------------------------------------------------
 void __fastcall TFDiary::EnNDateClick(TObject *Sender)
@@ -435,7 +435,7 @@ Refresh();
 //---------------------------------------------------------------------------
 void TFDiary::LoadDiary()
 {
-LoadTypeOp->Execute();
+Zast->LoadTypeOp->Execute();
 /*
 //Main->MClient->Start();
 
@@ -781,9 +781,4 @@ Application->HelpJump("IDH_опнялнрп_фспмюкю_янашрхи");
 
 
 
-void __fastcall TFDiary::MergeEventsExecute(TObject *Sender)
-{
-//
-}
-//---------------------------------------------------------------------------
 
