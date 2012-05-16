@@ -99,6 +99,7 @@ Clients* Cl;
 String Path;
 vector<String>Parameters;
 //vector<BaseItem>VBases;
+void __fastcall ChangeCountClient(TObject *Sender);
 void __fastcall MTIcon(TMessage&);
 void __fastcall WMSysCommand(TMessage & Msg);
 

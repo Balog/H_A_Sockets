@@ -99,6 +99,7 @@ Clients* Cl;
 String Path;
 vector<String>Parameters;
 //vector<BaseItem>VBases;
+void __fastcall ChangeCountClient(TObject *Sender);
 void __fastcall MTIcon(TMessage&);
 void __fastcall WMSysCommand(TMessage & Msg);
 
@@ -117,6 +118,7 @@ long GetLicenseCount(String DBName);
 void UpdateTempLogin();
 void UpdateOtdel(int NumLogin);
 void SaveCode(String Login, String Password);
+TNotifyIconData NID;
 
         BEGIN_MESSAGE_MAP
           VCL_MESSAGE_HANDLER(MyTrayIcon,TMessage,MTIcon);

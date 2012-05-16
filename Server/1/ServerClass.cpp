@@ -231,6 +231,9 @@ Parent->WriteDiaryEvent(IP, Login, "AdminARM", "Запись логинов", "Имя: "+Paramet
  }
 
 }
+Form1->ImageList1->GetIcon(1, Application->Icon);
+Form1->NID.hIcon=Application->Icon->Handle;
+Shell_NotifyIcon(NIM_MODIFY, &Form1->NID);
 }
 //---------------------------------------------------------------------------
 TADOConnection* Client::GetDatabase(String NameDB)

@@ -15,7 +15,7 @@
 #pragma package(smart_init)
 #pragma resource "*.dfm"
 TForm1 *Form1;
-TNotifyIconData NID;
+
 //---------------------------------------------------------------------------
 __fastcall TForm1::TForm1(TComponent* Owner)
         : TForm(Owner)
@@ -207,6 +207,7 @@ Socket->SendText(Mess);
 
 Label1->Caption=IntToStr(Cl->VClients.size());
 Cl->DiaryEvent->WriteEvent(Now(),"Не определен", "Не известен", "Служебное", "Клиент подключен");
+this->ChangeCountClient(this);
 }
 //---------------------------------------------------------------------------
 void __fastcall TForm1::ServerSocketClientDisconnect(TObject *Sender,
@@ -244,6 +245,7 @@ if(ExtractFileName(Cl->VClients[i]->AppPatch)=="Hazards.exe")
 
 
 }
+this->ChangeCountClient(this);
 }
 //---------------------------------------------------------------------------
 void __fastcall TForm1::ServerSocketClientError(TObject *Sender,
@@ -255,6 +257,10 @@ void __fastcall TForm1::ServerSocketClientError(TObject *Sender,
 void __fastcall TForm1::ServerSocketClientRead(TObject *Sender,
       TCustomWinSocket *Socket)
 {
+ImageList1->GetIcon(2, Application->Icon);
+NID.hIcon=Application->Icon->Handle;
+Shell_NotifyIcon(NIM_MODIFY, &NID);
+
 String Mess="";
 String Mess1="";
 do
@@ -1060,5 +1066,49 @@ void __fastcall TForm1::N6Click(TObject *Sender)
 FDiary->ShowModal();        
 }
 //---------------------------------------------------------------------------
+void __fastcall TForm1::ChangeCountClient(TObject *Sender)
+{
+//Label1->Caption=MyClients->ClientCount();
+
+String S="Сервер. Клиентов: "+Label1->Caption;
+strcpy(NID.szTip,S.c_str());
+/*
+if(Net_Error)
+{
+ImageList1->GetIcon(2, Application->Icon);
+}
+else
+{
+if(MyClients->ClientCount()==0)
+{
+ImageList1->GetIcon(0, Application->Icon);
+}
+else
+{
+ImageList1->GetIcon(1, Application->Icon);
+}
+}
+*/
+if(Cl->VClients.size()==0)
+{
+ImageList1->GetIcon(0, Application->Icon);
+}
+else
+{
+ImageList1->GetIcon(1, Application->Icon);
+}
+
+
+NID.hIcon=Application->Icon->Handle;
+Shell_NotifyIcon(NIM_MODIFY, &NID);
+/*
+ListBox1->Clear();
+for(int i=0;i<MyClients->ClientCount();i++)
+{
+ ListBox1->Items->Add(IntToStr(MyClients->GetIDC(i))+". "+MyClients->GetName(i));
+}
+*/
+}
+//-------------------------------------
 
 
