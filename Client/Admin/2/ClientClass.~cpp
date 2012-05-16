@@ -445,6 +445,14 @@ for(unsigned int i=0;i<VDB.size();i++)
  if(VDB[i].Name==Name)
  {
   VDB[i].NumLicense=NumLic;
+  if(NumLic!=0)
+  {
+   this->Reg=true;
+  }
+  else
+  {
+   this->Reg=false;
+  }
   break;
  }
 }

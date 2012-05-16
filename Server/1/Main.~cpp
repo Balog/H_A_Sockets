@@ -251,7 +251,7 @@ this->ChangeCountClient(this);
 void __fastcall TForm1::ServerSocketClientError(TObject *Sender,
       TCustomWinSocket *Socket, TErrorEvent ErrorEvent, int &ErrorCode)
 {
-//ErrorCode=0;
+ErrorCode=0;
 }
 //---------------------------------------------------------------------------
 void __fastcall TForm1::ServerSocketClientRead(TObject *Sender,
@@ -265,6 +265,7 @@ String Mess="";
 String Mess1="";
 do
 {
+Sleep(100);
 Mess1=Socket->ReceiveText();
 //String Mess1=Socket->ReceiveText();
 Mess=Mess+Mess1;

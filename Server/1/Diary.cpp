@@ -110,7 +110,7 @@ for(Login->First();!Login->Eof;Login->Next())
 //if(Login->FieldByName("Login")->AsString!="")
 //{
 Logins->Items->Add(Login->FieldByName("Login")->AsString);
-if(Login->FieldByName("Login")->AsString=="Еще не определен")
+if(Login->FieldByName("Login")->AsString=="Не известен")
 {
 Logins->Checked[i]=false;
 }
@@ -132,7 +132,14 @@ Types->Clear();
 for(Type->First();!Type->Eof;Type->Next())
 {
  Types->Items->Add(Type->FieldByName("NameType")->AsString);
+ if(Type->FieldByName("NameType")->AsString=="Служебное")
+ {
+ Types->Checked[i]=false;
+ }
+ else
+ {
  Types->Checked[i]=true;
+ }
  i++;
 }
 }

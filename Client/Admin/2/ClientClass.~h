@@ -79,6 +79,7 @@ void WriteDiaryEvent(String Type, String Name, String Prim);
 void WriteDiaryEvent(String Type, String Name);
 String Login;
 void WriteTable(String Database, String ClientSQLText, String ServerSQLText);
+bool Reg;
 private:
 String GetIP();
 TClientSocket *Socket;

@@ -251,7 +251,22 @@ this->ChangeCountClient(this);
 void __fastcall TForm1::ServerSocketClientError(TObject *Sender,
       TCustomWinSocket *Socket, TErrorEvent ErrorEvent, int &ErrorCode)
 {
-//ErrorCode=0;
+String Comp;
+String Login;
+Cl->IVC=Cl->VClients.begin();
+for(unsigned int i=0;i<Cl->VClients.size();i++)
+{
+ if(Cl->VClients[i]->Socket==Socket)
+ {
+//Cl->DiaryEvent->WriteEvent(Now(),Cl->VClients[i]->IP,Cl->VClients[i]->Login , "Сервер", "Клиент отключен","Путь: "+Cl->VClients[i]->AppPatch);
+ Comp=Cl->VClients[i]->IP;
+ Login=Cl->VClients[i]->Login;
+ }
+ Cl->IVC++;
+}
+
+Cl->WriteDiaryEvent(Comp,Login,"Сервер","Ошибка","Номер: "+IntToStr(ErrorCode));
+ErrorCode=0;
 }
 //---------------------------------------------------------------------------
 void __fastcall TForm1::ServerSocketClientRead(TObject *Sender,

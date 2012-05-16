@@ -629,7 +629,7 @@ void Client::WriteTable(String Database, String ClientSQLText, String ServerSQLT
 //***************************************************************************
 void Client::ActTrigger(int NumTrigger)
 {
-
+Sleep(200);
 if(VTrigger[NumTrigger].Var<VTrigger[NumTrigger].Max)
 {
 

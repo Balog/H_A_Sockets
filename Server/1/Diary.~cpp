@@ -4,7 +4,7 @@
 #pragma hdrstop
 
 #include "Diary.h"
-#include "UServer.h"
+#include "Main.h"
 #include "MasterPointer.h"
 #include "inifiles.hpp";
 //---------------------------------------------------------------------------
@@ -110,7 +110,7 @@ for(Login->First();!Login->Eof;Login->Next())
 //if(Login->FieldByName("Login")->AsString!="")
 //{
 Logins->Items->Add(Login->FieldByName("Login")->AsString);
-if(Login->FieldByName("Login")->AsString=="Еще не определен")
+if(Login->FieldByName("Login")->AsString=="Не известен")
 {
 Logins->Checked[i]=false;
 }
