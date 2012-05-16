@@ -133,12 +133,15 @@ object Form1: TForm1
     end
     object N10: TMenuItem
       Caption = #1055#1086#1084#1086#1097#1100
+      OnClick = N10Click
     end
     object N8: TMenuItem
       Caption = #1054' '#1087#1088#1086#1075#1088#1072#1084#1084#1077
+      OnClick = N8Click
     end
     object N9: TMenuItem
       Caption = #1042#1099#1093#1086#1076
+      OnClick = N9Click
     end
   end
   object DBTimer: TTimer

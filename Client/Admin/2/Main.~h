@@ -67,6 +67,9 @@ __published:	// IDE-managed Components
         void __fastcall N6Click(TObject *Sender);
         void __fastcall UsersClick(TObject *Sender);
         void __fastcall N7Click(TObject *Sender);
+        void __fastcall N10Click(TObject *Sender);
+        void __fastcall N8Click(TObject *Sender);
+        void __fastcall N9Click(TObject *Sender);
 private:	// User declarations
 String Path;
 String AdminDatabase;

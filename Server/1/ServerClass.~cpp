@@ -55,7 +55,7 @@ DiaryEvent=new Diary(pOwner, DiaryPatch);
 Client::Client(Clients* Cls)
 {
  Parent=Cls;
- Login="Неизвестен";
+ Login="Не известен";
 // Role=-1;
 
 }

@@ -174,7 +174,36 @@ MClient->Connect(Server, Port);
 
 void __fastcall TForm1::FormClose(TObject *Sender, TCloseAction &Action)
 {
+
+switch (Application->MessageBoxA("Записать все изменения на сервер?","Выход из программы",MB_YESNOCANCEL	+MB_ICONQUESTION+MB_DEFBUTTON1))
+{
+ case IDYES:
+ {
+//MClient->Start();
+//Main->MClient->WriteDiaryEvent("AdminARM","Завершение работы запись данных","База данных: "+CBDatabase->Text);
+//Zast->Close();
+Zast->Stop=true;
+Zast->PrepareSaveLogins->Execute();
+ Action=caNone;
+//MClient->Stop();
+ break;
+ }
+ case IDNO:
+ {
+//Main->MClient->WriteDiaryEvent("AdminARM","Завершение работы отказ от записи","База данных: "+CBDatabase->Text);
+Zast->MClient->WriteDiaryEvent("AdminARM","Завершение работы отказ от записи","База данных: "+CBDatabase->Text);
 Zast->Close();
+ Action=caFree;
+ break;
+ }
+ case IDCANCEL:
+ {
+ Action=caNone;
+ break;
+ }
+}
+
+
 }
 //---------------------------------------------------------------------------
 
