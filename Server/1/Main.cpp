@@ -265,6 +265,7 @@ String Mess="";
 String Mess1="";
 do
 {
+Sleep(100);
 Mess1=Socket->ReceiveText();
 //String Mess1=Socket->ReceiveText();
 Mess=Mess+Mess1;

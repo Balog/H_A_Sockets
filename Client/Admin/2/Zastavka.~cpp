@@ -47,6 +47,7 @@ MainDatabase2=MAspectBase;
 MainDatabase3=UsrBase;
 }
 */
+Stop=false;
 Start=false;
 Path=ExtractFilePath(Application->ExeName);
 MP<TIniFile>Ini(Path+"Admin.ini");
@@ -1031,7 +1032,15 @@ void __fastcall TZast::PostSaveLoginsExecute(TObject *Sender)
 {
 Zast->MClient->Act.ParamComm.clear();
 Zast->MClient->Act.WaitCommand=0;
+if(!Stop)
+{
 ShowMessage("Запись данных завершена");
+}
+else
+{
+Zast->MClient->WriteDiaryEvent("AdminARM","Завершение работы запись данных","");
+ this->Close();
+}
 }
 //---------------------------------------------------------------------------
 

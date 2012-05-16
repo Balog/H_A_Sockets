@@ -60,7 +60,7 @@ object FDiary: TFDiary
     Top = 21
     Width = 155
     Height = 154
-    Date = 40897.3916392361
+    Date = 40897.0658039699
     TabOrder = 0
     OnClick = NDateClick
   end
@@ -69,7 +69,7 @@ object FDiary: TFDiary
     Top = 21
     Width = 155
     Height = 154
-    Date = 40897.3916392361
+    Date = 40897.0658039699
     TabOrder = 1
     OnClick = NDateClick
   end
@@ -106,6 +106,7 @@ object FDiary: TFDiary
     Width = 1014
     Height = 527
     DataSource = DataSource1
+    ReadOnly = True
     TabOrder = 5
     TitleFont.Charset = DEFAULT_CHARSET
     TitleFont.Color = clWindowText
