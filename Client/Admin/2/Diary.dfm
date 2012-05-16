@@ -15,6 +15,7 @@ object FDiary: TFDiary
   KeyPreview = True
   OldCreateOrder = False
   Position = poScreenCenter
+  OnCreate = FormCreate
   OnKeyUp = FormKeyUp
   OnShow = FormShow
   PixelsPerInch = 96
@@ -59,7 +60,7 @@ object FDiary: TFDiary
     Top = 21
     Width = 155
     Height = 154
-    Date = 40897.6512341319
+    Date = 40897.3916392361
     TabOrder = 0
     OnClick = NDateClick
   end
@@ -68,7 +69,7 @@ object FDiary: TFDiary
     Top = 21
     Width = 155
     Height = 154
-    Date = 40897.6512341319
+    Date = 40897.3916392361
     TabOrder = 1
     OnClick = NDateClick
   end
@@ -190,7 +191,7 @@ object FDiary: TFDiary
     Width = 1011
     Height = 6
     Min = 0
-    Max = 100
+    Max = 6
     Smooth = True
     TabOrder = 9
     Visible = False
@@ -210,17 +211,9 @@ object FDiary: TFDiary
     Top = 240
   end
   object Events: TADODataSet
-    Connection = ADODiary
     CursorType = ctStatic
     Parameters = <>
     Left = 376
-    Top = 240
-  end
-  object ADODiary: TADOConnection
-    LoginPrompt = False
-    Mode = cmShareDenyNone
-    Provider = 'Microsoft.Jet.OLEDB.4.0'
-    Left = 416
     Top = 240
   end
 end

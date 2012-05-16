@@ -15,6 +15,7 @@ object FDiary: TFDiary
   KeyPreview = True
   OldCreateOrder = False
   Position = poScreenCenter
+  OnCreate = FormCreate
   OnKeyUp = FormKeyUp
   OnShow = FormShow
   PixelsPerInch = 96
@@ -190,7 +191,7 @@ object FDiary: TFDiary
     Width = 1011
     Height = 6
     Min = 0
-    Max = 100
+    Max = 6
     Smooth = True
     TabOrder = 9
     Visible = False

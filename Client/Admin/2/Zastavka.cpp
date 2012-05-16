@@ -1194,6 +1194,7 @@ Comm->Execute();
 
 void __fastcall TZast::LoadTypeOpExecute(TObject *Sender)
 {
+FDiary->PB->Position++;
  Zast->MClient->Act.ParamComm.clear();
  Zast->MClient->Act.ParamComm.push_back("LoadOperation");
  Zast->MClient->Act.NextCommand=5;
@@ -1204,6 +1205,7 @@ void __fastcall TZast::LoadTypeOpExecute(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TZast::LoadOperationExecute(TObject *Sender)
 {
+FDiary->PB->Position++;
  Zast->MClient->Act.ParamComm.clear();
  Zast->MClient->Act.ParamComm.push_back("MergeType_Op");
  Zast->MClient->Act.NextCommand=5;
@@ -1215,6 +1217,7 @@ void __fastcall TZast::LoadOperationExecute(TObject *Sender)
 
 void __fastcall TZast::MergeType_OpExecute(TObject *Sender)
 {
+FDiary->PB->Position++;
 FDiary->MergeTypeOp();
 
 FDiary->MergeOperations();
@@ -1225,6 +1228,7 @@ LoadEvents->Execute();
 
 void __fastcall TZast::LoadEventsExecute(TObject *Sender)
 {
+FDiary->PB->Position++;
 Word Y;
 Word M;
 Word D;
@@ -1302,17 +1306,23 @@ ServerSQL="SELECT Events.Num,  Events.Date_Time, Events.Comp, Events.Login, Even
 
 void __fastcall TZast::MergeEventsExecute(TObject *Sender)
 {
-//
+FDiary->PB->Position++;
 MP<TADOCommand>Comm(this);
 Comm->Connection=MClient->Diary;
 Comm->CommandText="Delete * From Events";
 Comm->Execute();
 
 Comm->CommandText="INSERT INTO Events ( Num, Date_Time, [Comp], Login, Operation, Prim ) SELECT TempEvents.Num, TempEvents.Date_Time, TempEvents.Comp, TempEvents.Login, TempEvents.Operation, TempEvents.Prim FROM TempEvents;";
-//Comm->Execute();
+Comm->Execute();
 
-//FDiary->Initialize();
-//FDiary->Refresh();
+if(!FDiary->Visible)
+{
+FDiary->ShowModal();
+}
+else
+{
+FDiary->Refresh();
+}
 }
 //---------------------------------------------------------------------------
 

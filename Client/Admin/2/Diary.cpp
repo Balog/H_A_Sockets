@@ -23,62 +23,10 @@ Register=false;
 //---------------------------------------------------------------------------
 void __fastcall TFDiary::FormShow(TObject *Sender)
 {
-NDate->Date=Now();
-KDate->Date=Now();
-EnNDate->Checked=true;
-EnKDate->Checked=true;
+//Sleep(1000);
+FDiary->Initialize();
 
-
-String Path=ExtractFilePath(Application->ExeName);
-MP<TIniFile>Ini(Path+"Admin.ini");
-String DPatch=Ini->ReadString("Main","DiaryBase","");
-
-String DiaryPath=Path+DPatch+".dtb";
-/*
-for(int i=0;i<NumBase;i++)
-{
- String NameSect="Base"+IntToStr(i+1);
-
- String Name=Ini->ReadString(NameSect,"Name","");
- if(Name=="Diary")
- {
-  String Name=Ini->ReadString(NameSect,"Name","");
-
-  int AbsPath=Ini->ReadInteger(NameSect, "AbsPath",0);
-
-  if(AbsPath==0)
-  {
-   DiaryPath=Path+Ini->ReadString(NameSect,"Base","");
-  }
-  else
-  {
-   DiaryPath= Ini->ReadString(NameSect,"Base","");
-  }
-
-  break;
- }
-}
-*/
-
-
-ADODiary->Connected=false;
-ADODiary->ConnectionString="Provider=Microsoft.Jet.OLEDB.4.0;Data Source="+DiaryPath+";Persist Security Info=False";
-ADODiary->LoginPrompt=false;
-ADODiary->Connected=true;
-
-try
-{
-LoadDiary();
-
-
-
-
-}
-catch(...)
-{
-
-}
-
+FDiary->Refresh();
 }
 //---------------------------------------------------------------------------
 void __fastcall TFDiary::EnNDateClick(TObject *Sender)
@@ -97,8 +45,13 @@ Refresh();
 //---------------------------------------------------------------------------
 void  TFDiary::Initialize()
 {
+//ADODiary->Connected=false;
+//ADODiary->Connected=true;
+
+
+
 MP<TADODataSet>Comp(this);
-Comp->Connection=ADODiary;
+Comp->Connection=Zast->MClient->Diary;
 Comp->CommandText="SELECT Events.Comp FROM Events GROUP BY Events.Comp ORDER BY Events.Comp;";
 Comp->Active=true;
 
@@ -120,7 +73,7 @@ for(Comp->First();!Comp->Eof;Comp->Next())
 }
 
 MP<TADODataSet>Login(this);
-Login->Connection=ADODiary;
+Login->Connection=Zast->MClient->Diary;
 Login->CommandText="SELECT Events.Login FROM Events GROUP BY Events.Login ORDER BY Events.Login;";
 Login->Active=true;
 
@@ -145,7 +98,7 @@ i++;
 }
 
 MP<TADODataSet>Type(this);
-Type->Connection=ADODiary;
+Type->Connection=Zast->MClient->Diary;
 Type->CommandText="SELECT TypeOp.NameType FROM TypeOp ORDER BY TypeOp.NameType;";
 Type->Active=true;
 i=0;
@@ -391,9 +344,10 @@ Filtr="("+Filtr5+")";
 
 
 
-//Filtr=" ("+Filtr1+" OR "+Filtr2+") AND ("+Filtr3+") AND ("+Filtr4+") AND ("+Filtr5+") ";
+Filtr=" ("+Filtr1+" OR "+Filtr2+") AND ("+Filtr3+") AND ("+Filtr4+") AND ("+Filtr5+") ";
 
 String CT="SELECT Events.Num, Events.Date_Time, Events.Comp, Events.Login, TypeOp.NameType, Operations.NameOperation, Events.Prim FROM TypeOp INNER JOIN (Operations INNER JOIN Events ON Operations.Num = Events.Operation) ON TypeOp.Num = Operations.Type ";
+
 if(Filtr!="")
 {
 CT=CT+" Where "+Filtr+" ORDER BY Events.Num DESC;";
@@ -404,22 +358,28 @@ CT=CT+" ORDER BY Events.Num DESC;";
 }
 
 Events->Active=false;
-Events->Connection=ADODiary;
+Events->Connection=Zast->MClient->Diary;
 Events->CommandText=CT;
 Events->Active=true;
+
+PB->Visible=false;
 }
 //------------------------------------------------------
 void __fastcall TFDiary::NDateClick(TObject *Sender)
 {
+PB->Visible=true;
+PB->Position=0;
 LoadDiary();
-Refresh();
+//Refresh();
 }
 //---------------------------------------------------------------------------
 
 void __fastcall TFDiary::NTimeChange(TObject *Sender)
 {
+PB->Visible=true;
+PB->Position=0;
 LoadDiary();
-Refresh();
+//Refresh();
 }
 //---------------------------------------------------------------------------
 
@@ -430,11 +390,12 @@ PB->Visible=true;
 PB->Min=0;
 PB->Position=0;
 LoadDiary();
-Refresh();
+//Refresh();
 }
 //---------------------------------------------------------------------------
 void TFDiary::LoadDiary()
 {
+PB->Position++;
 Zast->LoadTypeOp->Execute();
 /*
 //Main->MClient->Start();
@@ -617,12 +578,12 @@ Main->MClient->Stop();
 void TFDiary::MergeTypeOp()
 {
 MP<TADODataSet>Type(this);
-Type->Connection=ADODiary;
+Type->Connection=Zast->MClient->Diary;
 Type->CommandText="select * From TypeOp";
 Type->Active=true;
 
 MP<TADODataSet>TempType(this);
-TempType->Connection=ADODiary;
+TempType->Connection=Zast->MClient->Diary;
 TempType->CommandText="select * From TempTypeOp";
 TempType->Active=true;
 
@@ -640,7 +601,7 @@ for(TempType->First();!TempType->Eof;TempType->Next())
 }
 
 MP<TADOCommand>Comm(this);
-Comm->Connection=ADODiary;
+Comm->Connection=Zast->MClient->Diary;
 Comm->CommandText="DELETE TypeOp.* FROM TypeOp LEFT JOIN TempTypeOp ON TypeOp.[Num] = TempTypeOp.[Num] WHERE (((TempTypeOp.Num) Is Null));";
 Comm->Execute();
 }
@@ -650,7 +611,7 @@ void TFDiary::MergeOperations()
 {
 
 MP<TADOCommand>Comm(this);
-Comm->Connection=ADODiary;
+Comm->Connection=Zast->MClient->Diary;
 Comm->CommandText="Delete * from Operations";
 Comm->Execute();
 
@@ -714,7 +675,7 @@ Sheet=App.OlePropertyGet("ActiveSheet");
 App.OlePropertySet("Visible",false);
 
 MP<TADODataSet>Event(this);
-Event->Connection=ADODiary;
+Event->Connection=Zast->MClient->Diary;
 Event->CommandText=Events->CommandText;
 Event->Active=true;
 
@@ -794,4 +755,66 @@ Application->HelpJump("IDH_ÏÐÎÑÌÎÒÐ_ÆÓÐÍÀËÀ_ÑÎÁÛÒÈÉ");
 
 
 
+
+void __fastcall TFDiary::FormCreate(TObject *Sender)
+{
+NDate->Date=Now();
+KDate->Date=Now();
+EnNDate->Checked=true;
+EnKDate->Checked=true;
+
+/*
+String Path=ExtractFilePath(Application->ExeName);
+MP<TIniFile>Ini(Path+"Admin.ini");
+String DPatch=Ini->ReadString("Main","DiaryBase","");
+
+String DiaryPath=Path+DPatch+".dtb";
+*/
+/*
+for(int i=0;i<NumBase;i++)
+{
+ String NameSect="Base"+IntToStr(i+1);
+
+ String Name=Ini->ReadString(NameSect,"Name","");
+ if(Name=="Diary")
+ {
+  String Name=Ini->ReadString(NameSect,"Name","");
+
+  int AbsPath=Ini->ReadInteger(NameSect, "AbsPath",0);
+
+  if(AbsPath==0)
+  {
+   DiaryPath=Path+Ini->ReadString(NameSect,"Base","");
+  }
+  else
+  {
+   DiaryPath= Ini->ReadString(NameSect,"Base","");
+  }
+
+  break;
+ }
+}
+*/
+
+/*
+ADODiary->Connected=false;
+ADODiary->ConnectionString="Provider=Microsoft.Jet.OLEDB.4.0;Data Source="+DiaryPath+";Persist Security Info=False";
+ADODiary->LoginPrompt=false;
+ADODiary->Connected=true;
+ */
+try
+{
+
+
+
+
+
+}
+catch(...)
+{
+
+}
+        
+}
+//---------------------------------------------------------------------------
 

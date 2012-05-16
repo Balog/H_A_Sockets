@@ -1309,10 +1309,16 @@ Comm->CommandText="Delete * From Events";
 Comm->Execute();
 
 Comm->CommandText="INSERT INTO Events ( Num, Date_Time, [Comp], Login, Operation, Prim ) SELECT TempEvents.Num, TempEvents.Date_Time, TempEvents.Comp, TempEvents.Login, TempEvents.Operation, TempEvents.Prim FROM TempEvents;";
-//Comm->Execute();
+Comm->Execute();
 
-//FDiary->Initialize();
-//FDiary->Refresh();
+if(!FDiary->Visible)
+{
+FDiary->ShowModal();
+}
+else
+{
+FDiary->Refresh();
+}
 }
 //---------------------------------------------------------------------------
 

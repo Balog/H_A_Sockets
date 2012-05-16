@@ -34,7 +34,6 @@ __published:	// IDE-managed Components
         TCheckBox *EnKDate;
         TDataSource *DataSource1;
         TADODataSet *Events;
-        TADOConnection *ADODiary;
         TButton *Button1;
         TProgressBar *PB;
         TButton *Button2;
@@ -48,10 +47,11 @@ __published:	// IDE-managed Components
         void __fastcall Button2Click(TObject *Sender);
         void __fastcall FormKeyUp(TObject *Sender, WORD &Key,
           TShiftState Shift);
+        void __fastcall FormCreate(TObject *Sender);
 private:	// User declarations
 TLocateOptions SO;
 
-void LoadDiary();
+
 bool Register;
 
 
@@ -63,6 +63,7 @@ void MergeTypeOp();
 void MergeOperations();
 void Refresh();
 void Initialize();
+void LoadDiary();
 };
 //---------------------------------------------------------------------------
 extern PACKAGE TFDiary *FDiary;

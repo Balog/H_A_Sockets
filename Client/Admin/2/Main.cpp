@@ -554,7 +554,9 @@ UpdateOtdel(N);
 
 void __fastcall TForm1::N7Click(TObject *Sender)
 {
-FDiary->ShowModal();
+FDiary->PB->Visible=true;
+FDiary->PB->Position=0;
+FDiary->LoadDiary();
 }
 //---------------------------------------------------------------------------
 
