@@ -102,9 +102,9 @@ object FDiary: TFDiary
   end
   object Diary: TDBGrid
     Left = 0
-    Top = 183
+    Top = 186
     Width = 1014
-    Height = 530
+    Height = 527
     DataSource = DataSource1
     TabOrder = 5
     TitleFont.Charset = DEFAULT_CHARSET
@@ -189,10 +189,9 @@ object FDiary: TFDiary
     Left = 2
     Top = 175
     Width = 1011
-    Height = 6
+    Height = 10
     Min = 0
     Max = 6
-    Smooth = True
     TabOrder = 9
     Visible = False
   end

@@ -1,0 +1,28 @@
+object Prog: TProg
+  Left = 192
+  Top = 107
+  BorderStyle = bsNone
+  Caption = 'Prog'
+  ClientHeight = 12
+  ClientWidth = 371
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'MS Sans Serif'
+  Font.Style = []
+  OldCreateOrder = False
+  Position = poScreenCenter
+  PixelsPerInch = 96
+  TextHeight = 13
+  object PB: TProgressBar
+    Left = 0
+    Top = 0
+    Width = 371
+    Height = 12
+    Align = alClient
+    Min = 0
+    Max = 100
+    TabOrder = 0
+  end
+end

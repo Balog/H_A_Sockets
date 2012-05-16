@@ -156,9 +156,14 @@ if(ExtractFileName(Parent->VClients[i]->AppPatch)=="Hazards.exe")
   case 5:
    {
    //Прием команды чтения таблицы
+
    String Text=TableToStr(Parameters[0], Parameters[1]);
    //ShowMessage(Text);
-   this->Socket->SendText("Command:5;1|"+IntToStr(Text.Length())+"#"+Text+"|");
+   Text="Command:5;1|"+IntToStr(Text.Length())+"#"+Text+"|";
+
+   this->Socket->SendText(Text);
+   //Text=Text.SubString(Rec+1,Text.Length());
+
    break;
    }
    case 6:

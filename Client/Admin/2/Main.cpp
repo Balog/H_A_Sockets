@@ -10,6 +10,8 @@
 #include "PassForm.h"
 #include "Zastavka.h"
 #include "EditLogin.h"
+#include "Progress.h"
+#include "About.h"
 using namespace std;
 //---------------------------------------------------------------------------
 #pragma package(smart_init)
@@ -554,9 +556,32 @@ UpdateOtdel(N);
 
 void __fastcall TForm1::N7Click(TObject *Sender)
 {
-FDiary->PB->Visible=true;
-FDiary->PB->Position=0;
+Prog->Show();
+Prog->PB->Visible=true;
+Prog->PB->Max=6;
+Prog->PB->Position=0;
+
+
 FDiary->LoadDiary();
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm1::N10Click(TObject *Sender)
+{
+Application->HelpFile=ExtractFilePath(Application->ExeName)+"ADMINARM.HLP";
+Application->HelpJump("IDH_ÐÓÊÎÂÎÄÑÒÂÎ");        
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm1::N8Click(TObject *Sender)
+{
+FAbout->ShowModal();
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm1::N9Click(TObject *Sender)
+{
+this->Close();
 }
 //---------------------------------------------------------------------------
 

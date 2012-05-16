@@ -34,7 +34,6 @@ __published:	// IDE-managed Components
         TCheckBox *EnKDate;
         TDataSource *DataSource1;
         TADODataSet *Events;
-        TADOConnection *ADODiary;
         TButton *Button1;
         TProgressBar *PB;
         TButton *Button2;

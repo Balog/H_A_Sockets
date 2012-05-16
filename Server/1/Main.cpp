@@ -180,7 +180,7 @@ VerifyLicense();
 
 
 ServerSocket->Active=true;
-Cl->DiaryEvent->WriteEvent(Now(),"Неопределен", "Неизвестен", "Служебное", "Сервер инициирован", "");
+Cl->DiaryEvent->WriteEvent(Now(),"Не определен", "Не известен", "Служебное", "Сервер инициирован", "");
 
 }
 //---------------------------------------------------------------------------
@@ -206,7 +206,7 @@ for(unsigned int i=0;i<Cl->VClients.size();i++)
 Socket->SendText(Mess);
 
 Label1->Caption=IntToStr(Cl->VClients.size());
-Cl->DiaryEvent->WriteEvent(Now(),"Неопределен", "Неизвестен", "Служебное", "Клиент подключен");
+Cl->DiaryEvent->WriteEvent(Now(),"Не определен", "Не известен", "Служебное", "Клиент подключен");
 }
 //---------------------------------------------------------------------------
 void __fastcall TForm1::ServerSocketClientDisconnect(TObject *Sender,

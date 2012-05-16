@@ -14,6 +14,7 @@
 #include <FileCtrl.hpp>
 #include "PassForm.h"
 #include "Diary.h"
+#include "Progress.h"
 //---------------------------------------------------------------------------
 #pragma package(smart_init)
 #pragma resource "*.dfm"
@@ -1194,6 +1195,7 @@ Comm->Execute();
 
 void __fastcall TZast::LoadTypeOpExecute(TObject *Sender)
 {
+Prog->PB->Position++;
 FDiary->PB->Position++;
  Zast->MClient->Act.ParamComm.clear();
  Zast->MClient->Act.ParamComm.push_back("LoadOperation");
@@ -1205,6 +1207,7 @@ FDiary->PB->Position++;
 //---------------------------------------------------------------------------
 void __fastcall TZast::LoadOperationExecute(TObject *Sender)
 {
+Prog->PB->Position++;
 FDiary->PB->Position++;
  Zast->MClient->Act.ParamComm.clear();
  Zast->MClient->Act.ParamComm.push_back("MergeType_Op");
@@ -1217,6 +1220,7 @@ FDiary->PB->Position++;
 
 void __fastcall TZast::MergeType_OpExecute(TObject *Sender)
 {
+Prog->PB->Position++;
 FDiary->PB->Position++;
 FDiary->MergeTypeOp();
 
@@ -1228,6 +1232,7 @@ LoadEvents->Execute();
 
 void __fastcall TZast::LoadEventsExecute(TObject *Sender)
 {
+Prog->PB->Position++;
 FDiary->PB->Position++;
 Word Y;
 Word M;
@@ -1306,6 +1311,7 @@ ServerSQL="SELECT Events.Num,  Events.Date_Time, Events.Comp, Events.Login, Even
 
 void __fastcall TZast::MergeEventsExecute(TObject *Sender)
 {
+Prog->PB->Position++;
 FDiary->PB->Position++;
 MP<TADOCommand>Comm(this);
 Comm->Connection=MClient->Diary;
@@ -1317,6 +1323,7 @@ Comm->Execute();
 
 if(!FDiary->Visible)
 {
+Prog->Close();
 FDiary->ShowModal();
 }
 else

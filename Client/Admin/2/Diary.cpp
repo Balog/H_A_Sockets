@@ -10,6 +10,7 @@
 #include "Main.h"
 #include "ClientClass.h"
 #include "Zastavka.h"
+#include "Progress.h"
 //---------------------------------------------------------------------------
 #pragma package(smart_init)
 #pragma resource "*.dfm"
@@ -31,16 +32,20 @@ FDiary->Refresh();
 //---------------------------------------------------------------------------
 void __fastcall TFDiary::EnNDateClick(TObject *Sender)
 {
+PB->Visible=true;
+PB->Position=0;
 NDate->Enabled=EnNDate->Checked;
 LoadDiary();
-Refresh();
+//Refresh();
 }
 //---------------------------------------------------------------------------
 void __fastcall TFDiary::EnKDateClick(TObject *Sender)
 {
+PB->Visible=true;
+PB->Position=0;
 KDate->Enabled=EnKDate->Checked;
 LoadDiary();
-Refresh();
+//Refresh();
 }
 //---------------------------------------------------------------------------
 void  TFDiary::Initialize()
@@ -84,7 +89,7 @@ for(Login->First();!Login->Eof;Login->Next())
 //if(Login->FieldByName("Login")->AsString!="")
 //{
 Logins->Items->Add(Login->FieldByName("Login")->AsString);
-if(Login->FieldByName("Login")->AsString=="Еще не определен")
+if(Login->FieldByName("Login")->AsString=="Не известен")
 {
 Logins->Checked[i]=false;
 }
@@ -123,8 +128,8 @@ void TFDiary::Refresh()
 
 
 String Filtr;
-String Filtr1;
-String Filtr2;
+String Filtr1="";
+String Filtr2="";
 String Filtr3;
 String Filtr4;
 String Filtr5;
@@ -344,7 +349,7 @@ Filtr="("+Filtr5+")";
 
 
 
-Filtr=" ("+Filtr1+" OR "+Filtr2+") AND ("+Filtr3+") AND ("+Filtr4+") AND ("+Filtr5+") ";
+//Filtr=" ("+Filtr1+" OR "+Filtr2+") AND ("+Filtr3+") AND ("+Filtr4+") AND ("+Filtr5+") ";
 
 String CT="SELECT Events.Num, Events.Date_Time, Events.Comp, Events.Login, TypeOp.NameType, Operations.NameOperation, Events.Prim FROM TypeOp INNER JOIN (Operations INNER JOIN Events ON Operations.Num = Events.Operation) ON TypeOp.Num = Operations.Type ";
 
@@ -386,6 +391,7 @@ LoadDiary();
 
 void __fastcall TFDiary::Button1Click(TObject *Sender)
 {
+PB->Max=6;
 PB->Visible=true;
 PB->Min=0;
 PB->Position=0;
@@ -395,6 +401,7 @@ LoadDiary();
 //---------------------------------------------------------------------------
 void TFDiary::LoadDiary()
 {
+Prog->PB->Position++;
 PB->Position++;
 Zast->LoadTypeOp->Execute();
 /*

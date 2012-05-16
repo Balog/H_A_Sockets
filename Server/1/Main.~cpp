@@ -255,7 +255,16 @@ void __fastcall TForm1::ServerSocketClientError(TObject *Sender,
 void __fastcall TForm1::ServerSocketClientRead(TObject *Sender,
       TCustomWinSocket *Socket)
 {
-String Mess=Socket->ReceiveText();
+String Mess="";
+String Mess1="";
+do
+{
+Mess1=Socket->ReceiveText();
+//String Mess1=Socket->ReceiveText();
+Mess=Mess+Mess1;
+}
+while(Mess1.Length()!=0);
+
 if (Mess.Length()!=0)
 {
 int N0=Mess.Pos(":");
