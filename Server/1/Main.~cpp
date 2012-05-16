@@ -15,7 +15,7 @@
 #pragma package(smart_init)
 #pragma resource "*.dfm"
 TForm1 *Form1;
-TNotifyIconData NID;
+
 //---------------------------------------------------------------------------
 __fastcall TForm1::TForm1(TComponent* Owner)
         : TForm(Owner)
@@ -258,6 +258,9 @@ void __fastcall TForm1::ServerSocketClientRead(TObject *Sender,
       TCustomWinSocket *Socket)
 {
 ImageList1->GetIcon(2, Application->Icon);
+NID.hIcon=Application->Icon->Handle;
+Shell_NotifyIcon(NIM_MODIFY, &NID);
+
 String Mess="";
 String Mess1="";
 do

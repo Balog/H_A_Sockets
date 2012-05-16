@@ -118,6 +118,7 @@ long GetLicenseCount(String DBName);
 void UpdateTempLogin();
 void UpdateOtdel(int NumLogin);
 void SaveCode(String Login, String Password);
+TNotifyIconData NID;
 
         BEGIN_MESSAGE_MAP
           VCL_MESSAGE_HANDLER(MyTrayIcon,TMessage,MTIcon);

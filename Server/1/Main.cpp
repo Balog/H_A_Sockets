@@ -180,7 +180,7 @@ VerifyLicense();
 
 
 ServerSocket->Active=true;
-Cl->DiaryEvent->WriteEvent(Now(),"Не определен", "Не известен", "Служебное", "Сервер инициирован", "");
+Cl->DiaryEvent->WriteEvent(Now(),"Не определен", "Не известен", "Сервер", "Сервер инициирован", "");
 
 }
 //---------------------------------------------------------------------------
@@ -206,7 +206,7 @@ for(unsigned int i=0;i<Cl->VClients.size();i++)
 Socket->SendText(Mess);
 
 Label1->Caption=IntToStr(Cl->VClients.size());
-Cl->DiaryEvent->WriteEvent(Now(),"Не определен", "Не известен", "Служебное", "Клиент подключен");
+Cl->DiaryEvent->WriteEvent(Now(),"Не определен", "Не известен", "Сервер", "Клиент подключен");
 this->ChangeCountClient(this);
 }
 //---------------------------------------------------------------------------
@@ -218,7 +218,7 @@ for(unsigned int i=0;i<Cl->VClients.size();i++)
 {
  if(Cl->VClients[i]->Socket==Socket)
  {
-Cl->DiaryEvent->WriteEvent(Now(),Cl->VClients[i]->IP,Cl->VClients[i]->Login , "Служебное", "Клиент отключен","Путь: "+Cl->VClients[i]->AppPatch);
+Cl->DiaryEvent->WriteEvent(Now(),Cl->VClients[i]->IP,Cl->VClients[i]->Login , "Сервер", "Клиент отключен","Путь: "+Cl->VClients[i]->AppPatch);
   Cl->VClients.erase(Cl->IVC);
  }
  Cl->IVC++;
