@@ -34,6 +34,7 @@ void __fastcall TFDiary::EnNDateClick(TObject *Sender)
 {
 PB->Visible=true;
 PB->Position=0;
+PB->Max=6;
 NDate->Enabled=EnNDate->Checked;
 LoadDiary();
 //Refresh();
@@ -43,6 +44,7 @@ void __fastcall TFDiary::EnKDateClick(TObject *Sender)
 {
 PB->Visible=true;
 PB->Position=0;
+PB->Max=6;
 KDate->Enabled=EnKDate->Checked;
 LoadDiary();
 //Refresh();
@@ -374,6 +376,7 @@ void __fastcall TFDiary::NDateClick(TObject *Sender)
 {
 PB->Visible=true;
 PB->Position=0;
+PB->Max=6;
 LoadDiary();
 //Refresh();
 }

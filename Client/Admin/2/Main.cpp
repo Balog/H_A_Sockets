@@ -179,21 +179,30 @@ switch (Application->MessageBoxA("Записать все изменения на сервер?","Выход из п
 {
  case IDYES:
  {
-//MClient->Start();
-//Main->MClient->WriteDiaryEvent("AdminARM","Завершение работы запись данных","База данных: "+CBDatabase->Text);
-//Zast->Close();
 Zast->Stop=true;
+Zast->MClient->Act.WaitCommand=0;
+
+Zast->Saved=false;
 Zast->PrepareSaveLogins->Execute();
+
+
  Action=caNone;
+
+//Timer1->Interval=6000;
+// Timer1->Enabled=true;
 //MClient->Stop();
  break;
  }
  case IDNO:
  {
-//Main->MClient->WriteDiaryEvent("AdminARM","Завершение работы отказ от записи","База данных: "+CBDatabase->Text);
-Zast->MClient->WriteDiaryEvent("AdminARM","Завершение работы отказ от записи","База данных: "+CBDatabase->Text);
+Zast->MClient->WriteDiaryEvent("AdminARM","Завершение работы отказ от записи","");
+Zast->Stop=true;
+Sleep(2000);
 Zast->Close();
- Action=caFree;
+// Action=caFree;
+ Action=caNone;
+// Timer1->Interval=1000;
+//  Timer1->Enabled=true;
  break;
  }
  case IDCANCEL:
@@ -563,6 +572,10 @@ Comm->Execute();
 
  Zast->MClient->ReadTable(CBDatabase->Text,"Select [Номер подразделения], [Название подразделения] from Подразделения", "Select [Номер подразделения], [Название подразделения] from TempПодразделения");
 */
+Prog->PB->Min=0;
+Prog->PB->Position=0;
+Prog->PB->Max=Zast->MClient->VDB.size()*5;
+Prog->Show();
 Zast->PrepareRead->Execute();
 }
 //---------------------------------------------------------------------------
@@ -571,6 +584,11 @@ Zast->PrepareRead->Execute();
 
 void __fastcall TForm1::N6Click(TObject *Sender)
 {
+Prog->PB->Min=0;
+Prog->PB->Position=0;
+Prog->PB->Max=Zast->MClient->VDB.size()*5;
+Prog->Show();
+Zast->Saved=false;
 Zast->PrepareSaveLogins->Execute();
 }
 //---------------------------------------------------------------------------
@@ -611,6 +629,15 @@ FAbout->ShowModal();
 void __fastcall TForm1::N9Click(TObject *Sender)
 {
 this->Close();
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm1::Timer1Timer(TObject *Sender)
+{
+if(Zast->Saved)
+{
+Zast->Close();
+}
 }
 //---------------------------------------------------------------------------
 

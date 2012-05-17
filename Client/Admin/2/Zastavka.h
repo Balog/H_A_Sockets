@@ -201,6 +201,7 @@ int Port;
 bool Start;
 
 public:		// User declarations
+bool Saved;
 bool Stop;
 bool Reg;
 //bool LoadLogin(MDBConnector* DB);

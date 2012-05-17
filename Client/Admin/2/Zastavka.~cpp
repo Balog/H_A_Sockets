@@ -47,6 +47,7 @@ MainDatabase2=MAspectBase;
 MainDatabase3=UsrBase;
 }
 */
+Saved=false;
 Stop=false;
 Start=false;
 Path=ExtractFilePath(Application->ExeName);
@@ -121,7 +122,7 @@ Timer1->Enabled=false;
 }
 else
 {
-Timer1->Interval=1000;
+Timer1->Interval=2000;
 }
 }
 //---------------------------------------------------------------------------
@@ -530,8 +531,9 @@ Comm->Execute();
 Comm->CommandText="INSERT INTO Подразделения ( ServerNum, [Название подразделения], NumDatabase ) SELECT TempПодразделения.[Номер подразделения], TempПодразделения.[Название подразделения], "+IntToStr(Zast->MClient->VDB[Zast->MClient->GetIDDBName(Form1->CBDatabase->Text)].NumDatabase)+" AS [Database] FROM TempПодразделения;";
 Comm->Execute();
 //Main->MClient->WriteDiaryEvent("AdminARM","Конец объединения подразделений","");
-  Zast->MClient->Act.NextCommand=0;
-MClient->WriteDiaryEvent("AdminARM","Конец объединения подразделений",Zast->MClient->VDB[StrToInt(MClient->VTrigger[0].Var)].Name);
+
+//  Zast->MClient->Act.WaitCommand=0;
+//MClient->WriteDiaryEvent("AdminARM","Конец объединения подразделений",Zast->MClient->VDB[StrToInt(MClient->VTrigger[0].Var)].Name);
 }
 catch(...)
 {
@@ -559,6 +561,7 @@ String Mess="";
 String Mess1="";
 do
 {
+Sleep(100);
 Mess1=Socket->ReceiveText();
 //String Mess1=Socket->ReceiveText();
 Mess=Mess+Mess1;
@@ -723,7 +726,7 @@ Pass->ViewLogins();
 void __fastcall TZast::ClientSocketError(TObject *Sender,
       TCustomWinSocket *Socket, TErrorEvent ErrorEvent, int &ErrorCode)
 {
-if(ErrorCode==10061)
+if(ErrorCode==10061 | ErrorCode==10060)
 {
  this->Hide();
  ShowMessage("Не найден сервер!");
@@ -787,6 +790,7 @@ Comm->Execute();
  Zast->MClient->Act.ParamComm.push_back("UpdateLoginsMan");
  Zast->MClient->Act.NextCommand=5;
 
+ Prog->PB->Position++;
  Zast->MClient->ReadTable(Zast->MClient->VDB[StrToInt(MClient->VTrigger[0].Var)].Name,"Select [Num], [Login], [Code1], [Code2], Role from Logins", "Select [Num], [Login], [Code1], [Code2], Role from TempLogins");
 
 
@@ -805,6 +809,7 @@ Comm->Execute();
  Zast->MClient->Act.ParamComm.push_back("UpdateObslOtdelMan");
  Zast->MClient->Act.NextCommand=5;
 
+ Prog->PB->Position++;
  Zast->MClient->ReadTable(Zast->MClient->VDB[StrToInt(MClient->VTrigger[0].Var)].Name,"Select [Login], [NumObslOtdel] from ObslOtdel", "Select [Login], [NumObslOtdel] from TempObslOtdel");
 
 }
@@ -876,7 +881,7 @@ Comm->CommandText="Delete * From TempObslOtdel";
 Comm->Execute();
 
 
-
+ Prog->PB->Position++;
   MClient->VTrigger[0].Var++;
   MClient->ActTrigger(0);
 }
@@ -1032,6 +1037,8 @@ void __fastcall TZast::PostSaveLoginsExecute(TObject *Sender)
 {
 Zast->MClient->Act.ParamComm.clear();
 Zast->MClient->Act.WaitCommand=0;
+Prog->PB->Position++;
+Zast->Saved=true;
 if(!Stop)
 {
 ShowMessage("Запись данных завершена");
@@ -1123,6 +1130,8 @@ Comm->Execute();
  Zast->MClient->Act.ParamComm.push_back("UpdateOtdelsMan");
  Zast->MClient->Act.NextCommand=5;
 
+ Prog->PB->Position++;
+
  Zast->MClient->ReadTable(Zast->MClient->VDB[StrToInt(MClient->VTrigger[0].Var)].Name,"Select [Номер подразделения], [Название подразделения] from Подразделения", "Select [Номер подразделения], [Название подразделения] from TempПодразделения");
 
 }
@@ -1141,6 +1150,8 @@ T.TrueAction="ReadOtdels";
 T.FalseAction="PostRead";
 Zast->MClient->VTrigger.push_back(T);
 //SaveLogins->Execute();
+Prog->PB->Position++;
+
 MClient->ActTrigger(0);
 }
 //---------------------------------------------------------------------------
@@ -1156,6 +1167,8 @@ Zast->MClient->Act.ParamComm.clear();
 Zast->MClient->VTrigger.clear();
  Zast->MClient->Act.ParamComm.clear();
   Zast->MClient->Act.WaitCommand=0;
+  Prog->PB->Position++;
+  Prog->Close();
 ShowMessage("Чтение завершено!");
 }
 //---------------------------------------------------------------------------
@@ -1181,6 +1194,8 @@ void __fastcall TZast::PostUpdateOtdExecute(TObject *Sender)
 
 Form1->Users->ItemIndex=0;
 Form1->UpdateOtdel(0);
+
+Zast->MClient->WriteDiaryEvent("AdminARM","Завершение запуска","");
 }
 //---------------------------------------------------------------------------
 

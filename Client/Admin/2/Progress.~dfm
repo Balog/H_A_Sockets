@@ -3,7 +3,7 @@ object Prog: TProg
   Top = 107
   BorderStyle = bsNone
   Caption = 'Prog'
-  ClientHeight = 12
+  ClientHeight = 35
   ClientWidth = 371
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -15,12 +15,34 @@ object Prog: TProg
   Position = poScreenCenter
   PixelsPerInch = 96
   TextHeight = 13
-  object PB: TProgressBar
+  object Bevel1: TBevel
     Left = 0
     Top = 0
     Width = 371
-    Height = 12
+    Height = 23
     Align = alClient
+    Shape = bsFrame
+    Style = bsRaised
+  end
+  object Label1: TLabel
+    Left = 75
+    Top = 2
+    Width = 220
+    Height = 20
+    Caption = #1055#1086#1076#1086#1078#1076#1080#1090#1077' '#1087#1086#1078#1072#1083#1091#1081#1089#1090#1072'...'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -16
+    Font.Name = 'MS Sans Serif'
+    Font.Style = [fsBold]
+    ParentFont = False
+  end
+  object PB: TProgressBar
+    Left = 0
+    Top = 23
+    Width = 371
+    Height = 12
+    Align = alBottom
     Min = 0
     Max = 100
     TabOrder = 0

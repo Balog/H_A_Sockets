@@ -47,6 +47,7 @@ MainDatabase2=MAspectBase;
 MainDatabase3=UsrBase;
 }
 */
+Saved=false;
 Stop=false;
 Start=false;
 Path=ExtractFilePath(Application->ExeName);
@@ -121,7 +122,7 @@ Timer1->Enabled=false;
 }
 else
 {
-Timer1->Interval=1000;
+Timer1->Interval=2000;
 }
 }
 //---------------------------------------------------------------------------
@@ -530,8 +531,9 @@ Comm->Execute();
 Comm->CommandText="INSERT INTO Подразделения ( ServerNum, [Название подразделения], NumDatabase ) SELECT TempПодразделения.[Номер подразделения], TempПодразделения.[Название подразделения], "+IntToStr(Zast->MClient->VDB[Zast->MClient->GetIDDBName(Form1->CBDatabase->Text)].NumDatabase)+" AS [Database] FROM TempПодразделения;";
 Comm->Execute();
 //Main->MClient->WriteDiaryEvent("AdminARM","Конец объединения подразделений","");
-  Zast->MClient->Act.NextCommand=0;
-MClient->WriteDiaryEvent("AdminARM","Конец объединения подразделений",Zast->MClient->VDB[StrToInt(MClient->VTrigger[0].Var)].Name);
+
+//  Zast->MClient->Act.WaitCommand=0;
+//MClient->WriteDiaryEvent("AdminARM","Конец объединения подразделений",Zast->MClient->VDB[StrToInt(MClient->VTrigger[0].Var)].Name);
 }
 catch(...)
 {
@@ -724,7 +726,7 @@ Pass->ViewLogins();
 void __fastcall TZast::ClientSocketError(TObject *Sender,
       TCustomWinSocket *Socket, TErrorEvent ErrorEvent, int &ErrorCode)
 {
-if(ErrorCode==10061)
+if(ErrorCode==10061 | ErrorCode==10060)
 {
  this->Hide();
  ShowMessage("Не найден сервер!");
@@ -788,6 +790,7 @@ Comm->Execute();
  Zast->MClient->Act.ParamComm.push_back("UpdateLoginsMan");
  Zast->MClient->Act.NextCommand=5;
 
+ Prog->PB->Position++;
  Zast->MClient->ReadTable(Zast->MClient->VDB[StrToInt(MClient->VTrigger[0].Var)].Name,"Select [Num], [Login], [Code1], [Code2], Role from Logins", "Select [Num], [Login], [Code1], [Code2], Role from TempLogins");
 
 
@@ -806,6 +809,7 @@ Comm->Execute();
  Zast->MClient->Act.ParamComm.push_back("UpdateObslOtdelMan");
  Zast->MClient->Act.NextCommand=5;
 
+ Prog->PB->Position++;
  Zast->MClient->ReadTable(Zast->MClient->VDB[StrToInt(MClient->VTrigger[0].Var)].Name,"Select [Login], [NumObslOtdel] from ObslOtdel", "Select [Login], [NumObslOtdel] from TempObslOtdel");
 
 }
@@ -877,7 +881,7 @@ Comm->CommandText="Delete * From TempObslOtdel";
 Comm->Execute();
 
 
-
+ Prog->PB->Position++;
   MClient->VTrigger[0].Var++;
   MClient->ActTrigger(0);
 }
@@ -957,6 +961,7 @@ catch(...)
 
 void __fastcall TZast::SaveLoginsExecute(TObject *Sender)
 {
+Prog->PB->Position++;
 //Zast->MClient->Act.ParamComm.clear();
 //ShowMessage(MClient->VDB.size());
 Zast->MClient->Act.ParamComm.clear();
@@ -970,6 +975,7 @@ Zast->MClient->WriteTable(Zast->MClient->VDB[StrToInt(MClient->VTrigger[0].Var)]
 
 void __fastcall TZast::SaveObslOtdExecute(TObject *Sender)
 {
+Prog->PB->Position++;
 //Zast->MClient->Act.ParamComm.clear();
 Zast->MClient->Act.ParamComm[0]="SaveTempPodr";
 Zast->MClient->Act.WaitCommand=8;
@@ -981,6 +987,7 @@ Zast->MClient->WriteTable(Zast->MClient->VDB[StrToInt(MClient->VTrigger[0].Var)]
 
 void __fastcall TZast::SendMergeSaveExecute(TObject *Sender)
 {
+Prog->PB->Position++;
 //отослать команду на начало объединения данных на сервере
 //Zast->MClient->Act.ParamComm.clear();
 Zast->MClient->Act.WaitCommand=9;
@@ -1002,6 +1009,7 @@ MClient->VTrigger[0].Var=i;
 
 void __fastcall TZast::PrepareSaveLoginsExecute(TObject *Sender)
 {
+Prog->PB->Position++;
 Zast->MClient->Act.ParamComm.clear();
 /*
 ShowMessage(MClient->VDB[0].NumDatabase);
@@ -1033,8 +1041,11 @@ void __fastcall TZast::PostSaveLoginsExecute(TObject *Sender)
 {
 Zast->MClient->Act.ParamComm.clear();
 Zast->MClient->Act.WaitCommand=0;
+Prog->PB->Position++;
+Zast->Saved=true;
 if(!Stop)
 {
+Prog->Close();
 ShowMessage("Запись данных завершена");
 }
 else
@@ -1047,6 +1058,7 @@ Zast->MClient->WriteDiaryEvent("AdminARM","Завершение работы запись данных","");
 
 void __fastcall TZast::SaveTempPodrExecute(TObject *Sender)
 {
+Prog->PB->Position++;
 Zast->MClient->Act.ParamComm[0]="SendMergeSave";
 Zast->MClient->Act.WaitCommand=8;
 
@@ -1059,7 +1071,7 @@ void __fastcall TZast::LoadNewLoginsExecute(TObject *Sender)
 {
 // Чтение временной таблицы логинов с сервера для получения сервернух номеров новых логинов
 //Очистка клиентской временной таблицы логинов
-
+Prog->PB->Position++;
 MP<TADOCommand>Comm(this);
 Comm->Connection=MClient->Database;
 Comm->CommandText="Delete * From TempLogins";
@@ -1078,7 +1090,7 @@ MClient->ReadTable(NameDB, "SELECT TempLogins.Num, TempLogins.ServerNum FROM Tem
 void __fastcall TZast::CorrectNewLoginsExecute(TObject *Sender)
 {
 //запись новых номеров логинов в базу
-
+Prog->PB->Position++;
 TLocateOptions SO;
 
 MP<TADODataSet>CLogins(this);
@@ -1124,6 +1136,8 @@ Comm->Execute();
  Zast->MClient->Act.ParamComm.push_back("UpdateOtdelsMan");
  Zast->MClient->Act.NextCommand=5;
 
+ Prog->PB->Position++;
+
  Zast->MClient->ReadTable(Zast->MClient->VDB[StrToInt(MClient->VTrigger[0].Var)].Name,"Select [Номер подразделения], [Название подразделения] from Подразделения", "Select [Номер подразделения], [Название подразделения] from TempПодразделения");
 
 }
@@ -1142,6 +1156,8 @@ T.TrueAction="ReadOtdels";
 T.FalseAction="PostRead";
 Zast->MClient->VTrigger.push_back(T);
 //SaveLogins->Execute();
+Prog->PB->Position++;
+
 MClient->ActTrigger(0);
 }
 //---------------------------------------------------------------------------
@@ -1157,6 +1173,8 @@ Zast->MClient->Act.ParamComm.clear();
 Zast->MClient->VTrigger.clear();
  Zast->MClient->Act.ParamComm.clear();
   Zast->MClient->Act.WaitCommand=0;
+  Prog->PB->Position++;
+  Prog->Close();
 ShowMessage("Чтение завершено!");
 }
 //---------------------------------------------------------------------------
@@ -1182,6 +1200,8 @@ void __fastcall TZast::PostUpdateOtdExecute(TObject *Sender)
 
 Form1->Users->ItemIndex=0;
 Form1->UpdateOtdel(0);
+
+Zast->MClient->WriteDiaryEvent("AdminARM","Завершение запуска","");
 }
 //---------------------------------------------------------------------------
 

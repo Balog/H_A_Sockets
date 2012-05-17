@@ -84,7 +84,7 @@ if(LastCommand==Comm | LastCommand==0)
    //Ответ на команду запроса IP у клиента
    this->IP=Parameters[0];
    this->AppPatch=Parameters[1];
-  Parent->WriteDiaryEvent(IP, Login, "Служебное", "IP получен", "Путь: "+Parameters[1]);   
+  Parent->WriteDiaryEvent(IP, Login, "Сервер", "IP получен", "Путь: "+Parameters[1]);
    //Передача сигнала готовности к дальнейшей работе
    //Ответ на него не предусмотрен
    LastCommand=0;
@@ -143,13 +143,13 @@ if(ExtractFileName(Parent->VClients[i]->AppPatch)=="Hazards.exe")
    //удачное открытие базы
     if(Parameters[1]!="-1")
     {
-   Parent->WriteDiaryEvent(IP, Login, "Служебное", "Открытие базы данных", "Имя: "+Parent->VBases[i].Name+" Число лицензий="+IntToStr(Parent->VBases[i].LicCount));
+   Parent->WriteDiaryEvent(IP, Login, "Сервер", "Открытие базы данных", "Имя: "+Parent->VBases[i].Name+" Число лицензий="+IntToStr(Parent->VBases[i].LicCount));
 
    this->Socket->SendText("Command:4;3|1#1|"+IntToStr(IntToStr(Parent->VBases[i].LicCount).Length())+"#"+IntToStr(Parent->VBases[i].LicCount)+"|"+IntToStr(Parent->VBases[i].Name.Length())+"#"+Parent->VBases[i].Name+"|");
     }
     else
     {
-    Parent->WriteDiaryEvent(IP, Login, "Служебное", "Открытие базы данных", "Имя: "+Parent->VBases[i].Name+" Число лицензий - Неограничено");
+    Parent->WriteDiaryEvent(IP, Login, "Сервер", "Открытие базы данных", "Имя: "+Parent->VBases[i].Name+" Число лицензий - Неограничено");
    this->Socket->SendText("Command:4;3|1#1|2#-1|1#" "");
     }
 

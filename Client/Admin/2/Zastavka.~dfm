@@ -9890,7 +9890,7 @@ object Zast: TZast
   end
   object Timer1: TTimer
     Enabled = False
-    Interval = 5000
+    Interval = 7000
     OnTimer = Timer1Timer
     Left = 40
     Top = 32

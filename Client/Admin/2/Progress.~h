@@ -8,10 +8,13 @@
 #include <StdCtrls.hpp>
 #include <Forms.hpp>
 #include <ComCtrls.hpp>
+#include <ExtCtrls.hpp>
 //---------------------------------------------------------------------------
 class TProg : public TForm
 {
 __published:	// IDE-managed Components
+        TBevel *Bevel1;
+        TLabel *Label1;
         TProgressBar *PB;
 private:	// User declarations
 public:		// User declarations

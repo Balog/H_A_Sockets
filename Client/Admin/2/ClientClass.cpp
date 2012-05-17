@@ -500,7 +500,7 @@ StartAction("LoadLogins");
 //************************************************************************
 void Client::WriteDiaryEvent(String Type, String Name, String Prim)
 {
-Act.WaitCommand=7;
+Act.WaitCommand=0;
 Act.ParamComm.clear();
 Socket->Socket->SendText("Command:7;5|"+IntToStr(IP.Length())+"#"+IP+"|"+IntToStr(Login.Length())+"#"+Login+"|"+IntToStr(Type.Length())+"#"+Type+"|"+IntToStr(Name.Length())+"#"+Name+"|"+IntToStr(Prim.Length())+"#"+Prim+"|");
 

@@ -374,6 +374,7 @@ void __fastcall TFDiary::NDateClick(TObject *Sender)
 {
 PB->Visible=true;
 PB->Position=0;
+PB->Max=6;
 LoadDiary();
 //Refresh();
 }
