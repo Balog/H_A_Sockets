@@ -13,7 +13,7 @@
 class TProg : public TForm
 {
 __published:	// IDE-managed Components
-        TBevel *Bevel1;
+        TPanel *Panel1;
         TLabel *Label1;
         TProgressBar *PB;
 private:	// User declarations

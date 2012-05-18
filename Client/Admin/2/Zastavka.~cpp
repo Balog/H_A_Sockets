@@ -961,6 +961,7 @@ catch(...)
 
 void __fastcall TZast::SaveLoginsExecute(TObject *Sender)
 {
+Prog->PB->Position++;
 //Zast->MClient->Act.ParamComm.clear();
 //ShowMessage(MClient->VDB.size());
 Zast->MClient->Act.ParamComm.clear();
@@ -974,6 +975,7 @@ Zast->MClient->WriteTable(Zast->MClient->VDB[StrToInt(MClient->VTrigger[0].Var)]
 
 void __fastcall TZast::SaveObslOtdExecute(TObject *Sender)
 {
+Prog->PB->Position++;
 //Zast->MClient->Act.ParamComm.clear();
 Zast->MClient->Act.ParamComm[0]="SaveTempPodr";
 Zast->MClient->Act.WaitCommand=8;
@@ -985,6 +987,7 @@ Zast->MClient->WriteTable(Zast->MClient->VDB[StrToInt(MClient->VTrigger[0].Var)]
 
 void __fastcall TZast::SendMergeSaveExecute(TObject *Sender)
 {
+Prog->PB->Position++;
 //отослать команду на начало объединени€ данных на сервере
 //Zast->MClient->Act.ParamComm.clear();
 Zast->MClient->Act.WaitCommand=9;
@@ -1006,6 +1009,7 @@ MClient->VTrigger[0].Var=i;
 
 void __fastcall TZast::PrepareSaveLoginsExecute(TObject *Sender)
 {
+Prog->PB->Position++;
 Zast->MClient->Act.ParamComm.clear();
 /*
 ShowMessage(MClient->VDB[0].NumDatabase);
@@ -1041,6 +1045,7 @@ Prog->PB->Position++;
 Zast->Saved=true;
 if(!Stop)
 {
+Prog->Close();
 ShowMessage("«апись данных завершена");
 }
 else
@@ -1053,6 +1058,7 @@ Zast->MClient->WriteDiaryEvent("AdminARM","«авершение работы запись данных","");
 
 void __fastcall TZast::SaveTempPodrExecute(TObject *Sender)
 {
+Prog->PB->Position++;
 Zast->MClient->Act.ParamComm[0]="SendMergeSave";
 Zast->MClient->Act.WaitCommand=8;
 
@@ -1065,7 +1071,7 @@ void __fastcall TZast::LoadNewLoginsExecute(TObject *Sender)
 {
 // „тение временной таблицы логинов с сервера дл€ получени€ сервернух номеров новых логинов
 //ќчистка клиентской временной таблицы логинов
-
+Prog->PB->Position++;
 MP<TADOCommand>Comm(this);
 Comm->Connection=MClient->Database;
 Comm->CommandText="Delete * From TempLogins";
@@ -1084,7 +1090,7 @@ MClient->ReadTable(NameDB, "SELECT TempLogins.Num, TempLogins.ServerNum FROM Tem
 void __fastcall TZast::CorrectNewLoginsExecute(TObject *Sender)
 {
 //запись новых номеров логинов в базу
-
+Prog->PB->Position++;
 TLocateOptions SO;
 
 MP<TADODataSet>CLogins(this);

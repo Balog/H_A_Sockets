@@ -202,7 +202,7 @@ if(ExtractFileName(Parent->VClients[i]->AppPatch)=="Hazards.exe")
 //void WriteDiaryEvent(String Comp, String Login, String Type, String Name, String Prim);
 
 Parent->WriteDiaryEvent(Parameters[0], Parameters[1], Parameters[2], Parameters[3], Parameters[4]);
-   //this->Socket->SendText("Command:7;0|");
+   this->Socket->SendText("Command:7;0|");
    break;
    }
    case 8:

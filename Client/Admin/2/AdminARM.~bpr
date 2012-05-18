@@ -5,13 +5,13 @@
     <VERSION value="BCB.06.00"/>
     <PROJECT value="AdminARM.exe"/>
     <OBJFILES value="AdminARM.obj Zastavka.obj ClientClass.obj Main.obj MDBConnector.obj 
-      PassForm.obj CodeText.obj EditLogin.obj Diary.obj Progress.obj"/>
+      PassForm.obj CodeText.obj EditLogin.obj Diary.obj Progress.obj About.obj"/>
     <RESFILES value="AdminARM.res"/>
     <IDLFILES value=""/>
     <IDLGENFILES value=""/>
     <DEFFILE value=""/>
     <RESDEPEN value="$(RESFILES) Zastavka.dfm Main.dfm PassForm.dfm EditLogin.dfm Diary.dfm 
-      Progress.dfm"/>
+      Progress.dfm About.dfm"/>
     <LIBFILES value=""/>
     <LIBRARIES value="vcldb.lib vclx.lib adortl.lib dbrtl.lib dclusr.lib rtl.lib vcl.lib"/>
     <SPARELIBS value="vcl.lib rtl.lib dclusr.lib dbrtl.lib adortl.lib vclx.lib vcldb.lib"/>
@@ -69,6 +69,7 @@
       <FILE FILENAME="EditLogin.cpp" FORMNAME="EditLogins" UNITNAME="EditLogin" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="Diary.cpp" FORMNAME="FDiary" UNITNAME="Diary" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="Progress.cpp" FORMNAME="Prog" UNITNAME="Progress" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="About.cpp" FORMNAME="FAbout" UNITNAME="About" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
   </FILELIST>
   <BUILDTOOLS>
   </BUILDTOOLS>

@@ -16,6 +16,7 @@ __published:	// IDE-managed Components
         TPanel *Panel1;
         TLabel *Label1;
         TProgressBar *PB;
+        void __fastcall FormCreate(TObject *Sender);
 private:	// User declarations
 public:		// User declarations
         __fastcall TProg(TComponent* Owner);

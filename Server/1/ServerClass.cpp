@@ -51,6 +51,40 @@ this->DiaryBase=DiaryPatch;
 DiaryEvent=new Diary(pOwner, DiaryPatch);
 }
 //----------------------------------------------------
+void Clients::SearchDubl(String IP, String Login, String AppPatch, TCustomWinSocket *S)
+{
+IVC=VClients.begin();
+for(unsigned int i=0;i<VClients.size();i++)
+{
+if(VClients[i]->IP==IP & VClients[i]->Login==Login & VClients[i]->AppPatch==AppPatch & VClients[i]->Socket!=S)
+{
+delete VClients[i];
+VClients.erase(IVC);
+
+  Form1->ListBox1->Clear();
+for(unsigned int i=0; i<VClients.size();i++)
+{
+String App;
+if(ExtractFileName(VClients[i]->AppPatch)=="AdminARM.exe")
+{
+ App="AdminARM";
+}
+if(ExtractFileName(VClients[i]->AppPatch)=="NetAspects.exe")
+{
+ App="Aspects";
+}
+if(ExtractFileName(VClients[i]->AppPatch)=="Hazards.exe")
+{
+ App="Hazards";
+}
+ Form1->ListBox1->Items->Add(VClients[i]->IP+" "+App);
+}
+
+break;
+}
+IVC++;
+}
+}
 //********************************************************
 Client::Client(Clients* Cls)
 {
@@ -178,8 +212,12 @@ if(ExtractFileName(Parent->VClients[i]->AppPatch)=="Hazards.exe")
 
    if(Parameters[2]=="1")
    {
+
    Parent->WriteDiaryEvent(this->IP, Parameters[0], "Служебное","Пользователь идентифицирован");
    this->Login=Parameters[0];
+
+   Parent->SearchDubl(IP, Login, AppPatch, this->Socket);
+
    this->Socket->SendText("Command:6;0|");
 
    }
@@ -783,6 +821,7 @@ Comm->Execute();
 }
 //--------------------------------------------------------------------------
 
+//--------------------------------------------------------------------------
 //***************************************************************************
  mForm::mForm()
  {

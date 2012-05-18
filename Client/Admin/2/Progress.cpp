@@ -14,3 +14,11 @@ __fastcall TProg::TProg(TComponent* Owner)
 {
 }
 //---------------------------------------------------------------------------
+void __fastcall TProg::FormCreate(TObject *Sender)
+{
+ShowWindow(Application->Handle,SW_RESTORE);
+SetWindowPos(Handle, HWND_TOPMOST,0,0,0,0,             SWP_NOMOVE|SWP_NOSIZE);
+this->BringToFront();        
+}
+//---------------------------------------------------------------------------
+
