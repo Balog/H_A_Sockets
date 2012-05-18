@@ -132,7 +132,14 @@ Types->Clear();
 for(Type->First();!Type->Eof;Type->Next())
 {
  Types->Items->Add(Type->FieldByName("NameType")->AsString);
+ if(Type->FieldByName("NameType")->AsString=="Служебное")
+ {
+ Types->Checked[i]=false;
+ }
+ else
+ {
  Types->Checked[i]=true;
+ }
  i++;
 }
 }

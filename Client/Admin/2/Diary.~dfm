@@ -106,6 +106,7 @@ object FDiary: TFDiary
     Width = 1014
     Height = 527
     DataSource = DataSource1
+    Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit]
     ReadOnly = True
     TabOrder = 5
     TitleFont.Charset = DEFAULT_CHARSET

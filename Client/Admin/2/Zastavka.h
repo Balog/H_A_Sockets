@@ -147,7 +147,6 @@ __published:	// IDE-managed Components
         TAction *MergeEvents;
         void __fastcall Timer1Timer(TObject *Sender);
         void __fastcall Image1Click(TObject *Sender);
-        void __fastcall FormCreate(TObject *Sender);
         void __fastcall FormShow(TObject *Sender);
         void __fastcall Timer2Timer(TObject *Sender);
         void __fastcall FormDestroy(TObject *Sender);
@@ -165,7 +164,6 @@ __published:	// IDE-managed Components
           TCustomWinSocket *Socket, TErrorEvent ErrorEvent,
           int &ErrorCode);
         void __fastcall UpdateOtdelsExecute(TObject *Sender);
-        void __fastcall TriggerExecute(TObject *Sender);
         void __fastcall UpdateLoginsExecute(TObject *Sender);
         void __fastcall UpdateOtdelsManExecute(TObject *Sender);
         void __fastcall UpdateLoginsManExecute(TObject *Sender);

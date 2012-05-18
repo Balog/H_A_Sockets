@@ -1,6 +1,7 @@
 object Form1: TForm1
   Left = 209
   Top = 136
+  BorderIcons = [biSystemMenu, biMinimize]
   BorderStyle = bsSingle
   Caption = 'Form1'
   ClientHeight = 263
@@ -15,7 +16,6 @@ object Form1: TForm1
   OldCreateOrder = False
   Position = poScreenCenter
   OnClose = FormClose
-  OnCreate = FormCreate
   OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 13
@@ -143,17 +143,5 @@ object Form1: TForm1
       Caption = #1042#1099#1093#1086#1076
       OnClick = N9Click
     end
-  end
-  object DBTimer: TTimer
-    Enabled = False
-    Interval = 100
-    Left = 128
-    Top = 64
-  end
-  object Timer1: TTimer
-    Enabled = False
-    OnTimer = Timer1Timer
-    Left = 136
-    Top = 104
   end
 end

@@ -17,7 +17,6 @@ object Zast: TZast
   FormStyle = fsStayOnTop
   OldCreateOrder = False
   Position = poDesktopCenter
-  OnCreate = FormCreate
   OnDestroy = FormDestroy
   OnShow = FormShow
   PixelsPerInch = 96
@@ -9952,7 +9951,6 @@ object Zast: TZast
     end
     object Trigger: TAction
       Caption = 'Trigger'
-      OnExecute = TriggerExecute
     end
     object UpdateLogins: TAction
       Caption = 'UpdateLogins'

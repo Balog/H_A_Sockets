@@ -24,29 +24,6 @@ TZast *Zast;
 __fastcall TZast::TZast(TComponent* Owner)
         : TForm(Owner)
 {
-/*
-Reg=false;
-Start=false;
-String Path=ExtractFilePath(Application->ExeName);
-MP<TIniFile>Ini(Path+"NetAspects.ini");
-
-int AbsPathMain=Ini->ReadInteger("Main","AbsPathMSpec",1);
-String MSpecBase=Ini->ReadString("Main","MSpecBase","");
-String MAspectBase=Ini->ReadString("Main","MAspBase","");
-String UsrBase=Ini->ReadString("Main","UsrBase","");
-if(AbsPathMain==0)
-{
-MainDatabase=Path+MSpecBase;
-MainDatabase2=Path+MAspectBase;
-MainDatabase3=Path+UsrBase;
-}
-else
-{
-MainDatabase= MSpecBase;
-MainDatabase2=MAspectBase;
-MainDatabase3=UsrBase;
-}
-*/
 Saved=false;
 Stop=false;
 Start=false;
@@ -84,22 +61,6 @@ MClient->Diary->SetPatchBackUp("Archive");
 MClient->Diary->ClearArchive(Days);
 MClient->Diary->PackDB();
 MClient->Diary->Backup("Archive");
-
-/*
-Database=new MDBConnector(ExtractFilePath(MainDatabase), ExtractFileName(MainDatabase), this);
-Database->SetPatchBackUp("Archive");
-Database->OnArchTimer=ArchTimer;
-
-Diary=new MDBConnector(ExtractFilePath(MainDatabase2), ExtractFileName(MainDatabase2), this);
-Diary->SetPatchBackUp("Archive");
-Diary->OnArchTimer=ArchTimer;
-*/
-/*
-ADOUsrAspect=new MDBConnector(ExtractFilePath(MainDatabase3), ExtractFileName(MainDatabase3), this);
-ADOUsrAspect->SetPatchBackUp("Archive");
-ADOUsrAspect->OnArchTimer=ArchTimer;
-*/
-
 }
 //---------------------------------------------------------------------------
 void __fastcall TZast::Timer1Timer(TObject *Sender)
@@ -112,7 +73,6 @@ this->BorderStyle=bsSingle;
 
 
 Timer2->Enabled=false;
-//ShowMessage("Запуск");
 if(Start)
 {
 Timer1->Enabled=false;
@@ -130,53 +90,23 @@ Timer1->Interval=2000;
 void __fastcall TZast::Image1Click(TObject *Sender)
 {
 this->Hide();
-//Documents->Show();
 Timer1->Enabled=false;
 this->BorderStyle=bsSingle;
 Timer1->Enabled=false;
 Timer1->Interval=100;
 Timer1->Enabled=true;
-/*
-if(Start)
-{
-Pass->ShowModal();
-}
-else
-{
-Start=true;
-}
-*/
-//Pass->Show();
 }
 //---------------------------------------------------------------------------
 void __fastcall TZast::MyException(TObject *Sender,
                                     Exception *E)
 {
-/*
-E->ClassName();
-if(String(E->ClassName()) =="EOleException")
-{
- ShowMessage("Ошибка подключения к базе");
 
-}
-else
-{
-// ShowMessage("Ошибка!");
-}
-*/
 }
 
 
 
 
 //---------------------------------------------------
-void __fastcall TZast::FormCreate(TObject *Sender)
-{
-//Application->OnException = MyException;
-
-
-}
-//---------------------------------------------------------------------------
 
 void __fastcall TZast::FormShow(TObject *Sender)
 {
@@ -184,7 +114,6 @@ Path=ExtractFilePath(Application->ExeName);
 MP<TIniFile>Ini(Path+"Admin.ini");
 Server=Ini->ReadString("Server","Server","localhost");
 Port=Ini->ReadInteger("Server","Port",2000);
-//MClient=new Client(ClientSocket, ActionManager1, this);
 
 MClient->VDB.clear();
 Form1->CBDatabase->Clear();
@@ -195,8 +124,6 @@ for(int i=0;i<Num;i++)
 String S="Base"+IntToStr(i+1);
 String ServerBase=Ini->ReadString(S,"ServerDatabase","");
 String Name=Ini->ReadString(S,"Name","");
-
-//MClient->AddDatabase(ServerBase);
 
 CDBItem DBI;
 DBI.Name=Name;
@@ -214,10 +141,6 @@ MClient->VDB.push_back(DBI);
 }
 Form1->CBDatabase->ItemIndex=0;
 
-
-
-
-
 MP<TADODataSet>Roles(this);
 Roles->CommandText="Select * from Roles order by Num";
 Roles->Connection=MClient->Database;
@@ -228,45 +151,6 @@ for(Roles->First();!Roles->Eof;Roles->Next())
 Form1->Role->Items->Add(Roles->FieldByName("Name")->AsString);
 }
 Form1->Role->ItemIndex=0;
-
-
-
-/*
-String Path=ExtractFilePath(Application->ExeName);
-MP<TIniFile>Ini(Path+"NetAspects.ini");
-ServerName=Ini->ReadString("Server","ServerName","");
-
-MClient=new Client();
-
-MClient->Connect(ServerName, "");
-
-MClient->RegForm(this);
-
-MClient->WriteDiaryEvent("NetAspects","Запуск","");
-
-int Num=Ini->ReadInteger("Server","NumServerBase",0);
-for(int i=0;i<Num;i++)
-{
-String S="Base"+IntToStr(i+1);
-String ServerBase=Ini->ReadString(S,"ServerDatabase","");
-String Name=Ini->ReadString(S,"Name","");
-
-MClient->AddDatabase(ServerBase, Name);
-
-int LicCount=MClient->GetLicenseCount("Аспекты");
-Reg=LicCount!=0;
-
-CDBItem DBI;
-DBI.Name=Name;
-DBI.ServerDB=ServerBase;
-DBI.Num=i;
-
-//CBDatabase->Items->Add(Name);
-
-VDB.push_back(DBI);
-}
-*/
-
 
 HRGN MyRegion, MyRegion2, RoundReg, TempReg, MyRegion3, MyRegion4, MyRegion5, MyRegion6, MyRegion7;
 
@@ -373,17 +257,10 @@ P[9] = Point(StaticText9->Left,StaticText9->Top);
 P[10] = Point(StaticText10->Left,StaticText10->Top);
 P[11] = Point(StaticText11->Left,StaticText11->Top);
 
-
-
-
 MyRegion2 = CreatePolygonRgn(P, 12, ALTERNATE);
 CombineRgn(MyRegion, MyRegion, MyRegion2, RGN_OR);
 
-
-
-
 SetWindowRgn(Handle, MyRegion, true);
-
 
 Timer2->Enabled=true;
 }
@@ -425,50 +302,17 @@ catch ( ... )
 {
 SetCurrentDir(CurDir);
 }
-
-
-
 }
 }
 //-----------------------------------
 void __fastcall TZast::ArchTimer(TObject *Sender, int N)
 {
-/*
-Label2->Caption="Архивирование базы данных... "+IntToStr(N)+" сек";
-this->Repaint();
-*/
+
 }
 //----------------------------------
-
-
-
-
 void __fastcall TZast::Timer2Timer(TObject *Sender)
 {
 Timer2->Enabled=false;
-/*
-String Path=ExtractFilePath(Application->ExeName);
-MP<TIniFile> Ini(Path+"NetAspects.ini");
-int Days=Ini->ReadInteger("Main","StoreArchive",0);
-ADOConn->ClearArchive(Days);
-ADOAspect->ClearArchive(Days);
-ADOUsrAspect->ClearArchive(Days);
-
-ADOConn->PackDB();
-ADOAspect->PackDB();
-ADOUsrAspect->PackDB();
-if(Days!=-1)
-{
-
-ADOConn->Backup("Archive");
-ADOAspect->Backup("Archive");
-ADOUsrAspect->Backup("Archive");
-}
-
-ADOConn->ConnectDB();
-ADOAspect->ConnectDB();
-ADOUsrAspect->ConnectDB();
-*/
 MClient->Connect(Server, Port);
 Timer1->Enabled=true;
 }
@@ -476,7 +320,6 @@ Timer1->Enabled=true;
 
 void TZast::MergeOtdels()
 {
-//Main->MClient->WriteDiaryEvent("AdminARM","Начало объединения подразделений","");
 try
 {
 TLocateOptions SO;
@@ -530,14 +373,9 @@ Comm->Execute();
 
 Comm->CommandText="INSERT INTO Подразделения ( ServerNum, [Название подразделения], NumDatabase ) SELECT TempПодразделения.[Номер подразделения], TempПодразделения.[Название подразделения], "+IntToStr(Zast->MClient->VDB[Zast->MClient->GetIDDBName(Form1->CBDatabase->Text)].NumDatabase)+" AS [Database] FROM TempПодразделения;";
 Comm->Execute();
-//Main->MClient->WriteDiaryEvent("AdminARM","Конец объединения подразделений","");
-
-//  Zast->MClient->Act.WaitCommand=0;
-//MClient->WriteDiaryEvent("AdminARM","Конец объединения подразделений",Zast->MClient->VDB[StrToInt(MClient->VTrigger[0].Var)].Name);
 }
 catch(...)
 {
-//Main->MClient->WriteDiaryEvent("AdminARM ошибка","Ошибка объединения подразделений"," Ошибка "+IntToStr(GetLastError()));
   Zast->MClient->Act.WaitCommand=0;
 MClient->WriteDiaryEvent("AdminARM ошибка","Ошибка объединения подразделений"," Ошибка "+IntToStr(GetLastError()));
 }
@@ -563,7 +401,7 @@ do
 {
 Sleep(100);
 Mess1=Socket->ReceiveText();
-//String Mess1=Socket->ReceiveText();
+
 Mess=Mess+Mess1;
 }
 while(Mess1.Length()!=0);
@@ -573,7 +411,7 @@ if (Mess.Length()!=0)
 int N0=Mess.Pos(":");
 int N=Mess.Pos(";");
 int N1=Mess.Pos("|");
-//String Num=RText.SubString(9,1);
+
 int Comm, NumPar;
 String Nick;
 String SS=Mess.SubString(N0+1,N-N0-1);
@@ -649,20 +487,13 @@ MClient->StartAction("PrepareConnectBase");
 
 void __fastcall TZast::PrepareConnectBaseExecute(TObject *Sender)
 {
-/*
-MClient->Act.NextCommand=4;
-String Par="DiaryConnect";
-MClient->Act.ParamComm.clear();
-MClient->Act.ParamComm.push_back(Par);
 
-MClient->ConnectDatabase("Аспекты", true);
-*/
 MClient->Act.NextCommand=4;
 String Par="ConnectBase";
 MClient->Act.ParamComm.clear();
 String Path=ExtractFilePath(Application->ExeName);
 MP<TIniFile>Ini(Path+"Admin.ini");
-int MaxBase=MClient->VDB.size();//Ini->ReadInteger("Server","NumServerBase",1);
+int MaxBase=MClient->VDB.size();
 
 Trig T;
 T.Var=0;
@@ -670,13 +501,7 @@ T.Max=MaxBase;
 T.TrueAction="ConnectBase";
 T.FalseAction="LoadLogins";
 MClient->VTrigger.push_back(T);
-/*
-MClient->Act.ParamComm.push_back(IntToStr(MaxBase));
-MClient->Act.ParamComm.push_back("1");
-MClient->Act.ParamComm.push_back("ConnectBase");
-MClient->Act.ParamComm.push_back("LoadLogins");
-*/
-//MClient->StartAction("Trigger");
+
 MClient->ActTrigger(0);
 
 }
@@ -684,20 +509,13 @@ MClient->ActTrigger(0);
 
 void __fastcall TZast::ConnectBaseExecute(TObject *Sender)
 {
-/*
-MClient->Act.NextCommand=0;
-String Par="LoadLogins";
-MClient->Act.ParamComm.clear();
-MClient->Act.ParamComm.push_back(Par);
 
-MClient->ConnectDatabase("Diary", true);
-*/
 int TekNumBase=StrToInt(MClient->VTrigger[0].Var);
 //MClient->Act.ParamComm.clear();
 String Path=ExtractFilePath(Application->ExeName);
 MP<TIniFile>Ini(Path+"Admin.ini");
-int NumDatabase=MClient->VDB[TekNumBase].Num;//Ini->ReadInteger("Base"+IntToStr(TekNumBase),"NumDatabase",-1);
-String NameDatabase=MClient->VDB[TekNumBase].Name;//Ini->ReadString("Base"+IntToStr(TekNumBase),"Name","");
+int NumDatabase=MClient->VDB[TekNumBase].Num;
+String NameDatabase=MClient->VDB[TekNumBase].Name;
 
 /////////////////////////////////////////////////
 //НАПИСАТЬ ЦИКЛИЧЕСКОЕ ПОДКЛЮЧЕНИЕ БАЗ
@@ -706,7 +524,6 @@ String NameDatabase=MClient->VDB[TekNumBase].Name;//Ini->ReadString("Base"+IntTo
 /////////////////////////////////////////////////
 MClient->ConnectDatabase(NameDatabase, NumDatabase, true);
 
-//MClient->Act.ParamComm[1]=IntToStr(StrToInt(MClient->Act.ParamComm[1])+1);
 }
 //---------------------------------------------------------------------------
 
@@ -739,12 +556,6 @@ if(ErrorCode==10061 | ErrorCode==10060)
 
 void __fastcall TZast::UpdateOtdelsExecute(TObject *Sender)
 {
-/*
-ShowMessage(MClient->Act.ParamComm[1]);
-ShowMessage(MClient->Act.ParamComm[2]);
-*/
-
-
 MergeOtdels();
 
   MClient->VTrigger[0].Var++;
@@ -752,20 +563,6 @@ MergeOtdels();
 }
 //---------------------------------------------------------------------------
 
-void __fastcall TZast::TriggerExecute(TObject *Sender)
-{
-/*
-if(StrToInt(MClient->Act.ParamComm[1]-1)<StrToInt(MClient->Act.ParamComm[0]))
-{
- MClient->StartAction(MClient->Act.ParamComm[2]);
-}
-else
-{
- MClient->StartAction(MClient->Act.ParamComm[3]);
-}
-*/
-}
-//---------------------------------------------------------------------------
 
 
 void __fastcall TZast::UpdateLoginsExecute(TObject *Sender)
@@ -847,23 +644,14 @@ if(Login->Locate("ServerNum", Log1, SO))
 {
 Log2=Login->FieldByName("Num")->Value;
 }
-else
-{
-//Main->MClient->WriteDiaryEvent("AdminARM ошибка","Сбой объединения списка обслуживаемых подразделений","Номер логина: "+IntToStr(Log1));
-//Mess="Ошибка передачи";
-}
+
 
 int Otd1=TempObslOtd->FieldByName("NumObslOtdel")->Value;
 if(Otdel->Locate("ServerNum", Otd1, SO))
 {
 Otd2=Otdel->FieldByName("Номер подразделения")->Value;
 }
-else
-{
-//Main->MClient->WriteDiaryEvent("AdminARM ошибка","Сбой объединения списка обслуживаемых подразделений","Номер подразделения: "+IntToStr(Otd1));
 
-//Mess="Ошибка передачи";
-}
 
 TempObslOtd->Edit();
 TempObslOtd->FieldByName("Login")->Value=Log2;
@@ -888,7 +676,7 @@ Comm->Execute();
 //---------------------------------------------------------------------------
 void TZast::MergeLogins()
 {
-//Main->MClient->WriteDiaryEvent("AdminARM","Начало объединения логинов","");
+
 try
 {
 MP<TADOCommand>Comm(this);
@@ -949,11 +737,11 @@ Comm->Execute();
 //очистить TempLogins
 Comm->CommandText="Delete * from TempLogins";
 Comm->Execute();
-//Main->MClient->WriteDiaryEvent("AdminARM","Конец объединения логинов","");
+
 }
 catch(...)
 {
-//Main->MClient->WriteDiaryEvent("Ошибка AdminARM","Ошибка объединения логинов"," Ошибка "+IntToStr(GetLastError()));
+
 
 }
 }
@@ -962,8 +750,6 @@ catch(...)
 void __fastcall TZast::SaveLoginsExecute(TObject *Sender)
 {
 Prog->PB->Position++;
-//Zast->MClient->Act.ParamComm.clear();
-//ShowMessage(MClient->VDB.size());
 Zast->MClient->Act.ParamComm.clear();
 Zast->MClient->Act.ParamComm.push_back("SaveObslOtd");
 Zast->MClient->Act.WaitCommand=8;
@@ -976,7 +762,6 @@ Zast->MClient->WriteTable(Zast->MClient->VDB[StrToInt(MClient->VTrigger[0].Var)]
 void __fastcall TZast::SaveObslOtdExecute(TObject *Sender)
 {
 Prog->PB->Position++;
-//Zast->MClient->Act.ParamComm.clear();
 Zast->MClient->Act.ParamComm[0]="SaveTempPodr";
 Zast->MClient->Act.WaitCommand=8;
 
@@ -989,21 +774,9 @@ void __fastcall TZast::SendMergeSaveExecute(TObject *Sender)
 {
 Prog->PB->Position++;
 //отослать команду на начало объединения данных на сервере
-//Zast->MClient->Act.ParamComm.clear();
 Zast->MClient->Act.WaitCommand=9;
 
 ClientSocket->Socket->SendText("Command:9;1|"+IntToStr(Zast->MClient->VDB[StrToInt(MClient->VTrigger[0].Var)].Name.Length())+"#"+Zast->MClient->VDB[StrToInt(MClient->VTrigger[0].Var)].Name+"|");
-
-/*
-int i=MClient->VTrigger[0].Var;
-do
-{
-i++;
-}
-while (Zast->MClient->VDB[i].NumDatabase<0);
-MClient->VTrigger[0].Var=i;
-*/
-
 }
 //---------------------------------------------------------------------------
 
@@ -1011,19 +784,7 @@ void __fastcall TZast::PrepareSaveLoginsExecute(TObject *Sender)
 {
 Prog->PB->Position++;
 Zast->MClient->Act.ParamComm.clear();
-/*
-ShowMessage(MClient->VDB[0].NumDatabase);
-ShowMessage(MClient->VDB[1].NumDatabase);
-ShowMessage(MClient->VDB[2].NumDatabase);
-*/
 
-/*
-Zast->MClient->Act.ParamComm.push_back(IntToStr(MClient->VDB.size()-1));
-Zast->MClient->Act.ParamComm.push_back("0");
-Zast->MClient->Act.ParamComm.push_back("SaveLogins");
-Zast->MClient->Act.ParamComm.push_back("PostSaveLogins");
-Zast->MClient->Act.ParamComm.push_back("Action");
-*/
 Zast->MClient->VTrigger.clear();
 
 Trig T;
@@ -1032,7 +793,6 @@ T.Max=MClient->VDB.size();
 T.TrueAction="SaveLogins";
 T.FalseAction="PostSaveLogins";
 Zast->MClient->VTrigger.push_back(T);
-//SaveLogins->Execute();
 MClient->ActTrigger(0);
 }
 //---------------------------------------------------------------------------
@@ -1046,11 +806,12 @@ Zast->Saved=true;
 if(!Stop)
 {
 Prog->Close();
-ShowMessage("Запись данных завершена");
+ShowMessage("Запись завершена");
 }
 else
 {
 Zast->MClient->WriteDiaryEvent("AdminARM","Завершение работы запись данных","");
+Sleep(2000);
  this->Close();
 }
 }
@@ -1114,13 +875,11 @@ for(TempLogin->First();!TempLogin->Eof;TempLogin->Next())
  }
  else
  {
-// Main->MClient->WriteDiaryEvent("AdminARM ошибка","Сбой чтения с сервера номеров новых логинов","База данных: "+CBDatabase->Text);
   ShowMessage("Ошибка получения ServerNum для новых логинов N="+IntToStr(N));
  }
 }
   MClient->VTrigger[0].Var++;
   MClient->ActTrigger(0);
- //MClient->StartAction("Trigger");
 }
 //---------------------------------------------------------------------------
 
@@ -1155,7 +914,6 @@ T.Max=MClient->VDB.size();
 T.TrueAction="ReadOtdels";
 T.FalseAction="PostRead";
 Zast->MClient->VTrigger.push_back(T);
-//SaveLogins->Execute();
 Prog->PB->Position++;
 
 MClient->ActTrigger(0);
@@ -1175,7 +933,7 @@ Zast->MClient->VTrigger.clear();
   Zast->MClient->Act.WaitCommand=0;
   Prog->PB->Position++;
   Prog->Close();
-ShowMessage("Чтение завершено!");
+ShowMessage("Чтение завершено");
 }
 //---------------------------------------------------------------------------
 
@@ -1188,7 +946,6 @@ T.Max=MClient->VDB.size();
 T.TrueAction="ReadOtdelsAuto";
 T.FalseAction="PostUpdateOtd";
 Zast->MClient->VTrigger.push_back(T);
-//SaveLogins->Execute();
 MClient->ActTrigger(0);
 }
 //---------------------------------------------------------------------------
@@ -1290,7 +1047,6 @@ String ServerSQL;
 
 if(FDiary->EnNDate->Checked & FDiary->EnKDate->Checked)
 {
-//ShowMessage("Включены оба");
 //Включены оба
 
 
@@ -1302,7 +1058,6 @@ else
 {
 if(FDiary->EnNDate->Checked)
 {
-//ShowMessage("Включен начальный");
 //включен только начальный
 ClientSQL="SELECT TempEvents.Num,  TempEvents.Date_Time, TempEvents.Comp, TempEvents.Login, TempEvents.Operation, TempEvents.Prim FROM TempEvents;";
 ServerSQL="SELECT Events.Num,  Events.Date_Time, Events.Comp, Events.Login, Events.Operation, Events.Prim FROM Events WHERE (((Events.Date_Time)>=#"+Dat+"#)) order by Events.Num;";
@@ -1312,7 +1067,6 @@ else
 {
 if(FDiary->EnKDate->Checked)
 {
-//ShowMessage("Включен конечный");
 //включен только конечный
 ClientSQL="SELECT TempEvents.Num,  TempEvents.Date_Time, TempEvents.Comp, TempEvents.Login, TempEvents.Operation, TempEvents.Prim FROM TempEvents;";
 ServerSQL="SELECT Events.Num,  Events.Date_Time, Events.Comp, Events.Login, Events.Operation, Events.Prim FROM Events WHERE (((Events.Date_Time)<=#"+Dat1+"#)) order by Events.Num";

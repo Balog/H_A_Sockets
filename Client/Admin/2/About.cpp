@@ -4,7 +4,6 @@
 #pragma hdrstop
 
 #include "About.h"
-//#include "AdmMain.h"
 #include "Zastavka.h"
 //---------------------------------------------------------------------------
 #pragma package(smart_init)

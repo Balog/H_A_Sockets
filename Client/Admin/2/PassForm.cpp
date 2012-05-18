@@ -69,24 +69,13 @@ if(LG==TabLogin)
 
 Zast->MClient->Login=TabLogin;
 Zast->MClient->LoginResult(TabLogin,EdPass->Text, true);
-
-//Zast->MClient->WriteDiaryEvent("AdminARM","Пароль принят");
-//Main->MClient->WriteDiaryEvent("AdminARM","Пароль принят","");
-//Zast->MClient->SetLogin(TabLogin);
-//Main->Start=true;
-//Main->InputPass=true;
 this->Close();
 
 }
 else
 {
-//Main->Start=false;
-//Zast->MClient->LoginResult(TabLogin,EdPass->Text, false);
 this->Hide();
-//Zast->MClient->WriteDiaryEvent("AdminARM","Неверный пароль","Pass="+EdPass->Text);
-//Main->MClient->WriteDiaryEvent("AdminARM","Неверный пароль","Pass="+EdPass->Text);
 ShowMessage("Пароль ошибочен");
-//Main->InputPass=false;
 Zast->Close();
 }
 
@@ -94,7 +83,6 @@ Zast->Close();
 
 
 this->Hide();
-//Form1->Show();
 }
 //---------------------------------------------------------------------------
 
@@ -105,6 +93,14 @@ if(Key==13)
 {
 Button1->Click();
 }
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TPass::FormCreate(TObject *Sender)
+{
+ShowWindow(Application->Handle,SW_RESTORE);
+SetWindowPos(Handle, HWND_TOPMOST,0,0,0,0,             SWP_NOMOVE|SWP_NOSIZE);
+this->BringToFront();
 }
 //---------------------------------------------------------------------------
 

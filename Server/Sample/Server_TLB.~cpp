@@ -10,7 +10,7 @@
 // ************************************************************************ //
 
 // C++ TLBWRTR : $Revision:   1.151.1.0.1.27  $
-// File generated on 02.05.2012 11:24:53 from Type Library described below.
+// File generated on 18.05.2012 19:46:41 from Type Library described below.
 
 // ************************************************************************  //
 // Type Lib: D:\Program Files (x86)\Borland\CBuilder6\Projects\H_A_Sockets\Server\Sample\Server.tlb (1)

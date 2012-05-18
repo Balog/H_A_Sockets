@@ -22,152 +22,6 @@ __fastcall TForm1::TForm1(TComponent* Owner)
         : TForm(Owner)
 {
 Reg=false;
-/*
-Path=ExtractFilePath(Application->ExeName);
-MP<TIniFile>Ini(Path+"Admin.ini");
-
-int AbsPathAspect=Ini->ReadInteger("Main","AbsPathAspect",1);
-String AspectBase=Ini->ReadString("Main","AdminBase","");
-String DiaryBase=Ini->ReadString("Main","DiaryBase","");
-if(AbsPathAspect==0)
-{
-AdminDatabase=Path+AspectBase;
-DiaryDatabase=Path+DiaryBase;
-}
-else
-{
-AdminDatabase= AspectBase;
-DiaryDatabase=DiaryBase;
-}
-*/
-/*
-Database=new MDBConnector(ExtractFilePath(AdminDatabase), ExtractFileName(AdminDatabase), this);
-Database->SetPatchBackUp("Archive");
-
-int Days=Ini->ReadInteger("Main","StoreArchive",0);
-Database->ClearArchive(Days);
-Database->PackDB();
-Database->Backup("Archive");
-
-Diary=new MDBConnector(ExtractFilePath(DiaryDatabase), ExtractFileName(DiaryDatabase), this);
-Diary->SetPatchBackUp("Archive");
-
-
-Diary->ClearArchive(Days);
-Diary->PackDB();
-Diary->Backup("Archive");
-
-
-MP<TADODataSet>Roles(this);
-Roles->CommandText="Select * from Roles order by Num";
-Roles->Connection=Database;
-Roles->Active=true;
-Role->Clear();
-for(Roles->First();!Roles->Eof;Roles->Next())
-{
-Role->Items->Add(Roles->FieldByName("Name")->AsString);
-}
-Role->ItemIndex=0;
-
-*/
-
-
-
-}
-//---------------------------------------------------------------------------
-
-
-
-
-
-
-
-
-
-
-
-
-void __fastcall TForm1::FormCreate(TObject *Sender)
-{
-/*
-Path=ExtractFilePath(Application->ExeName);
-MP<TIniFile>Ini(Path+"Admin.ini");
-String Server=Ini->ReadString("Main","Server","localhost");
-int Port=Ini->ReadInteger("Main","Port",2000);
-MClient=new Client(ClientSocket, ActionManager1, this);
-
-MClient->VDB.clear();
-CBDatabase->Clear();
-ServerName=Ini->ReadString("Server","ServerName","");
-int Num=Ini->ReadInteger("Server","NumServerBase",0);
-for(int i=0;i<Num;i++)
-{
-String S="Base"+IntToStr(i+1);
-String ServerBase=Ini->ReadString(S,"ServerDatabase","");
-String Name=Ini->ReadString(S,"Name","");
-
-//MClient->AddDatabase(ServerBase);
-
-CDBItem DBI;
-DBI.Name=Name;
-DBI.ServerDB=ServerBase;
-DBI.Num=i;
-DBI.NumDatabase=Ini->ReadInteger(S,"NumDatabase",-1);
-
-if(DBI.NumDatabase>=0)
-{
-CBDatabase->Items->Add(Name);
-}
-
-MClient->VDB.push_back(DBI);
-}
-CBDatabase->ItemIndex=0;
-
-
-int AbsPathAspect=Ini->ReadInteger("Main","AbsPathAspect",1);
-String AspectBase=Ini->ReadString("Main","AdminBase","");
-String DiaryBase=Ini->ReadString("Main","DiaryBase","");
-if(AbsPathAspect==0)
-{
-AdminDatabase=Path+AspectBase;
-DiaryDatabase=Path+DiaryBase;
-}
-else
-{
-AdminDatabase= AspectBase;
-DiaryDatabase=DiaryBase;
-}
-
-MClient->Database=new MDBConnector(ExtractFilePath(AdminDatabase), ExtractFileName(AdminDatabase), this);
-MClient->Database->SetPatchBackUp("Archive");
-
-int Days=Ini->ReadInteger("Main","StoreArchive",0);
-MClient->Database->ClearArchive(Days);
-MClient->Database->PackDB();
-MClient->Database->Backup("Archive");
-
-MClient->Diary=new MDBConnector(ExtractFilePath(DiaryDatabase), ExtractFileName(DiaryDatabase), this);
-MClient->Diary->SetPatchBackUp("Archive");
-
-
-MClient->Diary->ClearArchive(Days);
-MClient->Diary->PackDB();
-MClient->Diary->Backup("Archive");
-
-MP<TADODataSet>Roles(this);
-Roles->CommandText="Select * from Roles order by Num";
-Roles->Connection=MClient->Database;
-Roles->Active=true;
-Role->Clear();
-for(Roles->First();!Roles->Eof;Roles->Next())
-{
-Role->Items->Add(Roles->FieldByName("Name")->AsString);
-}
-Role->ItemIndex=0;
-
-
-MClient->Connect(Server, Port);
- */
 }
 //---------------------------------------------------------------------------
 
@@ -187,10 +41,6 @@ Zast->PrepareSaveLogins->Execute();
 
 
  Action=caNone;
-
-//Timer1->Interval=6000;
-// Timer1->Enabled=true;
-//MClient->Stop();
  break;
  }
  case IDNO:
@@ -199,10 +49,7 @@ Zast->MClient->WriteDiaryEvent("AdminARM","Завершение работы отказ от записи",""
 Zast->Stop=true;
 Sleep(2000);
 Zast->Close();
-// Action=caFree;
  Action=caNone;
-// Timer1->Interval=1000;
-//  Timer1->Enabled=true;
  break;
  }
  case IDCANCEL:
@@ -253,13 +100,11 @@ Tab->First();
 Tab->MoveBy(NumLogin);
 int N1=Tab->FieldByName("Num")->AsInteger;
 
-//int NumLogin=TempLogin->FieldByName("Num")->Value;
 MP<TADODataSet>Verify(this);
 Verify->Connection=Zast->MClient->Database;
 
 Verify->Active=false;
 Verify->CommandText="SELECT ObslOtdel.Login, Подразделения.[Название подразделения] FROM Подразделения INNER JOIN ObslOtdel ON Подразделения.[Номер подразделения] = ObslOtdel.NumObslOtdel  where Login="+IntToStr(N1)+" Order by NumObslOtdel";
-//Verify->CommandText="SELECT ObslOtdel.Login, Подразделения.[Название подразделения], Подразделения.NumDatabase, ObslOtdel.NumObslOtdel FROM Подразделения INNER JOIN ObslOtdel ON (Подразделения.NumDatabase = ObslOtdel.NumDatabase) AND (Подразделения.[Номер подразделения] = ObslOtdel.NumObslOtdel) WHERE Подразделения.NumDatabase="+IntToStr(Main->VDB[Main->GetIDDBName(Main->CBDatabase->Text)].NumDatabase)+" ORDER BY ObslOtdel.NumObslOtdel;";
 Verify->Active=true;
 Otdels->Clear();
 for(Verify->First();!Verify->Eof;Verify->Next())
@@ -281,42 +126,6 @@ void __fastcall TForm1::CBDatabaseClick(TObject *Sender)
 UpdateTempLogin();
 Form1->Users->ItemIndex=0;
 UpdateOtdel(0);
-/*
-//Main->MClient->WriteDiaryEvent("AdminARM","Переключение базы данных","База данных: "+CBDatabase->Text);
-//LicCount=Zast->MClient->GetLicenseCount(CBDatabase->Text);
-Reg=LicCount!=0;
-//MClient->SetDatabaseConnect(MClient->IDC(), CBDatabase->ItemIndex, true);
-try
-{
-//Zast->MClient->
-//VerifyLicense(CBDatabase->Text);
-
-//UpdateOtdels();
-Zast->UpdateLogins->Execute();
-
-Zast->MClient->VTrigger.clear();
-Trig T;
-T.Var=CBDatabase->ItemIndex;
-T.Max=Zast->MClient->VDB.size();
-T.TrueAction="";
-T.FalseAction="";
-Zast->MClient->VTrigger.push_back(T);
-//SaveLogins->Execute();
-Zast->MClient->ActTrigger(0);
-
- Zast->MClient->Act.ParamComm.clear();
- Zast->MClient->Act.ParamComm.push_back("UpdateOtdels");
-
- Zast->MClient->ReadTable(CBDatabase->Text,"Select [Номер подразделения], [Название подразделения] from Подразделения", "Select [Номер подразделения], [Название подразделения] from TempПодразделения");
-
-
-//Main->MClient->WriteDiaryEvent("AdminARM","Переключение базы данных завершено","База данных: "+CBDatabase->Text);
-}
-catch(...)
-{
-//Main->MClient->WriteDiaryEvent("AdminARM ошибка","Ошибка переключения базы данных","База данных: "+CBDatabase->Text);
-}
-*/
 }
 //---------------------------------------------------------------------------
 
@@ -470,7 +279,6 @@ FreeOtdel->Items->Add(M);
 
 MP<TADODataSet>Tab(this);
 Tab->Connection=Zast->MClient->Database;
-//Tab->CommandText="SELECT Подразделения.[Номер подразделения], Подразделения.[Название подразделения], ObslOtdel.NumObslOtdel FROM Подразделения LEFT JOIN ObslOtdel ON Подразделения.[Номер подразделения] = ObslOtdel.NumObslOtdel WHERE (((ObslOtdel.NumObslOtdel) Is Null));";
 Tab->CommandText="SELECT Подразделения.[Номер подразделения], Подразделения.[Название подразделения], Подразделения.Del, Подразделения.NumDatabase FROM Подразделения LEFT JOIN ObslOtdel ON Подразделения.[Номер подразделения] = ObslOtdel.[NumObslOtdel] WHERE (((Подразделения.NumDatabase)="+IntToStr(Zast->MClient->VDB[Zast->MClient->GetIDDBName(Form1->CBDatabase->Text)].NumDatabase)+") AND ((ObslOtdel.NumObslOtdel) Is Null));";
 Tab->Active=true;
 
@@ -488,7 +296,6 @@ if(Role->ItemIndex>=2)
 if(Tab->RecordCount==0)
 {
 TMenuItem *M=new TMenuItem(FreeOtdel);
-M=new TMenuItem(FreeOtdel);
 M->Caption="Нет свободных подразделений";
 M->Tag=0;
 M->Enabled=false;
@@ -499,7 +306,6 @@ FreeOtdel->Items->Add(M);
 else
 {
 TMenuItem *M=new TMenuItem(FreeOtdel);
-M=new TMenuItem(FreeOtdel);
 M->Caption="Выберите логин";
 M->Tag=0;
 M->Enabled=false;
@@ -555,23 +361,6 @@ UpdateOtdel(Users->ItemIndex);
 //--------------------------------------------------------------------------
 void __fastcall TForm1::N5Click(TObject *Sender)
 {
-//Чтение подразделений, логинов и таблицы распределения
-
-//Чтение подразделений
-/*
-MP<TADOCommand>Comm(this);
-Comm->Connection=Zast->MClient->Database;
-Comm->CommandText="Delete * From TempПодразделения";
-Comm->Execute();
-
-
-
- Zast->MClient->Act.ParamComm.clear();
- Zast->MClient->Act.ParamComm.push_back("UpdateOtdelsMan");
- Zast->MClient->Act.NextCommand=5;
-
- Zast->MClient->ReadTable(CBDatabase->Text,"Select [Номер подразделения], [Название подразделения] from Подразделения", "Select [Номер подразделения], [Название подразделения] from TempПодразделения");
-*/
 Prog->PB->Min=0;
 Prog->PB->Position=0;
 Prog->PB->Max=Zast->MClient->VDB.size()*5;
@@ -584,6 +373,10 @@ Zast->PrepareRead->Execute();
 
 void __fastcall TForm1::N6Click(TObject *Sender)
 {
+Prog->PB->Min=0;
+Prog->PB->Position=0;
+Prog->PB->Max=Zast->MClient->VDB.size()*5;
+Prog->Show();
 Zast->Saved=false;
 Zast->PrepareSaveLogins->Execute();
 }
@@ -627,13 +420,42 @@ void __fastcall TForm1::N9Click(TObject *Sender)
 this->Close();
 }
 //---------------------------------------------------------------------------
+void __fastcall TForm1::WMSysCommand(TMessage & Msg)
+{
+  switch (Msg.WParam)
+  {
+/*
+case SC_MINIMIZE:
+{
+ Shell_NotifyIcon(NIM_ADD, &NID);
+  BCreate->Enabled = false;
+ BDelete->Enabled = true;
+ BHide->Enabled = true;
+Form1->Visible=false;
+//ShowMessage("SC_MINIMIZE");
+                     break;
+}
+*/
+case SC_MINIMIZE:
+{
 
-void __fastcall TForm1::Timer1Timer(TObject *Sender)
-{
-if(Zast->Saved)
-{
-Zast->Close();
+//  Shell_NotifyIcon(NIM_ADD, &NID);
+//  BCreate->Enabled = false;
+// BDelete->Enabled = true;
+// BHide->Enabled = true;
+//Form1->Visible=false;
+//SendMessage(Handle,WM_SYSCOMMAND,SC_MINIMIZE,0);
+
+//ShowMessage("SC_Close");
+Application->Minimize();
+break;
 }
+
+default:
+DefWindowProc(Handle,Msg.Msg,Msg.WParam,Msg.LParam);
+
+ }
+
 }
-//---------------------------------------------------------------------------
+//-------------------------------------------------------------------
 

@@ -49,9 +49,6 @@ __published:	// IDE-managed Components
         TMenuItem *N10;
         TMenuItem *N8;
         TMenuItem *N9;
-        TTimer *DBTimer;
-        TTimer *Timer1;
-        void __fastcall FormCreate(TObject *Sender);
         void __fastcall FormClose(TObject *Sender, TCloseAction &Action);
         void __fastcall RoleChange(TObject *Sender);
         void __fastcall FormShow(TObject *Sender);
@@ -71,7 +68,6 @@ __published:	// IDE-managed Components
         void __fastcall N10Click(TObject *Sender);
         void __fastcall N8Click(TObject *Sender);
         void __fastcall N9Click(TObject *Sender);
-        void __fastcall Timer1Timer(TObject *Sender);
 private:	// User declarations
 String Path;
 String AdminDatabase;
@@ -92,6 +88,10 @@ bool Reg;
 void UpdateTempLogin();
 void UpdateOtdel(int NumLogin);
 //Client *MClient;
+        BEGIN_MESSAGE_MAP
+          VCL_MESSAGE_HANDLER(WM_SYSCOMMAND, TMessage, WMSysCommand)
+        END_MESSAGE_MAP(TComponent);
+void __fastcall WMSysCommand(TMessage & Msg);        
 };
 //---------------------------------------------------------------------------
 extern PACKAGE TForm1 *Form1;
