@@ -69,7 +69,7 @@ else
  char S[256];
  fgets(S, 257, F);
  String Text=S;
- int LC=AnalizLic(Text, BI.Name);
+ int LC=AnalizLic(Text, BI.Name+"1");
 //Form1->MyClients->DiaryEvent->WriteEvent(Now(),"Не определен", "Еще не определен" "Лицензия", "Файл лицензии расшифрован", "DB: "+BI.Name+" NumUsers="+IntToStr(LC)); //ShowMessage("Файл лицензии открыт");
 
  BI.LicCount=LC;

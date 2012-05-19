@@ -1036,18 +1036,13 @@ void __fastcall TForm1::WMSysCommand(TMessage & Msg)
 {
   switch (Msg.WParam)
   {
-/*
+
 case SC_MINIMIZE:
 {
- Shell_NotifyIcon(NIM_ADD, &NID);
-  BCreate->Enabled = false;
- BDelete->Enabled = true;
- BHide->Enabled = true;
-Form1->Visible=false;
-//ShowMessage("SC_MINIMIZE");
-                     break;
+Application->Minimize();
+break;
 }
-*/
+
 case SC_CLOSE:
 {
 
