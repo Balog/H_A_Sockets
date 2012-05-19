@@ -76,6 +76,8 @@ else
 {
 this->Hide();
 ShowMessage("Пароль ошибочен");
+Zast->MClient->LoginResult(TabLogin,EdPass->Text, false);
+Sleep(2000);
 Zast->Close();
 }
 

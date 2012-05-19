@@ -198,6 +198,13 @@ UpdateOtdel(N);
 void __fastcall TForm1::N1Click(TObject *Sender)
 {
 //Добавить логин
+int Lic=Zast->MClient->VDB[Zast->MClient->GetIDDBName(Form1->CBDatabase->Text)].NumLicense;
+if(Lic<=Users->Count & Role->ItemIndex==2 & Lic!=-1 )
+{
+ ShowMessage("Достигнуто максимальное количество пользователей!");
+}
+else
+{
 EditLogins->Log->Text="";
 EditLogins->Pass1->Text="";
 EditLogins->Pass2->Text="";
@@ -206,6 +213,7 @@ EditLogins->Mode=false;
 EditLogins->NumLogin=-1;
 
 EditLogins->ShowModal();
+}
 }
 //---------------------------------------------------------------------------
 
