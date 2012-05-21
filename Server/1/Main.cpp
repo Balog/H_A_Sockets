@@ -30,7 +30,7 @@ int NumBase=Ini->ReadInteger("Main","NumDatabases",0);
 int DiaryStoreDays=Ini->ReadInteger("Main","DiaryStoreDays",0);
 int Days=Ini->ReadInteger("Main","StoreArchive",0);
 int Port=Ini->ReadInteger("Main","Port",2000);
-ServerSocket->Port=Port;
+
 
 Cl=new Clients(this);
 
@@ -178,7 +178,7 @@ for(unsigned int i=0;i<Cl->VBases.size();i++)
 VerifyLicense();
 
 
-
+ServerSocket->Port=Port;
 ServerSocket->Active=true;
 Cl->DiaryEvent->WriteEvent(Now(),"Не определен", "Не известен", "Сервер", "Сервер инициирован", "");
 }
@@ -261,6 +261,36 @@ for(unsigned int i=0;i<Cl->VClients.size();i++)
 //Cl->DiaryEvent->WriteEvent(Now(),Cl->VClients[i]->IP,Cl->VClients[i]->Login , "Сервер", "Клиент отключен","Путь: "+Cl->VClients[i]->AppPatch);
  Comp=Cl->VClients[i]->IP;
  Login=Cl->VClients[i]->Login;
+ if(Cl->VClients[i]->SDubl==true)
+ {
+  //Сокет не ответил при поиске дубля.
+  //Надо удалить его из списка и разрешить подключиться новому клиенту
+
+  delete Cl->VClients[i];
+Cl->VClients.erase(Cl->IVC);
+
+  Form1->ListBox1->Clear();
+for(unsigned int i=0; i<Cl->VClients.size();i++)
+{
+String App;
+if(ExtractFileName(Cl->VClients[i]->AppPatch)=="AdminARM.exe")
+{
+ App="AdminARM";
+}
+if(ExtractFileName(Cl->VClients[i]->AppPatch)=="NetAspects.exe")
+{
+ App="Aspects";
+}
+if(ExtractFileName(Cl->VClients[i]->AppPatch)=="Hazards.exe")
+{
+ App="Hazards";
+}
+ Form1->ListBox1->Items->Add(Cl->VClients[i]->IP+" "+App);
+}
+Cl->VClients[i]->Socket->SendText("Command:10;1|1#1");
+//this->Socket->SendText("Command:10;1|1#1");
+ }
+ break;
  }
  Cl->IVC++;
 }

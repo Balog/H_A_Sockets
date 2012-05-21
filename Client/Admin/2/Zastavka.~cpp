@@ -811,6 +811,7 @@ ShowMessage("Запись завершена");
 else
 {
 Zast->MClient->WriteDiaryEvent("AdminARM","Завершение работы запись данных","");
+Sleep(2000);
  this->Close();
 }
 }

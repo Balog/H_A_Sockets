@@ -77,6 +77,7 @@ TCustomWinSocket *Socket;
 String IP;
 String AppPatch;
 int LastCommand;
+bool SDubl;
 
 void CommandExec(int Comm, vector<String>);
 

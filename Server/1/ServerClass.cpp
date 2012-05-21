@@ -53,11 +53,29 @@ DiaryEvent=new Diary(pOwner, DiaryPatch);
 //----------------------------------------------------
 void Clients::SearchDubl(String IP, String Login, String AppPatch, TCustomWinSocket *S)
 {
+bool Dubl=false;
+int Di=0;
 IVC=VClients.begin();
 for(unsigned int i=0;i<VClients.size();i++)
 {
-if(VClients[i]->IP==IP & VClients[i]->Login==Login & VClients[i]->AppPatch==AppPatch & VClients[i]->Socket!=S)
+if(VClients[i]->Login==Login & VClients[i]->Socket!=S)
 {
+//Найден дубликат
+Dubl=true;
+Di=i;
+break;
+}
+IVC++;
+}
+if(Dubl)
+{
+ //найден дубдикат надо сделать проверку его работоспособности
+VClients[Di]->LastCommand=0;
+VClients[Di]->SDubl=true;
+
+VClients[Di]->Socket->SendText("Command:0;0|");
+
+ /*
 delete VClients[i];
 VClients.erase(IVC);
 
@@ -79,11 +97,13 @@ if(ExtractFileName(VClients[i]->AppPatch)=="Hazards.exe")
 }
  Form1->ListBox1->Items->Add(VClients[i]->IP+" "+App);
 }
+ */
+}
+else
+{
+S->SendText("Command:6;0|");
+}
 
-break;
-}
-IVC++;
-}
 }
 //********************************************************
 Client::Client(Clients* Cls)
@@ -91,7 +111,7 @@ Client::Client(Clients* Cls)
  Parent=Cls;
  Login="Не известен";
 // Role=-1;
-
+SDubl=false;
 }
 //**************************************************
 Client::~Client()
@@ -105,10 +125,26 @@ VForm.clear();
 //***************************************************
 void Client::CommandExec(int Comm, vector<String>Parameters)
 {
+SDubl=false;
 if(LastCommand==Comm | LastCommand==0)
 {
  switch(Comm)
  {
+  case 0:
+  {
+
+   //если существующий логин ответил то надо подать команду на отключение нового клиента
+   //this->Socket->SendText("Command:10;1|1#0");
+   for(unsigned int i=0; i<Parent->VClients.size();i++)
+   {
+    if(Parent->VClients[i]->Login==this->Login & Parent->VClients[i]->Socket!=this->Socket)
+    {
+    Parent->WriteDiaryEvent(Parent->VClients[i]->IP, Login, "Сервер", "Передача команды прекращения работы", "Уже работает на IP: "+IP);
+     Parent->VClients[i]->Socket->SendText("Command:10;1|1#0");
+    }
+   }
+  break;
+  }
   case 1:
   {
 
@@ -218,7 +254,7 @@ if(ExtractFileName(Parent->VClients[i]->AppPatch)=="Hazards.exe")
 
    Parent->SearchDubl(IP, Login, AppPatch, this->Socket);
 
-   this->Socket->SendText("Command:6;0|");
+
 
    }
    else
