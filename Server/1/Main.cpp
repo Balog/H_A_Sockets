@@ -212,6 +212,7 @@ this->ChangeCountClient(this);
 void __fastcall TForm1::ServerSocketClientDisconnect(TObject *Sender,
       TCustomWinSocket *Socket)
 {
+
 Cl->IVC=Cl->VClients.begin();
 for(unsigned int i=0;i<Cl->VClients.size();i++)
 {
@@ -241,11 +242,12 @@ if(ExtractFileName(Cl->VClients[i]->AppPatch)=="Hazards.exe")
 {
  App="Опасности";
 }
- Form1->ListBox1->Items->Add(Cl->VClients[i]->IP+" "+App);
+ Form1->ListBox1->Items->Add(Cl->VClients[i]->IP+" "+App+" "+Cl->VClients[i]->Login);
 
 
 }
 this->ChangeCountClient(this);
+
 }
 //---------------------------------------------------------------------------
 void __fastcall TForm1::ServerSocketClientError(TObject *Sender,
@@ -261,10 +263,8 @@ for(unsigned int i=0;i<Cl->VClients.size();i++)
 //Cl->DiaryEvent->WriteEvent(Now(),Cl->VClients[i]->IP,Cl->VClients[i]->Login , "Сервер", "Клиент отключен","Путь: "+Cl->VClients[i]->AppPatch);
  Comp=Cl->VClients[i]->IP;
  Login=Cl->VClients[i]->Login;
- if(Cl->VClients[i]->SDubl==true)
- {
-  //Сокет не ответил при поиске дубля.
-  //Надо удалить его из списка и разрешить подключиться новому клиенту
+
+
 
   delete Cl->VClients[i];
 Cl->VClients.erase(Cl->IVC);
@@ -285,11 +285,11 @@ if(ExtractFileName(Cl->VClients[i]->AppPatch)=="Hazards.exe")
 {
  App="Hazards";
 }
- Form1->ListBox1->Items->Add(Cl->VClients[i]->IP+" "+App);
+ Form1->ListBox1->Items->Add(Cl->VClients[i]->IP+" "+App+" "+Cl->VClients[i]->Login);
 }
-Cl->VClients[i]->Socket->SendText("Command:10;1|1#1");
-//this->Socket->SendText("Command:10;1|1#1");
- }
+//Cl->VClients[i]->Socket->SendText("Command:10;1|1#1");
+
+
  break;
  }
  Cl->IVC++;

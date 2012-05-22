@@ -41,6 +41,13 @@ if(Act.WaitCommand==Comm | Act.WaitCommand==0)
 {
 switch(Comm)
 {
+ case 0:
+ {
+ Act.WaitCommand=0;
+ String Mess="Command:0;1|"+IntToStr(IP.Length())+"#"+IP+"|";
+ Socket->Socket->SendText(Mess);
+ break;
+ }
  case 1:
  {
 
@@ -134,6 +141,22 @@ Zast->PrepareUpdateOtd->Execute();
  {
  //ShowMessage("Запись данных завершена");
  StartAction("LoadNewLogins");
+ break;
+ }
+ case 10:
+ {
+ if(Parameters[0]=="0")
+ {
+ //Команда на отключение клиента. В соединении отказано.
+
+ ShowMessage("В соединении отказано. Клиент с таким логином уже подключен к серверу");
+ Zast->Close();
+ }
+ else
+ {
+  //Команда на продолжение работы
+  Zast->PrepareUpdateOtd->Execute();
+ }
  break;
  }
 }
@@ -396,7 +419,7 @@ void Client::LoginResult(String Login, String Pass, bool Ok)
 //Проверку пароля произвожу на клиенте для компактности кода и быстродействия
 //От сервера ожидаем только квитанции о прохождении команды. Если пароль неверен то назад ничего не отсылается вообще.
  Act.ParamComm.clear();
- Act.WaitCommand=6;
+ Act.WaitCommand=0;
 
 if(Ok)
 {

@@ -73,8 +73,35 @@ if(Dubl)
 VClients[Di]->LastCommand=0;
 VClients[Di]->SDubl=true;
 
+try
+{
 VClients[Di]->Socket->SendText("Command:0;0|");
+}
+catch(...)
+{
+//Cl->VClients[i]->Socket->SendText("Command:10;1|1#1");
+delete VClients[Di];
+VClients.erase(IVC);
 
+Form1->ListBox1->Clear();
+for(unsigned int i=0; i<VClients.size();i++)
+{
+String App;
+if(ExtractFileName(VClients[i]->AppPatch)=="AdminARM.exe")
+{
+ App="AdminARM";
+}
+if(ExtractFileName(VClients[i]->AppPatch)=="NetAspects.exe")
+{
+ App="Aspects";
+}
+if(ExtractFileName(VClients[i]->AppPatch)=="Hazards.exe")
+{
+ App="Hazards";
+}
+ Form1->ListBox1->Items->Add(VClients[i]->IP+" "+App+" "+VClients[i]->Login);
+}
+}
  /*
 delete VClients[i];
 VClients.erase(IVC);
@@ -139,7 +166,7 @@ if(LastCommand==Comm | LastCommand==0)
    {
     if(Parent->VClients[i]->Login==this->Login & Parent->VClients[i]->Socket!=this->Socket)
     {
-    Parent->WriteDiaryEvent(IP, Login, "Служебное", "Передача команды прекращения работы", "IP: "+Parent->VClients[i]->IP);
+    Parent->WriteDiaryEvent(Parent->VClients[i]->IP, Login, "Сервер", "Передача команды прекращения работы", "Уже работает на IP: "+IP);
      Parent->VClients[i]->Socket->SendText("Command:10;1|1#0");
     }
    }
@@ -176,7 +203,7 @@ if(ExtractFileName(Parent->VClients[i]->AppPatch)=="Hazards.exe")
 {
  App="Hazards";
 }
- Form1->ListBox1->Items->Add(Parent->VClients[i]->IP+" "+App);
+ Form1->ListBox1->Items->Add(Parent->VClients[i]->IP+" "+App+" "+Parent->VClients[i]->Login);
 }
   break;
   }

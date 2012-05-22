@@ -73,7 +73,20 @@ if(Dubl)
 VClients[Di]->LastCommand=0;
 VClients[Di]->SDubl=true;
 
+try
+{
 VClients[Di]->Socket->SendText("Command:0;0|");
+}
+catch(...)
+{
+//Cl->VClients[i]->Socket->SendText("Command:10;1|1#1");
+delete VClients[Di];
+VClients.erase(IVC);
+
+
+}
+
+
 
  /*
 delete VClients[i];
@@ -103,7 +116,24 @@ else
 {
 S->SendText("Command:6;0|");
 }
-
+Form1->ListBox1->Clear();
+for(unsigned int i=0; i<VClients.size();i++)
+{
+String App;
+if(ExtractFileName(VClients[i]->AppPatch)=="AdminARM.exe")
+{
+ App="AdminARM";
+}
+if(ExtractFileName(VClients[i]->AppPatch)=="NetAspects.exe")
+{
+ App="Aspects";
+}
+if(ExtractFileName(VClients[i]->AppPatch)=="Hazards.exe")
+{
+ App="Hazards";
+}
+ Form1->ListBox1->Items->Add(VClients[i]->IP+" "+App+" "+VClients[i]->Login);
+}
 }
 //********************************************************
 Client::Client(Clients* Cls)
@@ -176,7 +206,7 @@ if(ExtractFileName(Parent->VClients[i]->AppPatch)=="Hazards.exe")
 {
  App="Hazards";
 }
- Form1->ListBox1->Items->Add(Parent->VClients[i]->IP+" "+App);
+ Form1->ListBox1->Items->Add(Parent->VClients[i]->IP+" "+App+" "+Parent->VClients[i]->Login);
 }
   break;
   }
