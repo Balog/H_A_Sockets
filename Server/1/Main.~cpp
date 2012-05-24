@@ -232,20 +232,22 @@ for(unsigned int i=0; i<Cl->VClients.size();i++)
 String App;
 if(ExtractFileName(Cl->VClients[i]->AppPatch)=="AdminARM.exe")
 {
- App="Админ";
+ App="AdminARM";
 }
 if(ExtractFileName(Cl->VClients[i]->AppPatch)=="NetAspects.exe")
 {
- App="Аспекты";
+ App="Aspects";
 }
 if(ExtractFileName(Cl->VClients[i]->AppPatch)=="Hazards.exe")
 {
- App="Опасности";
+ App="Hazards";
 }
- Form1->ListBox1->Items->Add(Cl->VClients[i]->IP+" "+App);
+ Form1->ListBox1->Items->Add(Cl->VClients[i]->IP+" "+App+" "+Cl->VClients[i]->Login);
+}
+// Form1->ListBox1->Items->Add(Cl->VClients[i]->IP+" "+App+" "+Cl->VClients[i]->Login);
 
 
-}
+//}
 this->ChangeCountClient(this);
 
 }
