@@ -75,7 +75,7 @@ MDBConnector* ADOConn;
 MDBConnector* ADOAspect;
 MDBConnector* ADOUsrAspect;
 //MDBConnector* Diary;
-void LoginResult(String Login, String Pass, bool Ok);
+void LoginResult(String Login, String Pass, int NumRole, bool Ok);
 int GetLicenseCount(String DBName);
 void WriteDiaryEvent(String Type, String Name, String Prim);
 void WriteDiaryEvent(String Type, String Name);

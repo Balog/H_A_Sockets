@@ -71,10 +71,11 @@ void ActTrigger(int NumTrigger);
 int GetIDDBName(String Name);
 void RegisterDatabase(String Name, int NumLic);
 
-MDBConnector* Database;
-MDBConnector* Reference;;
+MDBConnector* ADOConn;
+MDBConnector* ADOAspect;
+MDBConnector* ADOUsrAspect;
 //MDBConnector* Diary;
-void LoginResult(String Login, String Pass, bool Ok);
+void LoginResult(String Login, String Pass, int NumRole, bool Ok);
 int GetLicenseCount(String DBName);
 void WriteDiaryEvent(String Type, String Name, String Prim);
 void WriteDiaryEvent(String Type, String Name);
@@ -89,7 +90,7 @@ TActionManager *ActionManager;
 TForm *Owner;
 void VerifyLicense(String NameDB);
 String IP;
-String TableToStr(String SQLText);
+String TableToStr(String NameDB, String SQLText);
 
 };
 //****************************************

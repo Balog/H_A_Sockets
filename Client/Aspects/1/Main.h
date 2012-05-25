@@ -12,62 +12,180 @@
 #include "ClientClass.h"
 #include <ActnList.hpp>
 #include <ActnMan.hpp>
+#include <ComCtrls.hpp>
+#include <DBActns.hpp>
+#include <DBCtrls.hpp>
+#include <DBGrids.hpp>
+#include <Grids.hpp>
 #include <vector>
+#include <deque>
 #include "MDBConnector.h"
 //#include "Diary.h"
 #ifndef MainH
 #define MainH
 //---------------------------------------------------------------------------
+
+
+
+
+typedef struct MyNode
+{
+//  AnsiString FName, LName;
+int Number;
+int Parent;
+ bool Node;
+} TMyNode;
+typedef TMyNode* PMyNode;
+//---------------------------------------------------------------------------
 using namespace std;
+//---------------------------------------------------------------------------
+struct Node
+{
+ int Number;
+ int Parent;
 
-
+ TTreeNode *Nod;
+};
 //---------------------------------------------------------------------------
 
-
-class TForm1 : public TForm
+class TDocuments : public TForm
 {
 __published:	// IDE-managed Components
-        TLabel *Label1;
-        TLabel *Label2;
-        TLabel *Label3;
-        TLabel *Label4;
-        TComboBox *Role;
-        TListBox *Users;
-        TListBox *Otdels;
-        TComboBox *CBDatabase;
-        TADOConnection *Database1;
-        TPopupMenu *PopupMenu1;
-        TMenuItem *N1;
-        TMenuItem *N2;
-        TMenuItem *N3;
-        TMenuItem *N4;
-        TPopupMenu *FreeOtdel;
+        TPageControl *PageControl1;
+        TTabSheet *TabMetod;
+        TDBMemo *DBMemo1;
+        TPanel *Panel1;
+        TCheckBox *ReadMetod;
+        TButton *Button1;
+        TTabSheet *TabPodr;
+        TDBGrid *DBGrid2;
+        TPanel *Panel2;
+        TButton *Button2;
+        TTabSheet *TabCryt;
+        TDBGrid *DBGrid1;
+        TPanel *Panel3;
+        TButton *Button3;
+        TTabSheet *TabSit;
+        TDBGrid *DBGrid3;
+        TPanel *Panel9;
+        TButton *Button9;
+        TTabSheet *TabVozd;
+        TTreeView *TreeView1;
+        TPanel *Panel4;
+        TButton *Button4;
+        TTabSheet *TabMeropr;
+        TTreeView *TreeView2;
+        TPanel *Panel5;
+        TButton *Button5;
+        TTabSheet *TabTerr;
+        TTreeView *TreeView3;
+        TPanel *Panel6;
+        TButton *Button6;
+        TTabSheet *TabDeyat;
+        TTreeView *TreeView4;
+        TPanel *Panel7;
+        TButton *Button7;
+        TTabSheet *TabAspects;
+        TTreeView *TreeView5;
+        TPanel *Panel8;
+        TButton *Button8;
         TMainMenu *MainMenu1;
-        TMenuItem *N5;
+        TMenuItem *N4;
+        TMenuItem *N2;
+        TMenuItem *N27;
+        TMenuItem *N26;
+        TMenuItem *N28;
         TMenuItem *N6;
         TMenuItem *N7;
-        TMenuItem *N10;
+        TMenuItem *N20;
+        TMenuItem *N24;
+        TMenuItem *N25;
+        TMenuItem *N29;
+        TMenuItem *N31;
+        TMenuItem *N5;
+        TMenuItem *N18;
+        TMenuItem *N38;
+        TMenuItem *N37;
+        TMenuItem *N39;
+        TMenuItem *N32;
+        TMenuItem *N33;
+        TMenuItem *N34;
+        TMenuItem *N35;
+        TMenuItem *N36;
+        TMenuItem *N40;
+        TMenuItem *N41;
+        TMenuItem *N19;
+        TMenuItem *N21;
+        TMenuItem *N00111;
+        TMenuItem *N00121;
+        TMenuItem *N22;
+        TMenuItem *N1;
+        TMenuItem *N23;
         TMenuItem *N8;
+        TADODataSet *Nodes;
+        TADODataSet *Branches;
+        TADOCommand *Comm;
+        TPopupMenu *PopupMenu5;
+        TMenuItem *N16;
+        TMenuItem *N17;
+        TPopupMenu *PopupMenu4;
+        TMenuItem *N14;
+        TMenuItem *N15;
+        TPopupMenu *PopupMenu3;
+        TMenuItem *N12;
+        TMenuItem *N13;
+        TPopupMenu *PopupMenu2;
+        TMenuItem *N10;
+        TMenuItem *N11;
+        TPopupMenu *PopupMenu1;
+        TMenuItem *N3;
         TMenuItem *N9;
+        TADODataSet *Podr;
+        TDataSource *DataSource2;
+        TPopupMenu *PopupMenu7;
+        TMenuItem *MenuItem3;
+        TMenuItem *MenuItem4;
+        TDataSource *DataSource1;
+        TADODataSet *ADODataSet1;
+        TADODataSet *Sit;
+        TDataSource *DataSource3;
+        TADODataSet *Metod;
+        TPopupMenu *PopupMenu6;
+        TMenuItem *MenuItem1;
+        TMenuItem *MenuItem2;
+        TPopupMenu *PopupMenu8;
+        TMenuItem *MenuItem5;
+        TMenuItem *MenuItem6;
+        TDataSource *DataSource5;
+        TActionManager *ActionManager1;
+        TDataSetPost *DataSetPost1;
+        TDataSetPost *DataSetPost2;
+        TDataSetPost *DataSetPost3;
+        TDataSetPost *DataSetPost4;
+        TDataSetRefresh *DataSetRefresh1;
+        TDataSetRefresh *DataSetRefresh2;
+        TDataSetRefresh *DataSetRefresh3;
+        TDataSetRefresh *DataSetRefresh4;
+        TADODataSet *Temp;
+        TADODataSet *ADODataSet2;
         void __fastcall FormClose(TObject *Sender, TCloseAction &Action);
-        void __fastcall RoleChange(TObject *Sender);
         void __fastcall FormShow(TObject *Sender);
-        void __fastcall CBDatabaseClick(TObject *Sender);
-        void __fastcall UsersMouseDown(TObject *Sender,
-          TMouseButton Button, TShiftState Shift, int X, int Y);
-        void __fastcall N3Click(TObject *Sender);
-        void __fastcall N1Click(TObject *Sender);
-        void __fastcall N2Click(TObject *Sender);
-        void __fastcall N4Click(TObject *Sender);
-        void __fastcall OtdelsMouseDown(TObject *Sender,
-          TMouseButton Button, TShiftState Shift, int X, int Y);
-        void __fastcall N5Click(TObject *Sender);
-        void __fastcall N6Click(TObject *Sender);
-        void __fastcall UsersClick(TObject *Sender);
-        void __fastcall N7Click(TObject *Sender);
-        void __fastcall N10Click(TObject *Sender);
-        void __fastcall N8Click(TObject *Sender);
         void __fastcall N9Click(TObject *Sender);
+        void __fastcall N3Click(TObject *Sender);
+        void __fastcall N10Click(TObject *Sender);
+        void __fastcall N11Click(TObject *Sender);
+        void __fastcall N12Click(TObject *Sender);
+        void __fastcall N13Click(TObject *Sender);
+        void __fastcall N14Click(TObject *Sender);
+        void __fastcall N15Click(TObject *Sender);
+        void __fastcall N16Click(TObject *Sender);
+        void __fastcall N17Click(TObject *Sender);
+        void __fastcall MenuItem3Click(TObject *Sender);
+        void __fastcall MenuItem4Click(TObject *Sender);
+        void __fastcall MenuItem1Click(TObject *Sender);
+        void __fastcall MenuItem2Click(TObject *Sender);
+        void __fastcall MenuItem5Click(TObject *Sender);
+        void __fastcall MenuItem6Click(TObject *Sender);
 private:	// User declarations
 String Path;
 String AdminDatabase;
@@ -79,14 +197,33 @@ vector<String>Parameters;
 String GetIP();
 
 String ServerName;
-void __fastcall SelectOtdel(TObject *Sender);
+void LoadTab1();
+void LoadTab2();
+void LoadTab3();
+void LoadTab4();
+void LoadTab5();
 
+int DeleteNode(String NameNode, String NameBranch, int Number);
 
 public:		// User declarations
-        __fastcall TForm1(TComponent* Owner);
+        __fastcall TDocuments(TComponent* Owner);
 bool Reg;
-void UpdateTempLogin();
-void UpdateOtdel(int NumLogin);
+void Initialize();
+bool C;
+bool Ins;
+
+        deque<Node> NodeVector_3;
+        deque<Node>::iterator It_Node_3;
+        deque<Node> NodeVector_4;
+        deque<Node>::iterator It_Node_4;
+        deque<Node> NodeVector_5;
+        deque<Node>::iterator It_Node_5;
+        deque<Node> NodeVector_6;
+        deque<Node>::iterator It_Node_6;
+        deque<Node> NodeVector_7;
+        deque<Node>::iterator It_Node_7;
+
+
 //Client *MClient;
         BEGIN_MESSAGE_MAP
           VCL_MESSAGE_HANDLER(WM_SYSCOMMAND, TMessage, WMSysCommand)
@@ -94,6 +231,6 @@ void UpdateOtdel(int NumLogin);
 void __fastcall WMSysCommand(TMessage & Msg);        
 };
 //---------------------------------------------------------------------------
-extern PACKAGE TForm1 *Form1;
+extern PACKAGE TDocuments *Documents;
 //---------------------------------------------------------------------------
 #endif

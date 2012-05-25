@@ -16,17 +16,45 @@ using namespace std;
 //---------------------------------------------------------------------------
 #pragma package(smart_init)
 #pragma resource "*.dfm"
-TForm1 *Form1;
+TDocuments *Documents;
+int XX,YY;
+TTreeNode *SelNode;
+PMyNode  MyNodePtr;
 //---------------------------------------------------------------------------
-__fastcall TForm1::TForm1(TComponent* Owner)
+__fastcall TDocuments::TDocuments(TComponent* Owner)
         : TForm(Owner)
 {
-Reg=false;
+Nodes->Connection=Zast->ADOConn;
+Branches->Connection=Zast->ADOConn;
+Comm->Connection=Zast->ADOConn;
+LoadTab1();
+LoadTab2();
+LoadTab3();
+LoadTab4();
+LoadTab5();
+Zast->Timer1->Enabled=true;
+
+///
+C=false;
+Ins=false;
+
+ADODataSet1->Connection=Zast->ADOConn;
+ADODataSet2->Connection=Zast->ADOConn;
+///
+//***
+Podr->Connection=Zast->ADOAspect;
+Sit->Connection=Zast->ADOConn;
+Temp->Connection=Zast->ADOConn;
+Metod->Connection=Zast->ADOConn;
+
+
+Metod->CommandText="Select * From Методика";
+
+Podr->Active=true;
+Sit->Active=true;
 }
 //---------------------------------------------------------------------------
-
-
-void __fastcall TForm1::FormClose(TObject *Sender, TCloseAction &Action)
+void __fastcall TDocuments::FormClose(TObject *Sender, TCloseAction &Action)
 {
 
 switch (Application->MessageBoxA("Записать все изменения на сервер?","Выход из программы",MB_YESNOCANCEL	+MB_ICONQUESTION+MB_DEFBUTTON1))
@@ -37,7 +65,7 @@ Zast->Stop=true;
 Zast->MClient->Act.WaitCommand=0;
 
 Zast->Saved=false;
-Zast->PrepareSaveLogins->Execute();
+//Zast->PrepareSaveLogins->Execute();
 
 
  Action=caNone;
@@ -45,7 +73,7 @@ Zast->PrepareSaveLogins->Execute();
  }
  case IDNO:
  {
-Zast->MClient->WriteDiaryEvent("AdminARM","Завершение работы отказ от записи","");
+Zast->MClient->WriteDiaryEvent("NetAspects","Завершение работы отказ от записи","");
 Zast->Stop=true;
 Sleep(2000);
 Zast->Close();
@@ -62,405 +90,103 @@ Zast->Close();
 
 }
 //---------------------------------------------------------------------------
-
-void __fastcall TForm1::RoleChange(TObject *Sender)
+void __fastcall TDocuments::FormShow(TObject *Sender)
 {
-UpdateTempLogin();
-Users->ItemIndex=0;
-UpdateOtdel(0);
+ADODataSet1->Active=false;
+ADODataSet1->CommandText="select * from Значимость Order By [Мин граница]";
+ADODataSet1->Active=true;
+/////
+//***
+Initialize();
+//***
+//PageControl1->TabIndex=0;
+PageControl1->ActivePageIndex=0;
+
+Metod->Active=true;
+ReadMetod->Checked=false;
+DBMemo1->ReadOnly=!ReadMetod->Checked;
 }
 //---------------------------------------------------------------------------
-void TForm1::UpdateTempLogin()
+void __fastcall TDocuments::N9Click(TObject *Sender)
 {
-MP<TADODataSet>Tab(this);
-Tab->Connection=Zast->MClient->Database;
-Tab->CommandText="Select * From Logins where Role="+IntToStr(Role->ItemIndex+1)+" AND NumDatabase="+IntToStr(Zast->MClient->VDB[Zast->MClient->GetIDDBName(Form1->CBDatabase->Text)].NumDatabase)+" order by Login";
-Tab->Active=true;
+//this->Close();
+//Добавить проверку на отсутствие у родителя удаляемой ветви (узла) потомков
+//и перевода его в категорию ветвей
+TTreeNode *N;
 
-Users->Clear();
-for(Tab->First();!Tab->Eof;Tab->Next())
+
+int Number=PMyNode(TreeView1->Selected->Data)->Number;
+int Parent=PMyNode(TreeView1->Selected->Data)->Parent;
+bool IsNode=PMyNode(TreeView1->Selected->Data)->Node;
+if (IsNode==true)
 {
- Users->Items->Add(Tab->FieldByName("Login")->AsString);
-}
-}
-//-----------------------------------------------------------------
-void TForm1::UpdateOtdel(int NumLogin)
-{
-if(NumLogin<0)
-{
-Otdels->Clear();
+
+
+DeleteNode("Узлы_3","Ветви_5", Number);
+
 }
 else
 {
-MP<TADODataSet>Tab(this);
-Tab->Connection=Zast->MClient->Database;
-Tab->CommandText="Select * From Logins where Role="+IntToStr(Role->ItemIndex+1)+" AND NumDatabase="+IntToStr(Zast->MClient->VDB[Zast->MClient->GetIDDBName(Form1->CBDatabase->Text)].NumDatabase)+" order by Login";
-Tab->Active=true;
-Tab->First();
-Tab->MoveBy(NumLogin);
-int N1=Tab->FieldByName("Num")->AsInteger;
+Comm->CommandText="Delete * From Ветви_3 Where [Номер ветви]="+IntToStr(Number);
+Comm->Execute();
 
-MP<TADODataSet>Verify(this);
-Verify->Connection=Zast->MClient->Database;
+}
 
-Verify->Active=false;
-Verify->CommandText="SELECT ObslOtdel.Login, Подразделения.[Название подразделения] FROM Подразделения INNER JOIN ObslOtdel ON Подразделения.[Номер подразделения] = ObslOtdel.NumObslOtdel  where Login="+IntToStr(N1)+" Order by NumObslOtdel";
-Verify->Active=true;
-Otdels->Clear();
-for(Verify->First();!Verify->Eof;Verify->Next())
+Branches->Active=false;
+Branches->CommandText="Select * From Ветви_3 Where [Номер родителя]="+IntToStr(Parent);
+Branches->Active=true;
+Nodes->Active=false;
+Nodes->CommandText="Select * From Узлы_3 Where Родитель="+IntToStr(Parent);
+Nodes->Active=true;
+
+if (Branches->RecordCount==0 & Nodes->RecordCount==0)
 {
-Otdels->Items->Add(Verify->FieldByName("Название подразделения")->AsString);
-}
-}
-}
-//----------------------------------------------------------------
+ Nodes->Active=false;
+ Nodes->CommandText="Select * From Узлы_3 Where [Номер узла]="+IntToStr(Parent);
+ Nodes->Active=true;
+ if (Nodes->RecordCount==0)
+ {
+  ShowMessage("Ошибка! Удалялась запись в таблице узлов номер "+IntToStr(Number)+" предок номер "+IntToStr(Parent));
+  ShowMessage("Не найдена запись в таблице узлов номер "+IntToStr(Parent));
 
-void __fastcall TForm1::FormShow(TObject *Sender)
-{
-Zast->UpdateLogins->Execute();
+ }
+ else
+ {
+ int NumParent=Nodes->FieldByName("Родитель")->Value;
+ if (NumParent!=0)
+ {
+ AnsiString Text=Nodes->FieldByName("Название")->Value;;
+ Nodes->Delete();
+ Branches->Active=false;
+ Branches->CommandText="Select * From Ветви_3";
+ Branches->Active=true;
+ Branches->Append();
+ Branches->FieldByName("Номер родителя")->Value=NumParent;
+ Branches->FieldByName("Название")->Value=Text;
+ Branches->Post();
+ Branches->Last();
+ int Number=Branches->FieldByName("Номер ветви")->Value;
+ N=TreeView1->GetNodeAt(XX,YY);
+ TTreeNode * ParNode=N->Parent;
+ PMyNode(ParNode->Data)->Number=Number;
+ PMyNode(ParNode->Data)->Parent=NumParent;
+ PMyNode(ParNode->Data)->Node=false;
+ //
+ //ParNode->Text=Text+" "+IntToStr(Number)+" "+IntToStr(NumParent)+" Ветвь";
+}
+}
+}
+TreeView1->Items->Delete(TreeView1->GetNodeAt(XX,YY));
+
 }
 //---------------------------------------------------------------------------
-
-void __fastcall TForm1::CBDatabaseClick(TObject *Sender)
-{
-UpdateTempLogin();
-Form1->Users->ItemIndex=0;
-UpdateOtdel(0);
-}
-//---------------------------------------------------------------------------
-
-
-void __fastcall TForm1::UsersMouseDown(TObject *Sender,
-      TMouseButton Button, TShiftState Shift, int X, int Y)
-{
-int N=Users->ItemAtPos(Point(X,Y), true);
-Users->ItemIndex=N;
-UpdateOtdel(N);
-if(Button==mbRight)
-{
-if(Role->ItemIndex>1)
-{
-if(N>=0)
-{
-N1->Enabled=true;
-N2->Enabled=true;
-N3->Enabled=true;
-N4->Enabled=true;
-}
-else
-{
-N1->Enabled=true;
-N2->Enabled=false;
-N3->Enabled=false;
-N4->Enabled=false;
-}
-}
-else
-{
-if(N>=0)
-{
-N1->Enabled=false;
-N2->Enabled=true;
-N3->Enabled=false;
-N4->Enabled=true;
-}
-else
-{
-N1->Enabled=false;
-N2->Enabled=false;
-N3->Enabled=false;
-N4->Enabled=false;
-}
-}
-}
-}
-//---------------------------------------------------------------------------
-
-void __fastcall TForm1::N3Click(TObject *Sender)
-{
-//Удалить логин
-MP<TADODataSet>Tab(this);
-Tab->Connection=Zast->MClient->Database;
-Tab->CommandText="Select * From Logins Where Role="+IntToStr(Role->ItemIndex+1)+"  AND NumDatabase="+IntToStr(Zast->MClient->VDB[Zast->MClient->GetIDDBName(Form1->CBDatabase->Text)].NumDatabase)+" order by Login";
-Tab->Active=true;
-Tab->First();
-Tab->MoveBy(Users->ItemIndex);
-
-Tab->Delete();
-UpdateTempLogin();
-
-int N=Users->ItemIndex;
-
-UpdateOtdel(N);
-}
-//---------------------------------------------------------------------------
-
-void __fastcall TForm1::N1Click(TObject *Sender)
-{
-//Добавить логин
-/*
-int Lic=Zast->MClient->VDB[Zast->MClient->GetIDDBName(Form1->CBDatabase->Text)].NumLicense;
-if(Lic<=Users->Count & Role->ItemIndex==2 & Lic!=-1 )
-{
- ShowMessage("Достигнуто максимальное количество пользователей!");
-}
-else
-{
-EditLogins->Log->Text="";
-EditLogins->Pass1->Text="";
-EditLogins->Pass2->Text="";
-
-EditLogins->Mode=false;
-EditLogins->NumLogin=-1;
-
-EditLogins->ShowModal();
-}
-*/
-}
-//---------------------------------------------------------------------------
-
-void __fastcall TForm1::N2Click(TObject *Sender)
-{
-//Редактировать логин
-/*
-MP<TADODataSet>Tab(this);
-Tab->Connection=Zast->MClient->Database;
-Tab->CommandText="Select * from Logins Where Role="+IntToStr(Form1->Role->ItemIndex+1)+" AND NumDatabase="+IntToStr(Zast->MClient->VDB[Zast->MClient->GetIDDBName(Form1->CBDatabase->Text)].NumDatabase)+" order by Login";
-Tab->Active=true;
-Tab->First();
-Tab->RecNo=Users->ItemIndex+1;
-
-
-EditLogins->Log->Text=Tab->FieldByName("Login")->AsString;
-EditLogins->Pass1->Text="";
-EditLogins->Pass2->Text="";
-
-EditLogins->Mode=false;
-EditLogins->NumLogin=Users->ItemIndex;
-
-EditLogins->ShowModal();
-*/
-}
-//---------------------------------------------------------------------------
-
-void __fastcall TForm1::N4Click(TObject *Sender)
-{
-//Редактировать пароль
-/*
-MP<TADODataSet>Tab(this);
-Tab->Connection=Zast->MClient->Database;
-Tab->CommandText="Select * from Logins Where Role="+IntToStr(Form1->Role->ItemIndex+1)+" AND NumDatabase="+IntToStr(Zast->MClient->VDB[Zast->MClient->GetIDDBName(Form1->CBDatabase->Text)].NumDatabase)+" order by Login";
-Tab->Active=true;
-Tab->First();
-Tab->RecNo=Users->ItemIndex+1;
-
-
-EditLogins->Log->Text=Tab->FieldByName("Login")->AsString;
-EditLogins->Pass1->Text="";
-EditLogins->Pass2->Text="";
-
-EditLogins->Mode=true;
-EditLogins->NumLogin=Users->ItemIndex;
-
-EditLogins->ShowModal();
-*/
-}
-//---------------------------------------------------------------------------
-
-void __fastcall TForm1::OtdelsMouseDown(TObject *Sender,
-      TMouseButton Button, TShiftState Shift, int X, int Y)
-{
-FreeOtdel->Items->Clear();
-if(Users->ItemIndex>=0)
-{
-int N=Otdels->ItemAtPos(Point(X,Y),true);
-Otdels->ItemIndex=N;
-
-
-if(N>=0)
-{
-TMenuItem *M=new TMenuItem(FreeOtdel);
-M->Caption="Удалить";
-M->OnClick=SelectOtdel;
-M->Tag=-1;
-FreeOtdel->Items->Add(M);
-
-M=new TMenuItem(FreeOtdel);
-M->Caption="-";
-M->Tag=0;
-FreeOtdel->Items->Add(M);
-}
-
-MP<TADODataSet>Tab(this);
-Tab->Connection=Zast->MClient->Database;
-Tab->CommandText="SELECT Подразделения.[Номер подразделения], Подразделения.[Название подразделения], Подразделения.Del, Подразделения.NumDatabase FROM Подразделения LEFT JOIN ObslOtdel ON Подразделения.[Номер подразделения] = ObslOtdel.[NumObslOtdel] WHERE (((Подразделения.NumDatabase)="+IntToStr(Zast->MClient->VDB[Zast->MClient->GetIDDBName(Form1->CBDatabase->Text)].NumDatabase)+") AND ((ObslOtdel.NumObslOtdel) Is Null));";
-Tab->Active=true;
-
-for(Tab->First();!Tab->Eof;Tab->Next())
-{
-TMenuItem *M=new TMenuItem(FreeOtdel);
-M->Caption=Tab->FieldByName("Название подразделения")->AsString;
-M->OnClick=SelectOtdel;
-M->Tag=Tab->FieldByName("Номер подразделения")->AsInteger;
-FreeOtdel->Items->Add(M);
-}
-
-if(Role->ItemIndex>=2)
-{
-if(Tab->RecordCount==0)
-{
-TMenuItem *M=new TMenuItem(FreeOtdel);
-M->Caption="Нет свободных подразделений";
-M->Tag=0;
-M->Enabled=false;
-FreeOtdel->Items->Add(M);
-}
-}
-}
-else
-{
-TMenuItem *M=new TMenuItem(FreeOtdel);
-M->Caption="Выберите логин";
-M->Tag=0;
-M->Enabled=false;
-FreeOtdel->Items->Add(M);
-}
-}
-//---------------------------------------------------------------------------
-void __fastcall TForm1::SelectOtdel(TObject *Sender)
-{
-
-TMenuItem *Menu=(TMenuItem*)Sender;
-int Num=Menu->Tag;
-
-MP<TADODataSet>Tab1(this);
-Tab1->Connection=Zast->MClient->Database;
-Tab1->CommandText="Select * From Logins where Role="+IntToStr(Role->ItemIndex+1)+" AND NumDatabase="+IntToStr(Zast->MClient->VDB[Zast->MClient->GetIDDBName(Form1->CBDatabase->Text)].NumDatabase)+" order by Login";
-Tab1->Active=true;
-Tab1->First();
-Tab1->MoveBy(Users->ItemIndex);
-int N1=Tab1->FieldByName("Num")->Value;
-
-if(Num>0)
-{
-
-
-MP<TADODataSet>Tab(this);
-Tab->Connection=Zast->MClient->Database;
-Tab->CommandText="Select * From ObslOtdel";
-Tab->Active=true;
-
-Tab->Insert();
-Tab->FieldByName("Login")->Value=N1;
-Tab->FieldByName("NumObslOtdel")->Value=Num;
-Tab->FieldByName("NumDatabase")->Value=Zast->MClient->VDB[Zast->MClient->GetIDDBName(Form1->CBDatabase->Text)].NumDatabase;
-Tab->Post();
-
-UpdateOtdel(Users->ItemIndex);
-}
-else
-{
-MP<TADODataSet>Tab(this);
-Tab->Connection=Zast->MClient->Database;
-Tab->CommandText="Select * From ObslOtdel Where Login="+IntToStr(N1)+" Order by NumObslOtdel";
-Tab->Active=true;
-
-Tab->First();
-Tab->MoveBy(Otdels->ItemIndex);
-Tab->Delete();
-
-UpdateOtdel(Users->ItemIndex);
-}
-}
-//--------------------------------------------------------------------------
-void __fastcall TForm1::N5Click(TObject *Sender)
-{
-Prog->PB->Min=0;
-Prog->PB->Position=0;
-Prog->PB->Max=Zast->MClient->VDB.size()*5;
-Prog->Show();
-Zast->PrepareRead->Execute();
-}
-//---------------------------------------------------------------------------
-
-
-
-void __fastcall TForm1::N6Click(TObject *Sender)
-{
-Prog->PB->Min=0;
-Prog->PB->Position=0;
-Prog->PB->Max=Zast->MClient->VDB.size()*5;
-Prog->Show();
-Zast->Saved=false;
-Zast->PrepareSaveLogins->Execute();
-}
-//---------------------------------------------------------------------------
-
-void __fastcall TForm1::UsersClick(TObject *Sender)
-{
-int N=Users->ItemIndex;
-
-UpdateOtdel(N);        
-}
-//---------------------------------------------------------------------------
-
-void __fastcall TForm1::N7Click(TObject *Sender)
-{
-Prog->Show();
-Prog->PB->Visible=true;
-Prog->PB->Max=6;
-Prog->PB->Position=0;
-
-
-//FDiary->LoadDiary();
-}
-//---------------------------------------------------------------------------
-
-void __fastcall TForm1::N10Click(TObject *Sender)
-{
-Application->HelpFile=ExtractFilePath(Application->ExeName)+"ADMINARM.HLP";
-Application->HelpJump("IDH_РУКОВОДСТВО");        
-}
-//---------------------------------------------------------------------------
-
-void __fastcall TForm1::N8Click(TObject *Sender)
-{
-//FAbout->ShowModal();
-}
-//---------------------------------------------------------------------------
-
-void __fastcall TForm1::N9Click(TObject *Sender)
-{
-this->Close();
-}
-//---------------------------------------------------------------------------
-void __fastcall TForm1::WMSysCommand(TMessage & Msg)
+void __fastcall TDocuments::WMSysCommand(TMessage & Msg)
 {
   switch (Msg.WParam)
   {
-/*
+
 case SC_MINIMIZE:
 {
- Shell_NotifyIcon(NIM_ADD, &NID);
-  BCreate->Enabled = false;
- BDelete->Enabled = true;
- BHide->Enabled = true;
-Form1->Visible=false;
-//ShowMessage("SC_MINIMIZE");
-                     break;
-}
-*/
-case SC_MINIMIZE:
-{
-
-//  Shell_NotifyIcon(NIM_ADD, &NID);
-//  BCreate->Enabled = false;
-// BDelete->Enabled = true;
-// BHide->Enabled = true;
-//Form1->Visible=false;
-//SendMessage(Handle,WM_SYSCOMMAND,SC_MINIMIZE,0);
-
-//ShowMessage("SC_Close");
 Application->Minimize();
 break;
 }
@@ -472,4 +198,1460 @@ DefWindowProc(Handle,Msg.Msg,Msg.WParam,Msg.LParam);
 
 }
 //-------------------------------------------------------------------
+void TDocuments::Initialize()
+{
+Podr->Active=true;
+Sit->Active=true;
+}
+//-------------------------------------------------------------------
+void TDocuments::LoadTab1()
+{
+Nodes->Active=false;
+Nodes->CommandText="Select * From Узлы_3";
+Nodes->Active=true;
+Nodes->First();
+for(int i=0;i<Nodes->RecordCount;i++)
+{
+ int Parent=Nodes->FieldByName("Родитель")->Value;
+ if (Parent!=0)
+ {
+ Branches->Active=false;
+ Branches->CommandText="Select * From Узлы_3 Where [Номер узла]="+IntToStr(Parent);
+ Branches->Active=true;
+ if (Branches->RecordCount==0)
+ {
+  Nodes->Delete();
+ }
 
+ }
+ Nodes->Next();
+}
+
+PMyNode  MyNodePtr;
+MyNodePtr = new TMyNode;
+
+
+TTreeNode *N;
+TTreeNode *N1;
+//TTreeNode *N2;
+int NumParent;
+TreeView1->Items->BeginUpdate();
+TreeView1->Items->Clear();
+
+
+Nodes->Active=true;
+Nodes->First();
+NumParent=Nodes->FieldByName("Номер узла")->Value;
+AnsiString Text=Nodes->FieldByName("Название")->Value;
+
+MyNodePtr->Number=NumParent;
+MyNodePtr->Parent=0;
+MyNodePtr->Node=true;
+
+Nodes->Edit();
+N1=TreeView1->Items->AddChildObject(NULL,Text,MyNodePtr);
+
+Nodes->Post();
+
+Branches->Active=false;
+Branches->CommandText="Select * From Ветви_3 Where [Номер родителя]="+IntToStr(NumParent);
+Branches->Active=true;
+Branches->First();
+for (int j=0; j<Branches->RecordCount;j++)
+{
+int NumBranches=Branches->FieldByName("Номер ветви")->Value;
+int BranchesParent=Branches->FieldByName("Номер родителя")->Value;
+AnsiString TextBranches=Branches->FieldByName("Название")->Value;
+bool View=Branches->FieldByName("Показ")->Value;
+MyNodePtr = new TMyNode;
+MyNodePtr->Number=NumBranches;
+MyNodePtr->Parent=BranchesParent;
+MyNodePtr->Node=false;
+if (View==true)
+{
+TreeView1->Items->AddChildObject(N1,TextBranches,MyNodePtr);
+}
+
+Branches->Edit();
+
+Branches->Post();
+Branches->Next();
+}
+
+
+
+Nodes->Active=false;
+Nodes->CommandText="Select * From Узлы_3 Where ([Родитель])>0";
+Nodes->Active=true;
+Nodes->First();
+for(int i=0;i<Nodes->RecordCount;i++)
+{
+int NumNode=Nodes->FieldByName("Номер узла")->Value;
+NumParent=Nodes->FieldByName("Родитель")->Value;
+AnsiString TextNode=Nodes->FieldByName("Название")->Value;
+TTreeNode *ParNod;
+ParNod=N1;
+for (unsigned int k=0; k<NodeVector_3.size();k++)
+{
+ if (NodeVector_3[k].Number==NumParent)
+ {
+  ParNod=NodeVector_3[k].Nod;
+ }
+}
+
+MyNodePtr = new TMyNode;
+MyNodePtr->Number=NumNode;
+MyNodePtr->Parent=NumParent;
+MyNodePtr->Node=true;
+N=TreeView1->Items->AddChildObject(ParNod,TextNode,MyNodePtr);
+
+
+Nodes->Edit();
+
+Nodes->Post();
+Node NN;
+NN.Number=NumNode;
+NN.Parent=NumParent;
+NN.Nod=N;
+It_Node_3=NodeVector_3.end();
+NodeVector_3.insert(It_Node_3,NN);
+
+
+Branches->Active=false;
+Branches->CommandText="Select * From Ветви_3 Where [Номер родителя]="+IntToStr(NumNode);
+Branches->Active=true;
+Branches->First();
+for (int j=0; j<Branches->RecordCount;j++)
+{
+int NumBranches=Branches->FieldByName("Номер ветви")->Value;
+int BranchesParent=Branches->FieldByName("Номер родителя")->Value;
+AnsiString TextBranches=Branches->FieldByName("Название")->Value;
+
+
+MyNodePtr = new TMyNode;
+MyNodePtr->Number=NumBranches;
+MyNodePtr->Parent=BranchesParent;
+MyNodePtr->Node=false;
+TreeView1->Items->AddChildObject(N,TextBranches,MyNodePtr);
+
+Branches->Edit();
+
+Branches->Post();
+Branches->Next();
+}
+Nodes->Next();
+}
+Nodes->Active=false;
+Branches->Active=false;
+
+
+TreeView1->Items->EndUpdate();
+
+//ShowMessage(TreeView1->Items->Item[0]->Text);
+TreeView1->Items->Item[0]->Expand(false);
+/*
+for(int i=0;i<TreeView1->Items->Count;i++)
+{
+ShowMessage(TreeView1->Items->Item[i]->Text);
+TreeView1->Items->Item[i]->Expand(false);
+}
+*/
+}
+//-------------------------------------------------------------------------------------------------
+void TDocuments::LoadTab2()
+{
+Nodes->Active=false;
+Nodes->CommandText="Select * From Узлы_4";
+Nodes->Active=true;
+Nodes->First();
+for(int i=0;i<Nodes->RecordCount;i++)
+{
+ int Parent=Nodes->FieldByName("Родитель")->Value;
+ if (Parent!=0)
+ {
+ Branches->Active=false;
+ Branches->CommandText="Select * From Узлы_4 Where [Номер узла]="+IntToStr(Parent);
+ Branches->Active=true;
+ if (Branches->RecordCount==0)
+ {
+  Nodes->Delete();
+ }
+// Nodes->Next();
+ }
+ Nodes->Next();
+}
+//--------------------------------------------------
+
+
+
+PMyNode  MyNodePtr;
+MyNodePtr = new TMyNode;
+
+
+TTreeNode *N;
+TTreeNode *N1;
+
+int NumParent;
+TreeView2->Items->BeginUpdate();
+TreeView2->Items->Clear();
+
+
+Nodes->Active=true;
+Nodes->First();
+NumParent=Nodes->FieldByName("Номер узла")->Value;
+AnsiString Text=Nodes->FieldByName("Название")->Value;
+
+MyNodePtr->Number=NumParent;
+MyNodePtr->Parent=0;
+MyNodePtr->Node=true;
+
+Nodes->Edit();
+N1=TreeView2->Items->AddChildObject(NULL,Text,MyNodePtr);
+
+Nodes->Post();
+
+Branches->Active=false;
+Branches->CommandText="Select * From Ветви_4 Where [Номер родителя]="+IntToStr(NumParent);
+Branches->Active=true;
+Branches->First();
+for (int j=0; j<Branches->RecordCount;j++)
+{
+int NumBranches=Branches->FieldByName("Номер ветви")->Value;
+int BranchesParent=Branches->FieldByName("Номер родителя")->Value;
+AnsiString TextBranches=Branches->FieldByName("Название")->Value;
+bool View=Branches->FieldByName("Показ")->Value;
+MyNodePtr = new TMyNode;
+MyNodePtr->Number=NumBranches;
+MyNodePtr->Parent=BranchesParent;
+MyNodePtr->Node=false;
+if (View==true)
+{
+TreeView2->Items->AddChildObject(N1,TextBranches,MyNodePtr);
+}
+
+Branches->Edit();
+
+Branches->Post();
+Branches->Next();
+}
+
+
+
+Nodes->Active=false;
+Nodes->CommandText="Select * From Узлы_4 Where ([Родитель])>0";
+Nodes->Active=true;
+Nodes->First();
+for(int i=0;i<Nodes->RecordCount;i++)
+{
+int NumNode=Nodes->FieldByName("Номер узла")->Value;
+NumParent=Nodes->FieldByName("Родитель")->Value;
+AnsiString TextNode=Nodes->FieldByName("Название")->Value;
+TTreeNode *ParNod;
+ParNod=N1;
+for (unsigned int k=0; k<NodeVector_4.size();k++)
+{
+ if (NodeVector_4[k].Number==NumParent)
+ {
+  ParNod=NodeVector_4[k].Nod;
+ }
+}
+
+MyNodePtr = new TMyNode;
+MyNodePtr->Number=NumNode;
+MyNodePtr->Parent=NumParent;
+MyNodePtr->Node=true;
+N=TreeView2->Items->AddChildObject(ParNod,TextNode,MyNodePtr);
+
+
+Nodes->Edit();
+
+Nodes->Post();
+Node NN;
+NN.Number=NumNode;
+NN.Parent=NumParent;
+NN.Nod=N;
+It_Node_4=NodeVector_4.end();
+NodeVector_4.insert(It_Node_4,NN);
+
+
+Branches->Active=false;
+Branches->CommandText="Select * From Ветви_4 Where [Номер родителя]="+IntToStr(NumNode);
+Branches->Active=true;
+Branches->First();
+for (int j=0; j<Branches->RecordCount;j++)
+{
+int NumBranches=Branches->FieldByName("Номер ветви")->Value;
+int BranchesParent=Branches->FieldByName("Номер родителя")->Value;
+AnsiString TextBranches=Branches->FieldByName("Название")->Value;
+
+
+MyNodePtr = new TMyNode;
+MyNodePtr->Number=NumBranches;
+MyNodePtr->Parent=BranchesParent;
+MyNodePtr->Node=false;
+TreeView2->Items->AddChildObject(N,TextBranches,MyNodePtr);
+
+
+Branches->Edit();
+
+Branches->Post();
+Branches->Next();
+}
+Nodes->Next();
+}
+Nodes->Active=false;
+Branches->Active=false;
+
+
+TreeView2->Items->EndUpdate();
+TreeView2->Items->Item[0]->Expand(false);
+/*
+for(int i=0;i<TreeView2->Items->Count;i++)
+{
+TreeView2->Items->Item[i]->Expand(true);
+}
+*/
+}
+//---------------------------------------------------------------------------------
+void TDocuments::LoadTab3()
+{
+Nodes->Active=false;
+Nodes->CommandText="Select * From Узлы_5";
+Nodes->Active=true;
+Nodes->First();
+for(int i=0;i<Nodes->RecordCount;i++)
+{
+ int Parent=Nodes->FieldByName("Родитель")->Value;
+ if (Parent!=0)
+ {
+ Branches->Active=false;
+ Branches->CommandText="Select * From Узлы_5 Where [Номер узла]="+IntToStr(Parent);
+ Branches->Active=true;
+ if (Branches->RecordCount==0)
+ {
+  Nodes->Delete();
+ }
+// Nodes->Next();
+ }
+ Nodes->Next();
+}
+
+PMyNode  MyNodePtr;
+MyNodePtr = new TMyNode;
+
+
+TTreeNode *N;
+TTreeNode *N1;
+
+int NumParent;
+TreeView3->Items->BeginUpdate();
+TreeView3->Items->Clear();
+
+
+Nodes->Active=true;
+Nodes->First();
+NumParent=Nodes->FieldByName("Номер узла")->Value;
+AnsiString Text=Nodes->FieldByName("Название")->Value;
+
+MyNodePtr->Number=NumParent;
+MyNodePtr->Parent=0;
+MyNodePtr->Node=true;
+
+Nodes->Edit();
+N1=TreeView3->Items->AddChildObject(NULL,Text,MyNodePtr);
+
+Nodes->Post();
+
+Branches->Active=false;
+Branches->CommandText="Select * From Ветви_5 Where [Номер родителя]="+IntToStr(NumParent);
+Branches->Active=true;
+Branches->First();
+for (int j=0; j<Branches->RecordCount;j++)
+{
+int NumBranches=Branches->FieldByName("Номер ветви")->Value;
+int BranchesParent=Branches->FieldByName("Номер родителя")->Value;
+AnsiString TextBranches=Branches->FieldByName("Название")->Value;
+bool View=Branches->FieldByName("Показ")->Value;
+MyNodePtr = new TMyNode;
+MyNodePtr->Number=NumBranches;
+MyNodePtr->Parent=BranchesParent;
+MyNodePtr->Node=false;
+if (View==true)
+{
+TreeView3->Items->AddChildObject(N1,TextBranches,MyNodePtr);
+}
+
+Branches->Edit();
+
+Branches->Post();
+Branches->Next();
+}
+
+
+
+Nodes->Active=false;
+Nodes->CommandText="Select * From Узлы_5 Where ([Родитель])>0";
+Nodes->Active=true;
+Nodes->First();
+for(int i=0;i<Nodes->RecordCount;i++)
+{
+int NumNode=Nodes->FieldByName("Номер узла")->Value;
+NumParent=Nodes->FieldByName("Родитель")->Value;
+AnsiString TextNode=Nodes->FieldByName("Название")->Value;
+TTreeNode *ParNod;
+ParNod=N1;
+for (unsigned int k=0; k<NodeVector_5.size();k++)
+{
+ if (NodeVector_5[k].Number==NumParent)
+ {
+  ParNod=NodeVector_5[k].Nod;
+ }
+}
+
+MyNodePtr = new TMyNode;
+MyNodePtr->Number=NumNode;
+MyNodePtr->Parent=NumParent;
+MyNodePtr->Node=true;
+//N=TreeView1->Items->AddChildObject(ParNod,TextNode+" "+IntToStr(MyNodePtr->Number)+" "+IntToStr(MyNodePtr->Parent)+" Узел",MyNodePtr);
+N=TreeView3->Items->AddChildObject(ParNod,TextNode,MyNodePtr);
+
+//N=TreeView1->Items->AddChild(ParNod,TextNode);
+Nodes->Edit();
+
+Nodes->Post();
+Node NN;
+NN.Number=NumNode;
+NN.Parent=NumParent;
+NN.Nod=N;
+It_Node_5=NodeVector_5.end();
+NodeVector_5.insert(It_Node_5,NN);
+
+
+Branches->Active=false;
+Branches->CommandText="Select * From Ветви_5 Where [Номер родителя]="+IntToStr(NumNode);
+Branches->Active=true;
+Branches->First();
+for (int j=0; j<Branches->RecordCount;j++)
+{
+int NumBranches=Branches->FieldByName("Номер ветви")->Value;
+int BranchesParent=Branches->FieldByName("Номер родителя")->Value;
+AnsiString TextBranches=Branches->FieldByName("Название")->Value;
+
+
+MyNodePtr = new TMyNode;
+MyNodePtr->Number=NumBranches;
+MyNodePtr->Parent=BranchesParent;
+MyNodePtr->Node=false;
+TreeView3->Items->AddChildObject(N,TextBranches,MyNodePtr);
+
+
+Branches->Edit();
+
+Branches->Post();
+Branches->Next();
+}
+Nodes->Next();
+}
+Nodes->Active=false;
+Branches->Active=false;
+
+
+TreeView3->Items->EndUpdate();
+TreeView3->Items->Item[0]->Expand(false);
+/*
+for(int i=0;i<TreeView3->Items->Count;i++)
+{
+TreeView3->Items->Item[i]->Expand(true);
+}
+*/
+}
+//------------------------------------------------------------------------------
+void TDocuments::LoadTab4()
+{
+Nodes->Active=false;
+Nodes->CommandText="Select * From Узлы_6";
+Nodes->Active=true;
+Nodes->First();
+for(int i=0;i<Nodes->RecordCount;i++)
+{
+ int Parent=Nodes->FieldByName("Родитель")->Value;
+ if (Parent!=0)
+ {
+ Branches->Active=false;
+ Branches->CommandText="Select * From Узлы_6 Where [Номер узла]="+IntToStr(Parent);
+ Branches->Active=true;
+ if (Branches->RecordCount==0)
+ {
+  Nodes->Delete();
+ }
+
+ }
+ Nodes->Next();
+}
+
+PMyNode  MyNodePtr;
+MyNodePtr = new TMyNode;
+
+
+TTreeNode *N;
+TTreeNode *N1;
+
+int NumParent;
+TreeView4->Items->BeginUpdate();
+TreeView4->Items->Clear();
+
+
+Nodes->Active=true;
+Nodes->First();
+NumParent=Nodes->FieldByName("Номер узла")->Value;
+AnsiString Text=Nodes->FieldByName("Название")->Value;
+
+MyNodePtr->Number=NumParent;
+MyNodePtr->Parent=0;
+MyNodePtr->Node=true;
+
+Nodes->Edit();
+N1=TreeView4->Items->AddChildObject(NULL,Text,MyNodePtr);
+
+Nodes->Post();
+
+Branches->Active=false;
+Branches->CommandText="Select * From Ветви_6 Where [Номер родителя]="+IntToStr(NumParent);
+Branches->Active=true;
+Branches->First();
+for (int j=0; j<Branches->RecordCount;j++)
+{
+int NumBranches=Branches->FieldByName("Номер ветви")->Value;
+int BranchesParent=Branches->FieldByName("Номер родителя")->Value;
+AnsiString TextBranches=Branches->FieldByName("Название")->Value;
+bool View=Branches->FieldByName("Показ")->Value;
+MyNodePtr = new TMyNode;
+MyNodePtr->Number=NumBranches;
+MyNodePtr->Parent=BranchesParent;
+MyNodePtr->Node=false;
+if (View==true)
+{
+TreeView4->Items->AddChildObject(N1,TextBranches,MyNodePtr);
+}
+
+Branches->Edit();
+
+Branches->Post();
+Branches->Next();
+}
+
+
+
+Nodes->Active=false;
+Nodes->CommandText="Select * From Узлы_6 Where ([Родитель])>0";
+Nodes->Active=true;
+Nodes->First();
+for(int i=0;i<Nodes->RecordCount;i++)
+{
+int NumNode=Nodes->FieldByName("Номер узла")->Value;
+NumParent=Nodes->FieldByName("Родитель")->Value;
+AnsiString TextNode=Nodes->FieldByName("Название")->Value;
+TTreeNode *ParNod;
+ParNod=N1;
+for (unsigned int k=0; k<NodeVector_6.size();k++)
+{
+ if (NodeVector_6[k].Number==NumParent)
+ {
+  ParNod=NodeVector_6[k].Nod;
+ }
+}
+
+MyNodePtr = new TMyNode;
+MyNodePtr->Number=NumNode;
+MyNodePtr->Parent=NumParent;
+MyNodePtr->Node=true;
+//N=TreeView1->Items->AddChildObject(ParNod,TextNode+" "+IntToStr(MyNodePtr->Number)+" "+IntToStr(MyNodePtr->Parent)+" Узел",MyNodePtr);
+N=TreeView4->Items->AddChildObject(ParNod,TextNode,MyNodePtr);
+
+//N=TreeView1->Items->AddChild(ParNod,TextNode);
+Nodes->Edit();
+
+Nodes->Post();
+Node NN;
+NN.Number=NumNode;
+NN.Parent=NumParent;
+NN.Nod=N;
+It_Node_6=NodeVector_6.end();
+NodeVector_6.insert(It_Node_6,NN);
+
+
+Branches->Active=false;
+Branches->CommandText="Select * From Ветви_6 Where [Номер родителя]="+IntToStr(NumNode);
+Branches->Active=true;
+Branches->First();
+for (int j=0; j<Branches->RecordCount;j++)
+{
+int NumBranches=Branches->FieldByName("Номер ветви")->Value;
+int BranchesParent=Branches->FieldByName("Номер родителя")->Value;
+AnsiString TextBranches=Branches->FieldByName("Название")->Value;
+
+
+MyNodePtr = new TMyNode;
+MyNodePtr->Number=NumBranches;
+MyNodePtr->Parent=BranchesParent;
+MyNodePtr->Node=false;
+TreeView4->Items->AddChildObject(N,TextBranches,MyNodePtr);
+
+
+Branches->Edit();
+
+Branches->Post();
+Branches->Next();
+}
+Nodes->Next();
+}
+Nodes->Active=false;
+Branches->Active=false;
+
+
+TreeView4->Items->EndUpdate();
+TreeView4->Items->Item[0]->Expand(false);
+/*
+for(int i=0;i<TreeView4->Items->Count;i++)
+{
+TreeView4->Items->Item[i]->Expand(true);
+}
+*/
+}
+//---------------------------------------------------------------------------------
+void TDocuments::LoadTab5()
+{
+Nodes->Active=false;
+Nodes->CommandText="Select * From Узлы_7";
+Nodes->Active=true;
+Nodes->First();
+for(int i=0;i<Nodes->RecordCount;i++)
+{
+ int Parent=Nodes->FieldByName("Родитель")->Value;
+ if (Parent!=0)
+ {
+ Branches->Active=false;
+ Branches->CommandText="Select * From Узлы_7 Where [Номер узла]="+IntToStr(Parent);
+ Branches->Active=true;
+ if (Branches->RecordCount==0)
+ {
+  Nodes->Delete();
+ }
+// Nodes->Next();
+ }
+ Nodes->Next();
+}
+
+PMyNode  MyNodePtr;
+MyNodePtr = new TMyNode;
+
+
+TTreeNode *N;
+TTreeNode *N1;
+int NumParent;
+TreeView5->Items->BeginUpdate();
+TreeView5->Items->Clear();
+
+
+Nodes->Active=true;
+Nodes->First();
+NumParent=Nodes->FieldByName("Номер узла")->Value;
+AnsiString Text=Nodes->FieldByName("Название")->Value;
+
+MyNodePtr->Number=NumParent;
+MyNodePtr->Parent=0;
+MyNodePtr->Node=true;
+
+Nodes->Edit();
+N1=TreeView5->Items->AddChildObject(NULL,Text,MyNodePtr);
+
+Nodes->Post();
+
+Branches->Active=false;
+Branches->CommandText="Select * From Ветви_7 Where [Номер родителя]="+IntToStr(NumParent);
+Branches->Active=true;
+Branches->First();
+for (int j=0; j<Branches->RecordCount;j++)
+{
+int NumBranches=Branches->FieldByName("Номер ветви")->Value;
+int BranchesParent=Branches->FieldByName("Номер родителя")->Value;
+AnsiString TextBranches=Branches->FieldByName("Название")->Value;
+bool View=Branches->FieldByName("Показ")->Value;
+MyNodePtr = new TMyNode;
+MyNodePtr->Number=NumBranches;
+MyNodePtr->Parent=BranchesParent;
+MyNodePtr->Node=false;
+if (View==true)
+{
+TreeView5->Items->AddChildObject(N1,TextBranches,MyNodePtr);
+}
+
+Branches->Edit();
+
+Branches->Post();
+Branches->Next();
+}
+
+
+
+Nodes->Active=false;
+Nodes->CommandText="Select * From Узлы_7 Where ([Родитель])>0";
+Nodes->Active=true;
+Nodes->First();
+for(int i=0;i<Nodes->RecordCount;i++)
+{
+int NumNode=Nodes->FieldByName("Номер узла")->Value;
+NumParent=Nodes->FieldByName("Родитель")->Value;
+AnsiString TextNode=Nodes->FieldByName("Название")->Value;
+TTreeNode *ParNod;
+ParNod=N1;
+for (unsigned int k=0; k<NodeVector_7.size();k++)
+{
+ if (NodeVector_7[k].Number==NumParent)
+ {
+  ParNod=NodeVector_7[k].Nod;
+ }
+}
+
+MyNodePtr = new TMyNode;
+MyNodePtr->Number=NumNode;
+MyNodePtr->Parent=NumParent;
+MyNodePtr->Node=true;
+N=TreeView5->Items->AddChildObject(ParNod,TextNode,MyNodePtr);
+
+
+Nodes->Edit();
+
+Nodes->Post();
+Node NN;
+NN.Number=NumNode;
+NN.Parent=NumParent;
+NN.Nod=N;
+It_Node_7=NodeVector_7.end();
+NodeVector_7.insert(It_Node_7,NN);
+
+
+Branches->Active=false;
+Branches->CommandText="Select * From Ветви_7 Where [Номер родителя]="+IntToStr(NumNode);
+Branches->Active=true;
+Branches->First();
+for (int j=0; j<Branches->RecordCount;j++)
+{
+int NumBranches=Branches->FieldByName("Номер ветви")->Value;
+int BranchesParent=Branches->FieldByName("Номер родителя")->Value;
+AnsiString TextBranches=Branches->FieldByName("Название")->Value;
+
+
+MyNodePtr = new TMyNode;
+MyNodePtr->Number=NumBranches;
+MyNodePtr->Parent=BranchesParent;
+MyNodePtr->Node=false;
+TreeView5->Items->AddChildObject(N,TextBranches,MyNodePtr);
+
+
+Branches->Edit();
+
+Branches->Post();
+Branches->Next();
+}
+Nodes->Next();
+}
+Nodes->Active=false;
+Branches->Active=false;
+
+
+TreeView5->Items->EndUpdate();
+TreeView5->Items->Item[0]->Expand(false);
+/*
+for(int i=0;i<TreeView5->Items->Count;i++)
+{
+TreeView5->Items->Item[i]->Expand(true);
+}
+*/
+}
+//-----------------------------------------------------------------------------------------------------
+void __fastcall TDocuments::N3Click(TObject *Sender)
+{
+int Number;
+bool IsNode;
+TTreeNode *N;
+//PMyNode(TreeView1->Selected->Data)->Number;
+
+//Номер предка
+//Нужно узнать номер новой ветви
+int NumParentNode=PMyNode(SelNode->Data)->Number;
+//Является ли предок узлом?
+IsNode=PMyNode(SelNode->Data)->Node;
+if (IsNode==true)
+{
+//Если является то нужно только оформить на него ссылку
+Branches->Active=false;
+Branches->CommandText="Select * From Ветви_3";
+Branches->Active=true;
+Branches->Append();
+Branches->FieldByName("Номер родителя")->Value=NumParentNode;
+Branches->FieldByName("Название")->Value="Новое воздействие";
+Branches->Post();
+Branches->Last();
+Number=Branches->FieldByName("Номер ветви")->Value;
+
+MyNodePtr = new TMyNode;
+MyNodePtr->Number=Number;
+MyNodePtr->Parent=NumParentNode;
+MyNodePtr->Node=false;
+
+}
+else
+{
+//А если является ветвью то нужно ее перенести в узлы и оформить на нее ссылку.
+int Par;
+AnsiString Text;
+Branches->Active=false;
+Branches->CommandText="Select * From Ветви_3 Where [Номер ветви]="+IntToStr(NumParentNode);
+Branches->Active=true;
+Par=Branches->FieldByName("Номер родителя")->Value;
+Text=Branches->FieldByName("Название")->Value;
+Branches->Delete();
+Nodes->Active=false;
+Nodes->CommandText="Select * From Узлы_3";
+Nodes->Active=true;
+Nodes->Append();
+Nodes->FieldByName("Родитель")->Value=Par;
+Nodes->FieldByName("Название")->Value=Text;
+Nodes->Post();
+Nodes->Last();
+
+//PMyNode(TreeView1->Selected->Data)->Node
+PMyNode(SelNode->Data)->Number=Nodes->FieldByName("Номер узла")->Value;
+PMyNode(SelNode->Data)->Parent=Nodes->FieldByName("Родитель")->Value;
+PMyNode(SelNode->Data)->Node=true;
+NumParentNode=Nodes->FieldByName("Номер узла")->Value;
+Branches->Active=false;
+Branches->CommandText="Select * From Ветви_3";
+Branches->Active=true;
+Branches->Append();
+Branches->FieldByName("Номер родителя")->Value=NumParentNode;
+Branches->FieldByName("Название")->Value="Новое воздействие";
+Branches->Post();
+Branches->Last();
+Number=Branches->FieldByName("Номер ветви")->Value;
+
+
+MyNodePtr = new TMyNode;
+MyNodePtr->Number=Number;
+MyNodePtr->Parent=NumParentNode;
+MyNodePtr->Node=false;
+}
+TreeView1->Items->AddChildObject(SelNode,"Новое воздействие",MyNodePtr);        
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TDocuments::N10Click(TObject *Sender)
+{
+int Number;
+bool IsNode;
+TTreeNode *N;
+//PMyNode(TreeView1->Selected->Data)->Number;
+
+//Номер предка
+//Нужно узнать номер новой ветви
+int NumParentNode=PMyNode(SelNode->Data)->Number;
+//Является ли предок узлом?
+IsNode=PMyNode(SelNode->Data)->Node;
+if (IsNode==true)
+{
+//Если является то нужно только оформить на него ссылку
+Branches->Active=false;
+Branches->CommandText="Select * From Ветви_4";
+Branches->Active=true;
+Branches->Append();
+Branches->FieldByName("Номер родителя")->Value=NumParentNode;
+Branches->FieldByName("Название")->Value="Новое мероприятие";
+Branches->Post();
+Branches->Last();
+Number=Branches->FieldByName("Номер ветви")->Value;
+
+MyNodePtr = new TMyNode;
+MyNodePtr->Number=Number;
+MyNodePtr->Parent=NumParentNode;
+MyNodePtr->Node=false;
+
+}
+else
+{
+//А если является ветвью то нужно ее перенести в узлы и оформить на нее ссылку.
+int Par;
+AnsiString Text;
+Branches->Active=false;
+Branches->CommandText="Select * From Ветви_4 Where [Номер ветви]="+IntToStr(NumParentNode);
+Branches->Active=true;
+Par=Branches->FieldByName("Номер родителя")->Value;
+Text=Branches->FieldByName("Название")->Value;
+Branches->Delete();
+Nodes->Active=false;
+Nodes->CommandText="Select * From Узлы_4";
+Nodes->Active=true;
+Nodes->Append();
+Nodes->FieldByName("Родитель")->Value=Par;
+Nodes->FieldByName("Название")->Value=Text;
+Nodes->Post();
+Nodes->Last();
+
+//PMyNode(TreeView1->Selected->Data)->Node
+PMyNode(SelNode->Data)->Number=Nodes->FieldByName("Номер узла")->Value;
+PMyNode(SelNode->Data)->Parent=Nodes->FieldByName("Родитель")->Value;
+PMyNode(SelNode->Data)->Node=true;
+NumParentNode=Nodes->FieldByName("Номер узла")->Value;
+Branches->Active=false;
+Branches->CommandText="Select * From Ветви_4";
+Branches->Active=true;
+Branches->Append();
+Branches->FieldByName("Номер родителя")->Value=NumParentNode;
+Branches->FieldByName("Название")->Value="Новое мероприятие";
+Branches->Post();
+Branches->Last();
+Number=Branches->FieldByName("Номер ветви")->Value;
+
+
+MyNodePtr = new TMyNode;
+MyNodePtr->Number=Number;
+MyNodePtr->Parent=NumParentNode;
+MyNodePtr->Node=false;
+}
+TreeView2->Items->AddChildObject(SelNode,"Новое мероприятие",MyNodePtr);        
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TDocuments::N11Click(TObject *Sender)
+{
+//Добавить проверку на отсутствие у родителя удаляемой ветви (узла) потомков
+//и перевода его в категорию ветвей
+TTreeNode *N;
+
+
+int Number=PMyNode(TreeView2->Selected->Data)->Number;
+int Parent=PMyNode(TreeView2->Selected->Data)->Parent;
+bool IsNode=PMyNode(TreeView2->Selected->Data)->Node;
+if (IsNode==true)
+{
+DeleteNode("Узлы_4","Ветви_4", Number);
+
+}
+else
+{
+Comm->CommandText="Delete * From Ветви_4 Where [Номер ветви]="+IntToStr(Number);
+Comm->Execute();
+
+}
+
+Branches->Active=false;
+Branches->CommandText="Select * From Ветви_4 Where [Номер родителя]="+IntToStr(Parent);
+Branches->Active=true;
+Nodes->Active=false;
+Nodes->CommandText="Select * From Узлы_4 Where Родитель="+IntToStr(Parent);
+Nodes->Active=true;
+if (Branches->RecordCount==0 & Nodes->RecordCount==0)
+{
+ Nodes->Active=false;
+ Nodes->CommandText="Select * From Узлы_4 Where [Номер узла]="+IntToStr(Parent);
+ Nodes->Active=true;
+ if (Nodes->RecordCount==0)
+ {
+  ShowMessage("Ошибка! Удалялась запись в таблице узлов номер "+IntToStr(Number)+" предок номер "+IntToStr(Parent));
+  ShowMessage("Не найдена запись в таблице узлов номер "+IntToStr(Parent));
+
+ }
+ else
+ {
+ int NumParent=Nodes->FieldByName("Родитель")->Value;
+ AnsiString Text=Nodes->FieldByName("Название")->Value;
+  if (NumParent!=0)
+ {
+ Nodes->Delete();
+ Branches->Active=false;
+ Branches->CommandText="Select * From Ветви_4";
+ Branches->Active=true;
+ Branches->Append();
+ Branches->FieldByName("Номер родителя")->Value=NumParent;
+ Branches->FieldByName("Название")->Value=Text;
+ Branches->Post();
+ Branches->Last();
+ int Number=Branches->FieldByName("Номер ветви")->Value;
+ N=TreeView2->GetNodeAt(XX,YY);
+ TTreeNode * ParNode=N->Parent;
+ PMyNode(ParNode->Data)->Number=Number;
+ PMyNode(ParNode->Data)->Parent=NumParent;
+ PMyNode(ParNode->Data)->Node=false;
+ //
+ //ParNode->Text=Text+" "+IntToStr(Number)+" "+IntToStr(NumParent)+" Ветвь";
+}
+}
+}
+TreeView2->Items->Delete(TreeView2->GetNodeAt(XX,YY));
+        
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TDocuments::N12Click(TObject *Sender)
+{
+int Number;
+bool IsNode;
+TTreeNode *N;
+//PMyNode(TreeView1->Selected->Data)->Number;
+
+//Номер предка
+//Нужно узнать номер новой ветви
+int NumParentNode=PMyNode(SelNode->Data)->Number;
+//Является ли предок узлом?
+IsNode=PMyNode(SelNode->Data)->Node;
+if (IsNode==true)
+{
+//Если является то нужно только оформить на него ссылку
+Branches->Active=false;
+Branches->CommandText="Select * From Ветви_5";
+Branches->Active=true;
+Branches->Append();
+Branches->FieldByName("Номер родителя")->Value=NumParentNode;
+Branches->FieldByName("Название")->Value="Новая территория";
+Branches->Post();
+Branches->Last();
+Number=Branches->FieldByName("Номер ветви")->Value;
+
+MyNodePtr = new TMyNode;
+MyNodePtr->Number=Number;
+MyNodePtr->Parent=NumParentNode;
+MyNodePtr->Node=false;
+
+}
+else
+{
+//А если является ветвью то нужно ее перенести в узлы и оформить на нее ссылку.
+int Par;
+AnsiString Text;
+Branches->Active=false;
+Branches->CommandText="Select * From Ветви_5 Where [Номер ветви]="+IntToStr(NumParentNode);
+Branches->Active=true;
+Par=Branches->FieldByName("Номер родителя")->Value;
+Text=Branches->FieldByName("Название")->Value;
+Branches->Delete();
+Nodes->Active=false;
+Nodes->CommandText="Select * From Узлы_5";
+Nodes->Active=true;
+Nodes->Append();
+Nodes->FieldByName("Родитель")->Value=Par;
+Nodes->FieldByName("Название")->Value=Text;
+Nodes->Post();
+Nodes->Last();
+
+//PMyNode(TreeView1->Selected->Data)->Node
+PMyNode(SelNode->Data)->Number=Nodes->FieldByName("Номер узла")->Value;
+PMyNode(SelNode->Data)->Parent=Nodes->FieldByName("Родитель")->Value;
+PMyNode(SelNode->Data)->Node=true;
+NumParentNode=Nodes->FieldByName("Номер узла")->Value;
+Branches->Active=false;
+Branches->CommandText="Select * From Ветви_5";
+Branches->Active=true;
+Branches->Append();
+Branches->FieldByName("Номер родителя")->Value=NumParentNode;
+Branches->FieldByName("Название")->Value="Новая территория";
+Branches->Post();
+Branches->Last();
+Number=Branches->FieldByName("Номер ветви")->Value;
+
+
+MyNodePtr = new TMyNode;
+MyNodePtr->Number=Number;
+MyNodePtr->Parent=NumParentNode;
+MyNodePtr->Node=false;
+}
+TreeView3->Items->AddChildObject(SelNode,"Новая территория",MyNodePtr);        
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TDocuments::N13Click(TObject *Sender)
+{
+//Добавить проверку на отсутствие у родителя удаляемой ветви (узла) потомков
+//и перевода его в категорию ветвей
+TTreeNode *N;
+//N=TreeView1->GetNodeAt(XX,YY);
+
+int Number=PMyNode(TreeView3->Selected->Data)->Number;
+int Parent=PMyNode(TreeView3->Selected->Data)->Parent;
+bool IsNode=PMyNode(TreeView3->Selected->Data)->Node;
+if (IsNode==true)
+{
+DeleteNode("Узлы_5","Ветви_5", Number);
+
+}
+else
+{
+Comm->CommandText="Delete * From Ветви_5 Where [Номер ветви]="+IntToStr(Number);
+Comm->Execute();
+
+}
+
+Branches->Active=false;
+Branches->CommandText="Select * From Ветви_5 Where [Номер родителя]="+IntToStr(Parent);
+Branches->Active=true;
+Nodes->Active=false;
+Nodes->CommandText="Select * From Узлы_5 Where Родитель="+IntToStr(Parent);
+Nodes->Active=true;
+if (Branches->RecordCount==0 & Nodes->RecordCount==0)
+{
+ Nodes->Active=false;
+ Nodes->CommandText="Select * From Узлы_5 Where [Номер узла]="+IntToStr(Parent);
+ Nodes->Active=true;
+ if (Nodes->RecordCount==0)
+ {
+  ShowMessage("Ошибка! Удалялась запись в таблице узлов номер "+IntToStr(Number)+" предок номер "+IntToStr(Parent));
+  ShowMessage("Не найдена запись в таблице узлов номер "+IntToStr(Parent));
+
+ }
+ else
+ {
+ int NumParent=Nodes->FieldByName("Родитель")->Value;
+ AnsiString Text=Nodes->FieldByName("Название")->Value;
+  if (NumParent!=0)
+ {
+ Nodes->Delete();
+ Branches->Active=false;
+ Branches->CommandText="Select * From Ветви_5";
+ Branches->Active=true;
+ Branches->Append();
+ Branches->FieldByName("Номер родителя")->Value=NumParent;
+ Branches->FieldByName("Название")->Value=Text;
+ Branches->Post();
+ Branches->Last();
+ int Number=Branches->FieldByName("Номер ветви")->Value;
+ N=TreeView3->GetNodeAt(XX,YY);
+ TTreeNode * ParNode=N->Parent;
+ PMyNode(ParNode->Data)->Number=Number;
+ PMyNode(ParNode->Data)->Parent=NumParent;
+ PMyNode(ParNode->Data)->Node=false;
+ //
+ //ParNode->Text=Text+" "+IntToStr(Number)+" "+IntToStr(NumParent)+" Ветвь";
+}
+}
+}
+TreeView3->Items->Delete(TreeView3->GetNodeAt(XX,YY));
+        
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TDocuments::N14Click(TObject *Sender)
+{
+int Number;
+bool IsNode;
+TTreeNode *N;
+
+
+//Номер предка
+//Нужно узнать номер новой ветви
+int NumParentNode=PMyNode(SelNode->Data)->Number;
+//Является ли предок узлом?
+IsNode=PMyNode(SelNode->Data)->Node;
+if (IsNode==true)
+{
+//Если является то нужно только оформить на него ссылку
+Branches->Active=false;
+Branches->CommandText="Select * From Ветви_6";
+Branches->Active=true;
+Branches->Append();
+Branches->FieldByName("Номер родителя")->Value=NumParentNode;
+Branches->FieldByName("Название")->Value="Новый вид деятельности";
+Branches->Post();
+Branches->Last();
+Number=Branches->FieldByName("Номер ветви")->Value;
+
+MyNodePtr = new TMyNode;
+MyNodePtr->Number=Number;
+MyNodePtr->Parent=NumParentNode;
+MyNodePtr->Node=false;
+
+}
+else
+{
+//А если является ветвью то нужно ее перенести в узлы и оформить на нее ссылку.
+int Par;
+AnsiString Text;
+Branches->Active=false;
+Branches->CommandText="Select * From Ветви_6 Where [Номер ветви]="+IntToStr(NumParentNode);
+Branches->Active=true;
+Par=Branches->FieldByName("Номер родителя")->Value;
+Text=Branches->FieldByName("Название")->Value;
+Branches->Delete();
+Nodes->Active=false;
+Nodes->CommandText="Select * From Узлы_6";
+Nodes->Active=true;
+Nodes->Append();
+Nodes->FieldByName("Родитель")->Value=Par;
+Nodes->FieldByName("Название")->Value=Text;
+Nodes->Post();
+Nodes->Last();
+
+
+PMyNode(SelNode->Data)->Number=Nodes->FieldByName("Номер узла")->Value;
+PMyNode(SelNode->Data)->Parent=Nodes->FieldByName("Родитель")->Value;
+PMyNode(SelNode->Data)->Node=true;
+NumParentNode=Nodes->FieldByName("Номер узла")->Value;
+Branches->Active=false;
+Branches->CommandText="Select * From Ветви_6";
+Branches->Active=true;
+Branches->Append();
+Branches->FieldByName("Номер родителя")->Value=NumParentNode;
+Branches->FieldByName("Название")->Value="Новый вид деятельности";
+Branches->Post();
+Branches->Last();
+Number=Branches->FieldByName("Номер ветви")->Value;
+
+
+MyNodePtr = new TMyNode;
+MyNodePtr->Number=Number;
+MyNodePtr->Parent=NumParentNode;
+MyNodePtr->Node=false;
+}
+TreeView4->Items->AddChildObject(SelNode,"Новый вид деятельности",MyNodePtr);
+        
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TDocuments::N15Click(TObject *Sender)
+{
+//Добавить проверку на отсутствие у родителя удаляемой ветви (узла) потомков
+//и перевода его в категорию ветвей
+TTreeNode *N;
+//N=TreeView1->GetNodeAt(XX,YY);
+
+int Number=PMyNode(TreeView4->Selected->Data)->Number;
+int Parent=PMyNode(TreeView4->Selected->Data)->Parent;
+bool IsNode=PMyNode(TreeView4->Selected->Data)->Node;
+if (IsNode==true)
+{
+DeleteNode("Узлы_6","Ветви_6", Number);
+
+}
+else
+{
+Comm->CommandText="Delete * From Ветви_6 Where [Номер ветви]="+IntToStr(Number);
+Comm->Execute();
+
+}
+
+Branches->Active=false;
+Branches->CommandText="Select * From Ветви_6 Where [Номер родителя]="+IntToStr(Parent);
+Branches->Active=true;
+Nodes->Active=false;
+Nodes->CommandText="Select * From Узлы_6 Where Родитель="+IntToStr(Parent);
+Nodes->Active=true;
+if (Branches->RecordCount==0 & Nodes->RecordCount==0)
+{
+ Nodes->Active=false;
+ Nodes->CommandText="Select * From Узлы_6 Where [Номер узла]="+IntToStr(Parent);
+ Nodes->Active=true;
+ if (Nodes->RecordCount==0)
+ {
+  ShowMessage("Ошибка! Удалялась запись в таблице узлов номер "+IntToStr(Number)+" предок номер "+IntToStr(Parent));
+  ShowMessage("Не найдена запись в таблице узлов номер "+IntToStr(Parent));
+
+ }
+ else
+ {
+ int NumParent=Nodes->FieldByName("Родитель")->Value;
+ AnsiString Text=Nodes->FieldByName("Название")->Value;
+  if (NumParent!=0)
+ {
+ Nodes->Delete();
+ Branches->Active=false;
+ Branches->CommandText="Select * From Ветви_6";
+ Branches->Active=true;
+ Branches->Append();
+ Branches->FieldByName("Номер родителя")->Value=NumParent;
+ Branches->FieldByName("Название")->Value=Text;
+ Branches->Post();
+ Branches->Last();
+ int Number=Branches->FieldByName("Номер ветви")->Value;
+ N=TreeView4->GetNodeAt(XX,YY);
+ TTreeNode * ParNode=N->Parent;
+ PMyNode(ParNode->Data)->Number=Number;
+ PMyNode(ParNode->Data)->Parent=NumParent;
+ PMyNode(ParNode->Data)->Node=false;
+ //
+ //ParNode->Text=Text+" "+IntToStr(Number)+" "+IntToStr(NumParent)+" Ветвь";
+}
+}
+}
+TreeView4->Items->Delete(TreeView4->GetNodeAt(XX,YY));
+        
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TDocuments::N16Click(TObject *Sender)
+{
+int Number;
+bool IsNode;
+TTreeNode *N;
+
+
+//Номер предка
+//Нужно узнать номер новой ветви
+int NumParentNode=PMyNode(SelNode->Data)->Number;
+//Является ли предок узлом?
+IsNode=PMyNode(SelNode->Data)->Node;
+if (IsNode==true)
+{
+//Если является то нужно только оформить на него ссылку
+Branches->Active=false;
+Branches->CommandText="Select * From Ветви_7";
+Branches->Active=true;
+Branches->Append();
+Branches->FieldByName("Номер родителя")->Value=NumParentNode;
+Branches->FieldByName("Название")->Value="Новый аспект";
+Branches->Post();
+Branches->Last();
+Number=Branches->FieldByName("Номер ветви")->Value;
+
+MyNodePtr = new TMyNode;
+MyNodePtr->Number=Number;
+MyNodePtr->Parent=NumParentNode;
+MyNodePtr->Node=false;
+
+}
+else
+{
+//А если является ветвью то нужно ее перенести в узлы и оформить на нее ссылку.
+int Par;
+AnsiString Text;
+Branches->Active=false;
+Branches->CommandText="Select * From Ветви_7 Where [Номер ветви]="+IntToStr(NumParentNode);
+Branches->Active=true;
+Par=Branches->FieldByName("Номер родителя")->Value;
+Text=Branches->FieldByName("Название")->Value;
+Branches->Delete();
+Nodes->Active=false;
+Nodes->CommandText="Select * From Узлы_7";
+Nodes->Active=true;
+Nodes->Append();
+Nodes->FieldByName("Родитель")->Value=Par;
+Nodes->FieldByName("Название")->Value=Text;
+Nodes->Post();
+Nodes->Last();
+
+
+PMyNode(SelNode->Data)->Number=Nodes->FieldByName("Номер узла")->Value;
+PMyNode(SelNode->Data)->Parent=Nodes->FieldByName("Родитель")->Value;
+PMyNode(SelNode->Data)->Node=true;
+NumParentNode=Nodes->FieldByName("Номер узла")->Value;
+Branches->Active=false;
+Branches->CommandText="Select * From Ветви_7";
+Branches->Active=true;
+Branches->Append();
+Branches->FieldByName("Номер родителя")->Value=NumParentNode;
+Branches->FieldByName("Название")->Value="Новый аспект";
+Branches->Post();
+Branches->Last();
+Number=Branches->FieldByName("Номер ветви")->Value;
+
+
+MyNodePtr = new TMyNode;
+MyNodePtr->Number=Number;
+MyNodePtr->Parent=NumParentNode;
+MyNodePtr->Node=false;
+}
+TreeView5->Items->AddChildObject(SelNode,"Новый аспект",MyNodePtr);        
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TDocuments::N17Click(TObject *Sender)
+{
+//Добавить проверку на отсутствие у родителя удаляемой ветви (узла) потомков
+//и перевода его в категорию ветвей
+TTreeNode *N;
+
+
+int Number=PMyNode(TreeView5->Selected->Data)->Number;
+int Parent=PMyNode(TreeView5->Selected->Data)->Parent;
+bool IsNode=PMyNode(TreeView5->Selected->Data)->Node;
+if (IsNode==true)
+{
+DeleteNode("Узлы_7","Ветви_7", Number);
+
+}
+else
+{
+Comm->CommandText="Delete * From Ветви_7 Where [Номер ветви]="+IntToStr(Number);
+Comm->Execute();
+
+}
+
+Branches->Active=false;
+Branches->CommandText="Select * From Ветви_7 Where [Номер родителя]="+IntToStr(Parent);
+Branches->Active=true;
+Nodes->Active=false;
+Nodes->CommandText="Select * From Узлы_7 Where Родитель="+IntToStr(Parent);
+Nodes->Active=true;
+if (Branches->RecordCount==0 & Nodes->RecordCount==0)
+{
+ Nodes->Active=false;
+ Nodes->CommandText="Select * From Узлы_7 Where [Номер узла]="+IntToStr(Parent);
+ Nodes->Active=true;
+ if (Nodes->RecordCount==0)
+ {
+  ShowMessage("Ошибка! Удалялась запись в таблице узлов номер "+IntToStr(Number)+" предок номер "+IntToStr(Parent));
+  ShowMessage("Не найдена запись в таблице узлов номер "+IntToStr(Parent));
+
+ }
+ else
+ {
+ int NumParent=Nodes->FieldByName("Родитель")->Value;
+ AnsiString Text=Nodes->FieldByName("Название")->Value;
+  if (NumParent!=0)
+ {
+ Nodes->Delete();
+ Branches->Active=false;
+ Branches->CommandText="Select * From Ветви_7";
+ Branches->Active=true;
+ Branches->Append();
+ Branches->FieldByName("Номер родителя")->Value=NumParent;
+ Branches->FieldByName("Название")->Value=Text;
+ Branches->Post();
+ Branches->Last();
+ int Number=Branches->FieldByName("Номер ветви")->Value;
+ N=TreeView5->GetNodeAt(XX,YY);
+ TTreeNode * ParNode=N->Parent;
+ PMyNode(ParNode->Data)->Number=Number;
+ PMyNode(ParNode->Data)->Parent=NumParent;
+ PMyNode(ParNode->Data)->Node=false;
+
+}
+}
+}
+TreeView5->Items->Delete(TreeView5->GetNodeAt(XX,YY));
+}
+//---------------------------------------------------------------------------
+int TDocuments::DeleteNode(String NameNode, String NameBranch, int Number)
+{
+MP<TADODataSet>Tab(this);
+Tab->Connection=Zast->ADOConn;
+Tab->CommandText="Select * From "+NameNode+" Where [Родитель]="+IntToStr(Number);
+Tab->Active=true;
+
+if(Tab->RecordCount!=0)
+{
+for(Tab->First();!Tab->Eof;Tab->Next())
+{
+ int Parent=Tab->FieldByName("Номер узла")->AsInteger;
+ DeleteNode(NameNode, NameBranch, Parent);
+}
+
+}
+Comm->CommandText="Delete * From "+NameBranch+" Where [Номер родителя]="+IntToStr(Number);
+Comm->Execute();
+
+ Comm->CommandText="Delete * From "+NameNode+" Where [Номер узла]="+IntToStr(Number);
+ Comm->Execute();
+
+
+
+return -1;
+}
+//---------------------------------------------------------------------------

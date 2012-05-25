@@ -19,10 +19,11 @@ __published:	// IDE-managed Components
         TComboBox *CbLogin;
         TEdit *EdPass;
         TButton *Button1;
-        void __fastcall FormShow(TObject *Sender);
         void __fastcall Button1Click(TObject *Sender);
         void __fastcall EdPassKeyPress(TObject *Sender, char &Key);
         void __fastcall FormCreate(TObject *Sender);
+        void __fastcall CbLoginClick(TObject *Sender);
+        void __fastcall FormShow(TObject *Sender);
 private:	// User declarations
 public:		// User declarations
         __fastcall TPass(TComponent* Owner);

@@ -19,32 +19,10 @@ __fastcall TPass::TPass(TComponent* Owner)
 }
 //---------------------------------------------------------------------------
 
-void __fastcall TPass::FormShow(TObject *Sender)
-{
-
- Zast->MClient->Act.ParamComm.clear();
- Zast->MClient->Act.ParamComm.push_back("ViewLogins");
-
- Zast->MClient->ReadTable("Аспекты","Select Login, Code1, Code2 from Logins Where Role<>1", "Select Login, Code1, Code2 From TempLogins");
-
-}
-//---------------------------------------------------------------------------
 void TPass::ViewLogins()
 {
 
-MP<TADODataSet>Tab(this);
-Tab->Connection=Zast->MClient->ADOAspect;
-Tab->CommandText="Select Login, Code1, Code2 From TempLogins";
-Tab->Active=true;
 
-CbLogin->Clear();
-for(Tab->First();!Tab->Eof;Tab->Next())
-{
-CbLogin->Items->Add(Tab->FieldByName("Login")->AsString);
-}
-CbLogin->ItemIndex=0;
-EdPass->Text="";
-EdPass->SetFocus();
 
 }
 //---------------------------------------------------------------------------
@@ -54,6 +32,10 @@ MP<TADODataSet>Tab(this);
 Tab->Connection=Zast->MClient->ADOAspect;
 Tab->CommandText="Select * From TempLogins Where Login='"+CbLogin->Text+"'";
 Tab->Active=true;
+
+Tab->First();
+Tab->MoveBy(CbLogin->ItemIndex);
+int NumRole=Tab->FieldByName("Role")->AsInteger;
 
 String TabLogin=Tab->FieldByName("Login")->AsString;
 String Code=Tab->FieldByName("Code1")->AsString+Tab->FieldByName("Code2")->AsString;
@@ -70,7 +52,8 @@ if(LG==TabLogin)
 
 
 Zast->MClient->Login=TabLogin;
-Zast->MClient->LoginResult(TabLogin,EdPass->Text, true);
+
+Zast->MClient->LoginResult(TabLogin,EdPass->Text, NumRole, true);
 this->Close();
 
 }
@@ -78,7 +61,7 @@ else
 {
 this->Hide();
 ShowMessage("Пароль ошибочен");
-Zast->MClient->LoginResult(TabLogin,EdPass->Text, false);
+Zast->MClient->LoginResult(TabLogin,EdPass->Text, NumRole,  false);
 Sleep(2000);
 Zast->Close();
 }
@@ -105,6 +88,18 @@ void __fastcall TPass::FormCreate(TObject *Sender)
 ShowWindow(Application->Handle,SW_RESTORE);
 SetWindowPos(Handle, HWND_TOPMOST,0,0,0,0,             SWP_NOMOVE|SWP_NOSIZE);
 this->BringToFront();
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TPass::CbLoginClick(TObject *Sender)
+{
+EdPass->SetFocus();
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TPass::FormShow(TObject *Sender)
+{
+Pass->EdPass->SetFocus();        
 }
 //---------------------------------------------------------------------------
 

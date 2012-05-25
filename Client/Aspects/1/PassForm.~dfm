@@ -48,6 +48,7 @@ object Pass: TPass
     Style = csDropDownList
     ItemHeight = 13
     TabOrder = 0
+    OnClick = CbLoginClick
   end
   object EdPass: TEdit
     Left = 47

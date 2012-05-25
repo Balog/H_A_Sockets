@@ -120,7 +120,7 @@ switch(Comm)
 
  //далее - обновление списка подразделений
  //ћожет быть стоит показывать Form1 после обновлени€.
-Zast->PrepareUpdateOtd->Execute();
+Zast->BeginWork->Execute();
  break;
  }
  case 7:
@@ -155,7 +155,7 @@ Zast->PrepareUpdateOtd->Execute();
  else
  {
   // оманда на продолжение работы
-  Zast->PrepareUpdateOtd->Execute();
+//  Zast->PrepareUpdateOtd->Execute();
  }
  break;
  }
@@ -413,12 +413,14 @@ catch (...)
 }
 }
 //**************************************************************************
-void Client::LoginResult(String Login, String Pass, bool Ok)
+void Client::LoginResult(String Login, String Pass, int NumRole, bool Ok)
 {
 //ѕередача на сервер выбраного логина, введенного парол€ (если проверка не прошла) и результата проверки.
 //ѕроверку парол€ произвожу на клиенте дл€ компактности кода и быстродействи€
 //ќт сервера ожидаем только квитанции о прохождении команды. ≈сли пароль неверен то назад ничего не отсылаетс€ вообще.
  Act.ParamComm.clear();
+ Act.ParamComm.push_back(Login);
+ Act.ParamComm.push_back(IntToStr(NumRole));
  Act.WaitCommand=0;
 
 if(Ok)

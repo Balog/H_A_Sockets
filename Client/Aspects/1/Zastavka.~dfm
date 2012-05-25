@@ -9913,22 +9913,6 @@ object Zast: TZast
   object ActionManager1: TActionManager
     Left = 72
     Top = 128
-    object RegForm_Form1: TAction
-      Caption = 'RegForm_Form1'
-      OnExecute = RegForm_Form1Execute
-    end
-    object RegForm_Form2: TAction
-      Caption = 'RegForm_Form2'
-      OnExecute = RegForm_Form2Execute
-    end
-    object PostRegForm_Form1: TAction
-      Caption = 'PostRegForm_Form1'
-      OnExecute = PostRegForm_Form1Execute
-    end
-    object PostRegForm_Form2: TAction
-      Caption = 'PostRegForm_Form2'
-      OnExecute = PostRegForm_Form2Execute
-    end
     object PrepareConnectBase: TAction
       Caption = 'PrepareConnectBase'
       OnExecute = PrepareConnectBaseExecute
@@ -9945,123 +9929,9 @@ object Zast: TZast
       Caption = 'ViewLogins'
       OnExecute = ViewLoginsExecute
     end
-    object UpdateOtdels: TAction
-      Caption = 'UpdateOtdels'
-      OnExecute = UpdateOtdelsExecute
-    end
-    object Trigger: TAction
-      Caption = 'Trigger'
-    end
-    object UpdateLogins: TAction
-      Caption = 'UpdateLogins'
-      OnExecute = UpdateLoginsExecute
-    end
-    object UpdateOtdelsMan: TAction
-      Caption = 'UpdateOtdelsMan'
-      OnExecute = UpdateOtdelsManExecute
-    end
-    object UpdateLoginsMan: TAction
-      Caption = 'UpdateLoginsMan'
-      OnExecute = UpdateLoginsManExecute
-    end
-    object UpdateObslOtdelMan: TAction
-      Caption = 'UpdateObslOtdelMan'
-      OnExecute = UpdateObslOtdelManExecute
-    end
-    object SaveLogins: TAction
-      Caption = 'SaveLogins'
-      OnExecute = SaveLoginsExecute
-    end
-    object SaveObslOtd: TAction
-      Caption = 'SaveObslOtd'
-      OnExecute = SaveObslOtdExecute
-    end
-    object SendMergeSave: TAction
-      Caption = 'SendMergeSave'
-      OnExecute = SendMergeSaveExecute
-    end
-    object PrepareSaveLogins: TAction
-      Caption = 'PrepareSaveLogins'
-      OnExecute = PrepareSaveLoginsExecute
-    end
-    object PostSaveLogins: TAction
-      Caption = 'PostSaveLogins'
-      OnExecute = PostSaveLoginsExecute
-    end
-    object SaveTempPodr: TAction
-      Caption = 'SaveTempPodr'
-      OnExecute = SaveTempPodrExecute
-    end
-    object LoadNewLogins: TAction
-      Caption = 'LoadNewLogins'
-      OnExecute = LoadNewLoginsExecute
-    end
-    object CorrectNewLogins: TAction
-      Caption = 'CorrectNewLogins'
-      OnExecute = CorrectNewLoginsExecute
-    end
-    object ReadOtdels: TAction
-      Caption = 'ReadOtdels'
-      OnExecute = ReadOtdelsExecute
-    end
-    object PrepareRead: TAction
-      Caption = 'PrepareRead'
-      OnExecute = PrepareReadExecute
-    end
-    object PostRead: TAction
-      Caption = 'PostRead'
-      OnExecute = PostReadExecute
-    end
-    object PrepareUpdateOtd: TAction
-      Caption = 'PrepareUpdateOtd'
-      OnExecute = PrepareUpdateOtdExecute
-    end
-    object PostUpdateOtd: TAction
-      Caption = 'PostUpdateOtd'
-      OnExecute = PostUpdateOtdExecute
-    end
-    object ReadOtdelsAuto: TAction
-      Caption = 'ReadOtdelsAuto'
-      OnExecute = ReadOtdelsAutoExecute
-    end
-    object LoadTypeOp: TAction
-      Caption = 'LoadTypeOp'
-      OnExecute = LoadTypeOpExecute
-    end
-    object LoadOperation: TAction
-      Caption = 'LoadOperation'
-      OnExecute = LoadOperationExecute
-    end
-    object MergeType_Op: TAction
-      Caption = 'MergeType_Op'
-      OnExecute = MergeType_OpExecute
-    end
-    object LoadEvents: TAction
-      Caption = 'LoadEvents'
-      OnExecute = LoadEventsExecute
-    end
-    object MergeEvents: TAction
-      Caption = 'MergeEvents'
-      OnExecute = MergeEventsExecute
-    end
-  end
-  object ActionManager2: TActionManager
-    Left = 112
-    Top = 128
-    object LoadTypeOp1: TAction
-      Caption = 'LoadTypeOp1'
-    end
-    object LoadOperation1: TAction
-      Caption = 'LoadOperation1'
-    end
-    object MergeType_Op1: TAction
-      Caption = 'MergeType_Op1'
-    end
-    object LoadEvents1: TAction
-      Caption = 'LoadEvents1'
-    end
-    object MergeEvents1: TAction
-      Caption = 'MergeEvents1'
+    object BeginWork: TAction
+      Caption = 'BeginWork'
+      OnExecute = BeginWorkExecute
     end
   end
 end
