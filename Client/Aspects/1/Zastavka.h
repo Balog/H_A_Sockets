@@ -112,6 +112,16 @@ __published:	// IDE-managed Components
         TAction *ViewLogins;
         TAction *BeginWork;
         TAction *DeletePodr;
+        TAction *MergeMetodika;
+        TAction *ReadMetodika;
+        TAction *ReadDoc;
+        TAction *ReadPodrazd;
+        TAction *MergePodrazd;
+        TAction *ReadCrit;
+        TAction *MergeCrit;
+        TAction *ReadSit;
+        TAction *MergeSit1;
+        TAction *MergeSit2;
         void __fastcall Timer1Timer(TObject *Sender);
         void __fastcall Image1Click(TObject *Sender);
         void __fastcall FormShow(TObject *Sender);
@@ -128,6 +138,16 @@ __published:	// IDE-managed Components
           int &ErrorCode);
         void __fastcall BeginWorkExecute(TObject *Sender);
         void __fastcall DeletePodrExecute(TObject *Sender);
+        void __fastcall MergeMetodikaExecute(TObject *Sender);
+        void __fastcall ReadMetodikaExecute(TObject *Sender);
+        void __fastcall ReadDocExecute(TObject *Sender);
+        void __fastcall ReadPodrazdExecute(TObject *Sender);
+        void __fastcall MergePodrazdExecute(TObject *Sender);
+        void __fastcall ReadCritExecute(TObject *Sender);
+        void __fastcall MergeCritExecute(TObject *Sender);
+        void __fastcall ReadSitExecute(TObject *Sender);
+        void __fastcall MergeSit1Execute(TObject *Sender);
+        void __fastcall MergeSit2Execute(TObject *Sender);
 private:	// User declarations
 String Path;
 TLocateOptions SO;

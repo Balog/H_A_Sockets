@@ -264,7 +264,7 @@ DB=ADOConn;
 }
 int FromPos=ClientSQL.LowerCase().Pos("from");
 String DelText="Delete * "+ClientSQL.SubString(FromPos, ClientSQL.Length());
-FromPos=DelText.Pos("order");
+FromPos=DelText.LowerCase().Pos("order");
 if(FromPos>0)
 {
 DelText=DelText.SubString(0, FromPos-2);
@@ -375,7 +375,8 @@ DelText=DelText.SubString(0, FromPos-2);
         }
         case 6:
         {
-
+        String F=Field.SubString(4, Field.Length());
+        Tab->FieldList->Fields[i]->Value=F;
         break;
         }
 

@@ -24,7 +24,7 @@ object Documents: TDocuments
     Top = 0
     Width = 1031
     Height = 736
-    ActivePage = TabTerr
+    ActivePage = TabSit
     Align = alClient
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
@@ -33,7 +33,7 @@ object Documents: TDocuments
     Font.Style = []
     MultiLine = True
     ParentFont = False
-    TabIndex = 6
+    TabIndex = 3
     TabOrder = 0
     object TabMetod: TTabSheet
       Caption = #1052#1077#1090#1086#1076#1080#1082#1072
@@ -424,15 +424,19 @@ object Documents: TDocuments
       Caption = #1063#1090#1077#1085#1080#1077
       object N2: TMenuItem
         Caption = #1052#1077#1090#1086#1076#1080#1082#1072
+        OnClick = N2Click
       end
       object N27: TMenuItem
         Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103
+        OnClick = N27Click
       end
       object N26: TMenuItem
         Caption = #1050#1088#1080#1090#1077#1088#1080#1080
+        OnClick = N26Click
       end
       object N28: TMenuItem
         Caption = #1057#1080#1090#1091#1072#1094#1080#1080
+        OnClick = N28Click
       end
       object N6: TMenuItem
         Caption = #1055#1077#1088#1077#1095#1077#1085#1100' '#1074#1080#1076#1086#1074' '#1074#1086#1079#1076#1077#1081#1089#1090#1074#1080#1103

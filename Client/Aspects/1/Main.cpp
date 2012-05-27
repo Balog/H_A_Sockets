@@ -2318,3 +2318,35 @@ Application->HelpFile=ExtractFilePath(Application->ExeName)+"NetAspects.HLP";
 }
 //---------------------------------------------------------------------------
 
+void __fastcall TDocuments::N2Click(TObject *Sender)
+{
+ReadWrite.clear();
+ReadWrite.push_back("ReadMetodika");
+Zast->ReadDoc->Execute();
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TDocuments::N27Click(TObject *Sender)
+{
+ReadWrite.clear();
+ReadWrite.push_back("ReadPodrazd");
+Zast->ReadDoc->Execute();
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TDocuments::N26Click(TObject *Sender)
+{
+ReadWrite.clear();
+ReadWrite.push_back("ReadCrit");
+Zast->ReadDoc->Execute();
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TDocuments::N28Click(TObject *Sender)
+{
+ReadWrite.clear();
+ReadWrite.push_back("ReadSit");
+Zast->ReadDoc->Execute();
+}
+//---------------------------------------------------------------------------
+

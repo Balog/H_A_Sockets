@@ -2304,3 +2304,41 @@ else
 }
 //---------------------------------------------------------------------------
 
+void __fastcall TDocuments::N8Click(TObject *Sender)
+{
+this->Close();        
+}
+//---------------------------------------------------------------------------
+
+
+void __fastcall TDocuments::N1Click(TObject *Sender)
+{
+Application->HelpFile=ExtractFilePath(Application->ExeName)+"NetAspects.HLP";
+  Application->HelpJump("IDH_ÑÒÀÐÒ_ÃËÀÂÑÏÅÖ");        
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TDocuments::N2Click(TObject *Sender)
+{
+ReadWrite.clear();
+ReadWrite.push_back("ReadMetodika");
+Zast->ReadDoc->Execute();
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TDocuments::N27Click(TObject *Sender)
+{
+ReadWrite.clear();
+ReadWrite.push_back("ReadPodrazd");
+Zast->ReadDoc->Execute();
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TDocuments::N26Click(TObject *Sender)
+{
+ReadWrite.clear();
+ReadWrite.push_back("ReadCrit");
+Zast->ReadDoc->Execute();
+}
+//---------------------------------------------------------------------------
+

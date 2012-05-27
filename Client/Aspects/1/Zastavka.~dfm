@@ -9933,5 +9933,49 @@ object Zast: TZast
       Caption = 'BeginWork'
       OnExecute = BeginWorkExecute
     end
+    object DeletePodr: TAction
+      Caption = 'DeletePodr'
+      OnExecute = DeletePodrExecute
+    end
+    object MergeMetodika: TAction
+      Caption = 'MergeMetodika'
+      OnExecute = MergeMetodikaExecute
+    end
+    object ReadMetodika: TAction
+      Caption = 'ReadMetodika'
+      OnExecute = ReadMetodikaExecute
+    end
+    object ReadDoc: TAction
+      Caption = 'ReadDoc'
+      OnExecute = ReadDocExecute
+    end
+    object ReadPodrazd: TAction
+      Caption = 'ReadPodrazd'
+      OnExecute = ReadPodrazdExecute
+    end
+    object MergePodrazd: TAction
+      Caption = 'MergePodrazd'
+      OnExecute = MergePodrazdExecute
+    end
+    object ReadCrit: TAction
+      Caption = 'ReadCrit'
+      OnExecute = ReadCritExecute
+    end
+    object MergeCrit: TAction
+      Caption = 'MergeCrit'
+      OnExecute = MergeCritExecute
+    end
+    object ReadSit: TAction
+      Caption = 'ReadSit'
+      OnExecute = ReadSitExecute
+    end
+    object MergeSit1: TAction
+      Caption = 'MergeSit1'
+      OnExecute = MergeSit1Execute
+    end
+    object MergeSit2: TAction
+      Caption = 'MergeSit2'
+      OnExecute = MergeSit2Execute
+    end
   end
 end

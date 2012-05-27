@@ -213,6 +213,10 @@ __published:	// IDE-managed Components
           AnsiString &S);
         void __fastcall N8Click(TObject *Sender);
         void __fastcall N1Click(TObject *Sender);
+        void __fastcall N2Click(TObject *Sender);
+        void __fastcall N27Click(TObject *Sender);
+        void __fastcall N26Click(TObject *Sender);
+        void __fastcall N28Click(TObject *Sender);
 private:	// User declarations
 String Path;
 String AdminDatabase;
@@ -254,7 +258,8 @@ void Crit2(TDataSet *DataSet);
         deque<Node> NodeVector_7;
         deque<Node>::iterator It_Node_7;
 
-
+vector<String>ReadWrite;
+vector<String>::iterator RW;
 //Client *MClient;
         BEGIN_MESSAGE_MAP
           VCL_MESSAGE_HANDLER(WM_SYSCOMMAND, TMessage, WMSysCommand)
