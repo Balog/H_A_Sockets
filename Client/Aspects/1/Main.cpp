@@ -1665,6 +1665,16 @@ Podr->Post();
 
 void __fastcall TDocuments::MenuItem4Click(TObject *Sender)
 {
+// Socket->Socket->SendText("Command:5;2|"+IntToStr(NameDB.Length())+"#"+NameDB+"|"+ServerSQL.Length()+"#"+ServerSQL+"|");
+ Zast->MClient->Act.ParamComm.clear();
+ Zast->MClient->Act.ParamComm.push_back("DeletePodr");
+
+String DBName="Аспекты";
+String ServerSQL="SELECT Аспекты.[Номер аспекта], Аспекты.Подразделение FROM Аспекты";
+String ClientSQL="SELECT [Номер аспекта], Подразделение FROM TempAspects";
+Zast->MClient->ReadTable(DBName, ServerSQL, ClientSQL);
+
+/*
 int NumP=Podr->FieldByName("ServerNum")->AsInteger;
 
 Zast->MClient->Start();
@@ -1706,7 +1716,8 @@ String S=S1+"\rИспользуя \"Движение аспектов\" предварительно освободите удаляем
 Application->MessageBoxA(S.c_str(),"Удаление подразделения",MB_ICONEXCLAMATION);
 }
 Zast->MClient->DeleteTable(this, STab);
-Zast->MClient->Stop();        
+Zast->MClient->Stop();
+*/
 }
 //---------------------------------------------------------------------------
 
@@ -1779,6 +1790,531 @@ Sit->Post();
 void __fastcall TDocuments::MenuItem6Click(TObject *Sender)
 {
 Sit->Delete();
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TDocuments::ReadMetodClick(TObject *Sender)
+{
+DBMemo1->ReadOnly=!ReadMetod->Checked;        
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TDocuments::DBGrid1Exit(TObject *Sender)
+{
+DataSetRefresh2->Execute();
+DataSetPost2->Execute();        
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TDocuments::ADODataSet1AfterInsert(TDataSet *DataSet)
+{
+if(Ins==false)
+{
+DataSet->Prior();
+DataSet->Next();
+}        
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TDocuments::ADODataSet1AfterPost(TDataSet *DataSet)
+{
+if(C==false)
+{
+
+ /*
+ADODataSet1->Active=false;
+ADODataSet1->CommandText="select * from Значимость Order By [Мин граница]";
+ADODataSet1->Active=true;
+ */
+bool B=Kriteriy;
+if(B==true)
+{
+C=true;
+Crit(DataSet);
+C=false;
+}
+else
+{
+C=true;
+Crit1(DataSet);
+C=false;
+}
+
+C=true;
+Crit2(DataSet);
+C=false;
+}
+//Button1->Enabled=true;         
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TDocuments::ADODataSet1BeforePost(TDataSet *DataSet)
+{
+if(C==false)
+{
+AnsiString A=DataSet->FieldByName("Критерий1")->Value;
+if(A=="Да")
+{
+ DataSet->FieldByName("Критерий")->Value=true;
+ Kriteriy=true;
+}
+else
+{
+ DataSet->FieldByName("Критерий")->Value=false;
+ Kriteriy=false;
+}
+
+}
+}
+//---------------------------------------------------------------------------
+void TDocuments::Crit(TDataSet *DataSet)
+{
+int NR=DataSet->RecNo;
+
+while(!DataSet->Eof)
+{
+ DataSet->Edit();
+ DataSet->FieldByName("Критерий1")->Value="Да";
+ DataSet->FieldByName("Критерий")->Value=true;
+ DataSet->Post();
+ DataSet->Next();
+}
+DataSet->First();
+DataSet->MoveBy(NR-1);
+}
+//----------------------------------------------
+void TDocuments::Crit1(TDataSet *DataSet)
+{
+
+int NR=DataSet->RecNo;
+
+while(!DataSet->Bof)
+{
+ DataSet->Edit();
+ DataSet->FieldByName("Критерий1")->Value="Нет";
+ DataSet->FieldByName("Критерий")->Value=false;
+ DataSet->Post();
+ DataSet->Prior();
+}
+DataSet->First();
+DataSet->MoveBy(NR-1);
+}
+
+//---------------------------
+void TDocuments::Crit2(TDataSet *DataSet)
+{
+int NR=DataSet->RecNo;
+ADODataSet1->Active=false;
+ADODataSet1->CommandText="select * from Значимость Order By [Мин граница]";
+ADODataSet1->Active=true;
+DataSet->Last();
+
+
+
+int Min=DataSet->FieldByName("Мин граница")->Value;
+bool Cr=DataSet->FieldByName("Критерий")->Value;
+
+DataSet->Edit();
+DataSet->FieldByName("Макс граница")->Value=Min+1;
+DataSet->Post();
+
+DataSet->Prior();
+for(int i=1;i<DataSet->RecordCount;i++)
+{
+DataSet->Edit();
+DataSet->FieldByName("Макс граница")->Value=Min-1;
+if(Cr==false)
+{
+DataSet->FieldByName("Критерий")->Value=false;
+DataSet->FieldByName("Критерий1")->Value="Нет";
+
+}
+DataSet->Post();
+Min=DataSet->FieldByName("Мин граница")->Value;
+Cr=DataSet->FieldByName("Критерий")->Value;
+DataSet->Prior();
+}
+DataSet->First();
+DataSet->Edit();
+DataSet->FieldByName("Мин граница")->Value=0;
+DataSet->Post();
+ADODataSet1->Active=false;
+ADODataSet1->CommandText="select * from Значимость Order By [Мин граница]";
+ADODataSet1->Active=true;
+DataSet->First();
+
+//bool K=false;
+for(int i=0;i<DataSet->RecordCount;i++)
+{
+if(DataSet->FieldByName("Мин граница")->Value>DataSet->FieldByName("Макс граница")->Value)
+{
+ ShowMessage("В списке уже есть минмальная граница равная "+DataSet->FieldByName("Мин граница")->Value+" исправьте ее");
+//K=true;
+
+break;
+}
+ADODataSet1->Next();
+}
+
+DataSet->First();
+DataSet->MoveBy(NR-1);
+
+
+
+}
+//---------------------------------------------------------------------------
+void __fastcall TDocuments::TreeView1Edited(TObject *Sender,
+      TTreeNode *Node, AnsiString &S)
+{
+bool IsNode=PMyNode(Node->Data)->Node;
+int Number=PMyNode(Node->Data)->Number;
+if (S=="")
+{
+S=" ";
+}
+if (IsNode==true)
+{
+ Nodes->Active=false;
+ Nodes->CommandText="Select * From Узлы_3 Where [Номер узла]="+IntToStr(Number);
+ Nodes->Active=true;
+ Nodes->Edit();
+ Nodes->FieldByName("Название")->Value=S;
+ Nodes->Post();
+
+}
+else
+{
+ Branches->Active=false;
+ Branches->CommandText="Select * From Ветви_3 Where [Номер ветви]="+IntToStr(Number);
+ Branches->Active=true;
+ Branches->Edit();
+ Branches->FieldByName("Название")->Value=S;
+ Branches->Post();
+}        
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TDocuments::TreeView1MouseDown(TObject *Sender,
+      TMouseButton Button, TShiftState Shift, int X, int Y)
+{
+TTreeNode* N=TreeView1->GetNodeAt(X,Y);
+//if(N!=NULL)
+//{
+//N->Selected=true;
+THitTests HT;
+HT=TreeView1->GetHitTestInfoAt(X,Y);
+if (HT.Contains(htOnItem))
+{
+N->Selected=true;
+SelNode=TreeView1->Selected;
+//ShowMessage(SelNode->Text);
+ if (Button==mbRight)
+ {
+  TPoint TP;
+  TP=TreeView1->ClientOrigin;
+  if (SelNode->AbsoluteIndex==0)
+  {
+  PopupMenu1->Items->Items[0]->Enabled=true;
+  PopupMenu1->Items->Items[1]->Enabled=false;
+  }
+  else
+  {
+  PopupMenu1->Items->Items[0]->Enabled=true;
+  PopupMenu1->Items->Items[1]->Enabled=true;
+  }
+  PopupMenu1->Popup(X+TP.x,Y+TP.y);
+
+ }
+
+XX=X;
+YY=Y;
+// TreeView1->Items->Delete(TreeView1->GetNodeAt(X,Y));
+}
+//}        
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TDocuments::TreeView2Edited(TObject *Sender,
+      TTreeNode *Node, AnsiString &S)
+{
+bool IsNode=PMyNode(Node->Data)->Node;
+int Number=PMyNode(Node->Data)->Number;
+if (S=="")
+{
+S=" ";
+}
+if (IsNode==true)
+{
+ Nodes->Active=false;
+ Nodes->CommandText="Select * From Узлы_4 Where [Номер узла]="+IntToStr(Number);
+ Nodes->Active=true;
+ Nodes->Edit();
+ Nodes->FieldByName("Название")->Value=S;
+ Nodes->Post();
+
+}
+else
+{
+ Branches->Active=false;
+ Branches->CommandText="Select * From Ветви_4 Where [Номер ветви]="+IntToStr(Number);
+ Branches->Active=true;
+ Branches->Edit();
+ Branches->FieldByName("Название")->Value=S;
+ Branches->Post();
+}        
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TDocuments::TreeView2MouseDown(TObject *Sender,
+      TMouseButton Button, TShiftState Shift, int X, int Y)
+{
+TTreeNode* N=TreeView2->GetNodeAt(X,Y);
+
+THitTests HT;
+HT=TreeView2->GetHitTestInfoAt(X,Y);
+if (HT.Contains(htOnItem))
+{
+N->Selected=true;
+SelNode=TreeView2->Selected;
+
+//ShowMessage(SelNode->Text);
+ if (Button==mbRight)
+ {
+  TPoint TP;
+  TP=TreeView2->ClientOrigin;
+  if (SelNode->AbsoluteIndex==0)
+  {
+  PopupMenu2->Items->Items[0]->Enabled=true;
+  PopupMenu2->Items->Items[1]->Enabled=false;
+  }
+  else
+  {
+  PopupMenu2->Items->Items[0]->Enabled=true;
+  PopupMenu2->Items->Items[1]->Enabled=true;
+  }
+  PopupMenu2->Popup(X+TP.x,Y+TP.y);
+
+ }
+
+XX=X;
+YY=Y;
+}        
+}
+//---------------------------------------------------------------------------
+
+
+void __fastcall TDocuments::TreeView3MouseDown(TObject *Sender,
+      TMouseButton Button, TShiftState Shift, int X, int Y)
+{
+TTreeNode* N=TreeView3->GetNodeAt(X,Y);
+
+THitTests HT;
+HT=TreeView3->GetHitTestInfoAt(X,Y);
+if (HT.Contains(htOnItem))
+{
+N->Selected=true;
+SelNode=TreeView3->Selected;
+
+ if (Button==mbRight)
+ {
+  TPoint TP;
+  TP=TreeView3->ClientOrigin;
+  if (SelNode->AbsoluteIndex==0)
+  {
+  PopupMenu3->Items->Items[0]->Enabled=true;
+  PopupMenu3->Items->Items[1]->Enabled=false;
+  }
+  else
+  {
+  PopupMenu3->Items->Items[0]->Enabled=true;
+  PopupMenu3->Items->Items[1]->Enabled=true;
+  }
+  PopupMenu3->Popup(X+TP.x,Y+TP.y);
+
+ }
+
+XX=X;
+YY=Y;
+}        
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TDocuments::TreeView4Edited(TObject *Sender,
+      TTreeNode *Node, AnsiString &S)
+{
+bool IsNode=PMyNode(Node->Data)->Node;
+int Number=PMyNode(Node->Data)->Number;
+if (S=="")
+{
+S=" ";
+}
+if (IsNode==true)
+{
+ Nodes->Active=false;
+ Nodes->CommandText="Select * From Узлы_6 Where [Номер узла]="+IntToStr(Number);
+ Nodes->Active=true;
+ Nodes->Edit();
+ Nodes->FieldByName("Название")->Value=S;
+ Nodes->Post();
+
+}
+else
+{
+ Branches->Active=false;
+ Branches->CommandText="Select * From Ветви_6 Where [Номер ветви]="+IntToStr(Number);
+ Branches->Active=true;
+ Branches->Edit();
+ Branches->FieldByName("Название")->Value=S;
+ Branches->Post();
+}        
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TDocuments::TreeView4MouseDown(TObject *Sender,
+      TMouseButton Button, TShiftState Shift, int X, int Y)
+{
+TTreeNode* N=TreeView4->GetNodeAt(X,Y);
+
+THitTests HT;
+HT=TreeView4->GetHitTestInfoAt(X,Y);
+if (HT.Contains(htOnItem))
+{
+N->Selected=true;
+SelNode=TreeView4->Selected;
+//ShowMessage(SelNode->Text);
+ if (Button==mbRight)
+ {
+  TPoint TP;
+  TP=TreeView4->ClientOrigin;
+  if (SelNode->AbsoluteIndex==0)
+  {
+  PopupMenu4->Items->Items[0]->Enabled=true;
+  PopupMenu4->Items->Items[1]->Enabled=false;
+  }
+  else
+  {
+  PopupMenu4->Items->Items[0]->Enabled=true;
+  PopupMenu4->Items->Items[1]->Enabled=true;
+  }
+  PopupMenu4->Popup(X+TP.x,Y+TP.y);
+
+ }
+
+XX=X;
+YY=Y;
+}        
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TDocuments::TreeView5Edited(TObject *Sender,
+      TTreeNode *Node, AnsiString &S)
+{
+bool IsNode=PMyNode(Node->Data)->Node;
+int Number=PMyNode(Node->Data)->Number;
+if (S=="")
+{
+S=" ";
+}
+if (IsNode==true)
+{
+ Nodes->Active=false;
+ Nodes->CommandText="Select * From Узлы_7 Where [Номер узла]="+IntToStr(Number);
+ Nodes->Active=true;
+ Nodes->Edit();
+ Nodes->FieldByName("Название")->Value=S;
+ Nodes->Post();
+
+}
+else
+{
+ Branches->Active=false;
+ Branches->CommandText="Select * From Ветви_7 Where [Номер ветви]="+IntToStr(Number);
+ Branches->Active=true;
+ Branches->Edit();
+ Branches->FieldByName("Название")->Value=S;
+ Branches->Post();
+}        
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TDocuments::TreeView5MouseDown(TObject *Sender,
+      TMouseButton Button, TShiftState Shift, int X, int Y)
+{
+TTreeNode* N=TreeView5->GetNodeAt(X,Y);
+
+THitTests HT;
+HT=TreeView5->GetHitTestInfoAt(X,Y);
+if (HT.Contains(htOnItem))
+{
+N->Selected=true;
+SelNode=TreeView5->Selected;
+//ShowMessage(SelNode->Text);
+ if (Button==mbRight)
+ {
+  TPoint TP;
+  TP=TreeView5->ClientOrigin;
+  if (SelNode->AbsoluteIndex==0)
+  {
+  PopupMenu5->Items->Items[0]->Enabled=true;
+  PopupMenu5->Items->Items[1]->Enabled=false;
+  }
+  else
+  {
+  PopupMenu5->Items->Items[0]->Enabled=true;
+  PopupMenu5->Items->Items[1]->Enabled=true;
+  }
+  PopupMenu5->Popup(X+TP.x,Y+TP.y);
+
+ }
+
+XX=X;
+YY=Y;
+}
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TDocuments::TreeView3Edited(TObject *Sender,
+      TTreeNode *Node, AnsiString &S)
+{
+bool IsNode=PMyNode(Node->Data)->Node;
+int Number=PMyNode(Node->Data)->Number;
+if (S=="")
+{
+S=" ";
+}
+if (IsNode==true)
+{
+ Nodes->Active=false;
+ Nodes->CommandText="Select * From Узлы_5 Where [Номер узла]="+IntToStr(Number);
+ Nodes->Active=true;
+ Nodes->Edit();
+ Nodes->FieldByName("Название")->Value=S;
+ Nodes->Post();
+
+}
+else
+{
+ Branches->Active=false;
+ Branches->CommandText="Select * From Ветви_5 Where [Номер ветви]="+IntToStr(Number);
+ Branches->Active=true;
+ Branches->Edit();
+ Branches->FieldByName("Название")->Value=S;
+ Branches->Post();
+}        
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TDocuments::N8Click(TObject *Sender)
+{
+this->Close();        
+}
+//---------------------------------------------------------------------------
+
+
+void __fastcall TDocuments::N1Click(TObject *Sender)
+{
+Application->HelpFile=ExtractFilePath(Application->ExeName)+"NetAspects.HLP";
+  Application->HelpJump("IDH_СТАРТ_ГЛАВСПЕЦ");        
 }
 //---------------------------------------------------------------------------
 

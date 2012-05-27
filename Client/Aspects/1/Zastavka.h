@@ -111,6 +111,7 @@ __published:	// IDE-managed Components
         TAction *LoadLogins;
         TAction *ViewLogins;
         TAction *BeginWork;
+        TAction *DeletePodr;
         void __fastcall Timer1Timer(TObject *Sender);
         void __fastcall Image1Click(TObject *Sender);
         void __fastcall FormShow(TObject *Sender);
@@ -126,6 +127,7 @@ __published:	// IDE-managed Components
           TCustomWinSocket *Socket, TErrorEvent ErrorEvent,
           int &ErrorCode);
         void __fastcall BeginWorkExecute(TObject *Sender);
+        void __fastcall DeletePodrExecute(TObject *Sender);
 private:	// User declarations
 String Path;
 TLocateOptions SO;

@@ -117,7 +117,12 @@ Timer2->Enabled=false;
 if(Start)
 {
 Timer1->Enabled=false;
-Pass->Show();
+//Pass->Show();
+ Zast->MClient->Act.ParamComm.clear();
+ Zast->MClient->Act.ParamComm.push_back("ViewLogins");
+
+ Zast->MClient->ReadTable("Аспекты","Select Login, Code1, Code2, Role from Logins Where Role<>1", "Select Login, Code1, Code2, Role From TempLogins");
+
 
 Timer1->Enabled=false;
 }
@@ -474,7 +479,22 @@ Start=true;
 
 void __fastcall TZast::ViewLoginsExecute(TObject *Sender)
 {
-Pass->ViewLogins();
+MP<TADODataSet>Tab(this);
+Tab->Connection=Zast->MClient->ADOAspect;
+Tab->CommandText="Select Login, Code1, Code2 From TempLogins";
+Tab->Active=true;
+
+Pass->CbLogin->Clear();
+for(Tab->First();!Tab->Eof;Tab->Next())
+{
+Pass->CbLogin->Items->Add(Tab->FieldByName("Login")->AsString);
+}
+Pass->CbLogin->ItemIndex=0;
+Pass->EdPass->Text="";
+
+
+Pass->ShowModal();
+//Pass->ViewLogins();
 }
 //---------------------------------------------------------------------------
 

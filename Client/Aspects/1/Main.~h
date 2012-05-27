@@ -180,6 +180,37 @@ __published:	// IDE-managed Components
         void __fastcall N15Click(TObject *Sender);
         void __fastcall N16Click(TObject *Sender);
         void __fastcall N17Click(TObject *Sender);
+        void __fastcall MenuItem3Click(TObject *Sender);
+        void __fastcall MenuItem4Click(TObject *Sender);
+        void __fastcall MenuItem1Click(TObject *Sender);
+        void __fastcall MenuItem2Click(TObject *Sender);
+        void __fastcall MenuItem5Click(TObject *Sender);
+        void __fastcall MenuItem6Click(TObject *Sender);
+        void __fastcall ReadMetodClick(TObject *Sender);
+        void __fastcall DBGrid1Exit(TObject *Sender);
+        void __fastcall ADODataSet1AfterInsert(TDataSet *DataSet);
+        void __fastcall ADODataSet1AfterPost(TDataSet *DataSet);
+        void __fastcall ADODataSet1BeforePost(TDataSet *DataSet);
+        void __fastcall TreeView1Edited(TObject *Sender, TTreeNode *Node,
+          AnsiString &S);
+        void __fastcall TreeView1MouseDown(TObject *Sender,
+          TMouseButton Button, TShiftState Shift, int X, int Y);
+        void __fastcall TreeView2Edited(TObject *Sender, TTreeNode *Node,
+          AnsiString &S);
+        void __fastcall TreeView2MouseDown(TObject *Sender,
+          TMouseButton Button, TShiftState Shift, int X, int Y);
+        void __fastcall TreeView3MouseDown(TObject *Sender,
+          TMouseButton Button, TShiftState Shift, int X, int Y);
+        void __fastcall TreeView4Edited(TObject *Sender, TTreeNode *Node,
+          AnsiString &S);
+        void __fastcall TreeView4MouseDown(TObject *Sender,
+          TMouseButton Button, TShiftState Shift, int X, int Y);
+        void __fastcall TreeView5Edited(TObject *Sender, TTreeNode *Node,
+          AnsiString &S);
+        void __fastcall TreeView5MouseDown(TObject *Sender,
+          TMouseButton Button, TShiftState Shift, int X, int Y);
+        void __fastcall TreeView3Edited(TObject *Sender, TTreeNode *Node,
+          AnsiString &S);
 private:	// User declarations
 String Path;
 String AdminDatabase;
@@ -205,6 +236,10 @@ bool Reg;
 void Initialize();
 bool C;
 bool Ins;
+bool Kriteriy;
+void Crit(TDataSet *DataSet);
+void Crit1(TDataSet *DataSet);
+void Crit2(TDataSet *DataSet);
 
         deque<Node> NodeVector_3;
         deque<Node>::iterator It_Node_3;

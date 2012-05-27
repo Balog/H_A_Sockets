@@ -24,7 +24,7 @@ object Documents: TDocuments
     Top = 0
     Width = 1031
     Height = 736
-    ActivePage = TabPodr
+    ActivePage = TabTerr
     Align = alClient
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
@@ -33,7 +33,7 @@ object Documents: TDocuments
     Font.Style = []
     MultiLine = True
     ParentFont = False
-    TabIndex = 1
+    TabIndex = 6
     TabOrder = 0
     object TabMetod: TTabSheet
       Caption = #1052#1077#1090#1086#1076#1080#1082#1072
@@ -69,6 +69,7 @@ object Documents: TDocuments
           Height = 17
           Caption = #1056#1077#1076#1072#1082#1090#1080#1088#1086#1074#1072#1090#1100
           TabOrder = 0
+          OnClick = ReadMetodClick
         end
         object Button1: TButton
           Left = 5
@@ -140,6 +141,7 @@ object Documents: TDocuments
         TitleFont.Height = -11
         TitleFont.Name = 'MS Sans Serif'
         TitleFont.Style = []
+        OnExit = DBGrid1Exit
         Columns = <
           item
             Expanded = False
@@ -246,6 +248,8 @@ object Documents: TDocuments
         ParentFont = False
         TabOrder = 0
         ToolTips = False
+        OnEdited = TreeView1Edited
+        OnMouseDown = TreeView1MouseDown
       end
       object Panel4: TPanel
         Left = 0
@@ -281,6 +285,8 @@ object Documents: TDocuments
         Indent = 19
         ParentFont = False
         TabOrder = 0
+        OnEdited = TreeView2Edited
+        OnMouseDown = TreeView2MouseDown
       end
       object Panel5: TPanel
         Left = 0
@@ -316,6 +322,8 @@ object Documents: TDocuments
         Indent = 19
         ParentFont = False
         TabOrder = 0
+        OnEdited = TreeView3Edited
+        OnMouseDown = TreeView3MouseDown
       end
       object Panel6: TPanel
         Left = 0
@@ -351,6 +359,8 @@ object Documents: TDocuments
         Indent = 19
         ParentFont = False
         TabOrder = 0
+        OnEdited = TreeView4Edited
+        OnMouseDown = TreeView4MouseDown
       end
       object Panel7: TPanel
         Left = 0
@@ -386,6 +396,8 @@ object Documents: TDocuments
         Indent = 19
         ParentFont = False
         TabOrder = 0
+        OnEdited = TreeView5Edited
+        OnMouseDown = TreeView5MouseDown
       end
       object Panel8: TPanel
         Left = 0
@@ -497,12 +509,14 @@ object Documents: TDocuments
     end
     object N1: TMenuItem
       Caption = #1055#1086#1084#1086#1097#1100
+      OnClick = N1Click
     end
     object N23: TMenuItem
       Caption = #1054' '#1087#1088#1086#1075#1088#1072#1084#1084#1077
     end
     object N8: TMenuItem
       Caption = #1042#1099#1093#1086#1076
+      OnClick = N8Click
     end
   end
   object Nodes: TADODataSet
@@ -611,6 +625,9 @@ object Documents: TDocuments
   end
   object ADODataSet1: TADODataSet
     CursorType = ctStatic
+    AfterInsert = ADODataSet1AfterInsert
+    BeforePost = ADODataSet1BeforePost
+    AfterPost = ADODataSet1AfterPost
     CommandText = 'select * from '#1047#1085#1072#1095#1080#1084#1086#1089#1090#1100' Order By ['#1052#1072#1082#1089' '#1075#1088#1072#1085#1080#1094#1072']'
     Parameters = <>
     Left = 856

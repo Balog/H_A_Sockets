@@ -9933,5 +9933,9 @@ object Zast: TZast
       Caption = 'BeginWork'
       OnExecute = BeginWorkExecute
     end
+    object DeletePodr: TAction
+      Caption = 'DeletePodr'
+      OnExecute = DeletePodrExecute
+    end
   end
 end

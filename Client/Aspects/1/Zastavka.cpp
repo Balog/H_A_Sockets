@@ -549,3 +549,48 @@ switch (Role)
 }
 //---------------------------------------------------------------------------
 
+void __fastcall TZast::DeletePodrExecute(TObject *Sender)
+{
+int NumP=Documents->Podr->FieldByName("ServerNum")->AsInteger;
+
+MP<TADODataSet>STab(this);
+STab->Connection=ADOAspect;
+STab->CommandText="SELECT Аспекты.[Номер аспекта], Аспекты.Подразделение FROM Аспекты WHERE (((Аспекты.Подразделение)="+IntToStr(NumP)+"));";
+STab->Active=true;
+
+int N=STab->RecordCount;
+
+
+if(N==0)
+{
+Documents->Podr->Delete();
+}
+else
+{
+String S1;
+int N1=N-((int)(N/10))*10;
+switch(N1)
+{
+ case 1:
+ {
+ S1="На сервере зафиксирован "+IntToStr(N)+" аспект, принадлежащий этому подразделению.";
+ break;
+ }
+ case 2: case 3: case 4:
+ {
+ S1="На сервере зафиксировано "+IntToStr(N)+" аспекта, принадлежащих этому подразделению.";
+ break;
+ }
+ default:
+ {
+ S1="На сервере зафиксировано "+IntToStr(N)+" аспектов, принадлежащих этому подразделению.";
+ }
+}
+
+String S=S1+"\rИспользуя \"Движение аспектов\" предварительно освободите удаляемое подразделение от аспектов";
+Application->MessageBoxA(S.c_str(),"Удаление подразделения",MB_ICONEXCLAMATION);
+}
+
+}
+//---------------------------------------------------------------------------
+
