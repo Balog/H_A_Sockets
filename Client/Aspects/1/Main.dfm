@@ -24,7 +24,7 @@ object Documents: TDocuments
     Top = 0
     Width = 1031
     Height = 736
-    ActivePage = TabSit
+    ActivePage = TabMeropr
     Align = alClient
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
@@ -33,7 +33,7 @@ object Documents: TDocuments
     Font.Style = []
     MultiLine = True
     ParentFont = False
-    TabIndex = 3
+    TabIndex = 5
     TabOrder = 0
     object TabMetod: TTabSheet
       Caption = #1052#1077#1090#1086#1076#1080#1082#1072
@@ -440,24 +440,30 @@ object Documents: TDocuments
       end
       object N6: TMenuItem
         Caption = #1055#1077#1088#1077#1095#1077#1085#1100' '#1074#1080#1076#1086#1074' '#1074#1086#1079#1076#1077#1081#1089#1090#1074#1080#1103
+        OnClick = N6Click
       end
       object N7: TMenuItem
         Caption = #1055#1077#1088#1077#1095#1077#1085#1100' '#1087#1088#1080#1088#1086#1076#1086#1086#1093#1088#1072#1085#1085#1099#1093' '#1084#1077#1088#1086#1087#1088#1080#1103#1090#1080#1081
+        OnClick = N7Click
       end
       object N20: TMenuItem
         Caption = #1055#1077#1088#1077#1095#1077#1085#1100' '#1074#1080#1076#1086#1074' '#1090#1077#1088#1088#1080#1090#1086#1088#1080#1081
+        OnClick = N20Click
       end
       object N24: TMenuItem
         Caption = #1055#1077#1088#1077#1095#1077#1085#1100' '#1074#1080#1076#1086#1074' '#1076#1077#1103#1090#1077#1083#1100#1085#1086#1089#1090#1080
+        OnClick = N24Click
       end
       object N25: TMenuItem
         Caption = #1054#1073#1097#1080#1081' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082' '#1101#1082#1086#1083#1086#1075#1080#1095#1077#1089#1082#1080#1093' '#1072#1089#1087#1077#1082#1090#1086#1074
+        OnClick = N25Click
       end
       object N29: TMenuItem
         Caption = '-'
       end
       object N31: TMenuItem
         Caption = #1055#1088#1086#1095#1080#1090#1072#1090#1100' '#1074#1089#1077' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+        OnClick = N31Click
       end
     end
     object N5: TMenuItem

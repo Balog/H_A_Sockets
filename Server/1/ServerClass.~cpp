@@ -83,25 +83,11 @@ catch(...)
 delete VClients[Di];
 VClients.erase(IVC);
 
-Form1->ListBox1->Clear();
-for(unsigned int i=0; i<VClients.size();i++)
-{
-String App;
-if(ExtractFileName(VClients[i]->AppPatch)=="AdminARM.exe")
-{
- App="AdminARM";
+
 }
-if(ExtractFileName(VClients[i]->AppPatch)=="NetAspects.exe")
-{
- App="Aspects";
-}
-if(ExtractFileName(VClients[i]->AppPatch)=="Hazards.exe")
-{
- App="Hazards";
-}
- Form1->ListBox1->Items->Add(VClients[i]->IP+" "+App+" "+VClients[i]->Login);
-}
-}
+
+
+
  /*
 delete VClients[i];
 VClients.erase(IVC);
@@ -130,7 +116,24 @@ else
 {
 S->SendText("Command:6;0|");
 }
-
+Form1->ListBox1->Clear();
+for(unsigned int i=0; i<VClients.size();i++)
+{
+String App;
+if(ExtractFileName(VClients[i]->AppPatch)=="AdminARM.exe")
+{
+ App="AdminARM";
+}
+if(ExtractFileName(VClients[i]->AppPatch)=="NetAspects.exe")
+{
+ App="Aspects";
+}
+if(ExtractFileName(VClients[i]->AppPatch)=="Hazards.exe")
+{
+ App="Hazards";
+}
+ Form1->ListBox1->Items->Add(VClients[i]->IP+" "+App+" "+VClients[i]->Login);
+}
 }
 //********************************************************
 Client::Client(Clients* Cls)

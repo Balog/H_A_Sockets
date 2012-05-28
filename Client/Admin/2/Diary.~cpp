@@ -4,7 +4,6 @@
 #pragma hdrstop
 
 #include "Diary.h"
-//#include "UServer.h"
 #include "MasterPointer.h"
 #include "inifiles.hpp";
 #include "Main.h"
@@ -24,7 +23,7 @@ Register=false;
 //---------------------------------------------------------------------------
 void __fastcall TFDiary::FormShow(TObject *Sender)
 {
-//Sleep(1000);
+
 FDiary->Initialize();
 
 FDiary->Refresh();
@@ -37,7 +36,6 @@ PB->Position=0;
 PB->Max=6;
 NDate->Enabled=EnNDate->Checked;
 LoadDiary();
-//Refresh();
 }
 //---------------------------------------------------------------------------
 void __fastcall TFDiary::EnKDateClick(TObject *Sender)
@@ -52,11 +50,6 @@ LoadDiary();
 //---------------------------------------------------------------------------
 void  TFDiary::Initialize()
 {
-//ADODiary->Connected=false;
-//ADODiary->Connected=true;
-
-
-
 MP<TADODataSet>Comp(this);
 Comp->Connection=Zast->MClient->Diary;
 Comp->CommandText="SELECT Events.Comp FROM Events GROUP BY Events.Comp ORDER BY Events.Comp;";
@@ -88,8 +81,6 @@ i=0;
 Logins->Clear();
 for(Login->First();!Login->Eof;Login->Next())
 {
-//if(Login->FieldByName("Login")->AsString!="")
-//{
 Logins->Items->Add(Login->FieldByName("Login")->AsString);
 if(Login->FieldByName("Login")->AsString=="Не известен")
 {
@@ -101,7 +92,6 @@ Logins->Checked[i]=true;
 }
 
 i++;
-//}
 }
 
 MP<TADODataSet>Type(this);
@@ -166,23 +156,6 @@ Day=(int)D;
 Dat=IntToStr(Month)+"/"+IntToStr(Day)+"/"+IntToStr(Year);
 Filtr2=" Date_Time<=#"+Dat+"# ";
 }
-/*
-for(int i=0;i<Comps->Count;i++)
-{
- if(Comps->Checked[i])
- {
-  if(Filtr3=="")
-  {
-   Filtr3="Events.Comp='"+Comps->Items->Strings[i]+"'";
-  }
-  else
-  {
-   Filtr3=Filtr3+" OR Events.Comp='"+Comps->Items->Strings[i]+"'";
-  }
- }
-}
-Filtr3=" "+Filtr3+" ";
-*/
 for(int i=0;i<Comps->Count;i++)
 {
  if(Comps->Checked[i])
@@ -209,23 +182,6 @@ for(int i=0;i<Comps->Count;i++)
  }
 }
 Filtr3=" "+Filtr3+" ";
-/*
-for(int i=0;i<Logins->Count;i++)
-{
- if(Logins->Checked[i])
- {
-  if(Filtr4=="")
-  {
-   Filtr4="Events.Login='"+Logins->Items->Strings[i]+"'";
-  }
-  else
-  {
-   Filtr4=Filtr4+" OR Events.Login='"+Logins->Items->Strings[i]+"'";
-  }
- }
-}
-Filtr4=" "+Filtr4+" ";
-*/
 
 for(int i=0;i<Logins->Count;i++)
 {
@@ -280,10 +236,6 @@ for(int i=0;i<Types->Count;i++)
  }
 }
 Filtr5=" "+Filtr5+" ";
-
-
-
-
 
 if(Filtr1!="")
 {
@@ -349,10 +301,6 @@ Filtr="("+Filtr5+")";
 }
 }
 
-
-
-//Filtr=" ("+Filtr1+" OR "+Filtr2+") AND ("+Filtr3+") AND ("+Filtr4+") AND ("+Filtr5+") ";
-
 String CT="SELECT Events.Num, Events.Date_Time, Events.Comp, Events.Login, TypeOp.NameType, Operations.NameOperation, Events.Prim FROM TypeOp INNER JOIN (Operations INNER JOIN Events ON Operations.Num = Events.Operation) ON TypeOp.Num = Operations.Type ";
 
 if(Filtr!="")
@@ -378,7 +326,6 @@ PB->Visible=true;
 PB->Position=0;
 PB->Max=6;
 LoadDiary();
-//Refresh();
 }
 //---------------------------------------------------------------------------
 
@@ -387,7 +334,6 @@ void __fastcall TFDiary::NTimeChange(TObject *Sender)
 PB->Visible=true;
 PB->Position=0;
 LoadDiary();
-//Refresh();
 }
 //---------------------------------------------------------------------------
 
@@ -399,7 +345,6 @@ PB->Visible=true;
 PB->Min=0;
 PB->Position=0;
 LoadDiary();
-//Refresh();
 }
 //---------------------------------------------------------------------------
 void TFDiary::LoadDiary()
@@ -407,182 +352,6 @@ void TFDiary::LoadDiary()
 Prog->PB->Position++;
 PB->Position++;
 Zast->LoadTypeOp->Execute();
-/*
-//Main->MClient->Start();
-
-if(!Register)
-{
- Main->MClient->RegForm(this);
- Register=true;
-}
-
-MP<TADOCommand>Comm(this);
-Comm->Connection=ADODiary;
-Comm->CommandText="Delete * From TempTypeOp";
-Comm->Execute();
-
-Comm->CommandText="Delete * From TempOperations";
-Comm->Execute();
-
-MP<TADODataSet>LType(this);
-LType->Connection=ADODiary;
-LType->CommandText="Select Num, NameType from TempTypeOp order by Num";
-LType->Active=true;
-
-Table* RType=Main->MClient->CreateTable(this,  Main->ServerName, Main->VDB[Main->GetIDDBName("Diary")].ServerDB);
-RType->SetCommandText("Select Num, NameType from TypeOp order by Num");
-RType->Active(true);
-
-Main->MClient->LoadTable(RType, LType);
-
-if(Main->MClient->VerifyTable(LType, RType)==0)
-{
-MP<TADODataSet>LOp(this);
-LOp->Connection=ADODiary;
-LOp->CommandText="Select Num, Type, NameOperation from TempOperations order by Num";
-LOp->Active=true;
-
-Table* ROp=Main->MClient->CreateTable(this,  Main->ServerName, Main->VDB[Main->GetIDDBName("Diary")].ServerDB);
-ROp->SetCommandText("Select Num, Type, NameOperation from Operations order by Num");
-ROp->Active(true);
-
-Main->MClient->LoadTable(ROp, LOp);
-
-if(Main->MClient->VerifyTable(LOp, ROp)==0)
-{
-
-MergeTypeOp();
-
-MergeOperations();
-
-Word Y;
-Word M;
-Word D;
-
-int Year;
-int Month;
-int Day;
-String Dat, Dat1;
-
-MP<TADODataSet>Tab(this);
-Tab->Connection=ADODiary;
-
-Table* Remote;
-Remote=Main->MClient->CreateTable(this,  Main->ServerName, Main->VDB[Main->GetIDDBName("Diary")].ServerDB);
-DecodeDate(NDate->Date, Y, M, D);
-Year=(int)Y;
-Month=(int)M;
-Day=(int)D;
-Dat=IntToStr(Month)+"/"+IntToStr(Day)+"/"+IntToStr(Year);
-
-DecodeDate(KDate->Date+1, Y, M, D);
-Year=(int)Y;
-Month=(int)M;
-Day=(int)D;
-Dat1=IntToStr(Month)+"/"+IntToStr(Day)+"/"+IntToStr(Year);
-
-if(EnNDate->Checked & EnKDate->Checked)
-{
-//ShowMessage("Включены оба");
-//Включены оба
-
-
-Tab->CommandText="SELECT Events.Num,  Events.Date_Time, Events.Comp, Events.Login, Events.Operation, Events.Prim FROM Events WHERE (((Events.Date_Time)>=#"+Dat+"#) AND ((Events.Date_Time)<=#"+Dat1+"#));";
-
-Remote->SetCommandText("SELECT Events.Num,  Events.Date_Time, Events.Comp, Events.Login, Events.Operation, Events.Prim FROM Events WHERE (((Events.Date_Time)>=#"+Dat+"#) AND ((Events.Date_Time)<=#"+Dat1+"#))");
-
-}
-else
-{
-if(EnNDate->Checked)
-{
-//ShowMessage("Включен начальный");
-//включен только начальный
-Tab->CommandText="SELECT Events.Num,  Events.Date_Time, Events.Comp, Events.Login, Events.Operation, Events.Prim FROM Events WHERE (((Events.Date_Time)>=#"+Dat+"#));";
-
-Remote->SetCommandText("SELECT Events.Num,  Events.Date_Time, Events.Comp, Events.Login, Events.Operation, Events.Prim FROM Events WHERE (((Events.Date_Time)>=#"+Dat+"#));");
-
-}
-else
-{
-if(EnKDate->Checked)
-{
-//ShowMessage("Включен конечный");
-//включен только конечный
-Tab->CommandText="SELECT Events.Num,  Events.Date_Time, Events.Comp, Events.Login, Events.Operation, Events.Prim FROM Events WHERE (((Events.Date_Time)<=#"+Dat1+"#));";
-
-Remote->SetCommandText("SELECT Events.Num,  Events.Date_Time, Events.Comp, Events.Login, Events.Operation, Events.Prim FROM Events WHERE (((Events.Date_Time)<=#"+Dat1+"#))");
-
-}
-else
-{
-//ShowMessage("Выключены оба");
-//не включен ниодин
-Tab->CommandText="SELECT Events.Num,  Events.Date_Time, Events.Comp, Events.Login, Events.Operation, Events.Prim FROM Events;";
-
-Remote->SetCommandText("SELECT Events.Num,  Events.Date_Time, Events.Comp, Events.Login, Events.Operation, Events.Prim FROM Events ");
-
-}
-}
-}
-
-Tab->Active=true;
-Remote->Active(true);
-if(Tab->RecordCount!=Remote->RecordCount())
-{
-PB->Min=0;
-PB->Position=0;
-PB->Visible=true;
-PB->Max=Remote->RecordCount();
-PB->Position=PB->Max;
-PB->Min=Tab->RecordCount;
-PB->Position=PB->Min;
-//ShowMessage(PB->Max);
-// ShowMessage("Есть различия");
-for(Remote->First();!Remote->eof();Remote->Next())
-{
- int N=Remote->FieldByName("Num");
-
- if(!Tab->Locate("Num",N,SO))
- {
-  Tab->Insert();
-  Tab->FieldByName("Num")->Value=Remote->FieldByName("Num");
-  Tab->FieldByName("Date_Time")->Value=Remote->FieldByName("Date_Time");
-  Tab->FieldByName("Comp")->Value=Remote->FieldByName("Comp");
-  Tab->FieldByName("Login")->Value=Remote->FieldByName("Login");
-  Tab->FieldByName("Operation")->Value=Remote->FieldByName("Operation");
-  Tab->FieldByName("Prim")->Value=Remote->FieldByName("Prim");
-  Tab->Post();
- PB->Position++;
- //PB->Repaint();
- this->Repaint();
- }
-
-}
-PB->Visible=false;
-if(Events->Active)
-{
-Events->Active=false;
-Events->Active=true;
-}
-}
-Main->MClient->DeleteTable(this, Remote);
-}
-else
-{
- ShowMessage("Ошибка копирования операций");
-}
-Main->MClient->DeleteTable(this, ROp);
-}
-else
-{
- ShowMessage("Ошибка копирования типов операций");
-}
-Main->MClient->DeleteTable(this, RType);
-
-
-Main->MClient->Stop();
-*/
 }
 //----------------------------------------------------------------------------
 void TFDiary::MergeTypeOp()
@@ -630,36 +399,6 @@ Comm->Execute();
 
 Comm->CommandText="Delete * from TempOperations";
 Comm->Execute();
-/*
-MP<TADODataSet>Op(this);
-Op->Connection=ADODiary;
-Op->CommandText="select * From Operations";
-Op->Active=true;
-
-MP<TADODataSet>TempOp(this);
-TempOp->Connection=ADODiary;
-TempOp->CommandText="select * From TempOperations";
-TempOp->Active=true;
-
-for(TempOp->First();!TempOp->Eof;TempOp->Next())
-{
- int N=TempOp->FieldByName("Num")->Value;
-
- if(!Op->Locate("Num",N,SO))
- {
-  Op->Insert();
-  Op->FieldByName("Num")->Value=TempOp->FieldByName("Num")->Value;
-  Op->FieldByName("Type")->Value=TempOp->FieldByName("Type")->Value;
-  Op->FieldByName("NameOperation")->Value=TempOp->FieldByName("NameOperation")->Value;
-  Op->Post();
- }
-}
-
-MP<TADOCommand>Comm(this);
-Comm->Connection=ADODiary;
-Comm->CommandText="DELETE Operations.* FROM Operations LEFT JOIN TempOperations ON Operations.[Num] = TempOperations.[Num] WHERE (((TempOperations.Num) Is Null));";
-Comm->Execute();
-*/
 }
 //-----------------------------------------------------------------------------
 void __fastcall TFDiary::CompsClickCheck(TObject *Sender)
@@ -670,8 +409,6 @@ Refresh();
 
 void __fastcall TFDiary::Button2Click(TObject *Sender)
 {
-//LoadDiary();
-
 AnsiString P1=WideString(ExtractFilePath(Application->ExeName)+"\Templates\\Diary.xlt");
 Variant App;
 Variant Book;
@@ -773,45 +510,6 @@ KDate->Date=Now();
 EnNDate->Checked=true;
 EnKDate->Checked=true;
 
-/*
-String Path=ExtractFilePath(Application->ExeName);
-MP<TIniFile>Ini(Path+"Admin.ini");
-String DPatch=Ini->ReadString("Main","DiaryBase","");
-
-String DiaryPath=Path+DPatch+".dtb";
-*/
-/*
-for(int i=0;i<NumBase;i++)
-{
- String NameSect="Base"+IntToStr(i+1);
-
- String Name=Ini->ReadString(NameSect,"Name","");
- if(Name=="Diary")
- {
-  String Name=Ini->ReadString(NameSect,"Name","");
-
-  int AbsPath=Ini->ReadInteger(NameSect, "AbsPath",0);
-
-  if(AbsPath==0)
-  {
-   DiaryPath=Path+Ini->ReadString(NameSect,"Base","");
-  }
-  else
-  {
-   DiaryPath= Ini->ReadString(NameSect,"Base","");
-  }
-
-  break;
- }
-}
-*/
-
-/*
-ADODiary->Connected=false;
-ADODiary->ConnectionString="Provider=Microsoft.Jet.OLEDB.4.0;Data Source="+DiaryPath+";Persist Security Info=False";
-ADODiary->LoginPrompt=false;
-ADODiary->Connected=true;
- */
 try
 {
 

@@ -25,10 +25,12 @@ object Prog: TProg
     BevelWidth = 2
     TabOrder = 0
     object Label1: TLabel
-      Left = 75
+      Left = 2
       Top = 2
-      Width = 220
-      Height = 20
+      Width = 367
+      Height = 19
+      Align = alClient
+      Alignment = taCenter
       Caption = #1055#1086#1076#1086#1078#1076#1080#1090#1077' '#1087#1086#1078#1072#1083#1091#1081#1089#1090#1072'...'
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText

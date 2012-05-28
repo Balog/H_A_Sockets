@@ -771,7 +771,428 @@ Comm->Execute();
 Comm->CommandText="INSERT INTO Ситуации ( [Номер ситуации], [Название ситуации], Показ ) SELECT TempSit.[Номер ситуации], TempSit.[Название ситуации], True FROM TempSit;";
 Comm->Execute();
 
+Documents->Sit->Active=false;
+Documents->Sit->Active=true;
+
 Zast->MClient->WriteDiaryEvent("NetAspects","Конец загрузки ситуаций (главспец)","");
+
+ReadDoc->Execute();
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TZast::ReadVozd1Execute(TObject *Sender)
+{
+ Zast->MClient->Act.ParamComm.clear();
+ Zast->MClient->Act.ParamComm.push_back("ReadVozd2");
+Zast->MClient->ReadTable("Reference", "Select Узлы_3.[Номер узла], Узлы_3.[Родитель], Узлы_3.[Название] From Узлы_3 Order by Родитель, [Номер узла];", "Select TempNode.[Номер узла], TempNode.[Родитель], TempNode.[Название] From TempNode Order by Родитель, [Номер узла];");
+
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TZast::ReadVozd2Execute(TObject *Sender)
+{
+ Zast->MClient->Act.ParamComm.clear();
+ Zast->MClient->Act.ParamComm.push_back("MergeVozd");
+Zast->MClient->ReadTable("Reference", "Select Ветви_3.[Номер ветви], Ветви_3.[Номер родителя], Ветви_3.[Название], Ветви_3.[Показ] From Ветви_3 Order by [Номер родителя], [Номер ветви];", "Select TempBranch.[Номер ветви], TempBranch.[Номер родителя], TempBranch.[Название], TempBranch.[Показ] From TempBranch Order by [Номер родителя], [Номер ветви];");
+
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TZast::MergeVozdExecute(TObject *Sender)
+{
+Documents->MergeNode("Узлы_3");
+Documents->MergeBranch("Ветви_3");
+
+Documents->LoadTab1();
+
+ Zast->MClient->Act.ParamComm.clear();
+ Zast->MClient->Act.ParamComm.push_back("MergeVozd2");
+Zast->MClient->ReadTable("Аспекты", "Select Воздействия.[Номер воздействия], Воздействия.[Наименование воздействия], Воздействия.[Показ] From Воздействия order by [Номер воздействия];", "Select TempVozd.[Номер воздействия], TempVozd.[Наименование воздействия], TempVozd.[Показ] From TempVozd order by [Номер воздействия];");
+
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TZast::MergeVozd2Execute(TObject *Sender)
+{
+MP<TADOCommand>Comm(this);
+Comm->Connection=Zast->ADOAspect;
+Comm->CommandText="UPDATE Воздействия SET Воздействия.Del = False;";
+Comm->Execute();
+
+MP<TADODataSet>TempVozd(this);
+TempVozd->Connection=Zast->ADOAspect;
+TempVozd->CommandText="Select TempVozd.[Номер воздействия], TempVozd.[Наименование воздействия], TempVozd.[Показ] From TempVozd order by [Номер воздействия]";
+TempVozd->Active=true;
+
+MP<TADODataSet>Vozd(this);
+Vozd->Connection=Zast->ADOAspect;
+Vozd->CommandText="Select * From Воздействия";
+Vozd->Active=true;
+
+ for(Vozd->First();!Vozd->Eof;Vozd->Next())
+ {
+  int N=Vozd->FieldByName("Номер воздействия")->Value;
+
+  if(TempVozd->Locate("Номер воздействия", N, SO))
+  {
+   Vozd->Edit();
+   Vozd->FieldByName("Наименование воздействия")->Value=TempVozd->FieldByName("Наименование воздействия")->Value;
+   Vozd->FieldByName("Показ")->Value=TempVozd->FieldByName("Показ")->Value;
+   Vozd->Post();
+
+   TempVozd->Delete();
+  }
+  else
+  {
+   Vozd->Edit();
+   Vozd->FieldByName("Del")->Value=true;
+   Vozd->Post();
+  }
+ }
+Comm->CommandText="DELETE Воздействия.Del FROM Воздействия WHERE (((Воздействия.Del)=True));";
+Comm->Execute();
+
+Comm->CommandText="INSERT INTO Воздействия ( [Номер воздействия], [Наименование воздействия], Показ ) SELECT TempVozd.[Номер воздействия], TempVozd.[Наименование воздействия], TempVozd.Показ FROM TempVozd;";
+Comm->Execute();
+
+Comm->CommandText="DELETE TempVozd.* FROM TempVozd;";
+Comm->Execute();
+
+Zast->MClient->WriteDiaryEvent("NetAspects","Конец загрузки воздействий (главспец)","");
+
+ReadDoc->Execute();
+}
+//---------------------------------------------------------------------------
+
+
+void __fastcall TZast::ReadMeropr1Execute(TObject *Sender)
+{
+ Zast->MClient->Act.ParamComm.clear();
+ Zast->MClient->Act.ParamComm.push_back("ReadMeropr2");
+Zast->MClient->ReadTable("Reference", "Select Узлы_4.[Номер узла], Узлы_4.[Родитель], Узлы_4.[Название] From Узлы_4 Order by Родитель, [Номер узла];", "Select TempNode.[Номер узла], TempNode.[Родитель], TempNode.[Название] From TempNode Order by Родитель, [Номер узла];");
+
+}
+//---------------------------------------------------------------------------
+void __fastcall TZast::ReadMeropr2Execute(TObject *Sender)
+{
+ Zast->MClient->Act.ParamComm.clear();
+ Zast->MClient->Act.ParamComm.push_back("MergeMeropr");
+Zast->MClient->ReadTable("Reference", "Select Ветви_4.[Номер ветви], Ветви_4.[Номер родителя], Ветви_4.[Название], Ветви_4.[Показ] From Ветви_4 Order by [Номер родителя], [Номер ветви];", "Select TempBranch.[Номер ветви], TempBranch.[Номер родителя], TempBranch.[Название], TempBranch.[Показ] From TempBranch Order by [Номер родителя], [Номер ветви];");
+
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TZast::MergeMeroprExecute(TObject *Sender)
+{
+Documents->MergeNode("Узлы_4");
+Documents->MergeBranch("Ветви_4");
+
+Documents->LoadTab2();
+
+Zast->MClient->WriteDiaryEvent("NetAspects","Конец загрузки мероприятий (главспец)","");
+
+ReadDoc->Execute();
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TZast::ReadTerr1Execute(TObject *Sender)
+{
+ Zast->MClient->Act.ParamComm.clear();
+ Zast->MClient->Act.ParamComm.push_back("ReadTerr2");
+Zast->MClient->ReadTable("Reference", "Select Узлы_5.[Номер узла], Узлы_5.[Родитель], Узлы_5.[Название] From Узлы_5 Order by Родитель, [Номер узла];", "Select TempNode.[Номер узла], TempNode.[Родитель], TempNode.[Название] From TempNode Order by Родитель, [Номер узла];");
+
+
+}
+//---------------------------------------------------------------------------
+void __fastcall TZast::ReadTerr2Execute(TObject *Sender)
+{
+ Zast->MClient->Act.ParamComm.clear();
+ Zast->MClient->Act.ParamComm.push_back("MergeTerr1");
+Zast->MClient->ReadTable("Reference", "Select Ветви_5.[Номер ветви], Ветви_5.[Номер родителя], Ветви_5.[Название], Ветви_5.[Показ] From Ветви_5 Order by [Номер родителя], [Номер ветви];", "Select TempBranch.[Номер ветви], TempBranch.[Номер родителя], TempBranch.[Название], TempBranch.[Показ] From TempBranch Order by [Номер родителя], [Номер ветви];");
+
+
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TZast::MergeTerr1Execute(TObject *Sender)
+{
+MP<TADOCommand>Comm(this);
+Comm->Connection=Zast->ADOAspect;
+Comm->CommandText="UPDATE Территория SET Территория.Del = False;";
+Comm->Execute();
+
+MP<TADODataSet>TempTerr(this);
+TempTerr->Connection=Zast->ADOAspect;
+TempTerr->CommandText="Select TempTerr.[Номер территории], TempTerr.[Наименование территории], TempTerr.[Показ] From TempTerr order by [Номер территории]";
+TempTerr->Active=true;
+
+MP<TADODataSet>Terr(this);
+Terr->Connection=Zast->ADOAspect;
+Terr->CommandText="Select * From Территория";
+Terr->Active=true;
+
+ for(Terr->First();!Terr->Eof;Terr->Next())
+ {
+  int N=Terr->FieldByName("Номер территории")->Value;
+
+  if(TempTerr->Locate("Номер территории", N, SO))
+  {
+   Terr->Edit();
+   Terr->FieldByName("Наименование территории")->Value=TempTerr->FieldByName("Наименование территории")->Value;
+   Terr->FieldByName("Показ")->Value=TempTerr->FieldByName("Показ")->Value;
+   Terr->Post();
+
+   TempTerr->Delete();
+  }
+  else
+  {
+   Terr->Edit();
+   Terr->FieldByName("Del")->Value=true;
+   Terr->Post();
+  }
+ }
+Comm->CommandText="DELETE Территория.Del FROM Территория WHERE (((Территория.Del)=True));";
+Comm->Execute();
+
+Comm->CommandText="INSERT INTO Территория ( [Номер территории], [Наименование территории], Показ ) SELECT TempTerr.[Номер территории], TempTerr.[Наименование территории], TempTerr.Показ FROM TempTerr;";
+Comm->Execute();
+
+Comm->CommandText="DELETE TempTerr.* FROM TempTerr;";
+Comm->Execute();
+
+Documents->MergeNode("Узлы_5");
+Documents->MergeBranch("Ветви_5");
+Documents->LoadTab3();
+
+ Zast->MClient->Act.ParamComm.clear();
+ Zast->MClient->Act.ParamComm.push_back("MergeTerr2");
+Zast->MClient->ReadTable("Аспекты", "Select Территория.[Номер территории], Территория.[Наименование территории], Территория.[Показ] From Территория order by [Номер территории];", "Select TempTerr.[Номер территории], TempTerr.[Наименование территории], TempTerr.[Показ] From TempTerr order by [Номер территории];");
+
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TZast::MergeTerr2Execute(TObject *Sender)
+{
+MP<TADOCommand>Comm(this);
+Comm->Connection=Zast->ADOAspect;
+Comm->CommandText="UPDATE Территория SET Территория.Del = False;";
+Comm->Execute();
+
+MP<TADODataSet>TempTerr(this);
+TempTerr->Connection=Zast->ADOAspect;
+TempTerr->CommandText="Select TempTerr.[Номер территории], TempTerr.[Наименование территории], TempTerr.[Показ] From TempTerr order by [Номер территории]";
+TempTerr->Active=true;
+
+MP<TADODataSet>Terr(this);
+Terr->Connection=Zast->ADOAspect;
+Terr->CommandText="Select * From Территория";
+Terr->Active=true;
+
+ for(Terr->First();!Terr->Eof;Terr->Next())
+ {
+  int N=Terr->FieldByName("Номер территории")->Value;
+
+  if(TempTerr->Locate("Номер территории", N, SO))
+  {
+   Terr->Edit();
+   Terr->FieldByName("Наименование территории")->Value=TempTerr->FieldByName("Наименование территории")->Value;
+   Terr->FieldByName("Показ")->Value=TempTerr->FieldByName("Показ")->Value;
+   Terr->Post();
+
+   TempTerr->Delete();
+  }
+  else
+  {
+   Terr->Edit();
+   Terr->FieldByName("Del")->Value=true;
+   Terr->Post();
+  }
+ }
+Comm->CommandText="DELETE Территория.Del FROM Территория WHERE (((Территория.Del)=True));";
+Comm->Execute();
+
+Comm->CommandText="INSERT INTO Территория ( [Номер территории], [Наименование территории], Показ ) SELECT TempTerr.[Номер территории], TempTerr.[Наименование территории], TempTerr.Показ FROM TempTerr;";
+Comm->Execute();
+
+Comm->CommandText="DELETE TempTerr.* FROM TempTerr;";
+Comm->Execute();
+
+Zast->MClient->WriteDiaryEvent("NetAspects","Конец загрузки территорий (главспец)","");
+
+ReadDoc->Execute();
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TZast::ReadDeyat1Execute(TObject *Sender)
+{
+ Zast->MClient->Act.ParamComm.clear();
+ Zast->MClient->Act.ParamComm.push_back("ReadDeyat2");
+Zast->MClient->ReadTable("Reference", "Select Узлы_6.[Номер узла], Узлы_6.[Родитель], Узлы_6.[Название] From Узлы_6 Order by Родитель, [Номер узла];", "Select TempNode.[Номер узла], TempNode.[Родитель], TempNode.[Название] From TempNode Order by Родитель, [Номер узла];");
+
+
+}
+//---------------------------------------------------------------------------
+void __fastcall TZast::ReadDeyat2Execute(TObject *Sender)
+{
+ Zast->MClient->Act.ParamComm.clear();
+ Zast->MClient->Act.ParamComm.push_back("MergeDeyat1");
+Zast->MClient->ReadTable("Reference", "Select Ветви_6.[Номер ветви], Ветви_6.[Номер родителя], Ветви_6.[Название], Ветви_6.[Показ] From Ветви_6 Order by [Номер родителя], [Номер ветви];", "Select TempBranch.[Номер ветви], TempBranch.[Номер родителя], TempBranch.[Название], TempBranch.[Показ] From TempBranch Order by [Номер родителя], [Номер ветви];");
+
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TZast::MergeDeyat1Execute(TObject *Sender)
+{
+Documents->MergeNode("Узлы_6");
+Documents->MergeBranch("Ветви_6");
+Documents->LoadTab4();
+
+
+
+ Zast->MClient->Act.ParamComm.clear();
+ Zast->MClient->Act.ParamComm.push_back("MergeDeyat2");
+Zast->MClient->ReadTable("Аспекты", "Select Деятельность.[Номер деятельности], Деятельность.[Наименование деятельности], Деятельность.[Показ] From Деятельность order by [Номер деятельности];", "Select TempDeyat.[Номер деятельности], TempDeyat.[Наименование деятельности], TempDeyat.[Показ] From TempDeyat order by [Номер деятельности];");
+
+
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TZast::MergeDeyat2Execute(TObject *Sender)
+{
+MP<TADOCommand>Comm(this);
+Comm->Connection=Zast->ADOAspect;
+Comm->CommandText="UPDATE Деятельность SET Деятельность.Del = False;";
+Comm->Execute();
+
+MP<TADODataSet>TempDeyat(this);
+TempDeyat->Connection=Zast->ADOAspect;
+TempDeyat->CommandText="Select TempDeyat.[Номер деятельности], TempDeyat.[Наименование деятельности], TempDeyat.[Показ] From TempDeyat order by [Номер деятельности]";
+TempDeyat->Active=true;
+
+MP<TADODataSet>Deyat(this);
+Deyat->Connection=Zast->ADOAspect;
+Deyat->CommandText="Select * From Деятельность";
+Deyat->Active=true;
+
+ for(Deyat->First();!Deyat->Eof;Deyat->Next())
+ {
+  int N=Deyat->FieldByName("Номер деятельности")->Value;
+
+  if(TempDeyat->Locate("Номер деятельности", N, SO))
+  {
+   Deyat->Edit();
+   Deyat->FieldByName("Наименование деятельности")->Value=TempDeyat->FieldByName("Наименование деятельности")->Value;
+   Deyat->FieldByName("Показ")->Value=TempDeyat->FieldByName("Показ")->Value;
+   Deyat->Post();
+
+   TempDeyat->Delete();
+  }
+  else
+  {
+   Deyat->Edit();
+   Deyat->FieldByName("Del")->Value=true;
+   Deyat->Post();
+  }
+ }
+Comm->CommandText="DELETE деятельность.Del FROM Деятельность WHERE (((Деятельность.Del)=True));";
+Comm->Execute();
+
+Comm->CommandText="INSERT INTO Деятельность ( [Номер деятельности], [Наименование деятельности], Показ ) SELECT TempDeyat.[Номер деятельности], TempDeyat.[Наименование деятельности], TempDeyat.Показ FROM TempDeyat;";
+Comm->Execute();
+
+Comm->CommandText="DELETE TempDeyat.* FROM TempDeyat;";
+Comm->Execute();
+
+Zast->MClient->WriteDiaryEvent("NetAspects","Конец загрузки деятельностей (главспец)","");
+
+ReadDoc->Execute();
+
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TZast::ReadAspect1Execute(TObject *Sender)
+{
+ Zast->MClient->Act.ParamComm.clear();
+ Zast->MClient->Act.ParamComm.push_back("ReadAspect2");
+Zast->MClient->ReadTable("Reference", "Select Узлы_7.[Номер узла], Узлы_7.[Родитель], Узлы_7.[Название] From Узлы_7 Order by Родитель, [Номер узла];", "Select TempNode.[Номер узла], TempNode.[Родитель], TempNode.[Название] From TempNode Order by Родитель, [Номер узла];");
+
+
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TZast::ReadAspect2Execute(TObject *Sender)
+{
+ Zast->MClient->Act.ParamComm.clear();
+ Zast->MClient->Act.ParamComm.push_back("MergeAspect1");
+Zast->MClient->ReadTable("Reference", "Select Ветви_7.[Номер ветви], Ветви_7.[Номер родителя], Ветви_7.[Название], Ветви_7.[Показ] From Ветви_7 Order by [Номер родителя], [Номер ветви];", "Select TempBranch.[Номер ветви], TempBranch.[Номер родителя], TempBranch.[Название], TempBranch.[Показ] From TempBranch Order by [Номер родителя], [Номер ветви];");
+
+
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TZast::MergeAspect1Execute(TObject *Sender)
+{
+Documents->MergeNode("Узлы_7");
+Documents->MergeBranch("Ветви_7");
+Documents->LoadTab5();
+
+
+
+ Zast->MClient->Act.ParamComm.clear();
+ Zast->MClient->Act.ParamComm.push_back("MergeAspect2");
+Zast->MClient->ReadTable("Аспекты", "Select Аспект.[Номер аспекта], Аспект.[Наименование аспекта], Аспект.[Показ] From Аспект order by [Номер аспекта];", "Select TempAspect.[Номер аспекта], TempAspect.[Наименование аспекта], TempAspect.[Показ] From TempAspect order by [Номер аспекта];");
+
+
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TZast::MergeAspect2Execute(TObject *Sender)
+{
+MP<TADOCommand>Comm(this);
+Comm->Connection=Zast->ADOAspect;
+Comm->CommandText="UPDATE Аспект SET Аспект.Del = False;";
+Comm->Execute();
+
+MP<TADODataSet>TempAspect(this);
+TempAspect->Connection=Zast->ADOAspect;
+TempAspect->CommandText="Select TempAspect.[Номер аспекта], TempAspect.[Наименование аспекта], TempAspect.[Показ] From TempAspect order by [Номер аспекта]";
+TempAspect->Active=true;
+
+MP<TADODataSet>Aspect(this);
+Aspect->Connection=Zast->ADOAspect;
+Aspect->CommandText="Select * From Аспект";
+Aspect->Active=true;
+
+ for(Aspect->First();!Aspect->Eof;Aspect->Next())
+ {
+  int N=Aspect->FieldByName("Номер аспекта")->Value;
+
+  if(TempAspect->Locate("Номер аспекта", N, SO))
+  {
+   Aspect->Edit();
+   Aspect->FieldByName("Наименование аспекта")->Value=TempAspect->FieldByName("Наименование аспекта")->Value;
+   Aspect->FieldByName("Показ")->Value=TempAspect->FieldByName("Показ")->Value;
+   Aspect->Post();
+
+   TempAspect->Delete();
+  }
+  else
+  {
+   Aspect->Edit();
+   Aspect->FieldByName("Del")->Value=true;
+   Aspect->Post();
+  }
+ }
+Comm->CommandText="DELETE Аспект.Del FROM Аспект WHERE (((Аспект.Del)=True));";
+Comm->Execute();
+
+Comm->CommandText="INSERT INTO Аспект ( [Номер аспекта], [Наименование аспекта], Показ ) SELECT TempAspect.[Номер аспекта], TempAspect.[Наименование аспекта], TempAspect.Показ FROM TempAspect;";
+Comm->Execute();
+
+Comm->CommandText="DELETE TempDeyat.* FROM TempDeyat;";
+Comm->Execute();
+
+Zast->MClient->WriteDiaryEvent("NetAspects","Конец загрузки экологических аспектов (главспец)","");
 
 ReadDoc->Execute();
 }

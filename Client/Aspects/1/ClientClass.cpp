@@ -37,7 +37,7 @@ Socket->Active=true;
 //********************************************************************
 void Client::CommandExec(int Comm, vector<String>Parameters)
 {
-if(Act.WaitCommand==Comm | Act.WaitCommand==0)
+if(Act.WaitCommand==Comm | Act.WaitCommand==0 | Comm==7)
 {
 switch(Comm)
 {

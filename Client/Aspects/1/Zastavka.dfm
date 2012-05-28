@@ -9977,5 +9977,81 @@ object Zast: TZast
       Caption = 'MergeSit2'
       OnExecute = MergeSit2Execute
     end
+    object ReadVozd1: TAction
+      Caption = 'ReadVozd1'
+      OnExecute = ReadVozd1Execute
+    end
+    object ReadVozd2: TAction
+      Caption = 'ReadVozd2'
+      OnExecute = ReadVozd2Execute
+    end
+    object MergeVozd: TAction
+      Caption = 'MergeVozd'
+      OnExecute = MergeVozdExecute
+    end
+    object MergeVozd2: TAction
+      Caption = 'MergeVozd2'
+      OnExecute = MergeVozd2Execute
+    end
+    object ReadMeropr1: TAction
+      Caption = 'ReadMeropr1'
+      OnExecute = ReadMeropr1Execute
+    end
+    object MergeMeropr: TAction
+      Caption = 'MergeMeropr'
+      OnExecute = MergeMeroprExecute
+    end
+    object ReadTerr1: TAction
+      Caption = 'ReadTerr1'
+      OnExecute = ReadTerr1Execute
+    end
+    object MergeTerr1: TAction
+      Caption = 'MergeTerr1'
+      OnExecute = MergeTerr1Execute
+    end
+    object MergeTerr2: TAction
+      Caption = 'MergeTerr2'
+      OnExecute = MergeTerr2Execute
+    end
+    object ReadDeyat1: TAction
+      Caption = 'ReadDeyat1'
+      OnExecute = ReadDeyat1Execute
+    end
+    object MergeDeyat1: TAction
+      Caption = 'MergeDeyat1'
+      OnExecute = MergeDeyat1Execute
+    end
+    object ReadMeropr2: TAction
+      Caption = 'ReadMeropr2'
+      OnExecute = ReadMeropr2Execute
+    end
+    object ReadTerr2: TAction
+      Caption = 'ReadTerr2'
+      OnExecute = ReadTerr2Execute
+    end
+    object ReadDeyat2: TAction
+      Caption = 'ReadDeyat2'
+      OnExecute = ReadDeyat2Execute
+    end
+    object MergeDeyat2: TAction
+      Caption = 'MergeDeyat2'
+      OnExecute = MergeDeyat2Execute
+    end
+    object ReadAspect1: TAction
+      Caption = 'ReadAspect1'
+      OnExecute = ReadAspect1Execute
+    end
+    object ReadAspect2: TAction
+      Caption = 'ReadAspect2'
+      OnExecute = ReadAspect2Execute
+    end
+    object MergeAspect1: TAction
+      Caption = 'MergeAspect1'
+      OnExecute = MergeAspect1Execute
+    end
+    object MergeAspect2: TAction
+      Caption = 'MergeAspect2'
+      OnExecute = MergeAspect2Execute
+    end
   end
 end

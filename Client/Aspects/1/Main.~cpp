@@ -1674,50 +1674,6 @@ String ServerSQL="SELECT Аспекты.[Номер аспекта], Аспекты.Подразделение FROM Асп
 String ClientSQL="SELECT [Номер аспекта], Подразделение FROM TempAspects";
 Zast->MClient->ReadTable(DBName, ServerSQL, ClientSQL);
 
-/*
-int NumP=Podr->FieldByName("ServerNum")->AsInteger;
-
-Zast->MClient->Start();
-Table* STab=Zast->MClient->CreateTable(this, Zast->ServerName, Zast->VDB[Zast->GetIDDBName("Аспекты")].ServerDB);
-
-STab->SetCommandText("SELECT Аспекты.[Номер аспекта], Аспекты.Подразделение FROM Аспекты WHERE (((Аспекты.Подразделение)="+IntToStr(NumP)+"));");
-STab->Active(true);
-
-int N=0;
-N=STab->RecordCount();
-
-if(N==0)
-{
-Podr->Delete();
-}
-else
-{
-String S1;
-int N1=N-((int)(N/10))*10;
-switch(N1)
-{
- case 1:
- {
- S1="На сервере зафиксирован "+IntToStr(N)+" аспект, принадлежащий этому подразделению.";
- break;
- }
- case 2: case 3: case 4:
- {
- S1="На сервере зафиксировано "+IntToStr(N)+" аспекта, принадлежащих этому подразделению.";
- break;
- }
- default:
- {
- S1="На сервере зафиксировано "+IntToStr(N)+" аспектов, принадлежащих этому подразделению.";
- }
-}
-
-String S=S1+"\rИспользуя \"Движение аспектов\" предварительно освободите удаляемое подразделение от аспектов";
-Application->MessageBoxA(S.c_str(),"Удаление подразделения",MB_ICONEXCLAMATION);
-}
-Zast->MClient->DeleteTable(this, STab);
-Zast->MClient->Stop();
-*/
 }
 //---------------------------------------------------------------------------
 
@@ -1821,11 +1777,6 @@ void __fastcall TDocuments::ADODataSet1AfterPost(TDataSet *DataSet)
 if(C==false)
 {
 
- /*
-ADODataSet1->Active=false;
-ADODataSet1->CommandText="select * from Значимость Order By [Мин граница]";
-ADODataSet1->Active=true;
- */
 bool B=Kriteriy;
 if(B==true)
 {
@@ -2321,7 +2272,11 @@ Application->HelpFile=ExtractFilePath(Application->ExeName)+"NetAspects.HLP";
 void __fastcall TDocuments::N2Click(TObject *Sender)
 {
 ReadWrite.clear();
-ReadWrite.push_back("ReadMetodika");
+Str_RW S;
+S.NameAction="ReadMetodika";
+S.Text="Чтение методики...";
+S.Num=1;
+ReadWrite.push_back(S);
 Zast->ReadDoc->Execute();
 }
 //---------------------------------------------------------------------------
@@ -2329,7 +2284,11 @@ Zast->ReadDoc->Execute();
 void __fastcall TDocuments::N27Click(TObject *Sender)
 {
 ReadWrite.clear();
-ReadWrite.push_back("ReadPodrazd");
+Str_RW S;
+S.NameAction="ReadPodrazd";
+S.Text="Чтение подразделений...";
+S.Num=2;
+ReadWrite.push_back(S);
 Zast->ReadDoc->Execute();
 }
 //---------------------------------------------------------------------------
@@ -2337,7 +2296,241 @@ Zast->ReadDoc->Execute();
 void __fastcall TDocuments::N26Click(TObject *Sender)
 {
 ReadWrite.clear();
-ReadWrite.push_back("ReadCrit");
+Str_RW S;
+S.NameAction="ReadCrit";
+S.Text="Чтение критериев...";
+S.Num=3;
+ReadWrite.push_back(S);
+Zast->ReadDoc->Execute();
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TDocuments::N28Click(TObject *Sender)
+{
+ReadWrite.clear();
+Str_RW S;
+S.NameAction="ReadSit";
+S.Text="Чтение ситуаций...";
+S.Num=4;
+ReadWrite.push_back(S);
+Zast->ReadDoc->Execute();
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TDocuments::N6Click(TObject *Sender)
+{
+ReadWrite.clear();
+Str_RW S;
+S.NameAction="ReadVozd1";
+S.Text="Чтение списка воздействий...";
+S.Num=5;
+ReadWrite.push_back(S);
+Zast->ReadDoc->Execute();
+}
+//---------------------------------------------------------------------------
+void TDocuments::MergeNode(String NodeTable)
+{
+TLocateOptions SO;
+MP<TADOCommand>Comm(this);
+Comm->Connection=Zast->ADOConn;
+Comm->CommandText="UPDATE "+NodeTable+" SET "+NodeTable+".Del = False;";
+Comm->Execute();
+
+MP<TADODataSet>TempNode(this);
+TempNode->Connection=Zast->ADOConn;
+TempNode->CommandText="Select * From TempNode";
+TempNode->Active=true;
+
+MP<TADODataSet>Node(this);
+Node->Connection=Zast->ADOConn;
+Node->CommandText="Select * From "+NodeTable;
+Node->Active=true;
+
+for(Node->First();!Node->Eof;Node->Next())
+{
+int NumNode=Node->FieldByName("Номер узла")->Value;
+if(TempNode->Locate("Номер узла", NumNode, SO))
+{
+ //Найдено соответствие
+ Node->Edit();
+ Node->FieldByName("Родитель")->Value=TempNode->FieldByName("Родитель")->Value;
+ Node->FieldByName("Название")->Value=TempNode->FieldByName("Название")->Value;
+ Node->Post();
+
+ TempNode->Delete();
+}
+else
+{
+ //Нет соответствия
+ Node->Edit();
+ Node->FieldByName("Del")->Value=true;
+ Node->Post();
+}
+}
+
+Comm->CommandText="Delete * From "+NodeTable+" Where Del=true";
+Comm->Execute();
+
+Comm->CommandText="INSERT INTO "+NodeTable+" ( [Номер узла], Родитель, Название) SELECT TempNode.[Номер узла], TempNode.Родитель, TempNode.Название FROM TempNode;";
+Comm->Execute();
+
+Comm->CommandText="Delete * From TempNode";
+Comm->Execute();
+}
+//--------------------------------------------------------------------------
+void TDocuments::MergeBranch(String BranchTable)
+{
+TLocateOptions SO;
+MP<TADOCommand>Comm(this);
+Comm->Connection=Zast->ADOConn;
+Comm->CommandText="UPDATE "+BranchTable+" SET "+BranchTable+".Del = False;";
+Comm->Execute();
+
+MP<TADODataSet>TempBranch(this);
+TempBranch->Connection=Zast->ADOConn;
+TempBranch->CommandText="Select * From TempBranch";
+TempBranch->Active=true;
+
+MP<TADODataSet>Branch(this);
+Branch->Connection=Zast->ADOConn;
+Branch->CommandText="Select * From "+BranchTable;
+Branch->Active=true;
+
+for(Branch->First();!Branch->Eof;Branch->Next())
+{
+int NumBranch=Branch->FieldByName("Номер ветви")->Value;
+if(TempBranch->Locate("Номер ветви", NumBranch, SO))
+{
+ //Найдено соответствие
+ Branch->Edit();
+ Branch->FieldByName("Номер родителя")->Value=TempBranch->FieldByName("Номер родителя")->Value;
+ Branch->FieldByName("Название")->Value=TempBranch->FieldByName("Название")->Value;
+ Branch->FieldByName("Показ")->Value=TempBranch->FieldByName("Показ")->Value;
+ Branch->Post();
+
+ TempBranch->Delete();
+}
+else
+{
+ //Нет соответствия
+ Branch->Edit();
+ Branch->FieldByName("Del")->Value=true;
+ Branch->Post();
+}
+}
+
+Comm->CommandText="Delete * From "+BranchTable+" Where Del=true";
+Comm->Execute();
+
+Comm->CommandText="INSERT INTO "+BranchTable+" ( [Номер ветви], [Номер родителя], Название, Показ ) SELECT TempBranch.[Номер ветви], TempBranch.[Номер родителя], TempBranch.Название, TempBranch.Показ FROM TempBranch;";
+Comm->Execute();
+
+Comm->CommandText="Delete * From TempBranch";
+Comm->Execute();
+}
+//--------------------------------------------------------------------------
+
+void __fastcall TDocuments::N7Click(TObject *Sender)
+{
+ReadWrite.clear();
+Str_RW S;
+S.NameAction="ReadMeropr1";
+S.Text="Чтение списка мероприятий...";
+S.Num=6;
+ReadWrite.push_back(S);
+Zast->ReadDoc->Execute();
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TDocuments::N20Click(TObject *Sender)
+{
+ReadWrite.clear();
+Str_RW S;
+S.NameAction="ReadTerr1";
+S.Text="Чтение списка территорий...";
+S.Num=7;
+ReadWrite.push_back(S);
+Zast->ReadDoc->Execute();
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TDocuments::N24Click(TObject *Sender)
+{
+ReadWrite.clear();
+Str_RW S;
+S.NameAction="ReadDeyat1";
+S.Text="Чтение списка видов деятельности...";
+S.Num=8;
+ReadWrite.push_back(S);
+Zast->ReadDoc->Execute();
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TDocuments::N25Click(TObject *Sender)
+{
+ReadWrite.clear();
+Str_RW S;
+S.NameAction="ReadAspect1";
+S.Text="Чтение списка экологических аспектов...";
+S.Num=8;
+ReadWrite.push_back(S);
+Zast->ReadDoc->Execute();
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TDocuments::N31Click(TObject *Sender)
+{
+Prog->Show();
+Prog->PB->Min=0;
+Prog->PB->Position=0;
+Prog->PB->Max=9;
+
+ReadWrite.clear();
+Str_RW S;
+S.NameAction="ReadMetodika";
+S.Text="Чтение методики...";
+S.Num=1;
+ReadWrite.push_back(S);
+
+S.NameAction="ReadPodrazd";
+S.Text="Чтение подразделений...";
+S.Num=2;
+ReadWrite.push_back(S);
+
+S.NameAction="ReadCrit";
+S.Text="Чтение критериев...";
+S.Num=3;
+ReadWrite.push_back(S);
+
+S.NameAction="ReadSit";
+S.Text="Чтение ситуаций...";
+S.Num=4;
+ReadWrite.push_back(S);
+
+S.NameAction="ReadVozd1";
+S.Text="Чтение списка воздействий...";
+S.Num=5;
+ReadWrite.push_back(S);
+
+S.NameAction="ReadMeropr1";
+S.Text="Чтение списка мероприятий...";
+S.Num=6;
+ReadWrite.push_back(S);
+
+S.NameAction="ReadTerr1";
+S.Text="Чтение списка территорий...";
+S.Num=7;
+ReadWrite.push_back(S);
+
+S.NameAction="ReadDeyat1";
+S.Text="Чтение списка видов деятельности...";
+S.Num=8;
+ReadWrite.push_back(S);
+
+S.NameAction="ReadAspect1";
+S.Text="Чтение списка экологических аспектов...";
+S.Num=8;
+ReadWrite.push_back(S);
 Zast->ReadDoc->Execute();
 }
 //---------------------------------------------------------------------------
