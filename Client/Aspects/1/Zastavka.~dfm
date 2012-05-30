@@ -9945,9 +9945,9 @@ object Zast: TZast
       Caption = 'ReadMetodika'
       OnExecute = ReadMetodikaExecute
     end
-    object ReadDoc: TAction
-      Caption = 'ReadDoc'
-      OnExecute = ReadDocExecute
+    object ReadWriteDoc: TAction
+      Caption = 'ReadWriteDoc'
+      OnExecute = ReadWriteDocExecute
     end
     object ReadPodrazd: TAction
       Caption = 'ReadPodrazd'
@@ -10052,6 +10052,46 @@ object Zast: TZast
     object MergeAspect2: TAction
       Caption = 'MergeAspect2'
       OnExecute = MergeAspect2Execute
+    end
+    object WriteMetodika: TAction
+      Caption = 'WriteMetodika'
+      OnExecute = WriteMetodikaExecute
+    end
+    object WritePodr: TAction
+      Caption = 'WritePodr'
+      OnExecute = WritePodrExecute
+    end
+    object MergeServerPodr: TAction
+      Caption = 'MergeServerPodr'
+      OnExecute = MergeServerPodrExecute
+    end
+    object WriteCrit: TAction
+      Caption = 'WriteCrit'
+      OnExecute = WriteCritExecute
+    end
+    object MergeServerCrit: TAction
+      Caption = 'MergeServerCrit'
+      OnExecute = MergeServerCritExecute
+    end
+    object WriteSit: TAction
+      Caption = 'WriteSit'
+      OnExecute = WriteSitExecute
+    end
+    object WriteSit2: TAction
+      Caption = 'WriteSit2'
+      OnExecute = WriteSit2Execute
+    end
+    object WritePodr2: TAction
+      Caption = 'WritePodr2'
+      OnExecute = WritePodr2Execute
+    end
+    object MergeServerPodr2: TAction
+      Caption = 'MergeServerPodr2'
+      OnExecute = MergeServerPodr2Execute
+    end
+    object MergeServerSit: TAction
+      Caption = 'MergeServerSit'
+      OnExecute = MergeServerSitExecute
     end
   end
 end

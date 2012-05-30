@@ -2277,7 +2277,7 @@ S.NameAction="ReadMetodika";
 S.Text="Чтение методики...";
 S.Num=1;
 ReadWrite.push_back(S);
-Zast->ReadDoc->Execute();
+Zast->ReadWriteDoc->Execute();
 }
 //---------------------------------------------------------------------------
 
@@ -2289,7 +2289,7 @@ S.NameAction="ReadPodrazd";
 S.Text="Чтение подразделений...";
 S.Num=2;
 ReadWrite.push_back(S);
-Zast->ReadDoc->Execute();
+Zast->ReadWriteDoc->Execute();
 }
 //---------------------------------------------------------------------------
 
@@ -2301,7 +2301,7 @@ S.NameAction="ReadCrit";
 S.Text="Чтение критериев...";
 S.Num=3;
 ReadWrite.push_back(S);
-Zast->ReadDoc->Execute();
+Zast->ReadWriteDoc->Execute();
 }
 //---------------------------------------------------------------------------
 
@@ -2313,7 +2313,7 @@ S.NameAction="ReadSit";
 S.Text="Чтение ситуаций...";
 S.Num=4;
 ReadWrite.push_back(S);
-Zast->ReadDoc->Execute();
+Zast->ReadWriteDoc->Execute();
 }
 //---------------------------------------------------------------------------
 
@@ -2325,7 +2325,7 @@ S.NameAction="ReadVozd1";
 S.Text="Чтение списка воздействий...";
 S.Num=5;
 ReadWrite.push_back(S);
-Zast->ReadDoc->Execute();
+Zast->ReadWriteDoc->Execute();
 }
 //---------------------------------------------------------------------------
 void TDocuments::MergeNode(String NodeTable)
@@ -2438,7 +2438,7 @@ S.NameAction="ReadMeropr1";
 S.Text="Чтение списка мероприятий...";
 S.Num=6;
 ReadWrite.push_back(S);
-Zast->ReadDoc->Execute();
+Zast->ReadWriteDoc->Execute();
 }
 //---------------------------------------------------------------------------
 
@@ -2450,7 +2450,7 @@ S.NameAction="ReadTerr1";
 S.Text="Чтение списка территорий...";
 S.Num=7;
 ReadWrite.push_back(S);
-Zast->ReadDoc->Execute();
+Zast->ReadWriteDoc->Execute();
 }
 //---------------------------------------------------------------------------
 
@@ -2462,7 +2462,7 @@ S.NameAction="ReadDeyat1";
 S.Text="Чтение списка видов деятельности...";
 S.Num=8;
 ReadWrite.push_back(S);
-Zast->ReadDoc->Execute();
+Zast->ReadWriteDoc->Execute();
 }
 //---------------------------------------------------------------------------
 
@@ -2474,7 +2474,7 @@ S.NameAction="ReadAspect1";
 S.Text="Чтение списка экологических аспектов...";
 S.Num=8;
 ReadWrite.push_back(S);
-Zast->ReadDoc->Execute();
+Zast->ReadWriteDoc->Execute();
 }
 //---------------------------------------------------------------------------
 
@@ -2529,9 +2529,85 @@ ReadWrite.push_back(S);
 
 S.NameAction="ReadAspect1";
 S.Text="Чтение списка экологических аспектов...";
-S.Num=8;
+S.Num=9;
 ReadWrite.push_back(S);
-Zast->ReadDoc->Execute();
+Zast->ReadWriteDoc->Execute();
+}
+//---------------------------------------------------------------------------
+void __fastcall TDocuments::DBMemo1Exit(TObject *Sender)
+{
+DataSetRefresh4->Execute();
+DataSetPost1->Execute();
+}
+//---------------------------------------------------------------------------
+void __fastcall TDocuments::DBGrid2Exit(TObject *Sender)
+{
+DataSetRefresh4->Execute();
+DataSetPost1->Execute();
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TDocuments::DBGrid3Exit(TObject *Sender)
+{
+DataSetRefresh1->Execute();
+DataSetPost4->Execute();
+}
+//---------------------------------------------------------------------------
+void __fastcall TDocuments::N18Click(TObject *Sender)
+{
+DataSetRefresh4->Execute();
+DataSetPost1->Execute();
+
+ReadWrite.clear();
+Str_RW S;
+S.NameAction="WriteMetodika";
+S.Text="Запись методики...";
+S.Num=1;
+ReadWrite.push_back(S);
+Zast->ReadWriteDoc->Execute();
+}
+//---------------------------------------------------------------------------
+void __fastcall TDocuments::N38Click(TObject *Sender)
+{
+DataSetRefresh3->Execute();
+DataSetPost3->Execute();
+
+ReadWrite.clear();
+Str_RW S;
+S.NameAction="WritePodr";
+S.Text="Запись подразделений...";
+S.Num=2;
+ReadWrite.push_back(S);
+Zast->ReadWriteDoc->Execute();
+}
+//---------------------------------------------------------------------------
+void __fastcall TDocuments::N37Click(TObject *Sender)
+{
+DataSetRefresh2->Execute();
+DataSetPost2->Execute();
+
+ReadWrite.clear();
+Str_RW S;
+S.NameAction="WriteCrit";
+S.Text="Запись критериев...";
+S.Num=3;
+ReadWrite.push_back(S);
+Zast->ReadWriteDoc->Execute();
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TDocuments::N39Click(TObject *Sender)
+{
+DataSetRefresh1->Execute();
+DataSetPost4->Execute();
+
+ReadWrite.clear();
+Str_RW S;
+S.NameAction="WriteSit";
+S.Text="Запись ситуаций...";
+S.Num=4;
+ReadWrite.push_back(S);
+Zast->ReadWriteDoc->Execute();
 }
 //---------------------------------------------------------------------------
 

@@ -601,7 +601,7 @@ Documents->Metod->Active=true;
 
 Zast->MClient->WriteDiaryEvent("NetAspects","Конец загрузки методики (главспец)","");
 
-ReadDoc->Execute();
+ReadWriteDoc->Execute();
 }
 //---------------------------------------------------------------------------
 
@@ -614,18 +614,23 @@ Zast->MClient->ReadTable("Reference", "Select [Номер], [Методика] From Методика"
 }
 //---------------------------------------------------------------------------
 
-void __fastcall TZast::ReadDocExecute(TObject *Sender)
+void __fastcall TZast::ReadWriteDocExecute(TObject *Sender)
 {
+Str_RW S;
 if(Documents->ReadWrite.size()!=0)
 {
 Documents->RW=Documents->ReadWrite.begin();
-String NameAct=Documents->ReadWrite[0];
+S=Documents->ReadWrite[0];
 Documents->ReadWrite.erase(Documents->RW);
+Prog->Label1->Caption=S.Text;
+Prog->PB->Position=S.Num;
+Prog->Repaint();
 Sleep(1000);
-MClient->StartAction(NameAct);
+MClient->StartAction(S.NameAction);
 }
 else
 {
+Prog->Close();
  ShowMessage("Завершено");
 }
 }
@@ -689,7 +694,7 @@ Zast->MClient->WriteDiaryEvent("NetAspects","Конец загрузки подразделений (главс
 Documents->Podr->Active=false;
 Documents->Podr->Active=true;
 
-ReadDoc->Execute();
+ReadWriteDoc->Execute();
 }
 //---------------------------------------------------------------------------
 
@@ -726,7 +731,7 @@ Zast->MClient->WriteDiaryEvent("NetAspects","Конец загрузки критериев (главспец)
 Documents->ADODataSet1->Active=false;
 Documents->ADODataSet1->Active=true;
 
-ReadDoc->Execute();
+ReadWriteDoc->Execute();
 }
 //---------------------------------------------------------------------------
 
@@ -776,7 +781,7 @@ Documents->Sit->Active=true;
 
 Zast->MClient->WriteDiaryEvent("NetAspects","Конец загрузки ситуаций (главспец)","");
 
-ReadDoc->Execute();
+ReadWriteDoc->Execute();
 }
 //---------------------------------------------------------------------------
 
@@ -860,7 +865,7 @@ Comm->Execute();
 
 Zast->MClient->WriteDiaryEvent("NetAspects","Конец загрузки воздействий (главспец)","");
 
-ReadDoc->Execute();
+ReadWriteDoc->Execute();
 }
 //---------------------------------------------------------------------------
 
@@ -891,7 +896,7 @@ Documents->LoadTab2();
 
 Zast->MClient->WriteDiaryEvent("NetAspects","Конец загрузки мероприятий (главспец)","");
 
-ReadDoc->Execute();
+ReadWriteDoc->Execute();
 }
 //---------------------------------------------------------------------------
 
@@ -1019,7 +1024,7 @@ Comm->Execute();
 
 Zast->MClient->WriteDiaryEvent("NetAspects","Конец загрузки территорий (главспец)","");
 
-ReadDoc->Execute();
+ReadWriteDoc->Execute();
 }
 //---------------------------------------------------------------------------
 
@@ -1105,7 +1110,7 @@ Comm->Execute();
 
 Zast->MClient->WriteDiaryEvent("NetAspects","Конец загрузки деятельностей (главспец)","");
 
-ReadDoc->Execute();
+ReadWriteDoc->Execute();
 
 }
 //---------------------------------------------------------------------------
@@ -1194,7 +1199,217 @@ Comm->Execute();
 
 Zast->MClient->WriteDiaryEvent("NetAspects","Конец загрузки экологических аспектов (главспец)","");
 
-ReadDoc->Execute();
+ReadWriteDoc->Execute();
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TZast::WriteDocExecute(TObject *Sender)
+{
+Str_RW S;
+if(Documents->ReadWrite.size()!=0)
+{
+Documents->RW=Documents->ReadWrite.begin();
+S=Documents->ReadWrite[0];
+Documents->ReadWrite.erase(Documents->RW);
+Prog->Label1->Caption=S.Text;
+Prog->PB->Position=S.Num;
+Prog->Repaint();
+Sleep(1000);
+MClient->StartAction(S.NameAction);
+}
+else
+{
+Prog->Close();
+ ShowMessage("Завершено");
+}        
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TZast::WriteMetodikaExecute(TObject *Sender)
+{
+MClient->WriteTable("Reference","Select Номер, Методика From Методика Order by номер","Select Номер, Методика From Методика Order by номер");
+
+Zast->MClient->WriteDiaryEvent("NetAspects","Конец записи методики (главспец)","");
+
+ReadWriteDoc->Execute();
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TZast::WritePodrExecute(TObject *Sender)
+{
+ Zast->MClient->Act.ParamComm.clear();
+ Zast->MClient->Act.ParamComm.push_back("MergeServerPodr");
+MClient->WriteTable("Аспекты","Select Подразделения.[Номер подразделения], Подразделения.[Название подразделения], Подразделения.[ServerNum] from Подразделения Order by [Номер подразделения]", "Select TempПодразделения.[Номер подразделения], TempПодразделения.[Название подразделения], TempПодразделения.[ServerNum] from TempПодразделения Order by [Номер подразделения]");
+
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TZast::MergeServerPodrExecute(TObject *Sender)
+{
+
+ MClient->Act.WaitCommand=11;
+ String DB="Аспекты";
+ String Mess="Command:11;1|"+IntToStr(DB.Length())+"#"+DB+"|";
+ ClientSocket->Socket->SendText(Mess);
+}
+//---------------------------------------------------------------------------
+void __fastcall TZast::WritePodr2Execute(TObject *Sender)
+{
+ Zast->MClient->Act.ParamComm.clear();
+ Zast->MClient->Act.ParamComm.push_back("MergeServerPodr2");
+MClient->ReadTable("Аспекты","Select TempПодразделения.[Номер подразделения], TempПодразделения.[Название подразделения], TempПодразделения.[ServerNum] from TempПодразделения Order by [Номер подразделения]", "Select TempПодразделения.[Номер подразделения], TempПодразделения.[Название подразделения], TempПодразделения.[ServerNum] from TempПодразделения Order by [Номер подразделения]");
+
+}
+//---------------------------------------------------------------------------
+void __fastcall TZast::MergeServerPodr2Execute(TObject *Sender)
+{
+MP<TADODataSet>Temp(this);
+Temp->Connection=Zast->ADOAspect;
+Temp->CommandText="Select TempПодразделения.[Номер подразделения], TempПодразделения.[Название подразделения], TempПодразделения.[ServerNum] from TempПодразделения Order by [Номер подразделения]";
+Temp->Active=true;
+
+MP<TADODataSet>TempDoc(this);
+TempDoc->Connection=Zast->ADOAspect;
+TempDoc->CommandText="Select Подразделения.[Номер подразделения], Подразделения.[Название подразделения], Подразделения.[ServerNum] from Подразделения  Where ServerNum=0 Order by [Номер подразделения]";
+TempDoc->Active=true;
+
+for(TempDoc->First();!TempDoc->Eof;TempDoc->Next())
+{
+int N=TempDoc->FieldByName("Номер подразделения")->Value;
+if(Temp->Locate("Номер подразделения", N, SO))
+{
+TempDoc->Edit();
+TempDoc->FieldByName("ServerNum")->Value=Temp->FieldByName("ServerNum")->Value;
+TempDoc->Post();
+}
+else
+{
+ShowMessage("Ошибка записи подразделений Номер="+IntToStr(N));
+}
+}
+/*
+Zast->MClient->SetCommandText("Аспекты","Delete * From TempПодразделения");
+Zast->MClient->CommandExec("Аспекты");
+
+Zast->MClient->WriteDiaryEvent("NetAspects","Конец сохранения подразделений (главспец)","");
+*/
+MP<TADOCommand>Comm(this);
+Comm->Connection=Zast->ADOAspect;
+Comm->CommandText="Delete * from TempПодразделения";
+Comm->Execute();
+
+ Zast->MClient->WriteDiaryEvent("NetAspects","Конец записи подразделений (главспец)","");
+
+ Zast->ReadWriteDoc->Execute();
+}
+//---------------------------------------------------------------------------
+void __fastcall TZast::WriteCritExecute(TObject *Sender)
+{
+ Zast->MClient->Act.ParamComm.clear();
+ Zast->MClient->Act.ParamComm.push_back("MergeServerCrit");
+MClient->WriteTable("Reference","Select Значимость.[Номер значимости], Значимость.[Наименование значимости], Значимость.[Критерий1], Значимость.[Критерий], Значимость.[Мин граница], Значимость.[Макс граница], Значимость.[Необходимая мера] From Значимость Order by [Номер значимости]", "Select TempZn.[Номер значимости], TempZn.[Наименование значимости], TempZn.[Критерий1], TempZn.[Критерий], TempZn.[Мин граница], TempZn.[Макс граница], TempZn.[Необходимая мера] From TempZn Order by [Номер значимости]");
+
+}
+//---------------------------------------------------------------------------
+void __fastcall TZast::MergeServerCritExecute(TObject *Sender)
+{
+ MClient->Act.WaitCommand=12;
+ String DB="Reference";
+ String DB2="Аспекты";
+ String Mess="Command:12;2|"+IntToStr(DB.Length())+"#"+DB+"|"+IntToStr(DB2.Length())+"#"+DB2+"|";
+ ClientSocket->Socket->SendText(Mess);
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TZast::WriteSitExecute(TObject *Sender)
+{
+ Zast->MClient->Act.ParamComm.clear();
+ Zast->MClient->Act.ParamComm.push_back("WriteSit2");
+MClient->WriteTable("Reference","Select Ситуации.[Номер ситуации], Ситуации.[Название ситуации] from Ситуации Order by [Номер ситуации]", "Select TempSit.[Номер ситуации], TempSit.[Название ситуации] from TempSit Order by [Номер ситуации]");
+
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TZast::WriteSit2Execute(TObject *Sender)
+{
+MP<TADOCommand>Comm(this);
+Comm->Connection=ADOAspect;
+Comm->CommandText="Delete * From TempSit";
+Comm->Execute();
+
+MP<TADODataSet>RefSit(this);
+RefSit->Connection=ADOConn;
+RefSit->CommandText="Select Ситуации.[Номер ситуации], Ситуации.[Название ситуации] from Ситуации Order by [Номер ситуации]";
+RefSit->Active=true;
+
+MP<TADODataSet>TempSit(this);
+TempSit->Connection=ADOAspect;
+TempSit->CommandText="Select * from TempSit";
+TempSit->Active=true;
+
+for(RefSit->First();!RefSit->Eof;RefSit->Next())
+{
+ TempSit->Append();
+ TempSit->FieldByName("Номер ситуации")->Value=RefSit->FieldByName("Номер ситуации")->Value;
+ TempSit->FieldByName("Название ситуации")->Value=RefSit->FieldByName("Название ситуации")->Value;
+ TempSit->Post();
+}
+
+Comm->CommandText="UPDATE Ситуации SET Ситуации.Del = False;";
+Comm->Execute();
+
+
+
+MP<TADODataSet>AspSit(this);
+AspSit->Connection=ADOAspect;
+AspSit->CommandText="Select * from Ситуации Order by [Номер ситуации]";
+AspSit->Active=true;
+
+for(AspSit->First();!AspSit->Eof;AspSit->Next())
+{
+ int Num=AspSit->FieldByName("Номер ситуации")->Value;
+ if(TempSit->Locate("Номер ситуации", Num, SO))
+ {
+  AspSit->Edit();
+  AspSit->FieldByName("Название ситуации")->Value=TempSit->FieldByName("Название ситуации")->Value;
+  AspSit->FieldByName("Показ")->Value=true;
+  AspSit->Post();
+
+  TempSit->Delete();
+ }
+ else
+ {
+  AspSit->Edit();
+  AspSit->FieldByName("Del")->Value=true;
+  AspSit->Post();
+ }
+}
+
+Comm->CommandText="Delete * from Ситуации Where Del=true AND [Показ]=true";
+Comm->Execute();
+
+Comm->CommandText="INSERT INTO Ситуации ( [Номер ситуации], [Название ситуации], Показ ) SELECT TempSit.[Номер ситуации], TempSit.[Название ситуации], True AS Выражение1 FROM TempSit;";
+Comm->Execute();
+
+Comm->CommandText="UPDATE Ситуации SET Ситуации.Del = False;";
+Comm->Execute();
+
+Comm->CommandText="Delete * From TempSit";
+Comm->Execute();
+
+ Zast->MClient->Act.ParamComm.clear();
+ Zast->MClient->Act.ParamComm.push_back("MergeServerSit");
+MClient->WriteTable("Аспекты","Select Ситуации.[Номер ситуации], Ситуации.[Название ситуации] from Ситуации Order by [Номер ситуации]", "Select TempSit.[Номер ситуации], TempSit.[Название ситуации] from TempSit Order by [Номер ситуации]");
+
+}
+//---------------------------------------------------------------------------
+void __fastcall TZast::MergeServerSitExecute(TObject *Sender)
+{
+ MClient->Act.WaitCommand=13;
+ String DB="Reference";
+ String DB2="Аспекты";
+ String Mess="Command:13;2|"+IntToStr(DB.Length())+"#"+DB+"|"+IntToStr(DB2.Length())+"#"+DB2+"|";
+ ClientSocket->Socket->SendText(Mess);
 }
 //---------------------------------------------------------------------------
 

@@ -306,7 +306,7 @@ if(ExtractFileName(Parent->VClients[i]->AppPatch)=="Hazards.exe")
 //void WriteDiaryEvent(String Comp, String Login, String Type, String Name, String Prim);
 
 Parent->WriteDiaryEvent(Parameters[0], Parameters[1], Parameters[2], Parameters[3], Parameters[4]);
-   this->Socket->SendText("Command:7;0|");
+   //this->Socket->SendText("Command:7;0|");
    break;
    }
    case 8:
@@ -330,6 +330,24 @@ Parent->WriteDiaryEvent(IP, Login, "AdminARM", "Запись логинов", "Имя: "+Paramet
 
    MergeLogins(Parameters[0]);
    this->Socket->SendText("Command:9;0|");
+   break;
+   }
+   case 11:
+   {
+   MergePodr(Parameters[0]);
+   this->Socket->SendText("Command:11;0|");
+   break;
+   }
+   case 12:
+   {
+   MergeCrit(Parameters[0], Parameters[1]);
+   this->Socket->SendText("Command:12;0|");
+   break;
+   }
+   case 13:
+   {
+   MergeSit(Parameters[0], Parameters[1]);
+   this->Socket->SendText("Command:13;0|");
    break;
    }
  }
@@ -470,6 +488,11 @@ DB=GetDatabase(NameDB);
 
 int FromPos=ServerSQL.LowerCase().Pos("from");
 String DelText="Delete * "+ServerSQL.SubString(FromPos, ServerSQL.Length());
+FromPos=DelText.LowerCase().Pos("order");
+if(FromPos>0)
+{
+DelText=DelText.SubString(0, FromPos-2);
+}
 
  MP<TADOCommand>Comm((TForm*)Parent->pOwner);
  Comm->Connection=DB;
@@ -570,12 +593,14 @@ String DelText="Delete * "+ServerSQL.SubString(FromPos, ServerSQL.Length());
         }
         case 5:
         {
-
+        String F=Field.SubString(4, Field.Length());
+        Tab->FieldList->Fields[i]->Value=StrToDateTime(F);
         break;
         }
         case 6:
         {
-
+        String F=Field.SubString(4, Field.Length());
+        Tab->FieldList->Fields[i]->Value=F;
         break;
         }
 
@@ -886,8 +911,200 @@ Comm->Execute();
 */
 }
 //--------------------------------------------------------------------------
+void Client::MergePodr(String DB1)
+{
+TADOConnection *Database2=GetDatabase(DB1);
 
+MP<TADOCommand>Comm2(Form1);
+Comm2->Connection=Database2;
+Comm2->CommandText="UPDATE Подразделения SET Подразделения.Del = False;";
+Comm2->Execute();
+Comm2->CommandText="UPDATE TempПодразделения SET TempПодразделения.Del = False;";
+Comm2->Execute();
+
+MP<TADODataSet>Temp(Form1);
+Temp->Connection=Database2;
+Temp->CommandText="Select * From TempПодразделения Order by [Номер подразделения]";
+Temp->Active=true;
+
+MP<TADODataSet>Podr(Form1);
+Podr->Connection=Database2;
+Podr->CommandText="Select * From Подразделения Order by [Номер подразделения]";
+Podr->Active=true;
+
+for(Podr->First();!Podr->Eof;Podr->Next())
+{
+int Num=Podr->FieldByName("Номер подразделения")->AsInteger;
+
+if(Temp->Locate("ServerNum", Num, SO))
+{
+ //Найдено
+ Podr->Edit();
+ Podr->FieldByName("Название подразделения")->Value=Temp->FieldByName("Название подразделения")->Value;
+ Podr->Post();
+
+ Temp->Edit();
+ Temp->FieldByName("Del")->Value=true;
+ Temp->Post();
+
+}
+else
+{
+ //Ненайдено
+ Podr->Edit();
+ Podr->FieldByName("Del")->Value=true;
+ Podr->Post();
+}
+}
+
+Comm2->CommandText="Delete * From подразделения Where Del=true";
+Comm2->Execute();
+
+Temp->Active=false;
+Temp->CommandText="Select * From TempПодразделения where Del=false Order by [Номер подразделения]";
+Temp->Active=true;
+
+for(Temp->First();!Temp->Eof;Temp->Next())
+{
+Podr->Insert();
+Podr->FieldByName("Название подразделения")->Value=Temp->FieldByName("Название подразделения")->Value;
+Podr->Post();
+Podr->Active=false;
+Podr->Active=true;
+Podr->Last();
+Temp->Edit();
+Temp->FieldByName("ServerNum")->Value=Podr->FieldByName("Номер подразделения")->Value;
+Temp->Post();
+}
+
+
+}
 //--------------------------------------------------------------------------
+void Client::MergeCrit(String DB1, String DB2)
+{
+TADOConnection *Database1=GetDatabase(DB1);
+
+
+MP<TADOCommand>Comm1(Form1);
+Comm1->Connection=Database1;
+Comm1->CommandText="Delete * From Значимость";
+Comm1->Execute();
+
+Comm1->CommandText="INSERT INTO Значимость ( [Номер значимости], [Наименование значимости], Критерий1, Критерий, [Мин граница], [Макс граница], [Необходимая мера] ) SELECT TempZn.[Номер значимости], TempZn.[Наименование значимости], TempZn.Критерий1, TempZn.Критерий, TempZn.[Мин граница], TempZn.[Макс граница], TempZn.[Необходимая мера] FROM TempZn;";
+Comm1->Execute();
+
+//Aspects
+TADOConnection *Database2=GetDatabase(DB2);
+
+MP<TADOCommand>Comm2(Form1);
+Comm2->Connection=Database2;
+Comm2->CommandText="Delete * From Значимость";
+Comm2->Execute();
+
+MP<TADODataSet>Tab1(Form1);
+Tab1->Connection=Database1;
+Tab1->CommandText="Select * From Значимость order by [Номер значимости]";
+Tab1->Active=true;
+
+MP<TADODataSet>Tab2(Form1);
+Tab2->Connection=Database2;
+Tab2->CommandText="Select * From Значимость";
+Tab2->Active=true;
+
+for(Tab1->First();!Tab1->Eof;Tab1->Next())
+{
+ Tab2->Insert();
+ Tab2->FieldByName("Номер значимости")->Value=Tab1->FieldByName("Номер значимости")->Value;
+ Tab2->FieldByName("Наименование значимости")->Value=Tab1->FieldByName("Наименование значимости")->Value;
+ Tab2->FieldByName("Критерий1")->Value=Tab1->FieldByName("Критерий1")->Value;
+ Tab2->FieldByName("Критерий")->Value=Tab1->FieldByName("Критерий")->Value;
+ Tab2->FieldByName("Мин граница")->Value=Tab1->FieldByName("Мин граница")->Value;
+ Tab2->FieldByName("Макс граница")->Value=Tab1->FieldByName("Макс граница")->Value;
+ Tab2->FieldByName("Необходимая мера")->Value=Tab1->FieldByName("Необходимая мера")->Value;
+ Tab2->Post();
+}
+
+Comm1->CommandText="Delete * From TempZn";
+Comm1->Execute();
+}
+//--------------------------------------------------------------------------
+void Client::MergeSit(String DB1, String DB2)
+{
+TADOConnection *Database1=GetDatabase(DB1);
+
+MP<TADOCommand>Comm1(Form1);
+Comm1->Connection=Database1;
+Comm1->CommandText="Delete * From Ситуации";
+Comm1->Execute();
+
+Comm1->CommandText="INSERT INTO Ситуации ( [Номер ситуации], [Название ситуации] ) SELECT TempSit.[Номер ситуации], TempSit.[Название ситуации] FROM TempSit;";
+Comm1->Execute();
+
+TADOConnection *Database2=GetDatabase(DB2);
+
+MP<TADOCommand>Comm2(Form1);
+Comm2->Connection=Database2;
+Comm2->CommandText="UPDATE Ситуации SET Ситуации.Del = False;";
+Comm2->Execute();
+
+MP<TADODataSet>Temp(Form1);
+Temp->Connection=Database2;
+Temp->CommandText="Select * From TempSit Order by [Номер ситуации]";
+Temp->Active=true;
+
+MP<TADODataSet>Sit(Form1);
+Sit->Connection=Database2;
+Sit->CommandText="Select * From Ситуации Where [Номер ситуации]<>0 Order by [Номер ситуации]";
+Sit->Active=true;
+
+for(Sit->First();!Sit->Eof;Sit->Next())
+{
+int Num=Sit->FieldByName("номер ситуации")->Value;
+
+if(Temp->Locate("Номер ситуации", Num, SO))
+{
+ //Найдено
+ Sit->Edit();
+ Sit->FieldByName("Номер ситуации")->Value=Temp->FieldByName("Номер ситуации")->Value;
+ Sit->FieldByName("Название ситуации")->Value=Temp->FieldByName("Название ситуации")->Value;
+ Sit->FieldByName("Показ")->Value=true;
+ Sit->Post();
+
+ Temp->Delete();
+}
+else
+{
+ //Ненайдено
+ Sit->Edit();
+ Sit->FieldByName("Del")->Value=true;
+ Sit->Post();
+}
+}
+MP<TADODataSet>Asp(Form1);
+Asp->Connection=Database2;
+Asp->CommandText="SELECT Аспекты.* FROM Ситуации INNER JOIN Аспекты ON Ситуации.[Номер ситуации] = Аспекты.Ситуация WHERE (((Ситуации.Del)=True));";
+Asp->Active=true;
+
+for(Asp->First();!Asp->Eof;Asp->Next())
+{
+ Asp->Edit();
+ Asp->FieldByName("Ситуация")->Value=0;
+ Asp->Post();
+}
+
+Comm2->CommandText="Delete * From Ситуации Where Del=true AND Показ=True";
+Comm2->Execute();
+
+Comm2->CommandText="INSERT INTO Ситуации ( [Номер ситуации], [Название ситуации], [показ] ) SELECT TempSit.[Номер ситуации], TempSit.[Название ситуации], true FROM TempSit;";
+Comm2->Execute();
+
+//Temp->CommandText="Select * From TempSit Order by [Номер ситуации]";
+//Temp->Active=true;
+
+Comm2->CommandText="Delete * From TempSit";
+Comm2->Execute();
+}
+//-------------------------------------------------------------------------
 //***************************************************************************
  mForm::mForm()
  {

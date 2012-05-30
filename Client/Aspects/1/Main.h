@@ -230,6 +230,13 @@ __published:	// IDE-managed Components
         void __fastcall N24Click(TObject *Sender);
         void __fastcall N25Click(TObject *Sender);
         void __fastcall N31Click(TObject *Sender);
+        void __fastcall N18Click(TObject *Sender);
+        void __fastcall DBMemo1Exit(TObject *Sender);
+        void __fastcall N38Click(TObject *Sender);
+        void __fastcall DBGrid2Exit(TObject *Sender);
+        void __fastcall DBGrid3Exit(TObject *Sender);
+        void __fastcall N37Click(TObject *Sender);
+        void __fastcall N39Click(TObject *Sender);
 private:	// User declarations
 String Path;
 String AdminDatabase;

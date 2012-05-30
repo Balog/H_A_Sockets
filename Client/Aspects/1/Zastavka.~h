@@ -114,7 +114,7 @@ __published:	// IDE-managed Components
         TAction *DeletePodr;
         TAction *MergeMetodika;
         TAction *ReadMetodika;
-        TAction *ReadDoc;
+        TAction *ReadWriteDoc;
         TAction *ReadPodrazd;
         TAction *MergePodrazd;
         TAction *ReadCrit;
@@ -141,6 +141,16 @@ __published:	// IDE-managed Components
         TAction *ReadAspect2;
         TAction *MergeAspect1;
         TAction *MergeAspect2;
+        TAction *WriteMetodika;
+        TAction *WritePodr;
+        TAction *MergeServerPodr;
+        TAction *WriteCrit;
+        TAction *MergeServerCrit;
+        TAction *WriteSit;
+        TAction *WriteSit2;
+        TAction *WritePodr2;
+        TAction *MergeServerPodr2;
+        TAction *MergeServerSit;
         void __fastcall Timer1Timer(TObject *Sender);
         void __fastcall Image1Click(TObject *Sender);
         void __fastcall FormShow(TObject *Sender);
@@ -159,7 +169,7 @@ __published:	// IDE-managed Components
         void __fastcall DeletePodrExecute(TObject *Sender);
         void __fastcall MergeMetodikaExecute(TObject *Sender);
         void __fastcall ReadMetodikaExecute(TObject *Sender);
-        void __fastcall ReadDocExecute(TObject *Sender);
+        void __fastcall ReadWriteDocExecute(TObject *Sender);
         void __fastcall ReadPodrazdExecute(TObject *Sender);
         void __fastcall MergePodrazdExecute(TObject *Sender);
         void __fastcall ReadCritExecute(TObject *Sender);
@@ -186,6 +196,17 @@ __published:	// IDE-managed Components
         void __fastcall ReadAspect2Execute(TObject *Sender);
         void __fastcall MergeAspect1Execute(TObject *Sender);
         void __fastcall MergeAspect2Execute(TObject *Sender);
+        void __fastcall WriteDocExecute(TObject *Sender);
+        void __fastcall WriteMetodikaExecute(TObject *Sender);
+        void __fastcall WritePodrExecute(TObject *Sender);
+        void __fastcall MergeServerPodrExecute(TObject *Sender);
+        void __fastcall WriteCritExecute(TObject *Sender);
+        void __fastcall MergeServerCritExecute(TObject *Sender);
+        void __fastcall WriteSitExecute(TObject *Sender);
+        void __fastcall WriteSit2Execute(TObject *Sender);
+        void __fastcall WritePodr2Execute(TObject *Sender);
+        void __fastcall MergeServerPodr2Execute(TObject *Sender);
+        void __fastcall MergeServerSitExecute(TObject *Sender);
 private:	// User declarations
 String Path;
 TLocateOptions SO;

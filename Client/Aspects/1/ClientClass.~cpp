@@ -37,7 +37,7 @@ Socket->Active=true;
 //********************************************************************
 void Client::CommandExec(int Comm, vector<String>Parameters)
 {
-if(Act.WaitCommand==Comm | Act.WaitCommand==0)
+if(Act.WaitCommand==Comm | Act.WaitCommand==0 | Comm==7)
 {
 switch(Comm)
 {
@@ -157,6 +157,19 @@ Zast->BeginWork->Execute();
   //Команда на продолжение работы
 //  Zast->PrepareUpdateOtd->Execute();
  }
+ break;
+ }
+ case 11:
+ {
+ Zast->WritePodr2->Execute();
+
+ break;
+ }
+ case 12:
+ {
+ Zast->MClient->WriteDiaryEvent("NetAspects","Конец записи критериев (главспец)","");
+
+ Zast->ReadWriteDoc->Execute();
  break;
  }
 }
@@ -541,8 +554,17 @@ WriteDiaryEvent(Type, Name, "");
 //************************************************************************
 String Client::TableToStr(String NameDB, String SQLText)
 {
+MDBConnector* DB;
+if(NameDB=="Аспекты")
+{
+DB=ADOAspect;
+}
+if(NameDB=="Reference")
+{
+DB=ADOConn;
+}
    MP<TADODataSet>Tab(Owner);
-   //Tab->Connection=Database;
+   Tab->Connection=DB;
    Tab->CommandText=SQLText;
    Tab->Active=true;
 
@@ -651,6 +673,7 @@ String Client::TableToStr(String NameDB, String SQLText)
 //****************************************************************************
 void Client::WriteTable(String Database, String ClientSQLText, String ServerSQLText)
 {
+Act.WaitCommand=8;
  String Text=TableToStr(Database, ClientSQLText);
  Socket->Socket->SendText("Command:8;3|"+IntToStr(Database.Length())+"#"+Database+"|"+IntToStr(ServerSQLText.Length())+"#"+ServerSQLText+"|"+IntToStr(Text.Length())+"#"+Text+"|");
 }

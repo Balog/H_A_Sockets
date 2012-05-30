@@ -62,6 +62,7 @@ void Clients::SearchDubl(String IP, String Login, String AppPatch, TCustomWinSoc
 class Client
 {
  private:
+ TLocateOptions SO;
 vector<mForm*>VForm;
 vector<mForm*>::iterator IFC;
 Clients* Parent;
@@ -69,6 +70,9 @@ TADOConnection* GetDatabase(String NameDB);
 String TableToStr(String NameDB, String SQLText);
 void DecodeTable(String NameDB, String ServerSQL, String Text);
 void MergeLogins(String NameDB);
+void MergePodr(String DB);
+void MergeCrit(String DB1, String DB2);
+void MergeSit(String DB1, String DB2);
 
  public:
 Client(Clients*);
