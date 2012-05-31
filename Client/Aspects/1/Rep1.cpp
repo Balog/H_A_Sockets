@@ -1,0 +1,200 @@
+//---------------------------------------------------------------------------
+
+#include <vcl.h>
+#pragma hdrstop
+
+#include "Rep1.h"
+#include "MainForm.h"
+#include "Reports.h"
+#include "Zastavka.h"
+#include "MasterPointer.h"
+//---------------------------------------------------------------------------
+#pragma package(smart_init)
+#pragma resource "*.dfm"
+TReport1 *Report1;
+//---------------------------------------------------------------------------
+__fastcall TReport1::TReport1(TComponent* Owner)
+        : TForm(Owner)
+{
+Registration=false;
+}
+//---------------------------------------------------------------------------
+void __fastcall TReport1::FormShow(TObject *Sender)
+{
+/*
+if(!Registration)
+{
+Registration=true;
+ Zast->MClient->Start();
+ Zast->MClient->RegForm(this);
+ Zast->MClient->Stop();
+}
+*/
+/*
+MP<TADODataSet>TempPodr(this);
+TempPodr->Connection=Zast->ADOAspect;
+TempPodr->CommandText="Select TempПодразделения.[ServerNum], TempПодразделения.[Название подразделения] From TempDeyat Order by [ServerNum]";
+
+MP<TADOCommand>Comm(this);
+Comm->Connection=Zast->ADOAspect;
+Comm->CommandText="Delete * From TempПодразделения";
+Comm->Execute();
+
+Table* SPodr=Zast->MClient->CreateTable(this, Zast->ServerName, Zast->VDB[Zast->GetIDDBName("Аспекты")].ServerDB);
+
+SPodr->SetCommandText("Select Подразделения.[Номер подразделения], Подразделения.[Название подразделения] From Деятельность Order by [Номер подразделения]");
+SPodr->Active(true);
+TempDeyat->Active=true;
+Zast->MClient->LoadTable(SPodr, TempPodr);
+
+
+if(Zast->MClient->VerifyTable(SPodr, TempPodr)==0)
+{
+
+}
+Zast->MClient->DeleteTable(this, SPodr);
+*/
+
+
+
+Podr->Active=false;
+Podr->Connection=RepBase;
+Podr->CommandText=PodrComText;
+Podr->Active=true;
+
+
+ CPodrazdel->Clear();
+for(Podr->First();!Podr->Eof;Podr->Next())
+{
+ CPodrazdel->Items->Add(Podr->FieldByName("Название подразделения")->Value);
+
+}
+ CPodrazdel->ItemIndex=0;
+Date1->Date=Now();
+Date2->Date=Now();
+}
+//---------------------------------------------------------------------------
+void __fastcall TReport1::Button1Click(TObject *Sender)
+{
+Podr->First();
+Podr->MoveBy(CPodrazdel->ItemIndex);
+int NumPodr=Podr->FieldByName("ServerNum")->Value;
+
+//Очищаем TempAspects
+MP<TADOCommand>Comm(this);
+Comm->Connection=RepBase;
+Comm->CommandText="Delete * From TempAspects";
+Comm->Execute();
+
+
+if(Role==4)
+{
+ //Демопользователь
+ //Берем локальные данные
+String S="INSERT INTO TempAspects ( [Номер аспекта], Подразделение, Ситуация, [Вид территории], Деятельность, Специальность, Аспект, Воздействие, G, O, R, S, T, L, N, Z, Значимость, [Проявление воздействия], [Тяжесть последствий], Приоритетность, [Выполняющиеся мероприятия], [Предлагаемые мероприятия], [Мониторинг и контроль], [Предлагаемый мониторинг и контроль], Исполнитель, [Дата создания], [Начало действия], [Конец действия], ServerNum ) ";
+S=S+" SELECT TOP 2 Аспекты.[Номер аспекта], Аспекты.Подразделение, Аспекты.Ситуация, Аспекты.[Вид территории], Аспекты.Деятельность, Аспекты.Специальность, Аспекты.Аспект, Аспекты.Воздействие, Аспекты.G, Аспекты.O, Аспекты.R, Аспекты.S, Аспекты.T, Аспекты.L, Аспекты.N, Аспекты.Z, Аспекты.Значимость, Аспекты.[Проявление воздействия], Аспекты.[Тяжесть последствий], Аспекты.Приоритетность, Аспекты.[Выполняющиеся мероприятия], Аспекты.[Предлагаемые мероприятия], Аспекты.[Мониторинг и контроль], Аспекты.[Предлагаемый мониторинг и контроль], Аспекты.Исполнитель, Аспекты.[Дата создания], Аспекты.[Начало действия], Аспекты.[Конец действия], Аспекты.ServerNum ";
+S=S+" FROM Аспекты;";
+Comm->CommandText=S;
+Comm->Execute();
+
+CreateRep();
+}
+else
+{
+ //Главспец или пользователь
+ //запрашиваем данные с сервера
+ Zast->MClient->Act.ParamComm.clear();
+ Zast->MClient->Act.ParamComm.push_back("ContReport");
+ String ServerSQL="SELECT Аспекты.[Номер аспекта], Аспекты.Подразделение, Аспекты.Ситуация, Аспекты.[Вид территории], Аспекты.Деятельность, Аспекты.Специальность, Аспекты.Аспект, Аспекты.Воздействие, Аспекты.G, Аспекты.O, Аспекты.R, Аспекты.S, Аспекты.T, Аспекты.L, Аспекты.N, Аспекты.Z, Аспекты.Значимость, Аспекты.[Проявление воздействия], Аспекты.[Тяжесть последствий], Аспекты.Приоритетность,  Аспекты.[Выполняющиеся мероприятия],  Аспекты.[предлагаемые мероприятия],  Аспекты.[Мониторинг и контроль], Аспекты.[Предлагаемый мониторинг и контроль], Аспекты.[Дата создания], Аспекты.[Начало действия], Аспекты.[Конец действия] FROM Аспекты Where Подразделение="+IntToStr(NumPodr)+" ;";
+ String ClientSQL="SELECT TempAspects.[Номер аспекта], TempAspects.Подразделение, TempAspects.Ситуация, TempAspects.[Вид территории], TempAspects.Деятельность, TempAspects.Специальность, TempAspects.Аспект, TempAspects.Воздействие, TempAspects.G, TempAspects.O, TempAspects.R, TempAspects.S, TempAspects.T, TempAspects.L, TempAspects.N, TempAspects.Z, TempAspects.Значимость, TempAspects.[Проявление воздействия], TempAspects.[Тяжесть последствий], TempAspects.Приоритетность, TempAspects.[Выполняющиеся мероприятия],  TempAspects.[предлагаемые мероприятия],  TempAspects.[Мониторинг и контроль], TempAspects.[Предлагаемый мониторинг и контроль],  TempAspects.[Дата создания], TempAspects.[Начало действия], TempAspects.[Конец действия] FROM TempAspects;";
+Zast->MClient->ReadTable("Аспекты",ServerSQL, ClientSQL);
+}
+/*
+Podr->Active=true;
+Podr->First();
+
+Podr->MoveBy(CPodrazdel->ItemIndex);
+int NumPodr=Podr->FieldByName("ServerNum")->Value;
+Zast->MClient->Start();
+if(NumRep==1)
+{
+//Form1->CreateReport1(NumPodr, Date1->Date, Date2->Date, Edit1->Text);
+Reports *R=new Reports();
+R->Connect=RepBase;
+R->Role=Role;
+R->CreateReport1(NumPodr, Date1->Date, Date2->Date, Edit1->Text, Flt, FltName);
+delete R;
+}
+else
+{
+Reports *R=new Reports();
+R->Connect=RepBase;
+R->Role=Role;
+R->CreateReport2(NumPodr, Date1->Date, Date2->Date, Edit1->Text, Flt, FltName);
+delete R;
+}
+Zast->MClient->Stop();
+this->Close();
+*/
+}
+//---------------------------------------------------------------------------
+void __fastcall TReport1::CPodrazdelKeyPress(TObject *Sender, char &Key)
+{
+Key=0;        
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TReport1::Date1KeyPress(TObject *Sender, char &Key)
+{
+Key=0;        
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TReport1::Date2KeyPress(TObject *Sender, char &Key)
+{
+Key=0;        
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TReport1::FormKeyUp(TObject *Sender, WORD &Key,
+      TShiftState Shift)
+{
+if(Key==112)
+{
+Application->HelpFile=ExtractFilePath(Application->ExeName)+"NetAspects.HLP";
+if(Role==2)
+{
+  Application->HelpJump("IDH_ОТЧЕТЫ_1_2");
+}
+else
+{
+  Application->HelpJump("IDH_ФОРМИРОВАНИЕ_ОТЧЕТОВ");
+}
+}
+}
+//---------------------------------------------------------------------------
+void TReport1::CreateRep()
+{
+Podr->First();
+Podr->MoveBy(CPodrazdel->ItemIndex);
+int NumPodr=Podr->FieldByName("ServerNum")->Value;
+
+if(NumRep==1)
+{
+//Form1->CreateReport1(NumPodr, Date1->Date, Date2->Date, Edit1->Text);
+Reports *R=new Reports();
+R->Connect=RepBase;
+R->Role=Role;
+R->CreateReport1(NumPodr, Date1->Date, Date2->Date, Edit1->Text, Flt, FltName);
+delete R;
+}
+else
+{
+Reports *R=new Reports();
+R->Connect=RepBase;
+R->Role=Role;
+R->CreateReport2(NumPodr, Date1->Date, Date2->Date, Edit1->Text, Flt, FltName);
+delete R;
+}
+}
+//--------------------------------------------------------------------------

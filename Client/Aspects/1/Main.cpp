@@ -12,6 +12,8 @@
 //#include "EditLogin.h"
 #include "Progress.h"
 #include "About.h"
+#include "Rep1.h"
+#include "Svod.h"
 using namespace std;
 //---------------------------------------------------------------------------
 #pragma package(smart_init)
@@ -1681,6 +1683,7 @@ void __fastcall TDocuments::MenuItem1Click(TObject *Sender)
 {
 // Добавить
 Ins=true;
+/*
 ADODataSet1->Last();
 int Max=ADODataSet1->FieldByName("Макс граница")->Value;
 bool Cr=ADODataSet1->FieldByName("Критерий")->Value;
@@ -1702,6 +1705,34 @@ ADODataSet1->FieldByName("Критерий1")->Value="Нет";
 
 ADODataSet1->Post();
 ADODataSet1->Last();
+*/
+ADODataSet1->Last();
+int Max=ADODataSet1->FieldByName("Макс граница")->Value;
+int Min=ADODataSet1->FieldByName("Мин граница")->Value;
+bool Cr=ADODataSet1->FieldByName("Критерий")->Value;
+ADODataSet1->Edit();
+ADODataSet1->FieldByName("Макс граница")->Value=Max-1;
+ADODataSet1->Post();
+
+ADODataSet1->Append();
+ADODataSet1->FieldByName("Мин граница")->Value=Max;
+ADODataSet1->FieldByName("Макс граница")->Value=Max+1;
+ADODataSet1->FieldByName("Критерий")->Value=Cr;
+ADODataSet1->FieldByName("Наименование значимости")->Value="Новая значимость";
+ADODataSet1->FieldByName("Необходимая мера")->Value="Новая необходимая мера";
+
+if (Cr==true)
+{
+ADODataSet1->FieldByName("Критерий1")->Value="Да";
+}
+else
+{
+ADODataSet1->FieldByName("Критерий1")->Value="Нет";
+}
+
+ADODataSet1->Post();
+ADODataSet1->Last();
+
 Ins=false;        
 }
 //---------------------------------------------------------------------------
@@ -1712,10 +1743,9 @@ void __fastcall TDocuments::MenuItem2Click(TObject *Sender)
 
 ADODataSet1->Delete();
 ADODataSet2->Active=false;
-ADODataSet2->CommandText="Select * From Значимость Order By [Мин граница]";
+ADODataSet2->CommandText="Select * From Значимость Order By [Мин граница] DESC";
 ADODataSet2->Active=true;
-ADODataSet2->Last();
-
+/*
 int Min=ADODataSet2->FieldByName("Мин граница")->Value;
 
 ADODataSet2->Prior();
@@ -1730,8 +1760,36 @@ Min=ADODataSet2->FieldByName("Мин граница")->Value;
 ADODataSet2->Post();
 ADODataSet2->Prior();
 }
+*/
+ADODataSet2->First();
+int Min=ADODataSet2->FieldByName("Мин граница")->Value;
+ADODataSet2->Edit();
+ADODataSet2->FieldByName("Макс граница")->Value=Min+1;
+ADODataSet2->Post();
+for(ADODataSet2->First();!ADODataSet2->Eof;ADODataSet2->Next())
+{
+int NewMin=ADODataSet2->FieldByName("Мин граница")->Value;
+if(Min!=NewMin)
+{
+ADODataSet2->Edit();
+ADODataSet2->FieldByName("Макс граница")->Value=Min-1;
+ADODataSet2->Post();
+Min=NewMin;
+}
+else
+{
+ if(ADODataSet2->FieldByName("Макс граница")->Value==ADODataSet2->FieldByName("Мин граница")->Value)
+ {
+  ADODataSet2->Edit();
+  ADODataSet2->FieldByName("Макс граница")->Value=ADODataSet2->FieldByName("Мин граница")->Value+1;
+  ADODataSet2->Post();
+ }
+}
+
+}
+
 ADODataSet1->Active=false;
-ADODataSet1->Active=true;          
+ADODataSet1->Active=true;
 }
 //---------------------------------------------------------------------------
 
@@ -2608,6 +2666,166 @@ S.Text="Запись ситуаций...";
 S.Num=4;
 ReadWrite.push_back(S);
 Zast->ReadWriteDoc->Execute();
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TDocuments::N32Click(TObject *Sender)
+{
+ReadWrite.clear();
+Str_RW S;
+S.NameAction="WriteVozd1";
+S.Text="Запись воздействий...";
+S.Num=5;
+ReadWrite.push_back(S);
+Zast->ReadWriteDoc->Execute();
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TDocuments::N33Click(TObject *Sender)
+{
+ReadWrite.clear();
+Str_RW S;
+S.NameAction="WriteMeropr1";
+S.Text="Запись мероприятий...";
+S.Num=6;
+ReadWrite.push_back(S);
+Zast->ReadWriteDoc->Execute();
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TDocuments::N34Click(TObject *Sender)
+{
+ReadWrite.clear();
+Str_RW S;
+S.NameAction="WriteTerr1";
+S.Text="Запись территорий...";
+S.Num=7;
+ReadWrite.push_back(S);
+Zast->ReadWriteDoc->Execute();
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TDocuments::N35Click(TObject *Sender)
+{
+ReadWrite.clear();
+Str_RW S;
+S.NameAction="WriteDeyat1";
+S.Text="Запись видов деятельности...";
+S.Num=8;
+ReadWrite.push_back(S);
+Zast->ReadWriteDoc->Execute();
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TDocuments::N36Click(TObject *Sender)
+{
+ReadWrite.clear();
+Str_RW S;
+S.NameAction="WriteAspect1";
+S.Text="Запись списка экологических аспектов...";
+S.Num=9;
+ReadWrite.push_back(S);
+Zast->ReadWriteDoc->Execute();
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TDocuments::N41Click(TObject *Sender)
+{
+Prog->Show();
+Prog->PB->Min=0;
+Prog->PB->Position=0;
+Prog->PB->Max=9;
+
+ReadWrite.clear();
+Str_RW S;
+S.NameAction="WriteMetodika";
+S.Text="Запись методики...";
+S.Num=1;
+ReadWrite.push_back(S);
+
+S.NameAction="WritePodr";
+S.Text="Запись подразделений...";
+S.Num=2;
+ReadWrite.push_back(S);
+
+
+S.NameAction="WriteCrit";
+S.Text="Запись критериев...";
+S.Num=3;
+ReadWrite.push_back(S);
+
+
+S.NameAction="WriteSit";
+S.Text="Запись ситуаций...";
+S.Num=4;
+ReadWrite.push_back(S);
+
+
+S.NameAction="WriteVozd1";
+S.Text="Запись воздействий...";
+S.Num=5;
+ReadWrite.push_back(S);
+
+
+S.NameAction="WriteMeropr1";
+S.Text="Запись мероприятий...";
+S.Num=6;
+ReadWrite.push_back(S);
+
+
+S.NameAction="WriteTerr1";
+S.Text="Запись территорий...";
+S.Num=7;
+ReadWrite.push_back(S);
+
+
+S.NameAction="WriteDeyat1";
+S.Text="Запись видов деятельности...";
+S.Num=8;
+ReadWrite.push_back(S);
+
+
+S.NameAction="WriteAspect1";
+S.Text="Запись списка экологических аспектов...";
+S.Num=9;
+ReadWrite.push_back(S);
+
+Zast->ReadWriteDoc->Execute();
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TDocuments::N00111Click(TObject *Sender)
+{
+//Ф001.1
+Report1->Role=2;
+Report1->Flt="";
+Report1->FltName="Отключен";
+Report1->PodrComText="select * From Подразделения Order by [Название подразделения]";
+
+Report1->NumRep=1;
+Report1->RepBase=Zast->ADOAspect;
+Report1->ShowModal();        
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TDocuments::N00121Click(TObject *Sender)
+{
+//Ф001.2
+Report1->Role=2;
+Report1->Flt="";
+Report1->FltName="Отключен";
+Report1->PodrComText="select * From Подразделения Order by [Название подразделения]";
+
+Report1->NumRep=2;
+Report1->RepBase=Zast->ADOAspect;
+Report1->ShowModal();        
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TDocuments::N22Click(TObject *Sender)
+{
+//Сводный отчет
+FSvod->ShowModal();
 }
 //---------------------------------------------------------------------------
 

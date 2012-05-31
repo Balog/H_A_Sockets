@@ -237,6 +237,15 @@ __published:	// IDE-managed Components
         void __fastcall DBGrid3Exit(TObject *Sender);
         void __fastcall N37Click(TObject *Sender);
         void __fastcall N39Click(TObject *Sender);
+        void __fastcall N32Click(TObject *Sender);
+        void __fastcall N33Click(TObject *Sender);
+        void __fastcall N34Click(TObject *Sender);
+        void __fastcall N35Click(TObject *Sender);
+        void __fastcall N36Click(TObject *Sender);
+        void __fastcall N41Click(TObject *Sender);
+        void __fastcall N00111Click(TObject *Sender);
+        void __fastcall N00121Click(TObject *Sender);
+        void __fastcall N22Click(TObject *Sender);
 private:	// User declarations
 String Path;
 String AdminDatabase;

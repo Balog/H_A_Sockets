@@ -350,6 +350,18 @@ Parent->WriteDiaryEvent(IP, Login, "AdminARM", "Запись логинов", "Имя: "+Paramet
    this->Socket->SendText("Command:13;0|");
    break;
    }
+   case 14:
+   {
+   MergeNodeBranch(Parameters[0], Parameters[1], Parameters[2], Parameters[3], Parameters[4], Parameters[5], Parameters[6], Parameters[7]);
+   this->Socket->SendText("Command:14;0|");
+   break;
+   }
+   case 15:
+   {
+   MergeNodeBranch(Parameters[0], Parameters[1], Parameters[2]);
+   this->Socket->SendText("Command:15;0|");
+   break;
+   }
  }
 
 }
@@ -584,7 +596,15 @@ DelText=DelText.SubString(0, FromPos-2);
         }
         case 3:
         {
-
+        String F=Field.SubString(4, Field.Length());
+        if(F=="\x01")
+        {
+        Tab->FieldList->Fields[i]->Value=true;
+        }
+        else
+        {
+        Tab->FieldList->Fields[i]->Value=false;
+        }
         break;
         }
         case 4:
@@ -1105,6 +1125,261 @@ Comm2->CommandText="Delete * From TempSit";
 Comm2->Execute();
 }
 //-------------------------------------------------------------------------
+void Client::MergeNodeBranch(String NameDatabase1, String NameNode, String NameBranch, String NameDatabase2, String NameTable, String NameField, String NameKey, String Name)
+{
+TADOConnection *Database1=GetDatabase(NameDatabase1);
+
+if(Database1!=NULL)
+{
+MP<TADODataSet>TempNode(Form1);
+TempNode->Connection=Database1;
+TempNode->CommandText="Select * From TempNode";
+TempNode->Active=true;
+
+MP<TADODataSet>Node(Form1);
+Node->Connection=Database1;
+Node->CommandText="Select * From "+NameNode;
+Node->Active=true;
+
+MP<TADOCommand>Comm(Form1);
+Comm->Connection=Database1;
+Comm->CommandText="UPDATE "+NameNode+" SET "+NameNode+".Del = False, "+NameNode+".CopyNum = -1;";
+Comm->Execute();
+
+for(Node->First();!Node->Eof;Node->Next())
+{
+int NumNode=Node->FieldByName("Номер узла")->Value;
+
+if(TempNode->Locate("Номер узла", NumNode, SO))
+{
+//Найдено
+Node->Edit();
+Node->FieldByName("Родитель")->Value=TempNode->FieldByName("Родитель")->Value;
+Node->FieldByName("Название")->Value=TempNode->FieldByName("Название")->Value;
+Node->Post();
+
+TempNode->Delete();
+}
+else
+{
+//Ненайдено
+Node->Edit();
+Node->FieldByName("Del")->Value=true;
+Node->Post();
+}
+}
+
+Comm->CommandText="DELETE "+NameNode+".Del FROM "+NameNode+" WHERE ((("+NameNode+".Del)=True));";
+Comm->Execute();
+
+Comm->CommandText="INSERT INTO "+NameNode+" ( CopyNum, Родитель, Название ) SELECT TempNode.[Номер узла], TempNode.Родитель, TempNode.Название FROM TempNode;";
+Comm->Execute();
+
+
+MP<TADODataSet>TempBranch(Form1);
+TempBranch->Connection=Database1;
+TempBranch->CommandText="Select * From TempBranch";
+TempBranch->Active=true;
+
+MP<TADODataSet>Branch(Form1);
+Branch->Connection=Database1;
+Branch->CommandText="Select * From "+NameBranch;
+Branch->Active=true;
+
+Comm->CommandText="UPDATE "+NameBranch+" SET "+NameBranch+".Del = False, "+NameBranch+".NumCopy = -1; ";
+Comm->Execute();
+Node->Active=false;
+Node->Active=true;
+
+for(Branch->First();!Branch->Eof;Branch->Next())
+{
+ int NumBranch=Branch->FieldByName("Номер ветви")->Value;
+
+ if(TempBranch->Locate("Номер ветви",NumBranch,SO))
+ {
+  Branch->Edit();
+  int NumPar=TempBranch->FieldByName("Номер родителя")->Value;
+  if(Node->Locate("CopyNum",NumPar,SO))
+  {
+  NumPar=Node->FieldByName("Номер узла")->Value;
+  }
+
+  Branch->FieldByName("Номер родителя")->Value=NumPar;
+  Branch->FieldByName("Название")->Value=TempBranch->FieldByName("Название")->Value;
+  Branch->FieldByName("Показ")->Value=TempBranch->FieldByName("Показ")->Value;
+  Branch->Post();
+
+  TempBranch->Delete();
+ }
+ else
+ {
+  Branch->Edit();
+  Branch->FieldByName("Del")->Value=true;
+  Branch->Post();
+ }
+}
+
+Comm->CommandText="DELETE "+NameBranch+".Del FROM "+NameBranch+" WHERE ((("+NameBranch+".Del)=True));";
+Comm->Execute();
+
+for(TempBranch->First();!TempBranch->Eof;TempBranch->Next())
+{
+ int NumTemp=TempBranch->FieldByName("Номер родителя")->Value;
+
+ if(Node->Locate("CopyNum", NumTemp, SO))
+ {
+  int NumPar=Node->FieldByName("Номер узла")->Value;
+
+  Branch->Insert();
+  Branch->FieldByName("Номер родителя")->Value=NumPar;
+  Branch->FieldByName("Название")->Value=TempBranch->FieldByName("Название")->Value;
+  Branch->FieldByName("Показ")->Value=TempBranch->FieldByName("Показ")->Value;
+  Branch->Post();
+ }
+ else
+ {
+ if(Node->Locate("Номер узла", NumTemp, SO))
+ {
+  int NumPar=Node->FieldByName("Номер узла")->Value;
+
+  Branch->Insert();
+  Branch->FieldByName("Номер родителя")->Value=NumPar;
+  Branch->FieldByName("Название")->Value=TempBranch->FieldByName("Название")->Value;
+  Branch->FieldByName("Показ")->Value=TempBranch->FieldByName("Показ")->Value;
+  Branch->Post();
+ }
+ else
+ {
+//DiaryEvent->WriteEvent(Now(), this->pNameComp, this->Login, "Ошибка обработки данных", "Ошибка записи структуры", "IDC="+IntToStr(IDC())+" DB: "+NameDatabase1+" Номер узла: "+IntToStr(NumTemp)+"NameNode "+NameNode+" NameBravch "+NameBranch);
+Parent->WriteDiaryEvent(IP, Login, "Ошибка обработки данных", "Ошибка записи структуры", " DB: "+NameDatabase1+" Номер узла: "+IntToStr(NumTemp)+"NameNode "+NameNode+" NameBravch "+NameBranch);
+ }
+ }
+}
+}
+else
+{
+//DiaryEvent->WriteEvent(Now(), this->pNameComp, this->Login, "Ошибка обработки данных", "Ошибка записи узлов и ветвей 1 (Full) (нет базы данных)", "IDC="+IntToStr(IDC())+" DB: "+NameDatabase1);
+Parent->WriteDiaryEvent(IP, Login, "Ошибка обработки данных", "Ошибка записи узлов и ветвей 1 (Full) (нет базы данных)", " DB: "+NameDatabase1);
+
+}
+
+
+
+
+TADOConnection *Database2=GetDatabase(NameDatabase2);
+
+
+
+if(Database2!=NULL)
+{
+//План таков:
+//На всякий случай снимаем все пометки в целевой таблице
+//проходим по таблице ветви в Reference и ищем совпадение номера в целевой таблице базы аспектов
+//если находим - обновляем название и помечаем запись в целевой таблице
+//если не находим - добавляем запись в целевую таблицу и помечаем
+//после окончания прохода все непомеченные записи целевой таблицы уже отсутствуют в новой версии справочника.
+//запросом на исправление в таблице аспектов заменяем индекс ссылки на непомеченые записи нулями.
+//Потом удаляем непомеченые записи целевой и снимаем пометки целевой таблицы.
+
+//Database1 (Comm) - Reference
+//Database2 (Comm2) - аспекты
+
+MP<TADOCommand>Comm2(Form1);
+Comm2->Connection=Database2;
+Comm2->CommandText="UPDATE "+NameTable+" SET "+NameTable+".Del = False;";
+Comm2->Execute();
+
+MP<TADODataSet>Branch(Form1);
+Branch->Connection=Database1;
+Branch->CommandText="Select * From "+NameBranch+" Where показ=true Order by [Номер ветви]";
+Branch->Active=true;
+
+MP<TADODataSet>CurrTable(Form1);
+CurrTable->Connection=Database2;
+CurrTable->CommandText="Select * from "+NameTable+" Where показ=true";
+CurrTable->Active=true;
+
+
+for(Branch->First();!Branch->Eof;Branch->Next())
+{
+ int NumBranch=Branch->FieldByName("Номер ветви")->Value;
+ if(CurrTable->Locate(NameKey, NumBranch, SO))
+ {
+  //Найдено
+  CurrTable->Edit();
+  CurrTable->FieldByName(Name)->Value=Branch->FieldByName("Название")->Value;
+  CurrTable->FieldByName("Показ")->Value=Branch->FieldByName("Показ")->Value;
+  CurrTable->FieldByName("Del")->Value=true;
+  CurrTable->Post();
+ }
+ else
+ {
+  //Ненайдено
+  CurrTable->Insert();
+  CurrTable->FieldByName(NameKey)->Value=Branch->FieldByName("Номер ветви")->Value;
+  CurrTable->FieldByName(Name)->Value=Branch->FieldByName("Название")->Value;
+  CurrTable->FieldByName("Показ")->Value=Branch->FieldByName("Показ")->Value;
+  CurrTable->FieldByName("Del")->Value=true;
+  CurrTable->Post();
+ }
+}
+
+Comm2->CommandText="UPDATE ["+NameTable+"] INNER JOIN Аспекты ON ["+NameTable+"].["+NameKey+"] = Аспекты.["+NameField+"] SET Аспекты.["+NameField+"] = 0 WHERE (((["+NameTable+"].Показ)=True) AND ((["+NameTable+"].Del)=False)); ";
+//Comm2->CommandText="UPDATE "+NameTable+" INNER JOIN Аспекты ON "+NameTable+".[Номер воздействия] = Аспекты."+NameField+" SET Аспекты."+NameField+" = 0, "+NameTable+".Показ = True WHERE ((("+NameTable+".Del)=False)); ";
+//                  UPDATE Территория INNER JOIN Аспекты ON Территория.[Номер территории] = Аспекты.[Вид территории] SET Аспекты.[Вид территории] = 0 WHERE (((Территория.Показ)=True) AND ((Территория.Del)=False));
+Comm2->Execute();
+
+Comm2->CommandText="Delete * From "+NameTable+" Where "+NameTable+".Del=false AND "+NameTable+".Показ=true";
+Comm2->Execute();
+
+Comm2->CommandText="UPDATE "+NameTable+" SET "+NameTable+".Del = False";
+Comm2->Execute();
+
+MP<TADOCommand>Comm(Form1);
+Comm->Connection=Database1;
+Comm->CommandText="Delete * From TempBranch";
+Comm->Execute();
+}
+else
+{
+//DiaryEvent->WriteEvent(Now(), this->pNameComp, this->Login, "Сбой", "Сбой записи узлов и ветвей (Full) (нет базы данных)", "IDC="+IntToStr(IDC())+" DB: "+NameDatabase2);
+Parent->WriteDiaryEvent(IP, Login, "Сбой", "Сбой записи узлов и ветвей (Full) (нет базы данных)", " DB: "+NameDatabase2);
+}
+}
+//--------------------------------------------------------------------------
+void Client::MergeNodeBranch(String NameDatabase1, String NameNode, String NameBranch)
+{
+TADOConnection *Database1=GetDatabase(NameDatabase1);
+
+
+
+if(Database1!=NULL)
+{
+MP<TADOCommand>Comm(Form1);
+Comm->Connection=Database1;
+Comm->CommandText="Delete * From "+NameNode;
+Comm->Execute();
+
+Comm->CommandText="INSERT INTO "+NameNode+" ( [Номер узла], Родитель, Название ) SELECT TempNode.[Номер узла], TempNode.Родитель, TempNode.Название FROM TempNode;";
+Comm->Execute();
+
+Comm->CommandText="INSERT INTO "+NameBranch+" ( [Номер ветви], [Номер родителя], Название, Показ ) SELECT TempBranch.[Номер ветви], TempBranch.[Номер родителя], TempBranch.Название, TempBranch.Показ FROM TempBranch;";
+Comm->Execute();
+
+Comm->CommandText="Delete * From TempNode";
+Comm->Execute();
+
+}
+else
+{
+//DiaryEvent->WriteEvent(Now(), this->pNameComp, this->Login, "Сбой", "Сбой записи узлов и ветвей (Low) (нет базы данных)", "IDC="+IntToStr(IDC())+" DB: "+NameDatabase1);
+Parent->WriteDiaryEvent(IP, Login, "Сбой", "Сбой записи узлов и ветвей (Low) (нет базы данных)", " DB: "+NameDatabase1);
+
+
+}
+
+}
+//---------------------------------------------------------------------------
 //***************************************************************************
  mForm::mForm()
  {

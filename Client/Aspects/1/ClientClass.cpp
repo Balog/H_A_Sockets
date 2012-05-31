@@ -179,11 +179,29 @@ Zast->BeginWork->Execute();
  Zast->ReadWriteDoc->Execute();
  break;
  }
+ case 14:
+ {
+ StartAction(Act.ParamComm[0]);
+
+ Zast->ReadWriteDoc->Execute();
+ break;
+ }
+ case 15:
+ {
+ StartAction(Act.ParamComm[0]);
+
+ Zast->ReadWriteDoc->Execute();
+ break;
+ }
 }
 }
 else
 {
+ int a=Act.WaitCommand;
+ a++;
  ShowMessage("ќжидалась команда "+IntToStr(Act.WaitCommand)+" а пришел ответ на команду "+IntToStr(Comm));
+
+
 }
 }
 //*********************************************************************
@@ -380,7 +398,15 @@ DelText=DelText.SubString(0, FromPos-2);
         }
         case 3:
         {
-
+        String F=Field.SubString(4, Field.Length());
+        if(F=="\x01")
+        {
+        Tab->FieldList->Fields[i]->Value=true;
+        }
+        else
+        {
+        Tab->FieldList->Fields[i]->Value=false;
+        }
         break;
         }
         case 4:
@@ -425,6 +451,8 @@ DelText=DelText.SubString(0, FromPos-2);
    {
     ShowMessage("Ќет знаков начала и конца таблицы "+ClientSQL+" базы "+NameDB);
    }
+   Tab->Active=false;
+   Tab->Active=true;
 }
 catch (...)
 {
@@ -548,8 +576,8 @@ StartAction("LoadLogins");
 //************************************************************************
 void Client::WriteDiaryEvent(String Type, String Name, String Prim)
 {
-Act.WaitCommand=0;
-Act.ParamComm.clear();
+//Act.WaitCommand=0;
+//Act.ParamComm.clear();
 Socket->Socket->SendText("Command:7;5|"+IntToStr(IP.Length())+"#"+IP+"|"+IntToStr(Login.Length())+"#"+Login+"|"+IntToStr(Type.Length())+"#"+Type+"|"+IntToStr(Name.Length())+"#"+Name+"|"+IntToStr(Prim.Length())+"#"+Prim+"|");
 
 }
@@ -699,7 +727,7 @@ else
  StartAction(VTrigger[NumTrigger].FalseAction);
 }
 }
-//****************************************************************************
+//***************************************************************************
 /////////////////////////////////////////////////////////////////////////////
 Form::Form()
 {

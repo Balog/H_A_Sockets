@@ -10093,5 +10093,89 @@ object Zast: TZast
       Caption = 'MergeServerSit'
       OnExecute = MergeServerSitExecute
     end
+    object WriteVozd1: TAction
+      Caption = 'WriteVozd1'
+      OnExecute = WriteVozd1Execute
+    end
+    object WriteVozd2: TAction
+      Caption = 'WriteVozd2'
+      OnExecute = WriteVozd2Execute
+    end
+    object MergeServerVozd: TAction
+      Caption = 'MergeServerVozd'
+      OnExecute = MergeServerVozdExecute
+    end
+    object EndMergeServerVozd: TAction
+      Caption = 'EndMergeServerVozd'
+      OnExecute = EndMergeServerVozdExecute
+    end
+    object WriteMeropr1: TAction
+      Caption = 'WriteMeropr1'
+      OnExecute = WriteMeropr1Execute
+    end
+    object WriteMeropr2: TAction
+      Caption = 'WriteMeropr2'
+      OnExecute = WriteMeropr2Execute
+    end
+    object MergeServerMeropr: TAction
+      Caption = 'MergeServerMeropr'
+      OnExecute = MergeServerMeroprExecute
+    end
+    object EndMergeServerMeropr: TAction
+      Caption = 'EndMergeServerMeropr'
+      OnExecute = EndMergeServerMeroprExecute
+    end
+    object WriteTerr1: TAction
+      Caption = 'WriteTerr1'
+      OnExecute = WriteTerr1Execute
+    end
+    object WriteTerr2: TAction
+      Caption = 'WriteTerr2'
+      OnExecute = WriteTerr2Execute
+    end
+    object MergeServerTerr: TAction
+      Caption = 'MergeServerTerr'
+      OnExecute = MergeServerTerrExecute
+    end
+    object EndMergeServerTerr: TAction
+      Caption = 'EndMergeServerTerr'
+      OnExecute = EndMergeServerTerrExecute
+    end
+    object WriteDeyat1: TAction
+      Caption = 'WriteDeyat1'
+      OnExecute = WriteDeyat1Execute
+    end
+    object WriteDeyat2: TAction
+      Caption = 'WriteDeyat2'
+      OnExecute = WriteDeyat2Execute
+    end
+    object MergeServerDeyat: TAction
+      Caption = 'MergeServerDeyat'
+      OnExecute = MergeServerDeyatExecute
+    end
+    object EndMergeServerDeyat: TAction
+      Caption = 'EndMergeServerDeyat'
+      OnExecute = EndMergeServerDeyatExecute
+    end
+    object WriteAspect1: TAction
+      Caption = 'WriteAspect1'
+      OnExecute = WriteAspect1Execute
+    end
+    object WriteAspect2: TAction
+      Caption = 'WriteAspect2'
+      OnExecute = WriteAspect2Execute
+    end
+    object MergeServerAspect: TAction
+      Caption = 'MergeServerAspect'
+      OnExecute = MergeServerAspectExecute
+    end
+    object EndMergeServerAspect: TAction
+      Caption = 'EndMergeServerAspect'
+      OnExecute = EndMergeServerAspectExecute
+    end
+    object ContReport: TAction
+      Caption = 'ContReport'
+      OnExecute = ContReportExecute
+    end
   end
 end

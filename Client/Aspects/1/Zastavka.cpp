@@ -12,6 +12,8 @@
 #include "PassForm.h"
 #include "Progress.h"
 #include "MainForm.h"
+#include "Rep1.h"
+#include "Svod.h"
 //---------------------------------------------------------------------------
 #pragma package(smart_init)
 #pragma resource "*.dfm"
@@ -1233,11 +1235,14 @@ Prog->Close();
 
 void __fastcall TZast::WriteMetodikaExecute(TObject *Sender)
 {
+
+MClient->Act.ParamComm.clear();
+MClient->Act.ParamComm.push_back("ReadWriteDoc");
 MClient->WriteTable("Reference","Select Номер, Методика From Методика Order by номер","Select Номер, Методика From Методика Order by номер");
 
 Zast->MClient->WriteDiaryEvent("NetAspects","Конец записи методики (главспец)","");
 
-ReadWriteDoc->Execute();
+//ReadWriteDoc->Execute();
 }
 //---------------------------------------------------------------------------
 
@@ -1416,6 +1421,243 @@ void __fastcall TZast::MergeServerSitExecute(TObject *Sender)
  String DB2="Аспекты";
  String Mess="Command:13;2|"+IntToStr(DB.Length())+"#"+DB+"|"+IntToStr(DB2.Length())+"#"+DB2+"|";
  ClientSocket->Socket->SendText(Mess);
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TZast::WriteVozd1Execute(TObject *Sender)
+{
+ Zast->MClient->Act.ParamComm.clear();
+ Zast->MClient->Act.ParamComm.push_back("WriteVozd2");
+MClient->WriteTable("Reference","Select Узлы_3.[Номер узла], Узлы_3.[Родитель], Узлы_3.[Название] From Узлы_3 Order by [Родитель], [Номер узла]", "Select TempNode.[Номер узла], TempNode.[Родитель], TempNode.[Название] From TempNode Order by [Родитель], [Номер узла]");
+
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TZast::WriteVozd2Execute(TObject *Sender)
+{
+ Zast->MClient->Act.ParamComm.clear();
+ Zast->MClient->Act.ParamComm.push_back("MergeServerVozd");
+MClient->WriteTable("Reference","Select Ветви_3.[Номер ветви], Ветви_3.[Номер родителя], Ветви_3.[Название], Ветви_3.[Показ] From Ветви_3 Order by [Номер родителя], [Номер ветви]", "Select TempBranch.[Номер ветви], TempBranch.[Номер родителя], TempBranch.[Название], TempBranch.[Показ] From TempBranch Order by [Номер родителя], [Номер ветви]");
+
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TZast::MergeServerVozdExecute(TObject *Sender)
+{
+ MClient->Act.WaitCommand=14;
+ MClient->Act.ParamComm.clear();
+ MClient->Act.ParamComm.push_back("EndMergeServerVozd");
+
+ //"Reference", "Узлы_3","Ветви_3","Аспекты","Воздействия","Воздействие","Номер воздействия","Наименование воздействия"
+ String DB="Reference";
+ String Node="Узлы_3";
+ String Branch="Ветви_3";
+ String DB2="Аспекты";
+ String Table="Воздействия";
+ String AspField="Воздействие";
+ String KeyTarget="Номер воздействия";
+ String NameTarget="Наименование воздействия";
+
+ String Mess="Command:14;8|"+IntToStr(DB.Length())+"#"+DB+"|"+IntToStr(Node.Length())+"#"+Node+"|"+IntToStr(Branch.Length())+"#"+Branch+"|"+IntToStr(DB2.Length())+"#"+DB2+"|"+IntToStr(Table.Length())+"#"+Table+"|"+IntToStr(AspField.Length())+"#"+AspField+"|"+IntToStr(KeyTarget.Length())+"#"+KeyTarget+"|"+IntToStr(NameTarget.Length())+"#"+NameTarget+"|";
+ ClientSocket->Socket->SendText(Mess);
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TZast::EndMergeServerVozdExecute(TObject *Sender)
+{
+Zast->MClient->WriteDiaryEvent("NetAspects","Конец записи воздействий (главспец)","");
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TZast::WriteMeropr1Execute(TObject *Sender)
+{
+ Zast->MClient->Act.ParamComm.clear();
+ Zast->MClient->Act.ParamComm.push_back("WriteMeropr2");
+MClient->WriteTable("Reference","Select Узлы_4.[Номер узла], Узлы_4.[Родитель], Узлы_4.[Название] From Узлы_4 Order by [Родитель], [Номер узла]", "Select TempNode.[Номер узла], TempNode.[Родитель], TempNode.[Название] From TempNode Order by [Родитель], [Номер узла]");
+
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TZast::WriteMeropr2Execute(TObject *Sender)
+{
+ Zast->MClient->Act.ParamComm.clear();
+ Zast->MClient->Act.ParamComm.push_back("MergeServerMeropr");
+MClient->WriteTable("Reference","Select Ветви_4.[Номер ветви], Ветви_4.[Номер родителя], Ветви_4.[Название], Ветви_4.[Показ] From Ветви_4 Order by [Номер родителя], [Номер ветви]", "Select TempBranch.[Номер ветви], TempBranch.[Номер родителя], TempBranch.[Название], TempBranch.[Показ] From TempBranch Order by [Номер родителя], [Номер ветви]");
+
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TZast::MergeServerMeroprExecute(TObject *Sender)
+{
+ MClient->Act.WaitCommand=15;
+ MClient->Act.ParamComm.clear();
+ MClient->Act.ParamComm.push_back("EndMergeServerMeropr");
+
+ //"Reference", "Узлы_4","Ветви_4"
+ String DB="Reference";
+ String Node="Узлы_4";
+ String Branch="Ветви_4";
+
+
+ String Mess="Command:15;3|"+IntToStr(DB.Length())+"#"+DB+"|"+IntToStr(Node.Length())+"#"+Node+"|"+IntToStr(Branch.Length())+"#"+Branch+"|";
+ ClientSocket->Socket->SendText(Mess);
+
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TZast::EndMergeServerMeroprExecute(TObject *Sender)
+{
+Zast->MClient->WriteDiaryEvent("NetAspects","Конец записи мероприятий (главспец)","");
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TZast::WriteTerr1Execute(TObject *Sender)
+{
+ Zast->MClient->Act.ParamComm.clear();
+ Zast->MClient->Act.ParamComm.push_back("WriteTerr2");
+MClient->WriteTable("Reference","Select Узлы_5.[Номер узла], Узлы_5.[Родитель], Узлы_5.[Название] From Узлы_5 Order by [Родитель], [Номер узла]", "Select TempNode.[Номер узла], TempNode.[Родитель], TempNode.[Название] From TempNode Order by [Родитель], [Номер узла]");
+
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TZast::WriteTerr2Execute(TObject *Sender)
+{
+ Zast->MClient->Act.ParamComm.clear();
+ Zast->MClient->Act.ParamComm.push_back("MergeServerTerr");
+MClient->WriteTable("Reference","Select Ветви_5.[Номер ветви], Ветви_5.[Номер родителя], Ветви_5.[Название], Ветви_5.[Показ] From Ветви_5 Order by [Номер родителя], [Номер ветви]", "Select TempBranch.[Номер ветви], TempBranch.[Номер родителя], TempBranch.[Название], TempBranch.[Показ] From TempBranch Order by [Номер родителя], [Номер ветви]");
+
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TZast::MergeServerTerrExecute(TObject *Sender)
+{
+ MClient->Act.WaitCommand=14;
+ MClient->Act.ParamComm.clear();
+ MClient->Act.ParamComm.push_back("EndMergeServerVozd");
+
+ //"Reference", "Узлы_5","Ветви_5","Аспекты","Территория","Вид территории","Номер территории","Наименование территории"
+ String DB="Reference";
+ String Node="Узлы_5";
+ String Branch="Ветви_5";
+ String DB2="Аспекты";
+ String Table="Территория";
+ String AspField="Вид территории";
+ String KeyTarget="Номер территории";
+ String NameTarget="Наименование территории";
+
+ String Mess="Command:14;8|"+IntToStr(DB.Length())+"#"+DB+"|"+IntToStr(Node.Length())+"#"+Node+"|"+IntToStr(Branch.Length())+"#"+Branch+"|"+IntToStr(DB2.Length())+"#"+DB2+"|"+IntToStr(Table.Length())+"#"+Table+"|"+IntToStr(AspField.Length())+"#"+AspField+"|"+IntToStr(KeyTarget.Length())+"#"+KeyTarget+"|"+IntToStr(NameTarget.Length())+"#"+NameTarget+"|";
+ ClientSocket->Socket->SendText(Mess);
+
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TZast::EndMergeServerTerrExecute(TObject *Sender)
+{
+Zast->MClient->WriteDiaryEvent("NetAspects","Конец записи территорий (главспец)","");
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TZast::WriteDeyat1Execute(TObject *Sender)
+{
+ Zast->MClient->Act.ParamComm.clear();
+ Zast->MClient->Act.ParamComm.push_back("WriteDeyat2");
+MClient->WriteTable("Reference","Select Узлы_6.[Номер узла], Узлы_6.[Родитель], Узлы_6.[Название] From Узлы_6 Order by [Родитель], [Номер узла]", "Select TempNode.[Номер узла], TempNode.[Родитель], TempNode.[Название] From TempNode Order by [Родитель], [Номер узла]");
+
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TZast::WriteDeyat2Execute(TObject *Sender)
+{
+ Zast->MClient->Act.ParamComm.clear();
+ Zast->MClient->Act.ParamComm.push_back("MergeServerDeyat");
+MClient->WriteTable("Reference","Select Ветви_6.[Номер ветви], Ветви_6.[Номер родителя], Ветви_6.[Название], Ветви_6.[Показ] From Ветви_6 Order by [Номер родителя], [Номер ветви]", "Select TempBranch.[Номер ветви], TempBranch.[Номер родителя], TempBranch.[Название], TempBranch.[Показ] From TempBranch Order by [Номер родителя], [Номер ветви]");
+
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TZast::MergeServerDeyatExecute(TObject *Sender)
+{
+ MClient->Act.WaitCommand=14;
+ MClient->Act.ParamComm.clear();
+ MClient->Act.ParamComm.push_back("EndMergeServerDeyat");
+
+ //"Reference", "Узлы_6","Ветви_6","Аспекты","Деятельность","Деятельность","Номер деятельности","Наименование деятельности"
+ String DB="Reference";
+ String Node="Узлы_6";
+ String Branch="Ветви_6";
+ String DB2="Аспекты";
+ String Table="Деятельность";
+ String AspField="Деятельность";
+ String KeyTarget="Номер деятельности";
+ String NameTarget="Наименование деятельности";
+
+ String Mess="Command:14;8|"+IntToStr(DB.Length())+"#"+DB+"|"+IntToStr(Node.Length())+"#"+Node+"|"+IntToStr(Branch.Length())+"#"+Branch+"|"+IntToStr(DB2.Length())+"#"+DB2+"|"+IntToStr(Table.Length())+"#"+Table+"|"+IntToStr(AspField.Length())+"#"+AspField+"|"+IntToStr(KeyTarget.Length())+"#"+KeyTarget+"|"+IntToStr(NameTarget.Length())+"#"+NameTarget+"|";
+ ClientSocket->Socket->SendText(Mess);
+
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TZast::EndMergeServerDeyatExecute(TObject *Sender)
+{
+Zast->MClient->WriteDiaryEvent("NetAspects","Конец записи видов деятельности (главспец)","");
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TZast::WriteAspect1Execute(TObject *Sender)
+{
+ Zast->MClient->Act.ParamComm.clear();
+ Zast->MClient->Act.ParamComm.push_back("WriteAspect2");
+MClient->WriteTable("Reference","Select Узлы_7.[Номер узла], Узлы_7.[Родитель], Узлы_7.[Название] From Узлы_7 Order by [Родитель], [Номер узла]", "Select TempNode.[Номер узла], TempNode.[Родитель], TempNode.[Название] From TempNode Order by [Родитель], [Номер узла]");
+
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TZast::WriteAspect2Execute(TObject *Sender)
+{
+ Zast->MClient->Act.ParamComm.clear();
+ Zast->MClient->Act.ParamComm.push_back("MergeServerAspect");
+MClient->WriteTable("Reference","Select Ветви_7.[Номер ветви], Ветви_7.[Номер родителя], Ветви_7.[Название], Ветви_7.[Показ] From Ветви_7 Order by [Номер родителя], [Номер ветви]", "Select TempBranch.[Номер ветви], TempBranch.[Номер родителя], TempBranch.[Название], TempBranch.[Показ] From TempBranch Order by [Номер родителя], [Номер ветви]");
+
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TZast::MergeServerAspectExecute(TObject *Sender)
+{
+ MClient->Act.WaitCommand=14;
+ MClient->Act.ParamComm.clear();
+ MClient->Act.ParamComm.push_back("EndMergeServerAspect");
+
+ //"Reference", "Узлы_7","Ветви_7","Аспекты","Аспект","Аспект","Номер аспекта","Наименование аспекта"
+ String DB="Reference";
+ String Node="Узлы_7";
+ String Branch="Ветви_7";
+ String DB2="Аспекты";
+ String Table="Аспект";
+ String AspField="Аспект";
+ String KeyTarget="Номер аспекта";
+ String NameTarget="Наименование аспекта";
+
+ String Mess="Command:14;8|"+IntToStr(DB.Length())+"#"+DB+"|"+IntToStr(Node.Length())+"#"+Node+"|"+IntToStr(Branch.Length())+"#"+Branch+"|"+IntToStr(DB2.Length())+"#"+DB2+"|"+IntToStr(Table.Length())+"#"+Table+"|"+IntToStr(AspField.Length())+"#"+AspField+"|"+IntToStr(KeyTarget.Length())+"#"+KeyTarget+"|"+IntToStr(NameTarget.Length())+"#"+NameTarget+"|";
+ ClientSocket->Socket->SendText(Mess);
+
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TZast::EndMergeServerAspectExecute(TObject *Sender)
+{
+Zast->MClient->WriteDiaryEvent("NetAspects","Конец записи списка экологических аспектов (главспец)","");
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TZast::ContReportExecute(TObject *Sender)
+{
+ Report1->CreateRep();
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TZast::ContSvodReportExecute(TObject *Sender)
+{
+ FSvod->ContSvodReport();
 }
 //---------------------------------------------------------------------------
 
