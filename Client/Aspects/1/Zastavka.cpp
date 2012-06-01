@@ -525,30 +525,35 @@ void __fastcall TZast::BeginWorkExecute(TObject *Sender)
 {
 String Login=MClient->Act.ParamComm[0];
 int Role=StrToInt(MClient->Act.ParamComm[1]);
-if(Role==2)
-{
 
-}
-else
-{
 
-}
 
 switch (Role)
 {
  case 2:
  {
-  Documents->Show();
+//Необходимо прочесть логины, подразделения, распределение логинов
+//а также слить с локальной базой
+//и только потом показывать форму документов
+
+//Запрос на загрузку логинов
+ Zast->MClient->Act.ParamComm.clear();
+ Zast->MClient->Act.ParamComm.push_back("StartLoadPodr");
+ Zast->MClient->ReadTable("Аспекты", "Select Logins.Num, Logins.Login, Logins.Role From Logins Order by Num;", "Select TempLogins.Num, TempLogins.Login, TempLogins.Role From TempLogins Order by Num;");
+
+//  Documents->Show();
  break;
  }
  case 3:
  {
+ //тут тоже надо сначала считать обновления данных
  Form1->Caption="Пользователь: "+Login;
  Form1->Show();
  break;
  }
  case 4:
  {
+ //тут тоже надо сначала считать обновления данных
  Form1->Caption="Демонстрационный пользователь: "+Login+"                ***ЗАПИСЬ НА СЕРВЕР ОТКЛЮЧЕНА***";
  Form1->Show();
  break;
@@ -571,7 +576,13 @@ int N=STab->RecordCount;
 
 if(N==0)
 {
-Documents->Podr->Delete();
+//Documents->Podr->Delete();
+ Zast->MClient->Act.WaitCommand=16;
+ Zast->MClient->Act.ParamComm.clear();
+ Zast->MClient->Act.ParamComm.push_back("DeletePodr2");
+ String Database="Аспекты";
+String NumPodr=IntToStr(NumP);
+ClientSocket->Socket->SendText("Command:16;2|"+IntToStr(Database.Length())+"#"+Database+"|"+IntToStr(NumPodr.Length())+"#"+NumPodr+"|");
 }
 else
 {
@@ -1661,3 +1672,246 @@ void __fastcall TZast::ContSvodReportExecute(TObject *Sender)
 }
 //---------------------------------------------------------------------------
 
+
+void __fastcall TZast::StartLoadPodrExecute(TObject *Sender)
+{
+//Стартовая загрузка подразделений
+ Zast->MClient->Act.ParamComm.clear();
+ Zast->MClient->Act.ParamComm.push_back("StartLoadObslOtd");
+Zast->MClient->ReadTable("Аспекты", "Select Подразделения.[Номер подразделения], Подразделения.[Название подразделения] From Подразделения Order by [Номер подразделения];", "Select TempПодразделения.[Номер подразделения], TempПодразделения.[Название подразделения] From TempПодразделения Order by [Номер подразделения];");
+
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TZast::StartLoadObslOtdExecute(TObject *Sender)
+{
+ Zast->MClient->Act.ParamComm.clear();
+ Zast->MClient->Act.ParamComm.push_back("StartMergeLoginsPodr");
+Zast->MClient->ReadTable("Аспекты", "Select ObslOtdel.Login, ObslOtdel.NumObslOtdel From ObslOtdel Order by Login, NumObslOtdel;", "Select TempObslOtdel.Login, TempObslOtdel.NumObslOtdel From TempObslOtdel Order by Login, NumObslOtdel;");
+
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TZast::StartMergeLoginsPodrExecute(TObject *Sender)
+{
+MDBConnector *DB;
+if(Role==2)
+{
+DB=ADOAspect;
+}
+else
+{
+DB=ADOUsrAspect;
+}
+//Объединение загруженых с сервера логинов, подразделений и распределения подразделений
+//при старте старте программы под главспецом
+//Новые не сохраненные подразделения не должны быть удалены
+
+//Объединить таблицу подразделений
+MergeOtdels();
+//Объединить таблицу логинов, одновременно корректируя таблицу TempObslOtdel
+MergeLogins();
+
+//Объединить таблицу обслуживаемых подразделений
+MP<TADODataSet>ToTable(this);
+ToTable->Connection=DB;
+ToTable->CommandText="Select TempObslOtdel.Login, TempObslOtdel.NumObslOtdel From TempObslOtdel Order by Login, NumObslOtdel";
+ToTable->Active=true;
+
+MP<TADOCommand>Comm(this);
+Comm->Connection=DB;
+Comm->CommandText="Delete * From ObslOtdel";
+Comm->Execute();
+
+MP<TADODataSet>Logins(this);
+Logins->Connection=DB;
+Logins->CommandText="Select * from Logins";
+Logins->Active=true;
+
+MP<TADODataSet>Podr(this);
+Podr->Connection=DB;
+Podr->CommandText="Select * from Подразделения";
+Podr->Active=true;
+
+int Log;
+int Pod;
+for(ToTable->First();!ToTable->Eof;ToTable->Next())
+{
+ int N=ToTable->FieldByName("Login")->Value;
+
+ if(Logins->Locate("ServerNum", N, SO))
+ {
+  Log=Logins->FieldByName("Num")->Value;
+
+ int N1=ToTable->FieldByName("NumObslOtdel")->Value;
+
+ if(Podr->Locate("ServerNum", N1, SO))
+ {
+  Pod=Podr->FieldByName("Номер подразделения")->Value;
+
+  ToTable->Edit();
+  ToTable->FieldByName("Login")->Value=Log;
+  ToTable->FieldByName("NumObslOtdel")->Value=Pod;
+  ToTable->Post();
+ }
+ else
+ {
+  ShowMessage("Ошибка перекодировки подразделений N="+IntToStr(N1));
+ }
+ }
+ else
+ {
+  ShowMessage("Ошибка перекодировки логинов N="+IntToStr(N));
+ }
+
+
+
+
+}
+
+
+Comm->CommandText="INSERT INTO ObslOtdel ( Login, NumObslOtdel) SELECT TempObslOtdel.Login, TempObslOtdel.NumObslOtdel FROM TempObslOtdel;";
+Comm->Execute();
+
+Comm->CommandText="Delete * From TempObslOtdel";
+Comm->Execute();
+
+Documents->Show();
+}
+//---------------------------------------------------------------------------
+void TZast::MergeLogins()
+{
+MDBConnector *DB;
+if(Role==2)
+{
+DB=ADOAspect;
+}
+else
+{
+DB=ADOUsrAspect;
+}
+
+
+MP<TADOCommand>Comm(this);
+Comm->Connection=DB;
+Comm->CommandText="UPDATE Logins SET Logins.Del = False;";
+Comm->Execute();
+
+MP<TADODataSet>TempLogins(this);
+TempLogins->Connection=DB;
+TempLogins->CommandText="Select * From TempLogins";
+TempLogins->Active=true;
+
+MP<TADODataSet>Logins(this);
+Logins->Connection=DB;
+Logins->CommandText="Select * From Logins";
+Logins->Active=true;
+
+for(Logins->First();!Logins->Eof;Logins->Next())
+{
+ int N=Logins->FieldByName("ServerNum")->Value;
+ if(TempLogins->Locate("Num", N, SO))
+ {
+  Logins->Edit();
+  Logins->FieldByName("Login")->Value=TempLogins->FieldByName("Login")->Value;
+  Logins->FieldByName("Role")->Value=TempLogins->FieldByName("Role")->Value;
+  Logins->Post();
+
+  TempLogins->Delete();
+ }
+ else
+ {
+  Logins->Edit();
+  Logins->FieldByName("Del")->Value=true;
+  Logins->Post();
+ }
+}
+
+Comm->CommandText="Delete * From Logins Where Logins.Del = true;";
+Comm->Execute();
+
+Comm->CommandText="INSERT INTO Logins ( ServerNum, Login, Role ) SELECT TempLogins.Num, TempLogins.Login, TempLogins.Role FROM TempLogins;";
+Comm->Execute();
+
+}
+//---------------------------------------------------------------
+void TZast::MergeOtdels()
+{
+TLocateOptions SO;
+
+MDBConnector *DB;
+if(Role==2)
+{
+DB=ADOAspect;
+}
+else
+{
+DB=ADOUsrAspect;
+}
+
+MP<TADOCommand>Comm(this);
+Comm->Connection=DB;
+Comm->CommandText="UPDATE Подразделения SET Подразделения.Del = False;";
+Comm->Execute();
+
+MP<TADODataSet>Otdels(this);
+Otdels->Connection=DB;
+Otdels->CommandText="Select * From Подразделения Order by [Номер подразделения]";
+Otdels->Active=true;
+
+MP<TADODataSet>Temp(this);
+Temp->Connection=DB;
+Temp->CommandText="Select * From TempПодразделения Order by [Номер подразделения]";
+Temp->Active=true;
+
+for(Otdels->First();!Otdels->Eof;Otdels->Next())
+{
+int SNum=Otdels->FieldByName("ServerNum")->AsInteger;
+if(Temp->Locate("Номер подразделения", SNum, SO))
+{
+//найден
+//Обновить название подразделения
+//удалить запись из TempПодразделения
+Otdels->Edit();
+Otdels->FieldByName("Название подразделения")->Value=Temp->FieldByName("Название подразделения")->Value;
+Otdels->Post();
+
+Temp->Delete();
+}
+else
+{
+//Ненайден
+//Это подразделение на сервере удалено
+//Пометить к удалению
+/*
+Otdels->Edit();
+Otdels->FieldByName("Del")->Value=true;
+Otdels->Post();
+*/
+}
+}
+
+//Удалить лишние подразделения
+/*
+Comm->CommandText="Delete * from Подразделения Where Del=true";
+Comm->Execute();
+*/
+
+//если в TempПодразделения остались записи то это новые подразделения на сервере
+//Перенести их в Подразделения
+
+for(Temp->First();!Temp->Eof;Temp->Next())
+{
+Otdels->Insert();
+Otdels->FieldByName("Название подразделения")->Value=Temp-> FieldByName("Название подразделения")->Value;
+Otdels->FieldByName("ServerNum")->Value=Temp-> FieldByName("Номер подразделения")->Value;
+Otdels->FieldByName("Del")->Value=false;
+Otdels->Post();
+}
+//очистить TempПодразделения
+Comm->CommandText="Delete * from TempПодразделения";
+Comm->Execute();
+
+
+}
+//----------------------------------------------------

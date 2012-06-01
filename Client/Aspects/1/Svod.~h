@@ -61,7 +61,7 @@ __published:	// IDE-managed Components
         void __fastcall FormKeyUp(TObject *Sender, WORD &Key,
           TShiftState Shift);
 private:	// User declarations
-bool CreateMainSvod();
+void CreateMainSvod();
 void AddMainSvod(TADODataSet *Table);
 void CreateRep(TADODataSet *TempTable, Variant App, Variant Book, Variant Sheet, int& Start, int& NN, int Number);
 void EndSvod(Variant App, Variant Sheet, int Start);
@@ -73,6 +73,7 @@ public:		// User declarations
 //        void __fastcall MyException(TObject *Sender, Exception *E);
 AnsiString TFSvod::Address(Variant Sheet,int x,int y);
 void TFSvod::Initialize();
+void ContSvodReport();
 };
 //---------------------------------------------------------------------------
 extern PACKAGE TFSvod *FSvod;

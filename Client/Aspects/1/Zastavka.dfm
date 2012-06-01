@@ -10181,5 +10181,17 @@ object Zast: TZast
       Caption = 'ContSvodReport'
       OnExecute = ContSvodReportExecute
     end
+    object StartLoadPodr: TAction
+      Caption = 'StartLoadPodr'
+      OnExecute = StartLoadPodrExecute
+    end
+    object StartLoadObslOtd: TAction
+      Caption = 'StartLoadObslOtd'
+      OnExecute = StartLoadObslOtdExecute
+    end
+    object StartMergeLoginsPodr: TAction
+      Caption = 'StartMergeLoginsPodr'
+      OnExecute = StartMergeLoginsPodrExecute
+    end
   end
 end

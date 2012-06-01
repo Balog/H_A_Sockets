@@ -193,6 +193,22 @@ Zast->BeginWork->Execute();
  Zast->ReadWriteDoc->Execute();
  break;
  }
+ case 16:
+ {
+ if(Parameters[0]=="")
+ {
+  //удалить подразделение
+  Documents->Podr->Delete();
+ }
+ else
+ {
+  //не удал€ть подразделение
+  String S1="Ёто подразделение распределено дл€ логина "+Parameters[0];
+  String S=S1+"\rƒл€ удалени€ этого подразделени€ администратор должен отсоединить его от логина";
+  Application->MessageBoxA(S.c_str(),"”даление подразделени€",MB_ICONEXCLAMATION);
+ }
+ break;
+ }
 }
 }
 else
@@ -474,6 +490,7 @@ void Client::LoginResult(String Login, String Pass, int NumRole, bool Ok)
 
 if(Ok)
 {
+Zast->Role=NumRole;
 Socket->Socket->SendText("Command:6;3|"+IntToStr(Login.Length())+"#"+Login+"|"+"4#Pass"+"|"+"1#1"+"|");
 }
 else

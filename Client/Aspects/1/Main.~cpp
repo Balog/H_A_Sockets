@@ -13,6 +13,7 @@
 #include "Progress.h"
 #include "About.h"
 #include "Rep1.h"
+#include "Svod.h"
 using namespace std;
 //---------------------------------------------------------------------------
 #pragma package(smart_init)
@@ -2818,6 +2819,13 @@ Report1->PodrComText="select * From Подразделения Order by [Название подразделен
 Report1->NumRep=2;
 Report1->RepBase=Zast->ADOAspect;
 Report1->ShowModal();        
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TDocuments::N22Click(TObject *Sender)
+{
+//Сводный отчет
+FSvod->ShowModal();
 }
 //---------------------------------------------------------------------------
 

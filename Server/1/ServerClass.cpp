@@ -362,6 +362,12 @@ Parent->WriteDiaryEvent(IP, Login, "AdminARM", "Запись логинов", "Имя: "+Paramet
    this->Socket->SendText("Command:15;0|");
    break;
    }
+   case 16:
+   {
+   String Login=PodrToLogin(Parameters[0],StrToInt(Parameters[1]));
+   this->Socket->SendText("Command:16;1|"+IntToStr(Login.Length())+"#"+Login+"|");
+   break;
+   }
  }
 
 }
@@ -1378,6 +1384,21 @@ Parent->WriteDiaryEvent(IP, Login, "Сбой", "Сбой записи узлов и ветвей (Low) (не
 
 }
 
+}
+//---------------------------------------------------------------------------
+String Client::PodrToLogin(String NameDB, int NumPodr)
+{
+String Ret="";
+ MP<TADODataSet>Tab(Form1);
+ Tab->Connection=GetDatabase(NameDB);
+ Tab->CommandText="SELECT Logins.Login, ObslOtdel.NumObslOtdel FROM Logins INNER JOIN ObslOtdel ON Logins.Num = ObslOtdel.Login WHERE (((ObslOtdel.NumObslOtdel)="+IntToStr(NumPodr)+"));";
+ Tab->Active=true;
+ if(Tab->RecordCount!=0)
+ {
+  Ret=Tab->FieldByName("Login")->Value;
+ }
+
+ return Ret;
 }
 //---------------------------------------------------------------------------
 //***************************************************************************

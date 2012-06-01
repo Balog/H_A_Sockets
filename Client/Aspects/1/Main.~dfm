@@ -530,6 +530,7 @@ object Documents: TDocuments
       end
       object N22: TMenuItem
         Caption = #1057#1074#1086#1076#1085#1099#1081' '#1086#1090#1095#1077#1090
+        OnClick = N22Click
       end
     end
     object N1: TMenuItem

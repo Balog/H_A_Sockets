@@ -57,6 +57,7 @@ void WriteDiaryEvent(String Comp, String Login, String Type, String Name, String
 void WriteDiaryEvent(String Comp, String Login, String Type, String Name);
 void ConnectDiary(String DiaryPatch);
 void Clients::SearchDubl(String IP, String Login, String AppPatch, TCustomWinSocket *S);
+
 };
 //-------------------------------------------------------------------------
 class Client
@@ -75,7 +76,7 @@ void MergeCrit(String DB1, String DB2);
 void MergeSit(String DB1, String DB2);
 void MergeNodeBranch(String NameDatabase1, String NameNode, String NameBranch, String NameDatabase2, String NameTable, String NameField, String NameKey, String Name);
 void MergeNodeBranch(String NameDatabase1, String NameNode, String NameBranch);
-
+String PodrToLogin(String NameDB, int NumPodr);
 
  public:
 Client(Clients*);

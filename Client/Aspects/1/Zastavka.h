@@ -173,6 +173,9 @@ __published:	// IDE-managed Components
         TAction *EndMergeServerAspect;
         TAction *ContReport;
         TAction *ContSvodReport;
+        TAction *StartLoadPodr;
+        TAction *StartLoadObslOtd;
+        TAction *StartMergeLoginsPodr;
         void __fastcall Timer1Timer(TObject *Sender);
         void __fastcall Image1Click(TObject *Sender);
         void __fastcall FormShow(TObject *Sender);
@@ -251,6 +254,9 @@ __published:	// IDE-managed Components
         void __fastcall EndMergeServerAspectExecute(TObject *Sender);
         void __fastcall ContReportExecute(TObject *Sender);
         void __fastcall ContSvodReportExecute(TObject *Sender);
+        void __fastcall StartLoadPodrExecute(TObject *Sender);
+        void __fastcall StartLoadObslOtdExecute(TObject *Sender);
+        void __fastcall StartMergeLoginsPodrExecute(TObject *Sender);
 private:	// User declarations
 String Path;
 TLocateOptions SO;
@@ -261,6 +267,8 @@ void __fastcall ArchTimer(TObject *Sender, int N);
 String Server;
 int Port;
 bool Start;
+void MergeLogins();
+void MergeOtdels();
 
 public:		// User declarations
 bool Saved;
