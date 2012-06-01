@@ -14,6 +14,7 @@
 #include "About.h"
 #include "Rep1.h"
 #include "Svod.h"
+#include "FMoveAsp.h"
 using namespace std;
 //---------------------------------------------------------------------------
 #pragma package(smart_init)
@@ -2826,6 +2827,12 @@ void __fastcall TDocuments::N22Click(TObject *Sender)
 {
 //ׁגמהםûי מעקוע
 FSvod->ShowModal();
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TDocuments::N19Click(TObject *Sender)
+{
+MAsp->ShowModal();
 }
 //---------------------------------------------------------------------------
 

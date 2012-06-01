@@ -695,7 +695,7 @@ SZn->ShowModal();
 void TFSvod::CreateMainSvod()
 {
 //Фиксация собственных сводных
-bool Ret=false;
+//bool Ret=false;
 MP<TADODataSet>LPodr(this);
 LPodr->Connection=Zast->ADOAspect;
 LPodr->CommandText="SELECT Подразделения.[Номер подразделения], Подразделения.[Название подразделения], Подразделения.ServerNum FROM Logins INNER JOIN (Подразделения INNER JOIN ObslOtdel ON Подразделения.[Номер подразделения] = ObslOtdel.NumObslOtdel) ON Logins.Num = ObslOtdel.Login;";

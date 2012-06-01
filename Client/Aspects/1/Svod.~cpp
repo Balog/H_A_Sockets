@@ -1211,10 +1211,10 @@ void TFSvod::ContSvodReport()
 MP<TADOCommand>Comm(this);
 Comm->Connection=Zast->ADOAspect;
 
-String CT="INSERT INTO TempSvodReestr ( [Название подразделения], [Наименование деятельности], [Наименование аспекта], [Наименование воздействия], [Название ситуации], Z, Значимость, [Мониторинг и контроль], [Предлагаемый мониторинг и контроль] ) ";
-CT=CT+" SELECT Подразделения.[Название подразделения], Деятельность.[Наименование деятельности], Аспект.[Наименование аспекта], Воздействия.[Наименование воздействия], Ситуации.[Название ситуации], TempAspects.Z, TempAspects.Значимость, TempAspects.[Мониторинг и контроль], TempAspects.[Предлагаемый мониторинг и контроль] ";
-CT=CT+" FROM Logins INNER JOIN ((Ситуации INNER JOIN (Воздействия INNER JOIN (Аспект INNER JOIN (Деятельность INNER JOIN (Подразделения INNER JOIN TempAspects ON Подразделения.ServerNum = TempAspects.Подразделение) ON Деятельность.[Номер деятельности] = TempAspects.Деятельность) ON Аспект.[Номер аспекта] = TempAspects.Аспект) ON Воздействия.[Номер воздействия] = TempAspects.Воздействие) ON Ситуации.[Номер ситуации] = TempAspects.Ситуация) INNER JOIN ObslOtdel ON Подразделения.[Номер подразделения] = ObslOtdel.NumObslOtdel) ON Logins.Num = ObslOtdel.Login ";
-CT=CT+" WHERE (((Logins.Role)<>4));";
+String CT="INSERT INTO TempSvodReestr ( [Название подразделения], [Наименование деятельности], [Наименование аспекта], [Наименование воздействия], [Название ситуации], Z, [Мониторинг и контроль], [Предлагаемый мониторинг и контроль], Значимость ) ";
+CT=CT+" SELECT Подразделения.[Название подразделения], Деятельность.[Наименование деятельности], Аспект.[Наименование аспекта], Воздействия.[Наименование воздействия], Ситуации.[Название ситуации], TempAspects.Z, TempAspects.[Мониторинг и контроль], TempAspects.[Предлагаемый мониторинг и контроль], TempAspects.Значимость ";
+CT=CT+" FROM (Подразделения INNER JOIN (Ситуации INNER JOIN (Воздействия INNER JOIN (Аспект INNER JOIN (Деятельность INNER JOIN TempAspects ON Деятельность.[Номер деятельности] = TempAspects.Деятельность) ON Аспект.[Номер аспекта] = TempAspects.Аспект) ON Воздействия.[Номер воздействия] = TempAspects.Воздействие) ON Ситуации.[Номер ситуации] = TempAspects.Ситуация) ON Подразделения.ServerNum = TempAspects.Подразделение) INNER JOIN (Logins INNER JOIN ObslOtdel ON Logins.Num = ObslOtdel.Login) ON Подразделения.[Номер подразделения] = ObslOtdel.NumObslOtdel ";
+CT=CT+" WHERE (((Logins.Role)=3));";
 Comm->CommandText=CT;
 Comm->Execute();
 

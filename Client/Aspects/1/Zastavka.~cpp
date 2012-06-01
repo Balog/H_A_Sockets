@@ -1776,7 +1776,7 @@ Comm->Execute();
 Comm->CommandText="Delete * From TempObslOtdel";
 Comm->Execute();
 
-Form1->Show();
+Documents->Show();
 }
 //---------------------------------------------------------------------------
 void TZast::MergeLogins()

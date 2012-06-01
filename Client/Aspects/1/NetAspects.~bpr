@@ -6,13 +6,13 @@
     <PROJECT value="NetAspects.exe"/>
     <OBJFILES value="NetAspects.obj ClientClass.obj Main.obj MasterPointer.obj MDBConnector.obj 
       PassForm.obj Progress.obj Zastavka.obj CodeText.obj MainForm.obj Rep1.obj 
-      Reports.obj"/>
+      Reports.obj Svod.obj FMoveAsp.obj InpDocs.obj InputFiltr.obj"/>
     <RESFILES value="NetAspects.res"/>
     <IDLFILES value=""/>
     <IDLGENFILES value=""/>
     <DEFFILE value=""/>
     <RESDEPEN value="$(RESFILES) Main.dfm PassForm.dfm Progress.dfm Zastavka.dfm MainForm.dfm 
-      Rep1.dfm"/>
+      Rep1.dfm Svod.dfm FMoveAsp.dfm InpDocs.dfm InputFiltr.dfm"/>
     <LIBFILES value=""/>
     <LIBRARIES value="dclusr.lib"/>
     <SPARELIBS value="vcl.lib rtl.lib dclusr.lib vclx.lib dbrtl.lib adortl.lib vcldb.lib"/>
@@ -71,6 +71,10 @@
       <FILE FILENAME="MainForm.cpp" FORMNAME="Form1" UNITNAME="MainForm" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="Rep1.cpp" FORMNAME="Report1" UNITNAME="Rep1" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="Reports.cpp" FORMNAME="" UNITNAME="Reports" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="Svod.cpp" FORMNAME="FSvod" UNITNAME="Svod" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="FMoveAsp.cpp" FORMNAME="MAsp" UNITNAME="FMoveAsp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="InpDocs.cpp" FORMNAME="InputDocs" UNITNAME="InpDocs" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="InputFiltr.cpp" FORMNAME="Filter" UNITNAME="InputFiltr" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
   </FILELIST>
   <BUILDTOOLS>
   </BUILDTOOLS>

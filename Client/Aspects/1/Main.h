@@ -246,6 +246,7 @@ __published:	// IDE-managed Components
         void __fastcall N00111Click(TObject *Sender);
         void __fastcall N00121Click(TObject *Sender);
         void __fastcall N22Click(TObject *Sender);
+        void __fastcall N19Click(TObject *Sender);
 private:	// User declarations
 String Path;
 String AdminDatabase;
