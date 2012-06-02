@@ -403,6 +403,7 @@ DelText=DelText.SubString(0, FromPos-2);
        {
         case 1:
         {
+        String N=Tab->FieldList->Fields[i]->FullName;
         Tab->FieldList->Fields[i]->Value=Field.SubString(2, Field.Length());
         break;
         }
@@ -490,6 +491,7 @@ void Client::LoginResult(String Login, String Pass, int NumRole, bool Ok)
 
 if(Ok)
 {
+Zast->Role=NumRole;
 Socket->Socket->SendText("Command:6;3|"+IntToStr(Login.Length())+"#"+Login+"|"+"4#Pass"+"|"+"1#1"+"|");
 }
 else

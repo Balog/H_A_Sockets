@@ -14,6 +14,7 @@
 #include "MainForm.h"
 #include "Rep1.h"
 #include "Svod.h"
+#include "FMoveAsp.h"
 //---------------------------------------------------------------------------
 #pragma package(smart_init)
 #pragma resource "*.dfm"
@@ -1915,3 +1916,114 @@ Comm->Execute();
 
 }
 //----------------------------------------------------
+void __fastcall TZast::CompareMSpecAspectsExecute(TObject *Sender)
+{
+//Сравнение таблицы аспектов для главспеца по числу записей и составу
+//для принятия решения о необходимости чтения таблицы аспектов
+MP<TADODataSet>Tab(this);
+Tab->Connection=ADOAspect;
+/*
+" SELECT Аспекты.[Номер аспекта], Аспекты.Подразделение, Аспекты.Ситуация, Аспекты.[Вид территории], Аспекты.Деятельность, Аспекты.Специальность, Аспекты.Аспект, Аспекты.Воздействие, Аспекты.G, Аспекты.O, Аспекты.R, Аспекты.S, Аспекты.T, Аспекты.L, Аспекты.N, Аспекты.Z, Аспекты.Значимость, Аспекты.[Проявление воздействия], Аспекты.[Тяжесть последствий], Аспекты.Приоритетность, Аспекты.[Выполняющиеся мероприятия], Аспекты.[Предлагаемые мероприятия], Аспекты.[Мониторинг и контроль], Аспекты.[Предлагаемый мониторинг и контроль], Аспекты.Исполнитель, Аспекты.[Дата создания], Аспекты.[Начало действия], Аспекты.[Конец действия], Аспекты.ServerNum FROM Аспекты;"
+*/
+Tab->CommandText="SELECT Аспекты.[Номер аспекта], Аспекты.Ситуация, Аспекты.[Вид территории], Аспекты.Деятельность, Аспекты.Специальность, Аспекты.Аспект, Аспекты.Воздействие, Аспекты.G, Аспекты.O, Аспекты.R, Аспекты.S, Аспекты.T, Аспекты.L, Аспекты.N, Аспекты.Z, Аспекты.Значимость, Аспекты.[Проявление воздействия], Аспекты.[Тяжесть последствий], Аспекты.Приоритетность, Аспекты.[Выполняющиеся мероприятия], Аспекты.[Предлагаемые мероприятия], Аспекты.[Мониторинг и контроль], Аспекты.[Предлагаемый мониторинг и контроль], Аспекты.Исполнитель, Аспекты.[Дата создания], Аспекты.[Начало действия], Аспекты.[Конец действия] FROM Аспекты ORDER BY Аспекты.[Номер аспекта];";
+Tab->Active=true;
+
+MP<TADODataSet>Temp(this);
+Temp->Connection=ADOAspect;
+Temp->CommandText="SELECT TempAspects.[Номер аспекта], TempAspects.Ситуация, TempAspects.[Вид территории], TempAspects.Деятельность, TempAspects.Специальность, TempAspects.Аспект, TempAspects.Воздействие, TempAspects.G, TempAspects.O, TempAspects.R, TempAspects.S, TempAspects.T, TempAspects.L, TempAspects.N, TempAspects.Z, TempAspects.Значимость, TempAspects.[Проявление воздействия], TempAspects.[Тяжесть последствий], TempAspects.Приоритетность, TempAspects.[Выполняющиеся мероприятия],  TempAspects.[предлагаемые мероприятия],  TempAspects.[Мониторинг и контроль], TempAspects.[Предлагаемый мониторинг и контроль],  TempAspects.[Дата создания], TempAspects.[Начало действия], TempAspects.[Конец действия] FROM TempAspects ORDER BY TempAspects.[Номер аспекта]";
+Temp->Active=true;
+
+bool Res=false;
+String Mess;
+if(Tab->RecordCount==Temp->RecordCount)
+{
+ Temp->First();
+ for(Tab->First();!Tab->Eof;Tab->Next())
+ {
+  for(int i=0;i<Tab->Fields->Count;i++)
+  {
+  //Tab->FieldList->Fields[i]
+
+   if(Tab->FieldList->Fields[i]->AsString==Temp->FieldList->Fields[i]->AsString)
+   {
+    Res=true;
+   }
+   else
+   {
+    Res=false;
+    Mess="Содержание аспектов на сервере не совпадает с содержанием аспектов в локальной базе данных\rОбновить список аспектов?";
+    break;
+   }
+  }
+  Temp->Next();
+ }
+ Res=true;
+}
+else
+{
+ Mess="Количество аспектов на сервере не совпадает с количеством аспектов в локальной базе данных\rОбновить список аспектов?";
+}
+
+if(!Res)
+{
+ if(Application->MessageBoxA(Mess.c_str(),"Обновление аспектов",MB_YESNO+MB_ICONQUESTION+MB_DEFBUTTON1)==IDYES)
+ {
+  //Обновление списка аспектов для главспеца
+MP<TADODataSet>Temp(this);
+Temp->Connection=Zast->ADOAspect;
+Temp->CommandText="Select * From TempAspects";
+Temp->Active=true;
+
+MP<TADODataSet>Podr(this);
+Podr->Connection=Zast->ADOAspect;
+Podr->CommandText="Select * From Подразделения";
+Podr->Active=true;
+
+for(Temp->First();!Temp->Eof;Temp->Next())
+{
+ int N=Temp->FieldByName("Подразделение")->Value;
+
+ if(Podr->Locate("ServerNum", N, SO))
+ {
+  int Num=Podr->FieldByName("Номер подразделения")->Value;
+
+  Temp->Edit();
+  Temp->FieldByName("Подразделение")->Value=Num;
+  Temp->Post();
+ }
+ else
+ {
+  ShowMessage("Ошибка копирования аспектов");
+ }
+}
+
+MP<TADOCommand>Comm(this);
+Comm->Connection=Zast->ADOAspect;
+
+
+
+Comm->CommandText="Delete * From Аспекты";
+Comm->Execute();
+
+
+String CT="INSERT INTO Аспекты ( [Номер аспекта], Подразделение, Ситуация, [Вид территории], Деятельность, Специальность, Аспект, Воздействие, G, O, R, S, T, L, N, Z, Значимость, [Проявление воздействия], [Тяжесть последствий], Приоритетность, [Выполняющиеся мероприятия], [Предлагаемые мероприятия], [Мониторинг и контроль], [Предлагаемый мониторинг и контроль], Исполнитель, [Дата создания], [Начало действия], [Конец действия] ) ";
+CT=CT+" SELECT TempAspects.[Номер аспекта], TempAspects.Подразделение, TempAspects.Ситуация, TempAspects.[Вид территории], TempAspects.Деятельность, TempAspects.Специальность, TempAspects.Аспект, TempAspects.Воздействие, TempAspects.G, TempAspects.O, TempAspects.R, TempAspects.S, TempAspects.T, TempAspects.L, TempAspects.N, TempAspects.Z, TempAspects.Значимость, TempAspects.[Проявление воздействия], TempAspects.[Тяжесть последствий], TempAspects.Приоритетность, TempAspects.[Выполняющиеся мероприятия], TempAspects.[Предлагаемые мероприятия], TempAspects.[Мониторинг и контроль], TempAspects.[Предлагаемый мониторинг и контроль], TempAspects.Исполнитель, TempAspects.[Дата создания], TempAspects.[Начало действия], TempAspects.[Конец действия] ";
+CT=CT+" FROM TempAspects;";
+Comm->CommandText=CT;
+Comm->Execute();
+
+Comm->CommandText="Delete * From TempAspects";
+Comm->Execute();
+ }
+}
+
+MAsp->MoveAspects->Active=false;
+String CT="SELECT Аспекты.[Номер аспекта], Подразделения.[Номер подразделения], Подразделения.[Название подразделения], Территория.[Номер территории], Территория.[Наименование территории], Деятельность.[Номер деятельности], Деятельность.[Наименование деятельности], Аспект.[Номер аспекта], Аспект.[Наименование аспекта], Воздействия.[Номер воздействия], Воздействия.[Наименование воздействия], Аспекты.Значимость, Аспекты.Z, Ситуации.[Номер ситуации], Ситуации.[Название ситуации], Аспекты.Подразделение FROM Ситуации INNER JOIN (Воздействия INNER JOIN (Аспект INNER JOIN (Деятельность INNER JOIN (Территория INNER JOIN (Подразделения INNER JOIN Аспекты ON Подразделения.[Номер подразделения] = Аспекты.Подразделение) ON Территория.[Номер территории] = Аспекты.[Вид территории]) ON Деятельность.[Номер деятельности] = Аспекты.Деятельность) ON Аспект.[Номер аспекта] = Аспекты.Аспект) ON Воздействия.[Номер воздействия] = Аспекты.Воздействие) ON Ситуации.[Номер ситуации] = Аспекты.Ситуация";
+CT=CT+" Order by Аспекты.[Номер аспекта]; ";
+
+MAsp->MoveAspects->CommandText=CT;
+MAsp->MoveAspects->Connection=Zast->ADOAspect;
+MAsp->MoveAspects->Active=true;
+}
+//---------------------------------------------------------------------------
+

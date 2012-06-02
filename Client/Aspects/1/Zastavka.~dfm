@@ -9369,7 +9369,7 @@ object Zast: TZast
   end
   object StaticText1: TStaticText
     Left = 384
-    Top = 406
+    Top = 408
     Width = 4
     Height = 4
     TabOrder = 0
@@ -9377,7 +9377,7 @@ object Zast: TZast
   end
   object StaticText2: TStaticText
     Left = 413
-    Top = 422
+    Top = 424
     Width = 4
     Height = 4
     TabOrder = 1
@@ -9385,7 +9385,7 @@ object Zast: TZast
   end
   object StaticText3: TStaticText
     Left = 441
-    Top = 429
+    Top = 431
     Width = 4
     Height = 4
     TabOrder = 2
@@ -9393,7 +9393,7 @@ object Zast: TZast
   end
   object StaticText4: TStaticText
     Left = 462
-    Top = 430
+    Top = 432
     Width = 4
     Height = 4
     TabOrder = 3
@@ -9409,7 +9409,7 @@ object Zast: TZast
   end
   object StaticText6: TStaticText
     Left = 462
-    Top = 443
+    Top = 445
     Width = 4
     Height = 4
     TabOrder = 5
@@ -9417,7 +9417,7 @@ object Zast: TZast
   end
   object StaticText7: TStaticText
     Left = 434
-    Top = 455
+    Top = 457
     Width = 4
     Height = 4
     TabOrder = 6
@@ -9425,7 +9425,7 @@ object Zast: TZast
   end
   object StaticText8: TStaticText
     Left = 402
-    Top = 462
+    Top = 464
     Width = 4
     Height = 4
     TabOrder = 7
@@ -9433,7 +9433,7 @@ object Zast: TZast
   end
   object StaticText9: TStaticText
     Left = 366
-    Top = 462
+    Top = 464
     Width = 4
     Height = 4
     TabOrder = 8
@@ -9441,7 +9441,7 @@ object Zast: TZast
   end
   object StaticText10: TStaticText
     Left = 336
-    Top = 455
+    Top = 457
     Width = 4
     Height = 4
     TabOrder = 9
@@ -9449,7 +9449,7 @@ object Zast: TZast
   end
   object StaticText11: TStaticText
     Left = 320
-    Top = 447
+    Top = 449
     Width = 4
     Height = 4
     TabOrder = 10
@@ -9537,7 +9537,7 @@ object Zast: TZast
   end
   object StaticText8_1: TStaticText
     Left = 386
-    Top = 464
+    Top = 466
     Width = 4
     Height = 4
     TabOrder = 21
@@ -9681,7 +9681,7 @@ object Zast: TZast
   end
   object Y8: TStaticText
     Left = 221
-    Top = 344
+    Top = 346
     Width = 4
     Height = 4
     TabOrder = 39
@@ -9689,7 +9689,7 @@ object Zast: TZast
   end
   object Y9: TStaticText
     Left = 199
-    Top = 350
+    Top = 352
     Width = 4
     Height = 4
     TabOrder = 40
@@ -9697,7 +9697,7 @@ object Zast: TZast
   end
   object Y10: TStaticText
     Left = 178
-    Top = 360
+    Top = 362
     Width = 4
     Height = 4
     TabOrder = 41
@@ -9705,7 +9705,7 @@ object Zast: TZast
   end
   object Y11: TStaticText
     Left = 160
-    Top = 373
+    Top = 375
     Width = 4
     Height = 4
     TabOrder = 42
@@ -9729,7 +9729,7 @@ object Zast: TZast
   end
   object W1: TStaticText
     Left = 162
-    Top = 377
+    Top = 379
     Width = 4
     Height = 4
     TabOrder = 45
@@ -9737,7 +9737,7 @@ object Zast: TZast
   end
   object W2: TStaticText
     Left = 175
-    Top = 374
+    Top = 376
     Width = 4
     Height = 4
     TabOrder = 46
@@ -9745,7 +9745,7 @@ object Zast: TZast
   end
   object W3: TStaticText
     Left = 195
-    Top = 374
+    Top = 376
     Width = 4
     Height = 4
     TabOrder = 47
@@ -9753,7 +9753,7 @@ object Zast: TZast
   end
   object W4: TStaticText
     Left = 215
-    Top = 380
+    Top = 382
     Width = 4
     Height = 4
     TabOrder = 48
@@ -9761,7 +9761,7 @@ object Zast: TZast
   end
   object W5: TStaticText
     Left = 238
-    Top = 391
+    Top = 393
     Width = 4
     Height = 4
     TabOrder = 49
@@ -9777,7 +9777,7 @@ object Zast: TZast
   end
   object U1: TStaticText
     Left = 245
-    Top = 342
+    Top = 344
     Width = 4
     Height = 4
     TabOrder = 51
@@ -9857,7 +9857,7 @@ object Zast: TZast
   end
   object U11: TStaticText
     Left = 327
-    Top = 365
+    Top = 367
     Width = 4
     Height = 4
     TabOrder = 61
@@ -9865,7 +9865,7 @@ object Zast: TZast
   end
   object U12: TStaticText
     Left = 310
-    Top = 356
+    Top = 358
     Width = 4
     Height = 4
     TabOrder = 62
@@ -9873,7 +9873,7 @@ object Zast: TZast
   end
   object U13: TStaticText
     Left = 289
-    Top = 347
+    Top = 349
     Width = 4
     Height = 4
     TabOrder = 63
@@ -9881,7 +9881,7 @@ object Zast: TZast
   end
   object U14: TStaticText
     Left = 271
-    Top = 343
+    Top = 345
     Width = 4
     Height = 4
     TabOrder = 64
@@ -10192,6 +10192,10 @@ object Zast: TZast
     object StartMergeLoginsPodr: TAction
       Caption = 'StartMergeLoginsPodr'
       OnExecute = StartMergeLoginsPodrExecute
+    end
+    object CompareMSpecAspects: TAction
+      Caption = 'CompareMSpecAspects'
+      OnExecute = CompareMSpecAspectsExecute
     end
   end
 end

@@ -67,6 +67,20 @@ object MAsp: TMAsp
       Font.Style = [fsBold]
       ParentFont = False
     end
+    object Label11: TLabel
+      Left = 304
+      Top = 8
+      Width = 38
+      Height = 13
+      Caption = 'Label11'
+    end
+    object Label12: TLabel
+      Left = 392
+      Top = 8
+      Width = 361
+      Height = 10
+      Caption = 'Label12'
+    end
     object BitBtn1: TBitBtn
       Left = 5
       Top = 4
@@ -403,7 +417,7 @@ object MAsp: TMAsp
     object Edit1: TEdit
       Left = 126
       Top = 77
-      Width = 658
+      Width = 290
       Height = 21
       ReadOnly = True
       TabOrder = 2
@@ -413,7 +427,7 @@ object MAsp: TMAsp
     object Edit2: TEdit
       Left = 126
       Top = 105
-      Width = 658
+      Width = 290
       Height = 21
       ReadOnly = True
       TabOrder = 3
@@ -423,7 +437,7 @@ object MAsp: TMAsp
     object Edit3: TEdit
       Left = 126
       Top = 133
-      Width = 658
+      Width = 290
       Height = 21
       ReadOnly = True
       TabOrder = 4
@@ -433,7 +447,7 @@ object MAsp: TMAsp
     object Edit4: TEdit
       Left = 126
       Top = 161
-      Width = 658
+      Width = 290
       Height = 21
       ReadOnly = True
       TabOrder = 5
@@ -529,6 +543,21 @@ object MAsp: TMAsp
       TabOrder = 11
       Visible = False
       OnClick = Button4Click
+    end
+    object ComboBox4: TComboBox
+      Left = 421
+      Top = 78
+      Width = 362
+      Height = 21
+      AutoComplete = False
+      AutoDropDown = True
+      DropDownCount = 20
+      ItemHeight = 13
+      TabOrder = 12
+      OnChange = ComboBox4Change
+      OnDropDown = ComboBox4DropDown
+      OnKeyPress = ComboBox4KeyPress
+      OnSelect = ComboBox4Select
     end
   end
   object DataSource4: TDataSource

@@ -10193,5 +10193,9 @@ object Zast: TZast
       Caption = 'StartMergeLoginsPodr'
       OnExecute = StartMergeLoginsPodrExecute
     end
+    object CompareMSpecAspects: TAction
+      Caption = 'CompareMSpecAspects'
+      OnExecute = CompareMSpecAspectsExecute
+    end
   end
 end

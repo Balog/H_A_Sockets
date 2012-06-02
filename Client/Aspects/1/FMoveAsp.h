@@ -70,6 +70,9 @@ __published:	// IDE-managed Components
         TLabel *Label10;
         TTimer *Timer1;
         TDataSetRefresh *DataSetRefresh1;
+        TComboBox *ComboBox4;
+        TLabel *Label11;
+        TLabel *Label12;
         void __fastcall FormShow(TObject *Sender);
         void __fastcall BitBtn1Click(TObject *Sender);
         void __fastcall BitBtn2Click(TObject *Sender);
@@ -94,6 +97,10 @@ __published:	// IDE-managed Components
         void __fastcall Timer1Timer(TObject *Sender);
         void __fastcall FormKeyUp(TObject *Sender, WORD &Key,
           TShiftState Shift);
+        void __fastcall ComboBox4DropDown(TObject *Sender);
+        void __fastcall ComboBox4Change(TObject *Sender);
+        void __fastcall ComboBox4Select(TObject *Sender);
+        void __fastcall ComboBox4KeyPress(TObject *Sender, char &Key);
 private:	// User declarations
 bool Cont;
 TLocateOptions SO;

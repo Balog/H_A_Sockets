@@ -17,14 +17,44 @@ __fastcall TMAsp::TMAsp(TComponent* Owner)
         : TForm(Owner)
 {
 Cont=true;
-//DBAspects->Connection=Zast->ADOAspect;
-//DBAspects->CommandText="SELECT Аспекты.Подразделение, Подразделения.[Название подразделения], Деятельность.[Наименование деятельности], Аспект.[Наименование аспекта], Воздействия.[Наименование воздействия], Ситуации.[Название ситуации], Аспекты.Z FROM Ситуации INNER JOIN (Воздействия INNER JOIN (Аспект INNER JOIN (Деятельность INNER JOIN (Подразделения INNER JOIN Аспекты ON Подразделения.[Номер подразделения] = Аспекты.Подразделение) ON Деятельность.[Номер деятельности] = Аспекты.Деятельность) ON Аспект.[Номер аспекта] = Аспекты.Аспект) ON Воздействия.[Номер воздействия] = Аспекты.Воздействие) ON Ситуации.[Номер ситуации] = Аспекты.Ситуация ORDER BY Подразделения.[Название подразделения], Аспекты.[Номер аспекта];";
-//DBAspects->Active=true;
-
 }
 //---------------------------------------------------------------------------
 void __fastcall TMAsp::FormShow(TObject *Sender)
 {
+Podr->Active=false;
+Podr->CommandText="Select * From Подразделения";
+Podr->Connection=Zast->ADOAspect;
+Podr->Active=true;
+ComboBox1->Clear();
+Podr->First();
+for(int i=0;i<Podr->RecordCount;i++)
+{
+ AnsiString T=Podr->FieldByName("Название подразделения")->Value;
+ ComboBox1->Items->Add(T);
+ Podr->Next();
+}
+
+
+ Zast->MClient->Act.ParamComm.clear();
+ Zast->MClient->Act.ParamComm.push_back("CompareMSpecAspects");
+ String ServerSQL="SELECT Аспекты.[Номер аспекта], Аспекты.Подразделение, Аспекты.Ситуация, Аспекты.[Вид территории], Аспекты.Деятельность, Аспекты.Специальность, Аспекты.Аспект, Аспекты.Воздействие, Аспекты.G, Аспекты.O, Аспекты.R, Аспекты.S, Аспекты.T, Аспекты.L, Аспекты.N, Аспекты.Z, Аспекты.Значимость, Аспекты.[Проявление воздействия], Аспекты.[Тяжесть последствий], Аспекты.Приоритетность,  Аспекты.[Выполняющиеся мероприятия],  Аспекты.[предлагаемые мероприятия],  Аспекты.[Мониторинг и контроль], Аспекты.[Предлагаемый мониторинг и контроль], Аспекты.[Дата создания], Аспекты.[Начало действия], Аспекты.[Конец действия] FROM Аспекты;";
+ String ClientSQL="SELECT TempAspects.[Номер аспекта], TempAspects.Подразделение, TempAspects.Ситуация, TempAspects.[Вид территории], TempAspects.Деятельность, TempAspects.Специальность, TempAspects.Аспект, TempAspects.Воздействие, TempAspects.G, TempAspects.O, TempAspects.R, TempAspects.S, TempAspects.T, TempAspects.L, TempAspects.N, TempAspects.Z, TempAspects.Значимость, TempAspects.[Проявление воздействия], TempAspects.[Тяжесть последствий], TempAspects.Приоритетность, TempAspects.[Выполняющиеся мероприятия],  TempAspects.[предлагаемые мероприятия],  TempAspects.[Мониторинг и контроль], TempAspects.[Предлагаемый мониторинг и контроль],  TempAspects.[Дата создания], TempAspects.[Начало действия], TempAspects.[Конец действия] FROM TempAspects;";
+Zast->MClient->ReadTable("Аспекты",ServerSQL, ClientSQL);
+
+MP<TADODataSet>Tab(this);
+Tab->Connection=Zast->ADOAspect;
+Tab->CommandText="Select [Номер территории], [Наименование территории] From Территория Order by [Номер территории]";//"Select [Номер территории], [Наименование территории] From Территория Where [Наименование территории] Like '%з%' Order by [Номер территории]";
+Tab->Active=true;
+
+ComboBox4->Clear();
+for(Tab->First();!Tab->Eof;Tab->Next())
+{
+ComboBox4->Items->Add(Tab->FieldByName("Наименование территории")->AsString);
+}
+
+
+
+//Zast->MClient->ReadTable("Аспекты", "SELECT Аспекты.[Номер аспекта], Аспекты.Подразделение, Аспекты.Ситуация, Аспекты.[Вид территории], Аспекты.Деятельность, Аспекты.Специальность, Аспекты.Аспект, Аспекты.Воздействие, Аспекты.G, Аспекты.O, Аспекты.R, Аспекты.S, Аспекты.T, Аспекты.L, Аспекты.N, Аспекты.Z, Аспекты.Значимость, Аспекты.[Проявление воздействия], Аспекты.[Тяжесть последствий], Аспекты.Приоритетность,  Аспекты.Исполнитель, Аспекты.[Дата создания], Аспекты.[Начало действия], Аспекты.[Конец действия] FROM Аспекты ORDER BY Аспекты.[Номер аспекта]", "SELECT TempAspects.[Номер аспекта], TempAspects.Ситуация, TempAspects.[Вид территории], TempAspects.[Деятельность], TempAspects.[Специальность], TempAspects.[Аспект], TempAspects.[Воздействие], TempAspects.[Z], TempAspects.[Значимость]  FROM TempAspects order by [Номер аспекта]");
 /*
 String R="Завершено";
 Podr->Active=false;
@@ -484,6 +514,9 @@ Button4->Visible=false;
 ComboBox2->Visible=false;
 ComboBox3->Visible=false;
 
+ComboBox4->DroppedDown=true;
+ComboBox4->AutoComplete=false;
+ComboBox4->SetFocus();
 
  break;
  }
@@ -794,6 +827,112 @@ if(Key==112)
 Application->HelpFile=ExtractFilePath(Application->ExeName)+"NetAspects.HLP";
   Application->HelpJump("IDH_ДВИЖЕНИЕ_АСПЕКТОВ");
 }
+}
+//---------------------------------------------------------------------------
+
+
+
+
+
+void __fastcall TMAsp::ComboBox4DropDown(TObject *Sender)
+{
+
+String Text=ComboBox4->Text;
+MP<TADODataSet>Tab(this);
+Tab->Connection=Zast->ADOAspect;
+String CT="Select [Номер территории], [Наименование территории] From Территория Where [Наименование территории] Like '%"+Text+"%' Order by [Номер территории]";
+Tab->CommandText=CT;
+Tab->Active=true;
+
+ComboBox4->Clear();
+for(Tab->First();!Tab->Eof;Tab->Next())
+{
+ComboBox4->Items->Add(Tab->FieldByName("Наименование территории")->AsString);
+}
+ComboBox4->DropDownCount=20;
+//ComboBox4->Text=Text;
+
+
+}
+//---------------------------------------------------------------------------
+
+
+
+
+
+void __fastcall TMAsp::ComboBox4Change(TObject *Sender)
+{
+String Text=ComboBox4->Text;
+MP<TADODataSet>Tab(this);
+Tab->Connection=Zast->ADOAspect;
+String CT="Select [Номер территории], [Наименование территории] From Территория Where [Наименование территории] Like '%"+Text+"%' Order by [Номер территории]";
+Tab->CommandText=CT;
+Tab->Active=true;
+
+ComboBox4->Clear();
+for(Tab->First();!Tab->Eof;Tab->Next())
+{
+ComboBox4->Items->Add(Tab->FieldByName("Наименование территории")->AsString);
+}
+ComboBox4->DropDownCount=20;
+
+
+ComboBox4->DroppedDown=true;
+ComboBox4->AutoComplete=false;
+
+
+ComboBox4->Text=Text;
+ keybd_event(35,0,0,0);
+
+ keybd_event(35,0,KEYEVENTF_KEYUP,0);
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TMAsp::ComboBox4Select(TObject *Sender)
+{
+String Text=ComboBox4->Text;
+MP<TADODataSet>Tab(this);
+Tab->Connection=Zast->ADOAspect;
+String CT="Select [Номер территории], [Наименование территории] From Территория Where [Наименование территории] Like '%"+Text+"%' Order by [Номер территории]";
+Tab->CommandText=CT;
+Tab->Active=true;
+
+Tab->First();
+Tab->MoveBy(ComboBox4->ItemIndex);
+ComboBox4->Text=Tab->FieldByName("Наименование территории")->AsString;
+if(!ComboBox4->DroppedDown & ComboBox4->ItemIndex!=-1)
+{
+int Num=Tab->FieldByName("Номер территории")->AsInteger;
+// ShowMessage(Num);
+Label11->Caption=IntToStr(Num);
+Label12->Caption=Tab->FieldByName("Наименование территории")->AsString;
+}
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TMAsp::ComboBox4KeyPress(TObject *Sender, char &Key)
+{
+
+if(Key==13)
+{
+String Text=ComboBox4->Text;
+MP<TADODataSet>Tab(this);
+Tab->Connection=Zast->ADOAspect;
+String CT="Select [Номер территории], [Наименование территории] From Территория Where [Наименование территории] Like '%"+Text+"%' Order by [Номер территории]";
+Tab->CommandText=CT;
+Tab->Active=true;
+
+Tab->First();
+Tab->MoveBy(ComboBox4->ItemIndex);
+ComboBox4->Text=Tab->FieldByName("Наименование территории")->AsString;
+if(ComboBox4->DroppedDown & ComboBox4->ItemIndex!=-1)
+{
+int Num=Tab->FieldByName("Номер территории")->AsInteger;
+Label11->Caption=IntToStr(Num);
+Label12->Caption=Tab->FieldByName("Наименование территории")->AsString;
+}
+}
+
 }
 //---------------------------------------------------------------------------
 

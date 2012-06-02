@@ -176,6 +176,7 @@ __published:	// IDE-managed Components
         TAction *StartLoadPodr;
         TAction *StartLoadObslOtd;
         TAction *StartMergeLoginsPodr;
+        TAction *CompareMSpecAspects;
         void __fastcall Timer1Timer(TObject *Sender);
         void __fastcall Image1Click(TObject *Sender);
         void __fastcall FormShow(TObject *Sender);
@@ -257,6 +258,7 @@ __published:	// IDE-managed Components
         void __fastcall StartLoadPodrExecute(TObject *Sender);
         void __fastcall StartLoadObslOtdExecute(TObject *Sender);
         void __fastcall StartMergeLoginsPodrExecute(TObject *Sender);
+        void __fastcall CompareMSpecAspectsExecute(TObject *Sender);
 private:	// User declarations
 String Path;
 TLocateOptions SO;

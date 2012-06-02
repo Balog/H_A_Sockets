@@ -403,7 +403,7 @@ object MAsp: TMAsp
     object Edit1: TEdit
       Left = 126
       Top = 77
-      Width = 658
+      Width = 290
       Height = 21
       ReadOnly = True
       TabOrder = 2
@@ -413,7 +413,7 @@ object MAsp: TMAsp
     object Edit2: TEdit
       Left = 126
       Top = 105
-      Width = 658
+      Width = 290
       Height = 21
       ReadOnly = True
       TabOrder = 3
@@ -423,7 +423,7 @@ object MAsp: TMAsp
     object Edit3: TEdit
       Left = 126
       Top = 133
-      Width = 658
+      Width = 290
       Height = 21
       ReadOnly = True
       TabOrder = 4
@@ -433,7 +433,7 @@ object MAsp: TMAsp
     object Edit4: TEdit
       Left = 126
       Top = 161
-      Width = 658
+      Width = 290
       Height = 21
       ReadOnly = True
       TabOrder = 5
@@ -529,6 +529,15 @@ object MAsp: TMAsp
       TabOrder = 11
       Visible = False
       OnClick = Button4Click
+    end
+    object ComboBox4: TComboBox
+      Left = 421
+      Top = 78
+      Width = 362
+      Height = 21
+      ItemHeight = 13
+      TabOrder = 12
+      OnKeyPress = ComboBox4KeyPress
     end
   end
   object DataSource4: TDataSource

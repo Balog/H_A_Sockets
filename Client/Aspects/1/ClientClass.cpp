@@ -403,6 +403,7 @@ DelText=DelText.SubString(0, FromPos-2);
        {
         case 1:
         {
+        //String N=Tab->FieldList->Fields[i]->FullName;
         Tab->FieldList->Fields[i]->Value=Field.SubString(2, Field.Length());
         break;
         }
