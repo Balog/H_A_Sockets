@@ -18,6 +18,7 @@
 //#include "Metod.h"
 //#include "Rep1.h"
 #include "About.h"
+#include "InpDocs.h"
 //---------------------------------------------------------------------------
 #pragma package(smart_init)
 #pragma resource "*.dfm"
@@ -1212,12 +1213,12 @@ InputDocs->ShowModal();
 //---------------------------------------------------------------------------
 void TForm1::InpTer()
 {
-/*
+
 Edit1->Text=InputDocs->TextBr;
 Aspects->Edit();
 Aspects->FieldByName("Вид территории")->Value=InputDocs->NumBr;
 Aspects->Post();
-*/
+
 }
 //-------------------------------------------
 void TForm1::InpDeyat()

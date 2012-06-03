@@ -400,53 +400,13 @@ object MAsp: TMAsp
       Visible = False
       OnClick = ComboBox1Click
     end
-    object Edit1: TEdit
-      Left = 126
-      Top = 77
-      Width = 290
-      Height = 21
-      ReadOnly = True
-      TabOrder = 2
-      Visible = False
-      OnDblClick = Edit1DblClick
-    end
-    object Edit2: TEdit
-      Left = 126
-      Top = 105
-      Width = 290
-      Height = 21
-      ReadOnly = True
-      TabOrder = 3
-      Visible = False
-      OnDblClick = Edit2DblClick
-    end
-    object Edit3: TEdit
-      Left = 126
-      Top = 133
-      Width = 290
-      Height = 21
-      ReadOnly = True
-      TabOrder = 4
-      Visible = False
-      OnDblClick = Edit3DblClick
-    end
-    object Edit4: TEdit
-      Left = 126
-      Top = 161
-      Width = 290
-      Height = 21
-      ReadOnly = True
-      TabOrder = 5
-      Visible = False
-      OnDblClick = Edit4DblClick
-    end
     object ComboBox2: TComboBox
       Left = 126
       Top = 189
       Width = 145
       Height = 21
       ItemHeight = 13
-      TabOrder = 6
+      TabOrder = 2
       Visible = False
       OnChange = ComboBox2Change
       Items.Strings = (
@@ -459,7 +419,7 @@ object MAsp: TMAsp
       Width = 145
       Height = 21
       ItemHeight = 13
-      TabOrder = 7
+      TabOrder = 3
       Visible = False
       OnChange = ComboBox3Change
       Items.Strings = (
@@ -478,7 +438,7 @@ object MAsp: TMAsp
       Font.Name = 'Arial'
       Font.Style = [fsBold]
       ParentFont = False
-      TabOrder = 8
+      TabOrder = 4
       Visible = False
       OnClick = Button1Click
     end
@@ -494,7 +454,7 @@ object MAsp: TMAsp
       Font.Name = 'Arial'
       Font.Style = [fsBold]
       ParentFont = False
-      TabOrder = 9
+      TabOrder = 5
       Visible = False
       OnClick = Button2Click
     end
@@ -510,7 +470,7 @@ object MAsp: TMAsp
       Font.Name = 'Arial'
       Font.Style = [fsBold]
       ParentFont = False
-      TabOrder = 10
+      TabOrder = 6
       Visible = False
       OnClick = Button3Click
     end
@@ -526,18 +486,73 @@ object MAsp: TMAsp
       Font.Name = 'Arial'
       Font.Style = [fsBold]
       ParentFont = False
-      TabOrder = 11
+      TabOrder = 7
       Visible = False
       OnClick = Button4Click
     end
     object ComboBox4: TComboBox
-      Left = 421
-      Top = 78
-      Width = 362
+      Left = 127
+      Top = 77
+      Width = 655
       Height = 21
+      AutoComplete = False
+      AutoDropDown = True
+      DropDownCount = 30
       ItemHeight = 13
-      TabOrder = 12
+      TabOrder = 8
+      Visible = False
+      OnChange = ComboBox4Change
+      OnDropDown = ComboBox4DropDown
       OnKeyPress = ComboBox4KeyPress
+      OnSelect = ComboBox4Select
+    end
+    object ComboBox5: TComboBox
+      Left = 128
+      Top = 105
+      Width = 653
+      Height = 21
+      AutoComplete = False
+      AutoDropDown = True
+      DropDownCount = 30
+      ItemHeight = 13
+      TabOrder = 9
+      Visible = False
+      OnChange = ComboBox5Change
+      OnDropDown = ComboBox5DropDown
+      OnKeyPress = ComboBox5KeyPress
+      OnSelect = ComboBox5Select
+    end
+    object ComboBox6: TComboBox
+      Left = 128
+      Top = 134
+      Width = 653
+      Height = 21
+      AutoComplete = False
+      AutoDropDown = True
+      DropDownCount = 30
+      ItemHeight = 13
+      TabOrder = 10
+      Visible = False
+      OnChange = ComboBox6Change
+      OnDropDown = ComboBox6DropDown
+      OnKeyPress = ComboBox6KeyPress
+      OnSelect = ComboBox6Select
+    end
+    object ComboBox7: TComboBox
+      Left = 128
+      Top = 160
+      Width = 652
+      Height = 21
+      AutoComplete = False
+      AutoDropDown = True
+      DropDownCount = 30
+      ItemHeight = 13
+      TabOrder = 11
+      Visible = False
+      OnChange = ComboBox7Change
+      OnDropDown = ComboBox7DropDown
+      OnKeyPress = ComboBox7KeyPress
+      OnSelect = ComboBox7Select
     end
   end
   object DataSource4: TDataSource

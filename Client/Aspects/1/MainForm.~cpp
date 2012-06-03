@@ -733,50 +733,27 @@ CSit->ItemIndex=0;
 //---------------------------------------------------------------------------
 void __fastcall TForm1::FormClose(TObject *Sender, TCloseAction &Action)
 {
-/*
-DataSetRefresh1->Execute();
-DataSetPost1->Execute();
-if(!Demo)
-{
 switch (Application->MessageBoxA("Записать все изменения на сервер?","Выход из программы",MB_YESNOCANCEL	+MB_ICONQUESTION+MB_DEFBUTTON1))
 {
  case IDYES:
  {
-Zast->MClient->WriteDiaryEvent("NetAspects","Завершение работы запись данных","");
-Zast->MClient->Start();
-if(!Registered)
-{
-Zast->MClient->RegForm(this);
-}
-if(PrepareSaveAspects())
-{
-if(SaveAspects())
-{
+Zast->Stop=true;
+Zast->MClient->Act.WaitCommand=0;
 
-}
-else
-{
-Zast->MClient->WriteDiaryEvent("NetAspects ошибка","Сбой сохранения аспектов","");
- ShowMessage("Ошибка записи аспектов");
-  Action=caNone;
-}
-}
-else
-{
-Zast->MClient->WriteDiaryEvent("NetAspects ошибка","Сбой подготовки к записи аспектов","");
- ShowMessage("Ошибка подготовки записи аспектов");
-  Action=caNone;
-}
-Zast->MClient->Stop();
+Zast->Saved=false;
+//Zast->PrepareSaveLogins->Execute();
 
-  Zast->Close();
+
+ Action=caNone;
  break;
  }
  case IDNO:
  {
- Zast->MClient->WriteDiaryEvent("NetAspects","Завершение работы отказ от записи","");
- Action=caFree;
- Zast->Close();
+Zast->MClient->WriteDiaryEvent("NetAspects","Завершение работы отказ от записи","");
+Zast->Stop=true;
+Sleep(2000);
+Zast->Close();
+ Action=caNone;
  break;
  }
  case IDCANCEL:
@@ -785,12 +762,8 @@ Zast->MClient->Stop();
  break;
  }
 }
-}
-else
-{
- Zast->Close();
-}
-*/
+
+
 }
 //---------------------------------------------------------------------------
 void __fastcall TForm1::N8Click(TObject *Sender)

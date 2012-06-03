@@ -286,6 +286,7 @@ switch (Mode)
 {
  case 1:
  {
+
  Form1->InpTer();
 
  break;
@@ -325,6 +326,8 @@ switch (Mode)
 {
  case 1:
  {
+ MAsp->ComboBox4->Text=InputDocs->TextBr;
+ MAsp->Index=InputDocs->NumBr;
  MAsp->InpTer();
  break;
  }
