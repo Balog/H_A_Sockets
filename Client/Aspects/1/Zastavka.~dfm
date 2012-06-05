@@ -10197,5 +10197,37 @@ object Zast: TZast
       Caption = 'CompareMSpecAspects'
       OnExecute = CompareMSpecAspectsExecute
     end
+    object SaveAspectsMSpec: TAction
+      Caption = 'SaveAspectsMSpec'
+      OnExecute = SaveAspectsMSpecExecute
+    end
+    object EndsaveAspectsMSpec: TAction
+      Caption = 'EndsaveAspectsMSpec'
+      OnExecute = EndsaveAspectsMSpecExecute
+    end
+    object CompareMSpecAspects2: TAction
+      Caption = 'CompareMSpecAspects2'
+      OnExecute = CompareMSpecAspects2Execute
+    end
+    object SaveAspectsMSpec2: TAction
+      Caption = 'SaveAspectsMSpec2'
+      OnExecute = SaveAspectsMSpec2Execute
+    end
+    object EndsaveAspectsMSpec2: TAction
+      Caption = 'EndsaveAspectsMSpec2'
+      OnExecute = EndsaveAspectsMSpec2Execute
+    end
+    object LoadMSpecAspects: TAction
+      Caption = 'LoadMSpecAspects'
+      OnExecute = LoadMSpecAspectsExecute
+    end
+    object SaveAspectsMSpec0: TAction
+      Caption = 'SaveAspectsMSpec0'
+      OnExecute = SaveAspectsMSpec0Execute
+    end
+    object StopProgram: TAction
+      Caption = 'StopProgram'
+      OnExecute = StopProgramExecute
+    end
   end
 end

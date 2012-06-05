@@ -209,6 +209,11 @@ Zast->BeginWork->Execute();
  }
  break;
  }
+ case 17:
+ {
+ StartAction(Act.ParamComm[0]);
+ break;
+ }
 }
 }
 else
@@ -534,6 +539,8 @@ void Client::RegisterDatabase(String Name, int NumLic)
 {
 for(unsigned int i=0;i<VDB.size();i++)
 {
+if(Name!="Reference")
+{
  if(VDB[i].Name==Name)
  {
   VDB[i].NumLicense=NumLic;
@@ -547,6 +554,7 @@ for(unsigned int i=0;i<VDB.size();i++)
   }
   break;
  }
+}
 }
 }
 //*************************************************************************

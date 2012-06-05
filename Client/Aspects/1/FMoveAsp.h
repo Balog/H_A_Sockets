@@ -114,7 +114,7 @@ private:	// User declarations
 bool Cont;
 TLocateOptions SO;
 
-void ChangeCPodr();
+
 String LoadAspects();
 void MergeAspects();
 
@@ -134,6 +134,7 @@ void InpAsp();
 void InpVozd();
 String SaveAspects();
 int Index;
+void ChangeCPodr();
         __fastcall TMAsp(TComponent* Owner);
 };
 //---------------------------------------------------------------------------

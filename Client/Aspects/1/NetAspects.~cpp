@@ -10,6 +10,9 @@ USEFORM("Zastavka.cpp", Zast);
 USEFORM("MainForm.cpp", Form1);
 USEFORM("Rep1.cpp", Report1);
 USEFORM("Svod.cpp", FSvod);
+USEFORM("FMoveAsp.cpp", MAsp);
+USEFORM("InpDocs.cpp", InputDocs);
+USEFORM("InputFiltr.cpp", Filter);
 //---------------------------------------------------------------------------
 WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 {
@@ -23,6 +26,9 @@ WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
                  Application->CreateForm(__classid(TForm1), &Form1);
                  Application->CreateForm(__classid(TReport1), &Report1);
                  Application->CreateForm(__classid(TFSvod), &FSvod);
+                 Application->CreateForm(__classid(TMAsp), &MAsp);
+                 Application->CreateForm(__classid(TInputDocs), &InputDocs);
+                 Application->CreateForm(__classid(TFilter), &Filter);
                  Application->Run();
         }
         catch (Exception &exception)

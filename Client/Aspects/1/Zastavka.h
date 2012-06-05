@@ -177,6 +177,14 @@ __published:	// IDE-managed Components
         TAction *StartLoadObslOtd;
         TAction *StartMergeLoginsPodr;
         TAction *CompareMSpecAspects;
+        TAction *SaveAspectsMSpec;
+        TAction *EndsaveAspectsMSpec;
+        TAction *CompareMSpecAspects2;
+        TAction *SaveAspectsMSpec2;
+        TAction *EndsaveAspectsMSpec2;
+        TAction *LoadMSpecAspects;
+        TAction *SaveAspectsMSpec0;
+        TAction *StopProgram;
         void __fastcall Timer1Timer(TObject *Sender);
         void __fastcall Image1Click(TObject *Sender);
         void __fastcall FormShow(TObject *Sender);
@@ -259,6 +267,14 @@ __published:	// IDE-managed Components
         void __fastcall StartLoadObslOtdExecute(TObject *Sender);
         void __fastcall StartMergeLoginsPodrExecute(TObject *Sender);
         void __fastcall CompareMSpecAspectsExecute(TObject *Sender);
+        void __fastcall SaveAspectsMSpecExecute(TObject *Sender);
+        void __fastcall EndsaveAspectsMSpecExecute(TObject *Sender);
+        void __fastcall CompareMSpecAspects2Execute(TObject *Sender);
+        void __fastcall SaveAspectsMSpec2Execute(TObject *Sender);
+        void __fastcall EndsaveAspectsMSpec2Execute(TObject *Sender);
+        void __fastcall LoadMSpecAspectsExecute(TObject *Sender);
+        void __fastcall SaveAspectsMSpec0Execute(TObject *Sender);
+        void __fastcall StopProgramExecute(TObject *Sender);
 private:	// User declarations
 String Path;
 TLocateOptions SO;

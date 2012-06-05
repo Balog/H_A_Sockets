@@ -15,6 +15,7 @@
 #include "Rep1.h"
 #include "Svod.h"
 #include "FMoveAsp.h"
+#include "About.h"
 using namespace std;
 //---------------------------------------------------------------------------
 #pragma package(smart_init)
@@ -64,12 +65,83 @@ switch (Application->MessageBoxA("Записать все изменения на сервер?","Выход из п
 {
  case IDYES:
  {
+ /*
 Zast->Stop=true;
 Zast->MClient->Act.WaitCommand=0;
 
 Zast->Saved=false;
 //Zast->PrepareSaveLogins->Execute();
 
+*/
+Prog->Show();
+Prog->PB->Min=0;
+Prog->PB->Position=0;
+Prog->PB->Max=10;
+
+ReadWrite.clear();
+Str_RW S;
+S.NameAction="WriteMetodika";
+S.Text="Запись методики...";
+S.Num=1;
+ReadWrite.push_back(S);
+
+S.NameAction="WritePodr";
+S.Text="Запись подразделений...";
+S.Num=2;
+ReadWrite.push_back(S);
+
+
+S.NameAction="WriteCrit";
+S.Text="Запись критериев...";
+S.Num=3;
+ReadWrite.push_back(S);
+
+
+S.NameAction="WriteSit";
+S.Text="Запись ситуаций...";
+S.Num=4;
+ReadWrite.push_back(S);
+
+
+S.NameAction="WriteVozd1";
+S.Text="Запись воздействий...";
+S.Num=5;
+ReadWrite.push_back(S);
+
+
+S.NameAction="WriteMeropr1";
+S.Text="Запись мероприятий...";
+S.Num=6;
+ReadWrite.push_back(S);
+
+
+S.NameAction="WriteTerr1";
+S.Text="Запись территорий...";
+S.Num=7;
+ReadWrite.push_back(S);
+
+
+S.NameAction="WriteDeyat1";
+S.Text="Запись видов деятельности...";
+S.Num=8;
+ReadWrite.push_back(S);
+
+
+S.NameAction="WriteAspect1";
+S.Text="Запись списка экологических аспектов...";
+S.Num=9;
+ReadWrite.push_back(S);
+
+S.NameAction="SaveAspectsMSpec0";
+S.Text="Запись движения аспектов...";
+S.Num=10;
+ReadWrite.push_back(S);
+
+S.NameAction="StopProgram";
+S.Num=10;
+ReadWrite.push_back(S);
+
+Zast->ReadWriteDoc->Execute();
 
  Action=caNone;
  break;
@@ -2832,7 +2904,138 @@ FSvod->ShowModal();
 
 void __fastcall TDocuments::N19Click(TObject *Sender)
 {
-MAsp->ShowModal();
+ Zast->MClient->Act.ParamComm.clear();
+ Zast->MClient->Act.ParamComm.push_back("CompareMSpecAspects");
+ String ServerSQL="SELECT Аспекты.[Номер аспекта], Аспекты.Подразделение, Аспекты.Ситуация, Аспекты.[Вид территории], Аспекты.Деятельность, Аспекты.Специальность, Аспекты.Аспект, Аспекты.Воздействие, Аспекты.G, Аспекты.O, Аспекты.R, Аспекты.S, Аспекты.T, Аспекты.L, Аспекты.N, Аспекты.Z, Аспекты.Значимость, Аспекты.[Проявление воздействия], Аспекты.[Тяжесть последствий], Аспекты.Приоритетность,  Аспекты.[Выполняющиеся мероприятия],  Аспекты.[предлагаемые мероприятия],  Аспекты.[Мониторинг и контроль], Аспекты.[Предлагаемый мониторинг и контроль], Аспекты.[Дата создания], Аспекты.[Начало действия], Аспекты.[Конец действия] FROM Аспекты;";
+ String ClientSQL="SELECT TempAspects.[Номер аспекта], TempAspects.Подразделение, TempAspects.Ситуация, TempAspects.[Вид территории], TempAspects.Деятельность, TempAspects.Специальность, TempAspects.Аспект, TempAspects.Воздействие, TempAspects.G, TempAspects.O, TempAspects.R, TempAspects.S, TempAspects.T, TempAspects.L, TempAspects.N, TempAspects.Z, TempAspects.Значимость, TempAspects.[Проявление воздействия], TempAspects.[Тяжесть последствий], TempAspects.Приоритетность, TempAspects.[Выполняющиеся мероприятия],  TempAspects.[предлагаемые мероприятия],  TempAspects.[Мониторинг и контроль], TempAspects.[Предлагаемый мониторинг и контроль],  TempAspects.[Дата создания], TempAspects.[Начало действия], TempAspects.[Конец действия] FROM TempAspects;";
+Zast->MClient->ReadTable("Аспекты",ServerSQL, ClientSQL);
+
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TDocuments::N23Click(TObject *Sender)
+{
+FAbout->ShowModal();
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TDocuments::Button1Click(TObject *Sender)
+{
+DataSetRefresh4->Execute();
+DataSetPost1->Execute();
+
+ReadWrite.clear();
+Str_RW S;
+S.NameAction="WriteMetodika";
+S.Text="Запись методики...";
+S.Num=1;
+ReadWrite.push_back(S);
+Zast->ReadWriteDoc->Execute();        
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TDocuments::Button2Click(TObject *Sender)
+{
+DataSetRefresh3->Execute();
+DataSetPost3->Execute();
+
+ReadWrite.clear();
+Str_RW S;
+S.NameAction="WritePodr";
+S.Text="Запись подразделений...";
+S.Num=2;
+ReadWrite.push_back(S);
+Zast->ReadWriteDoc->Execute();        
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TDocuments::Button3Click(TObject *Sender)
+{
+DataSetRefresh2->Execute();
+DataSetPost2->Execute();
+
+ReadWrite.clear();
+Str_RW S;
+S.NameAction="WriteCrit";
+S.Text="Запись критериев...";
+S.Num=3;
+ReadWrite.push_back(S);
+Zast->ReadWriteDoc->Execute();        
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TDocuments::Button9Click(TObject *Sender)
+{
+DataSetRefresh1->Execute();
+DataSetPost4->Execute();
+
+ReadWrite.clear();
+Str_RW S;
+S.NameAction="WriteSit";
+S.Text="Запись ситуаций...";
+S.Num=4;
+ReadWrite.push_back(S);
+Zast->ReadWriteDoc->Execute();        
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TDocuments::Button4Click(TObject *Sender)
+{
+ReadWrite.clear();
+Str_RW S;
+S.NameAction="WriteVozd1";
+S.Text="Запись воздействий...";
+S.Num=5;
+ReadWrite.push_back(S);
+Zast->ReadWriteDoc->Execute();        
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TDocuments::Button5Click(TObject *Sender)
+{
+ReadWrite.clear();
+Str_RW S;
+S.NameAction="WriteMeropr1";
+S.Text="Запись мероприятий...";
+S.Num=6;
+ReadWrite.push_back(S);
+Zast->ReadWriteDoc->Execute();        
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TDocuments::Button6Click(TObject *Sender)
+{
+ReadWrite.clear();
+Str_RW S;
+S.NameAction="WriteTerr1";
+S.Text="Запись территорий...";
+S.Num=7;
+ReadWrite.push_back(S);
+Zast->ReadWriteDoc->Execute();        
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TDocuments::Button7Click(TObject *Sender)
+{
+ReadWrite.clear();
+Str_RW S;
+S.NameAction="WriteDeyat1";
+S.Text="Запись видов деятельности...";
+S.Num=8;
+ReadWrite.push_back(S);
+Zast->ReadWriteDoc->Execute();        
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TDocuments::Button8Click(TObject *Sender)
+{
+ReadWrite.clear();
+Str_RW S;
+S.NameAction="WriteAspect1";
+S.Text="Запись списка экологических аспектов...";
+S.Num=9;
+ReadWrite.push_back(S);
+Zast->ReadWriteDoc->Execute();        
 }
 //---------------------------------------------------------------------------
 

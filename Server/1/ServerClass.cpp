@@ -368,6 +368,12 @@ Parent->WriteDiaryEvent(IP, Login, "AdminARM", "Запись логинов", "Имя: "+Paramet
    this->Socket->SendText("Command:16;1|"+IntToStr(Login.Length())+"#"+Login+"|");
    break;
    }
+   case 17:
+   {
+   MergeAspectsMainSpec();
+   this->Socket->SendText("Command:17;0|");
+   break;
+   }
  }
 
 }
@@ -1399,6 +1405,41 @@ String Ret="";
  }
 
  return Ret;
+}
+//---------------------------------------------------------------------------
+void Client::MergeAspectsMainSpec()
+{
+MP<TADOCommand>Comm(Form1);
+Comm->Connection=GetDatabase("Аспекты");
+Comm->CommandText="UPDATE Аспекты SET Аспекты.Del = False";
+Comm->Execute();
+
+MP<TADODataSet>Aspects(Form1);
+Aspects->Connection=GetDatabase("Аспекты");
+Aspects->CommandText="Select * From Аспекты";
+Aspects->Active=true;
+
+MP<TADODataSet>Temp(Form1);
+Temp->Connection=GetDatabase("Аспекты");
+Temp->CommandText="Select * From TempAspects";
+Temp->Active=true;
+
+for(Aspects->First();!Aspects->Eof;Aspects->Next())
+{
+ int N=Aspects->FieldByName("номер аспекта")->Value;
+
+ if(Temp->Locate("Номер аспекта", N, SO))
+ {
+  Aspects->Edit();
+  Aspects->FieldByName("Подразделение")->Value=Temp->FieldByName("Подразделение")->Value;
+  Aspects->Post();
+ }
+ else
+ {
+//DiaryEvent->WriteEvent(Now(), this->pNameComp, this->Login, "Ошибка обработки данных", "Ошибка объединения аспектов главным специалистом (не найден аспект)", "IDC="+IntToStr(IDC())+" Номер="+IntToStr(N));
+
+ }
+}
 }
 //---------------------------------------------------------------------------
 //***************************************************************************

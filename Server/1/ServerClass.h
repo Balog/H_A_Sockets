@@ -77,7 +77,7 @@ void MergeSit(String DB1, String DB2);
 void MergeNodeBranch(String NameDatabase1, String NameNode, String NameBranch, String NameDatabase2, String NameTable, String NameField, String NameKey, String Name);
 void MergeNodeBranch(String NameDatabase1, String NameNode, String NameBranch);
 String PodrToLogin(String NameDB, int NumPodr);
-
+void MergeAspectsMainSpec();
  public:
 Client(Clients*);
 ~Client();

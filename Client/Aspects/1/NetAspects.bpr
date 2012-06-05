@@ -6,13 +6,13 @@
     <PROJECT value="NetAspects.exe"/>
     <OBJFILES value="NetAspects.obj ClientClass.obj Main.obj MasterPointer.obj MDBConnector.obj 
       PassForm.obj Progress.obj Zastavka.obj CodeText.obj MainForm.obj Rep1.obj 
-      Reports.obj Svod.obj FMoveAsp.obj InpDocs.obj InputFiltr.obj"/>
+      Reports.obj Svod.obj FMoveAsp.obj InpDocs.obj InputFiltr.obj About.obj"/>
     <RESFILES value="NetAspects.res"/>
     <IDLFILES value=""/>
     <IDLGENFILES value=""/>
     <DEFFILE value=""/>
     <RESDEPEN value="$(RESFILES) Main.dfm PassForm.dfm Progress.dfm Zastavka.dfm MainForm.dfm 
-      Rep1.dfm Svod.dfm FMoveAsp.dfm InpDocs.dfm InputFiltr.dfm"/>
+      Rep1.dfm Svod.dfm FMoveAsp.dfm InpDocs.dfm InputFiltr.dfm About.dfm"/>
     <LIBFILES value=""/>
     <LIBRARIES value="dclusr.lib"/>
     <SPARELIBS value="vcl.lib rtl.lib dclusr.lib vclx.lib dbrtl.lib adortl.lib vcldb.lib"/>
@@ -75,6 +75,7 @@
       <FILE FILENAME="FMoveAsp.cpp" FORMNAME="MAsp" UNITNAME="FMoveAsp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="InpDocs.cpp" FORMNAME="InputDocs" UNITNAME="InpDocs" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="InputFiltr.cpp" FORMNAME="Filter" UNITNAME="InputFiltr" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="About.cpp" FORMNAME="FAbout" UNITNAME="About" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
   </FILELIST>
   <BUILDTOOLS>
   </BUILDTOOLS>
