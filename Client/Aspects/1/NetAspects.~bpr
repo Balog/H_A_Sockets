@@ -6,15 +6,15 @@
     <PROJECT value="NetAspects.exe"/>
     <OBJFILES value="NetAspects.obj ClientClass.obj Main.obj MasterPointer.obj MDBConnector.obj 
       PassForm.obj Progress.obj Zastavka.obj CodeText.obj MainForm.obj Rep1.obj 
-      Reports.obj Svod.obj FMoveAsp.obj InpDocs.obj InputFiltr.obj"/>
+      Reports.obj Svod.obj FMoveAsp.obj InpDocs.obj InputFiltr.obj About.obj"/>
     <RESFILES value="NetAspects.res"/>
     <IDLFILES value=""/>
     <IDLGENFILES value=""/>
     <DEFFILE value=""/>
     <RESDEPEN value="$(RESFILES) Main.dfm PassForm.dfm Progress.dfm Zastavka.dfm MainForm.dfm 
-      Rep1.dfm Svod.dfm FMoveAsp.dfm InpDocs.dfm InputFiltr.dfm"/>
+      Rep1.dfm Svod.dfm FMoveAsp.dfm InpDocs.dfm InputFiltr.dfm About.dfm"/>
     <LIBFILES value=""/>
-    <LIBRARIES value="dclusr.lib"/>
+    <LIBRARIES value="vcldb.lib adortl.lib dbrtl.lib vclx.lib dclusr.lib rtl.lib vcl.lib"/>
     <SPARELIBS value="vcl.lib rtl.lib dclusr.lib vclx.lib dbrtl.lib adortl.lib vcldb.lib"/>
     <PACKAGES value="vcl.bpi rtl.bpi dbrtl.bpi adortl.bpi vcldb.bpi vclx.bpi bdertl.bpi 
       vcldbx.bpi ibxpress.bpi dsnap.bpi cds.bpi bdecds.bpi qrpt.bpi teeui.bpi 
@@ -31,7 +31,7 @@
     <RELEASELIBPATH value="$(BCB)\lib\release"/>
     <LINKER value="ilink32"/>
     <USERDEFINES value="_DEBUG"/>
-    <SYSDEFINES value="_RTLDLL;NO_STRICT;USEPACKAGES"/>
+    <SYSDEFINES value="NO_STRICT"/>
     <MAINSOURCE value="NetAspects.cpp"/>
     <INCLUDEPATH value="&quot;D:\Program Files (x86)\Borland\CBuilder6\Imports&quot;;&quot;D:\Program Files (x86)\Borland\CBuilder6\Projects&quot;;C:\Users\Алекс\Desktop\proba_Notify\Client2;$(BCB)\include;$(BCB)\include\vcl"/>
     <LIBPATH value="&quot;D:\Program Files (x86)\Borland\CBuilder6\Imports&quot;;&quot;D:\Program Files (x86)\Borland\CBuilder6\Projects&quot;;C:\Users\Алекс\Desktop\proba_Notify\Client2;$(BCB)\Projects\Lib;$(BCB)\lib\obj;$(BCB)\lib"/>
@@ -52,9 +52,9 @@
     <OTHERFILES value=""/>
   </OPTIONS>
   <LINKER>
-    <ALLOBJ value="c0w32.obj $(PACKAGES) Memmgr.Lib sysinit.obj $(OBJFILES)"/>
+    <ALLOBJ value="c0w32.obj sysinit.obj $(OBJFILES)"/>
     <ALLRES value="$(RESFILES)"/>
-    <ALLLIB value="$(LIBFILES) $(LIBRARIES) import32.lib cp32mti.lib"/>
+    <ALLLIB value="$(LIBFILES) $(LIBRARIES) import32.lib cp32mt.lib"/>
     <OTHERFILES value=""/>
   </LINKER>
   <FILELIST>
@@ -75,6 +75,7 @@
       <FILE FILENAME="FMoveAsp.cpp" FORMNAME="MAsp" UNITNAME="FMoveAsp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="InpDocs.cpp" FORMNAME="InputDocs" UNITNAME="InpDocs" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="InputFiltr.cpp" FORMNAME="Filter" UNITNAME="InputFiltr" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="About.cpp" FORMNAME="FAbout" UNITNAME="About" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
   </FILELIST>
   <BUILDTOOLS>
   </BUILDTOOLS>
