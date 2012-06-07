@@ -61,7 +61,7 @@ vector<Form*>::iterator IVF;
 
 void StartAction(String NameAction);
 void ConnectDatabase(String Name,int Number,  bool Connect);
-void ReadTable(String NameDB, String ServerSQL, String ClientSQL);
+void ReadTable(String NameDBFrom, String ServerSQL, String NameDBTo, String ClientSQL);
 void DecodeTable(String NameDB, String ClientSQL, String Text);
 
 vector<CDBItem>VDB;
@@ -80,7 +80,7 @@ int GetLicenseCount(String DBName);
 void WriteDiaryEvent(String Type, String Name, String Prim);
 void WriteDiaryEvent(String Type, String Name);
 String Login;
-void WriteTable(String Database, String ClientSQLText, String ServerSQLText);
+void WriteTable(String DatabaseFrom, String ClientSQLText, String DatabaseTo, String ServerSQLText);
 bool Reg;
 private:
 String GetIP();

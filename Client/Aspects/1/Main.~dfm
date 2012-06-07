@@ -24,7 +24,7 @@ object Documents: TDocuments
     Top = 0
     Width = 1031
     Height = 736
-    ActivePage = TabPodr
+    ActivePage = TabAspects
     Align = alClient
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
@@ -33,7 +33,7 @@ object Documents: TDocuments
     Font.Style = []
     MultiLine = True
     ParentFont = False
-    TabIndex = 1
+    TabIndex = 8
     TabOrder = 0
     object TabMetod: TTabSheet
       Caption = #1052#1077#1090#1086#1076#1080#1082#1072
@@ -79,6 +79,7 @@ object Documents: TDocuments
           Height = 19
           Caption = #1057#1086#1093#1088#1072#1085#1080#1090#1100
           TabOrder = 1
+          OnClick = Button1Click
         end
       end
     end
@@ -122,6 +123,7 @@ object Documents: TDocuments
           Height = 19
           Caption = #1057#1086#1093#1088#1072#1085#1080#1090#1100
           TabOrder = 0
+          OnClick = Button2Click
         end
       end
     end
@@ -188,6 +190,7 @@ object Documents: TDocuments
           Height = 19
           Caption = #1057#1086#1093#1088#1072#1085#1080#1090#1100
           TabOrder = 0
+          OnClick = Button3Click
         end
       end
     end
@@ -231,6 +234,7 @@ object Documents: TDocuments
           Height = 19
           Caption = #1057#1086#1093#1088#1072#1085#1080#1090#1100
           TabOrder = 0
+          OnClick = Button9Click
         end
       end
     end
@@ -268,6 +272,7 @@ object Documents: TDocuments
           Height = 19
           Caption = #1057#1086#1093#1088#1072#1085#1080#1090#1100
           TabOrder = 0
+          OnClick = Button4Click
         end
       end
     end
@@ -305,6 +310,7 @@ object Documents: TDocuments
           Height = 19
           Caption = #1057#1086#1093#1088#1072#1085#1080#1090#1100
           TabOrder = 0
+          OnClick = Button5Click
         end
       end
     end
@@ -342,6 +348,7 @@ object Documents: TDocuments
           Height = 19
           Caption = #1057#1086#1093#1088#1072#1085#1080#1090#1100
           TabOrder = 0
+          OnClick = Button6Click
         end
       end
     end
@@ -379,6 +386,7 @@ object Documents: TDocuments
           Height = 19
           Caption = #1057#1086#1093#1088#1072#1085#1080#1090#1100
           TabOrder = 0
+          OnClick = Button7Click
         end
       end
     end
@@ -416,6 +424,7 @@ object Documents: TDocuments
           Height = 19
           Caption = #1057#1086#1093#1088#1072#1085#1080#1090#1100
           TabOrder = 0
+          OnClick = Button8Click
         end
       end
     end

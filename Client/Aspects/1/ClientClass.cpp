@@ -296,14 +296,14 @@ Socket->Socket->SendText(Mess);
 
 }
 //*************************************************************************
-void Client::ReadTable(String NameDB, String ServerSQL, String ClientSQL)
+void Client::ReadTable(String NameDBFrom, String ServerSQL, String NameDBTo, String ClientSQL)
 {
  //Act.ParamComm.clear();
  Act.WaitCommand=5;
- Act.ParamComm.push_back(NameDB);
+ Act.ParamComm.push_back(NameDBTo);
  Act.ParamComm.push_back(ClientSQL);
 
- Socket->Socket->SendText("Command:5;2|"+IntToStr(NameDB.Length())+"#"+NameDB+"|"+ServerSQL.Length()+"#"+ServerSQL+"|");
+ Socket->Socket->SendText("Command:5;2|"+IntToStr(NameDBFrom.Length())+"#"+NameDBFrom+"|"+ServerSQL.Length()+"#"+ServerSQL+"|");
 }
 //*************************************************************************
 void Client::DecodeTable(String NameDB, String ClientSQL, String Text)
@@ -320,6 +320,10 @@ DB=ADOAspect;
 if(NameDB=="Reference")
 {
 DB=ADOConn;
+}
+if(NameDB=="Аспекты_П")
+{
+DB=ADOUsrAspect;
 }
 int FromPos=ClientSQL.LowerCase().Pos("from");
 String DelText="Delete * "+ClientSQL.SubString(FromPos, ClientSQL.Length());
@@ -732,11 +736,11 @@ DB=ADOConn;
    return Ret;
 }
 //****************************************************************************
-void Client::WriteTable(String Database, String ClientSQLText, String ServerSQLText)
+void Client::WriteTable(String DatabaseFrom, String ClientSQLText, String DatabaseTo, String ServerSQLText)
 {
 Act.WaitCommand=8;
- String Text=TableToStr(Database, ClientSQLText);
- Socket->Socket->SendText("Command:8;3|"+IntToStr(Database.Length())+"#"+Database+"|"+IntToStr(ServerSQLText.Length())+"#"+ServerSQLText+"|"+IntToStr(Text.Length())+"#"+Text+"|");
+ String Text=TableToStr(DatabaseFrom, ClientSQLText);
+ Socket->Socket->SendText("Command:8;3|"+IntToStr(DatabaseTo.Length())+"#"+DatabaseTo+"|"+IntToStr(ServerSQLText.Length())+"#"+ServerSQLText+"|"+IntToStr(Text.Length())+"#"+Text+"|");
 }
 //***************************************************************************
 void Client::ActTrigger(int NumTrigger)

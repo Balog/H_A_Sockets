@@ -2919,3 +2919,123 @@ FAbout->ShowModal();
 }
 //---------------------------------------------------------------------------
 
+void __fastcall TDocuments::Button1Click(TObject *Sender)
+{
+DataSetRefresh4->Execute();
+DataSetPost1->Execute();
+
+ReadWrite.clear();
+Str_RW S;
+S.NameAction="WriteMetodika";
+S.Text="Запись методики...";
+S.Num=1;
+ReadWrite.push_back(S);
+Zast->ReadWriteDoc->Execute();        
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TDocuments::Button2Click(TObject *Sender)
+{
+DataSetRefresh3->Execute();
+DataSetPost3->Execute();
+
+ReadWrite.clear();
+Str_RW S;
+S.NameAction="WritePodr";
+S.Text="Запись подразделений...";
+S.Num=2;
+ReadWrite.push_back(S);
+Zast->ReadWriteDoc->Execute();        
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TDocuments::Button3Click(TObject *Sender)
+{
+DataSetRefresh2->Execute();
+DataSetPost2->Execute();
+
+ReadWrite.clear();
+Str_RW S;
+S.NameAction="WriteCrit";
+S.Text="Запись критериев...";
+S.Num=3;
+ReadWrite.push_back(S);
+Zast->ReadWriteDoc->Execute();        
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TDocuments::Button9Click(TObject *Sender)
+{
+DataSetRefresh1->Execute();
+DataSetPost4->Execute();
+
+ReadWrite.clear();
+Str_RW S;
+S.NameAction="WriteSit";
+S.Text="Запись ситуаций...";
+S.Num=4;
+ReadWrite.push_back(S);
+Zast->ReadWriteDoc->Execute();        
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TDocuments::Button4Click(TObject *Sender)
+{
+ReadWrite.clear();
+Str_RW S;
+S.NameAction="WriteVozd1";
+S.Text="Запись воздействий...";
+S.Num=5;
+ReadWrite.push_back(S);
+Zast->ReadWriteDoc->Execute();        
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TDocuments::Button5Click(TObject *Sender)
+{
+ReadWrite.clear();
+Str_RW S;
+S.NameAction="WriteMeropr1";
+S.Text="Запись мероприятий...";
+S.Num=6;
+ReadWrite.push_back(S);
+Zast->ReadWriteDoc->Execute();        
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TDocuments::Button6Click(TObject *Sender)
+{
+ReadWrite.clear();
+Str_RW S;
+S.NameAction="WriteTerr1";
+S.Text="Запись территорий...";
+S.Num=7;
+ReadWrite.push_back(S);
+Zast->ReadWriteDoc->Execute();        
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TDocuments::Button7Click(TObject *Sender)
+{
+ReadWrite.clear();
+Str_RW S;
+S.NameAction="WriteDeyat1";
+S.Text="Запись видов деятельности...";
+S.Num=8;
+ReadWrite.push_back(S);
+Zast->ReadWriteDoc->Execute();        
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TDocuments::Button8Click(TObject *Sender)
+{
+ReadWrite.clear();
+Str_RW S;
+S.NameAction="WriteAspect1";
+S.Text="Запись списка экологических аспектов...";
+S.Num=9;
+ReadWrite.push_back(S);
+Zast->ReadWriteDoc->Execute();        
+}
+//---------------------------------------------------------------------------
+

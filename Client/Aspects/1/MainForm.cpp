@@ -72,7 +72,7 @@ void __fastcall TForm1::FormShow(TObject *Sender)
  Comm->Connection=Zast->ADOUsrAspect;
 if(!Demo)
 {
- Comm->CommandText="SELECT Аспекты.*, Logins.ServerNum FROM Logins INNER JOIN ((Подразделения INNER JOIN Аспекты ON Подразделения.[Номер подразделения] = Аспекты.Подразделение) INNER JOIN ObslOtdel ON Подразделения.[Номер подразделения] = ObslOtdel.NumObslOtdel) ON Logins.Num = ObslOtdel.Login WHERE (((Logins.ServerNum)="+IntToStr(NumLogin)+") AND ((Аспекты.Demo)=True));";
+ Comm->CommandText="DELETE Аспекты.* FROM Logins INNER JOIN ((Подразделения INNER JOIN Аспекты ON Подразделения.[Номер подразделения] = Аспекты.Подразделение) INNER JOIN ObslOtdel ON Подразделения.[Номер подразделения] = ObslOtdel.NumObslOtdel) ON Logins.Num = ObslOtdel.Login WHERE (((Logins.ServerNum)="+IntToStr(NumLogin)+") AND ((Аспекты.Demo)=True));";
   //Comm->CommandText="DELETE Logins.AdmNum, Аспекты.Demo, Аспекты.* FROM Logins INNER JOIN ((Подразделения INNER JOIN Аспекты ON Подразделения.[Номер подразделения] = Аспекты.Подразделение) INNER JOIN ObslOtdel ON Подразделения.[Номер подразделения] = ObslOtdel.NumObslOtdel) ON Logins.Num = ObslOtdel.Login WHERE (((Logins.AdmNum)="+IntToStr(NumLogin)+") AND ((Аспекты.Demo)=True)); ";
 
  Comm->Execute();
@@ -88,6 +88,7 @@ else
 //****************************************
 
 N3->Enabled=!Demo;
+Initialize();
 //N9->Enabled=!Demo;
 
 /*

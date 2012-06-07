@@ -417,10 +417,7 @@ Zast->MClient->WriteDiaryEvent("NetAspects ошибка","Ошибка объединения аспектов 
 //----------------------------------------------
 void __fastcall TMAsp::FormClose(TObject *Sender, TCloseAction &Action)
 {
-Documents->ReadWrite.clear();
-Str_RW S;
-Documents->ReadWrite.push_back(S);
-Zast->ReadWriteDoc->Execute();
+
 
  Zast->MClient->Act.ParamComm.clear();
  Zast->MClient->Act.ParamComm.push_back("CompareMSpecAspects2");

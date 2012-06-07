@@ -296,14 +296,14 @@ Socket->Socket->SendText(Mess);
 
 }
 //*************************************************************************
-void Client::ReadTable(String NameDB, String ServerSQL, String ClientSQL)
+void Client::ReadTable(String NameDBFrom, String ServerSQL, String NameDBTo, String ClientSQL)
 {
  //Act.ParamComm.clear();
  Act.WaitCommand=5;
- Act.ParamComm.push_back(NameDB);
+ Act.ParamComm.push_back(NameDBTo);
  Act.ParamComm.push_back(ClientSQL);
 
- Socket->Socket->SendText("Command:5;2|"+IntToStr(NameDB.Length())+"#"+NameDB+"|"+ServerSQL.Length()+"#"+ServerSQL+"|");
+ Socket->Socket->SendText("Command:5;2|"+IntToStr(NameDBFrom.Length())+"#"+NameDBFrom+"|"+ServerSQL.Length()+"#"+ServerSQL+"|");
 }
 //*************************************************************************
 void Client::DecodeTable(String NameDB, String ClientSQL, String Text)
@@ -539,6 +539,8 @@ void Client::RegisterDatabase(String Name, int NumLic)
 {
 for(unsigned int i=0;i<VDB.size();i++)
 {
+if(Name!="Reference")
+{
  if(VDB[i].Name==Name)
  {
   VDB[i].NumLicense=NumLic;
@@ -552,6 +554,7 @@ for(unsigned int i=0;i<VDB.size();i++)
   }
   break;
  }
+}
 }
 }
 //*************************************************************************
@@ -729,11 +732,11 @@ DB=ADOConn;
    return Ret;
 }
 //****************************************************************************
-void Client::WriteTable(String Database, String ClientSQLText, String ServerSQLText)
+void Client::WriteTable(String DatabaseFrom, String ClientSQLText, String DatabaseTo, String ServerSQLText)
 {
 Act.WaitCommand=8;
- String Text=TableToStr(Database, ClientSQLText);
- Socket->Socket->SendText("Command:8;3|"+IntToStr(Database.Length())+"#"+Database+"|"+IntToStr(ServerSQLText.Length())+"#"+ServerSQLText+"|"+IntToStr(Text.Length())+"#"+Text+"|");
+ String Text=TableToStr(DatabaseFrom, ClientSQLText);
+ Socket->Socket->SendText("Command:8;3|"+IntToStr(DatabaseTo.Length())+"#"+DatabaseTo+"|"+IntToStr(ServerSQLText.Length())+"#"+ServerSQLText+"|"+IntToStr(Text.Length())+"#"+Text+"|");
 }
 //***************************************************************************
 void Client::ActTrigger(int NumTrigger)

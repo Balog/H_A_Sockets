@@ -10229,5 +10229,13 @@ object Zast: TZast
       Caption = 'StopProgram'
       OnExecute = StopProgramExecute
     end
+    object StartLoadPodrUSR: TAction
+      Caption = 'StartLoadPodrUSR'
+      OnExecute = StartLoadPodrUSRExecute
+    end
+    object StartLoadObslOtdUSR: TAction
+      Caption = 'StartLoadObslOtdUSR'
+      OnExecute = StartLoadObslOtdUSRExecute
+    end
   end
 end

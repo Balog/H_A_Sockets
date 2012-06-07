@@ -175,13 +175,17 @@ else
 //---------------------------------------------------------------------------
 void TReport1::CreateRep()
 {
+Podr->First();
+Podr->MoveBy(CPodrazdel->ItemIndex);
+int NumPodr=Podr->FieldByName("ServerNum")->Value;
+
 if(NumRep==1)
 {
 //Form1->CreateReport1(NumPodr, Date1->Date, Date2->Date, Edit1->Text);
 Reports *R=new Reports();
 R->Connect=RepBase;
 R->Role=Role;
-R->CreateReport1(Date1->Date, Date2->Date, Edit1->Text, Flt, FltName);
+R->CreateReport1(NumPodr, Date1->Date, Date2->Date, Edit1->Text, Flt, FltName);
 delete R;
 }
 else
@@ -189,7 +193,7 @@ else
 Reports *R=new Reports();
 R->Connect=RepBase;
 R->Role=Role;
-R->CreateReport2(Date1->Date, Date2->Date, Edit1->Text, Flt, FltName);
+R->CreateReport2(NumPodr, Date1->Date, Date2->Date, Edit1->Text, Flt, FltName);
 delete R;
 }
 }

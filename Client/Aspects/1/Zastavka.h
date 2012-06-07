@@ -185,6 +185,8 @@ __published:	// IDE-managed Components
         TAction *LoadMSpecAspects;
         TAction *SaveAspectsMSpec0;
         TAction *StopProgram;
+        TAction *StartLoadPodrUSR;
+        TAction *StartLoadObslOtdUSR;
         void __fastcall Timer1Timer(TObject *Sender);
         void __fastcall Image1Click(TObject *Sender);
         void __fastcall FormShow(TObject *Sender);
@@ -275,6 +277,8 @@ __published:	// IDE-managed Components
         void __fastcall LoadMSpecAspectsExecute(TObject *Sender);
         void __fastcall SaveAspectsMSpec0Execute(TObject *Sender);
         void __fastcall StopProgramExecute(TObject *Sender);
+        void __fastcall StartLoadPodrUSRExecute(TObject *Sender);
+        void __fastcall StartLoadObslOtdUSRExecute(TObject *Sender);
 private:	// User declarations
 String Path;
 TLocateOptions SO;
