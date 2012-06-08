@@ -7,7 +7,7 @@
 #include "Zastavka.h"
 #include "About.h"
 #include "MasterPointer.h"
-//#include "InputFiltr.h"
+#include "InputFiltr.h"
 //#include "LoadKeyFile.h"
 //#include "Svod.h"
 //#include "Rep1.h"
@@ -16,9 +16,10 @@
 #include "Progress.h"
 //#include "F_Vvedenie.h"
 //#include "Metod.h"
-//#include "Rep1.h"
+#include "Rep1.h"
 #include "About.h"
 #include "InpDocs.h"
+#include "Main.h"
 //---------------------------------------------------------------------------
 #pragma package(smart_init)
 #pragma resource "*.dfm"
@@ -1175,41 +1176,41 @@ InitCombo();
 
 void __fastcall TForm1::Button1Click(TObject *Sender)
 {
-/*
+
 InputDocs->IForm=1;
 InputDocs->Mode=1;
 InputDocs->ShowModal();
-*/
+
 }
 //---------------------------------------------------------------------------
 
 void __fastcall TForm1::Button2Click(TObject *Sender)
 {
-/*
+
 InputDocs->IForm=1;
 InputDocs->Mode=2;
 InputDocs->ShowModal();
-*/
+
 }
 //---------------------------------------------------------------------------
 
 void __fastcall TForm1::Button3Click(TObject *Sender)
 {
-/*
+
 InputDocs->IForm=1;
 InputDocs->Mode=3;
 InputDocs->ShowModal();
-*/
+
 }
 //---------------------------------------------------------------------------
 
 void __fastcall TForm1::Button4Click(TObject *Sender)
 {
-/*
+
 InputDocs->IForm=1;
 InputDocs->Mode=4;
 InputDocs->ShowModal();
-*/
+
 }
 //---------------------------------------------------------------------------
 void TForm1::InpTer()
@@ -1224,43 +1225,43 @@ Aspects->Post();
 //-------------------------------------------
 void TForm1::InpDeyat()
 {
-/*
+
 Edit2->Text=InputDocs->TextBr;
 Aspects->Edit();
 Aspects->FieldByName("Деятельность")->Value=InputDocs->NumBr;
 Aspects->Post();
-*/
+
 }
 //-------------------------------------------
 void TForm1::InpAsp()
 {
-/*
+
 Edit4->Text=InputDocs->TextBr;
 Aspects->Edit();
 Aspects->FieldByName("Аспект")->Value=InputDocs->NumBr;
 Aspects->Post();
-*/
+
 }
 //-------------------------------------------
 void TForm1::InpVozd()
 {
-/*
+
 Edit5->Text=InputDocs->TextBr;
 Aspects->Edit();
 Aspects->FieldByName("Воздействие")->Value=InputDocs->NumBr;
 Aspects->Post();
-*/
+
 }
 //-------------------------------------------
 void TForm1::InpMeropr()
 {
-/*
+
 DBMemo31->Clear();
 DBMemo31->Lines->Add(InputDocs->TextBr);
 Aspects->Edit();
 Aspects->FieldByName("Предлагаемые мероприятия")->Value=InputDocs->TextBr;
 Aspects->Post();
- */
+
 }
 //-------------------------------------------
 void TForm1::Calc()
@@ -1645,12 +1646,12 @@ Aspects->Post();
 
 void __fastcall TForm1::Button6Click(TObject *Sender)
 {
-/*
+
 InputDocs->IForm=1;
 
 InputDocs->Mode=5;
 InputDocs->ShowModal();
-*/
+
 }
 //---------------------------------------------------------------------------
 
@@ -1659,13 +1660,13 @@ InputDocs->ShowModal();
 
 void __fastcall TForm1::Button5Click(TObject *Sender)
 {
-//Filter->ShowModal();
+Filter->ShowModal();
 }
 //---------------------------------------------------------------------------
 
 void __fastcall TForm1::BitBtn7Click(TObject *Sender)
 {
-/*
+
 Report1->Flt=Filtr1;
 Report1->FltName=LFiltr->Caption;
 Report1->PodrComText=Podrazdel->CommandText;
@@ -1674,7 +1675,7 @@ Report1->NumRep=1;
 Report1->RepBase=Zast->ADOUsrAspect;
 Report1->Role=Role;
 Report1->ShowModal();
-*/
+
 }
 //---------------------------------------------------------------------------
 
@@ -2087,7 +2088,7 @@ this->Visible=false;
 //---------------------------------------------------------------------------
 void __fastcall TForm1::BitBtn9Click(TObject *Sender)
 {
-/*
+
 Report1->Flt=Filtr2;
 Report1->FltName=LFiltr->Caption;
 Report1->PodrComText=Podrazdel->CommandText;
@@ -2096,7 +2097,7 @@ Report1->NumRep=2;
 Report1->RepBase=Zast->ADOUsrAspect;
 Report1->Role=Role;
 Report1->ShowModal();
-*/
+
 }
 //---------------------------------------------------------------------------
 
@@ -3146,6 +3147,59 @@ Button4->Click();
 
 void __fastcall TForm1::N10Click(TObject *Sender)
 {
+Prog->Show();
+Prog->PB->Min=0;
+Prog->PB->Position=0;
+Prog->PB->Max=9;
+
+Documents->ReadWrite.clear();
+Str_RW S;
+S.NameAction="ReadMetodika";
+S.Text="Чтение методики...";
+S.Num=1;
+Documents->ReadWrite.push_back(S);
+
+S.NameAction="ReadPodrazd";
+S.Text="Чтение подразделений...";
+S.Num=2;
+Documents->ReadWrite.push_back(S);
+
+S.NameAction="ReadCrit";
+S.Text="Чтение критериев...";
+S.Num=3;
+Documents->ReadWrite.push_back(S);
+
+S.NameAction="ReadSit";
+S.Text="Чтение ситуаций...";
+S.Num=4;
+Documents->ReadWrite.push_back(S);
+/*
+S.NameAction="ReadVozd1";
+S.Text="Чтение списка воздействий...";
+S.Num=5;
+Documents->ReadWrite.push_back(S);
+
+S.NameAction="ReadMeropr1";
+S.Text="Чтение списка мероприятий...";
+S.Num=6;
+Documents->ReadWrite.push_back(S);
+
+S.NameAction="ReadTerr1";
+S.Text="Чтение списка территорий...";
+S.Num=7;
+Documents->ReadWrite.push_back(S);
+
+S.NameAction="ReadDeyat1";
+S.Text="Чтение списка видов деятельности...";
+S.Num=8;
+Documents->ReadWrite.push_back(S);
+
+S.NameAction="ReadAspect1";
+S.Text="Чтение списка экологических аспектов...";
+S.Num=9;
+Documents->ReadWrite.push_back(S);
+*/
+Zast->ReadWriteDoc->Execute();
 /*
 Zast->MClient->Start();
 Zast->MClient->WriteDiaryEvent("NetAspects","Начало обновления справочников (ручное)","");

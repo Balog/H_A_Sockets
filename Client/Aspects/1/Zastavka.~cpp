@@ -568,7 +568,11 @@ switch (Role)
 
  Form1->Login=Login;
  Form1->Caption="Демонстрационный пользователь: "+Login+"                ***ЗАПИСЬ НА СЕРВЕР ОТКЛЮЧЕНА***";
- Form1->Show();
+ Zast->MClient->Act.ParamComm.clear();
+ Zast->MClient->Act.ParamComm.push_back("StartLoadPodrUSR");
+ //Zast->MClient->Act.ParamComm.push_back("Аспекты_П");
+ Zast->MClient->ReadTable("Аспекты", "Select Logins.Num, Logins.Login, Logins.Role From Logins Order by Num;", "Аспекты_П", "Select TempLogins.Num, TempLogins.Login, TempLogins.Role From TempLogins Order by Num;");
+
 
  break;
  }
@@ -673,25 +677,43 @@ void __fastcall TZast::ReadPodrazdExecute(TObject *Sender)
 {
  Zast->MClient->Act.ParamComm.clear();
  Zast->MClient->Act.ParamComm.push_back("MergePodrazd");
-Zast->MClient->ReadTable("Аспекты", "Select Подразделения.[Номер подразделения], Подразделения.[Название подразделения] From Подразделения order by [Номер подразделения]", "Аспекты", "Select TempПодразделения.[Номер подразделения], TempПодразделения.[Название подразделения] From TempПодразделения order by [Номер подразделения]");
+ String DBTo;
+ if(Role==2)
+ {
+  DBTo="Аспекты";
+ }
+ else
+ {
+  DBTo="Аспекты_П";
+ }
+Zast->MClient->ReadTable("Аспекты", "Select Подразделения.[Номер подразделения], Подразделения.[Название подразделения] From Подразделения order by [Номер подразделения]", DBTo, "Select TempПодразделения.[Номер подразделения], TempПодразделения.[Название подразделения] From TempПодразделения order by [Номер подразделения]");
 
 }
 //---------------------------------------------------------------------------
 
 void __fastcall TZast::MergePodrazdExecute(TObject *Sender)
 {
+MDBConnector* DB;
+ if(Role==2)
+ {
+  DB=ADOAspect;
+ }
+ else
+ {
+  DB=ADOUsrAspect;
+ }
 MP<TADODataSet>Podr(this);
-Podr->Connection=Zast->ADOAspect;
+Podr->Connection=DB;
 Podr->CommandText="Select * From Подразделения";
 Podr->Active=true;
 
 MP<TADODataSet>TempPodr(this);
-TempPodr->Connection=Zast->ADOAspect;
+TempPodr->Connection=DB;
 TempPodr->CommandText="Select TempПодразделения.[Номер подразделения], TempПодразделения.[Название подразделения] From TempПодразделения order by [Номер подразделения]";
 TempPodr->Active=true;
 
 MP<TADOCommand>Comm(this);
-Comm->Connection=Zast->ADOAspect;
+Comm->Connection=DB;
 Comm->CommandText="UPDATE Подразделения SET Подразделения.Del = False;";
 Comm->Execute();
 
@@ -722,10 +744,23 @@ Comm->Execute();
 Comm->CommandText="Delete * From TempПодразделения";
 Comm->Execute();
 
-Zast->MClient->WriteDiaryEvent("NetAspects","Конец загрузки подразделений (главспец)","");
-
+if(Role==2)
+{
 Documents->Podr->Active=false;
 Documents->Podr->Active=true;
+
+Zast->MClient->WriteDiaryEvent("NetAspects","Конец загрузки подразделений (главспец)","");
+}
+else
+{
+Form1->Initialize();
+
+Zast->MClient->WriteDiaryEvent("NetAspects","Конец загрузки подразделений (пользователь)","");
+}
+
+
+
+
 
 ReadWriteDoc->Execute();
 }
@@ -759,10 +794,23 @@ Comm->Execute();
 
 Comm->CommandText="INSERT INTO Значимость ( [Номер значимости], [Наименование значимости], Критерий1, Критерий, [Мин граница], [Макс граница], [Необходимая мера] ) SELECT TempZn.[Номер значимости], TempZn.[Наименование значимости], TempZn.Критерий1, TempZn.Критерий, TempZn.[Мин граница], TempZn.[Макс граница], TempZn.[Необходимая мера] FROM TempZn;";
 Comm->Execute();
-Zast->MClient->WriteDiaryEvent("NetAspects","Конец загрузки критериев (главспец)","");
-
+if(Role==2)
+{
 Documents->ADODataSet1->Active=false;
 Documents->ADODataSet1->Active=true;
+
+Zast->MClient->WriteDiaryEvent("NetAspects","Конец загрузки критериев (главспец)","");
+}
+else
+{
+
+
+Form1->Initialize();
+
+Zast->MClient->WriteDiaryEvent("NetAspects","Конец загрузки критериев (пользователь)","");
+}
+
+
 
 ReadWriteDoc->Execute();
 }
