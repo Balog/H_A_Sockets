@@ -3178,7 +3178,7 @@ S.NameAction="ReadVozd1";
 S.Text="Чтение списка воздействий...";
 S.Num=5;
 Documents->ReadWrite.push_back(S);
-/*
+
 S.NameAction="ReadMeropr1";
 S.Text="Чтение списка мероприятий...";
 S.Num=6;
@@ -3193,7 +3193,7 @@ S.NameAction="ReadDeyat1";
 S.Text="Чтение списка видов деятельности...";
 S.Num=8;
 Documents->ReadWrite.push_back(S);
-
+/*
 S.NameAction="ReadAspect1";
 S.Text="Чтение списка экологических аспектов...";
 S.Num=9;

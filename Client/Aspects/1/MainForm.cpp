@@ -3150,7 +3150,7 @@ void __fastcall TForm1::N10Click(TObject *Sender)
 Prog->Show();
 Prog->PB->Min=0;
 Prog->PB->Position=0;
-Prog->PB->Max=9;
+Prog->PB->Max=8;
 
 Documents->ReadWrite.clear();
 Str_RW S;
@@ -3183,7 +3183,7 @@ S.NameAction="ReadMeropr1";
 S.Text="Чтение списка мероприятий...";
 S.Num=6;
 Documents->ReadWrite.push_back(S);
-/*
+
 S.NameAction="ReadTerr1";
 S.Text="Чтение списка территорий...";
 S.Num=7;
@@ -3194,11 +3194,6 @@ S.Text="Чтение списка видов деятельности...";
 S.Num=8;
 Documents->ReadWrite.push_back(S);
 
-S.NameAction="ReadAspect1";
-S.Text="Чтение списка экологических аспектов...";
-S.Num=9;
-Documents->ReadWrite.push_back(S);
-*/
 Zast->ReadWriteDoc->Execute();
 /*
 Zast->MClient->Start();
