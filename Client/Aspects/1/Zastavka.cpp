@@ -861,31 +861,106 @@ Comm->CommandText="INSERT INTO Ситуации ( [Номер ситуации], [Название ситуации] 
 Comm->Execute();
 
 //----
-Comm->Connection=Zast->ADOAspect;
+MDBConnector* DB;
+String DBName;
+ if(Role==2)
+ {
+  DB=ADOAspect;
+  DBName="Аспекты";
+ }
+ else
+ {
+  DB=ADOUsrAspect;
+  DBName="Аспекты_П";
+ }
+
+Comm->Connection=DB;
 Comm->CommandText="Delete * From TempSit";
 Comm->Execute();
 
  Zast->MClient->Act.ParamComm.clear();
  Zast->MClient->Act.ParamComm.push_back("MergeSit2");
-Zast->MClient->ReadTable("Аспекты", "Select Ситуации.[Номер ситуации], Ситуации.[Название ситуации] From Ситуации Where Показ=True order by [Номер ситуации];", "Аспекты", "Select TempSit.[Номер ситуации], TempSit.[Название ситуации] From TempSit order by [Номер ситуации];");
+Zast->MClient->ReadTable("Аспекты", "Select Ситуации.[Номер ситуации], Ситуации.[Название ситуации] From Ситуации Where Показ=True order by [Номер ситуации];", DBName, "Select TempSit.[Номер ситуации], TempSit.[Название ситуации] From TempSit order by [Номер ситуации];");
 
 }
 //---------------------------------------------------------------------------
 
 void __fastcall TZast::MergeSit2Execute(TObject *Sender)
 {
+MDBConnector* DB;
+ if(Role==2)
+ {
+  DB=ADOAspect;
+ }
+ else
+ {
+  DB=ADOUsrAspect;
+ }
 MP<TADOCommand>Comm(this);
-Comm->Connection=Zast->ADOAspect;
-Comm->CommandText="Delete * From Ситуации where показ=true";
+Comm->Connection=DB;
+Comm->CommandText="UPDATE Ситуации SET Ситуации.Del = True Where Показ=true;";
 Comm->Execute();
 
-Comm->CommandText="INSERT INTO Ситуации ( [Номер ситуации], [Название ситуации], Показ ) SELECT TempSit.[Номер ситуации], TempSit.[Название ситуации], True FROM TempSit;";
+MP<TADODataSet>Temp(this);
+Temp->Connection=DB;
+Temp->CommandText="Select * from TempSit";
+Temp->Active=true;
+
+MP<TADODataSet>Sit(this);
+Sit->Connection=DB;
+Sit->CommandText="Select * From Ситуации Where Показ=true";
+Sit->Active=true;
+
+for(Sit->First();!Sit->Eof;Sit->Next())
+{
+int Num=Sit->FieldByName("Номер ситуации")->Value;
+ if(Temp->Locate("Номер ситуации", Num, SO))
+ {
+  Sit->Edit();
+  Sit->FieldByName("Название ситуации")->Value=Temp->FieldByName("Название ситуации")->Value;
+  Sit->FieldByName("Del")->Value=false;
+  Sit->Post();
+
+  Temp->Delete();
+ }
+ else
+ {
+  Sit->Edit();
+  Sit->FieldByName("Del")->Value=true;
+  Sit->Post();
+
+Comm->CommandText="UPDATE Аспекты SET Аспекты.Ситуация = 0 WHERE (((Аспекты.Ситуация)="+IntToStr(Num)+"));";
 Comm->Execute();
+ }
+}
+Comm->CommandText="DELETE * From Ситуации Where Del=true AND Показ=true";
+Comm->Execute();
+
+Comm->CommandText="INSERT INTO Ситуации ( [Номер ситуации], [Название ситуации], Показ, Del ) SELECT TempSit.[Номер ситуации], TempSit.[Название ситуации], True AS Выражение1, False AS Выражение2 FROM TempSit;";
+Comm->Execute();
+
+Comm->CommandText="DELETE * From TempSit";
+Comm->Execute();
+
+ if(Role==2)
+ {
 
 Documents->Sit->Active=false;
 Documents->Sit->Active=true;
 
 Zast->MClient->WriteDiaryEvent("NetAspects","Конец загрузки ситуаций (главспец)","");
+ }
+ else
+ {
+
+
+Form1->Initialize();
+
+Zast->MClient->WriteDiaryEvent("NetAspects","Конец загрузки ситуаций (пользователь)","");
+ }
+
+
+
 
 ReadWriteDoc->Execute();
 }
@@ -916,27 +991,47 @@ Documents->MergeBranch("Ветви_3");
 
 Documents->LoadTab1();
 
+String DBName;
+if(Role==2)
+{
+ DBName="Аспекты";
+}
+else
+{
+ DBName="Аспекты_П";
+}
+
  Zast->MClient->Act.ParamComm.clear();
  Zast->MClient->Act.ParamComm.push_back("MergeVozd2");
-Zast->MClient->ReadTable("Аспекты", "Select Воздействия.[Номер воздействия], Воздействия.[Наименование воздействия], Воздействия.[Показ] From Воздействия order by [Номер воздействия];", "Аспекты", "Select TempVozd.[Номер воздействия], TempVozd.[Наименование воздействия], TempVozd.[Показ] From TempVozd order by [Номер воздействия];");
+Zast->MClient->ReadTable("Аспекты", "Select Воздействия.[Номер воздействия], Воздействия.[Наименование воздействия], Воздействия.[Показ] From Воздействия order by [Номер воздействия];", DBName, "Select TempVozd.[Номер воздействия], TempVozd.[Наименование воздействия], TempVozd.[Показ] From TempVozd order by [Номер воздействия];");
 
 }
 //---------------------------------------------------------------------------
 
 void __fastcall TZast::MergeVozd2Execute(TObject *Sender)
 {
+MDBConnector* DB;
+if(Role==2)
+{
+ DB=ADOAspect;
+}
+else
+{
+ DB=ADOUsrAspect;
+}
+
 MP<TADOCommand>Comm(this);
-Comm->Connection=Zast->ADOAspect;
+Comm->Connection=DB;
 Comm->CommandText="UPDATE Воздействия SET Воздействия.Del = False;";
 Comm->Execute();
 
 MP<TADODataSet>TempVozd(this);
-TempVozd->Connection=Zast->ADOAspect;
+TempVozd->Connection=DB;
 TempVozd->CommandText="Select TempVozd.[Номер воздействия], TempVozd.[Наименование воздействия], TempVozd.[Показ] From TempVozd order by [Номер воздействия]";
 TempVozd->Active=true;
 
 MP<TADODataSet>Vozd(this);
-Vozd->Connection=Zast->ADOAspect;
+Vozd->Connection=DB;
 Vozd->CommandText="Select * From Воздействия";
 Vozd->Active=true;
 
@@ -969,7 +1064,18 @@ Comm->Execute();
 Comm->CommandText="DELETE TempVozd.* FROM TempVozd;";
 Comm->Execute();
 
+if(Role==2)
+{
+Documents->Sit->Active=false;
+Documents->Sit->Active=true;
+
 Zast->MClient->WriteDiaryEvent("NetAspects","Конец загрузки воздействий (главспец)","");
+}
+else
+{
+Form1->Initialize();
+Zast->MClient->WriteDiaryEvent("NetAspects","Конец загрузки воздействий (пользователь)","");
+}
 
 ReadWriteDoc->Execute();
 }
@@ -995,6 +1101,7 @@ Zast->MClient->ReadTable("Reference", "Select Ветви_4.[Номер ветви], Ветви_4.[Но
 
 void __fastcall TZast::MergeMeroprExecute(TObject *Sender)
 {
+//Добавить перенос данных ветвей в соответствующую таблицу аспектов и пользовательских аспектов
 Documents->MergeNode("Узлы_4");
 Documents->MergeBranch("Ветви_4");
 

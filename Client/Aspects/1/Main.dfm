@@ -24,7 +24,7 @@ object Documents: TDocuments
     Top = 0
     Width = 1031
     Height = 736
-    ActivePage = TabAspects
+    ActivePage = TabSit
     Align = alClient
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
@@ -33,7 +33,7 @@ object Documents: TDocuments
     Font.Style = []
     MultiLine = True
     ParentFont = False
-    TabIndex = 8
+    TabIndex = 3
     TabOrder = 0
     object TabMetod: TTabSheet
       Caption = #1052#1077#1090#1086#1076#1080#1082#1072

@@ -3168,7 +3168,7 @@ S.NameAction="ReadCrit";
 S.Text="Чтение критериев...";
 S.Num=3;
 Documents->ReadWrite.push_back(S);
-/*
+
 S.NameAction="ReadSit";
 S.Text="Чтение ситуаций...";
 S.Num=4;
@@ -3178,7 +3178,7 @@ S.NameAction="ReadVozd1";
 S.Text="Чтение списка воздействий...";
 S.Num=5;
 Documents->ReadWrite.push_back(S);
-
+/*
 S.NameAction="ReadMeropr1";
 S.Text="Чтение списка мероприятий...";
 S.Num=6;

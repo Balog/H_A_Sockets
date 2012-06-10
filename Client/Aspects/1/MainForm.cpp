@@ -3173,7 +3173,7 @@ S.NameAction="ReadSit";
 S.Text="Чтение ситуаций...";
 S.Num=4;
 Documents->ReadWrite.push_back(S);
-/*
+
 S.NameAction="ReadVozd1";
 S.Text="Чтение списка воздействий...";
 S.Num=5;
@@ -3183,7 +3183,7 @@ S.NameAction="ReadMeropr1";
 S.Text="Чтение списка мероприятий...";
 S.Num=6;
 Documents->ReadWrite.push_back(S);
-
+/*
 S.NameAction="ReadTerr1";
 S.Text="Чтение списка территорий...";
 S.Num=7;
