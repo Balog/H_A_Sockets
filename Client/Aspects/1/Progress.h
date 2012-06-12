@@ -19,6 +19,7 @@ __published:	// IDE-managed Components
         void __fastcall FormCreate(TObject *Sender);
 private:	// User declarations
 public:		// User declarations
+bool SignComplete;
         __fastcall TProg(TComponent* Owner);
 };
 //---------------------------------------------------------------------------

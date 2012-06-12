@@ -187,6 +187,8 @@ __published:	// IDE-managed Components
         TAction *StopProgram;
         TAction *StartLoadPodrUSR;
         TAction *StartLoadObslOtdUSR;
+        TAction *ShowForm1;
+        TAction *MergeAspectsUser;
         void __fastcall Timer1Timer(TObject *Sender);
         void __fastcall Image1Click(TObject *Sender);
         void __fastcall FormShow(TObject *Sender);
@@ -279,6 +281,8 @@ __published:	// IDE-managed Components
         void __fastcall StopProgramExecute(TObject *Sender);
         void __fastcall StartLoadPodrUSRExecute(TObject *Sender);
         void __fastcall StartLoadObslOtdUSRExecute(TObject *Sender);
+        void __fastcall ShowForm1Execute(TObject *Sender);
+        void __fastcall MergeAspectsUserExecute(TObject *Sender);
 private:	// User declarations
 String Path;
 TLocateOptions SO;
@@ -291,6 +295,7 @@ int Port;
 bool Start;
 void MergeLogins();
 void MergeOtdels();
+void MergeAspects(int NumLogin);
 
 public:		// User declarations
 bool Saved;

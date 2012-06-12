@@ -9899,7 +9899,7 @@ object Zast: TZast
     Interval = 100
     OnTimer = Timer2Timer
     Left = 40
-    Top = 72
+    Top = 80
   end
   object ClientSocket: TClientSocket
     Active = False
@@ -10236,6 +10236,14 @@ object Zast: TZast
     object StartLoadObslOtdUSR: TAction
       Caption = 'StartLoadObslOtdUSR'
       OnExecute = StartLoadObslOtdUSRExecute
+    end
+    object ShowForm1: TAction
+      Caption = 'ShowForm1'
+      OnExecute = ShowForm1Execute
+    end
+    object MergeAspectsUser: TAction
+      Caption = 'MergeAspectsUser'
+      OnExecute = MergeAspectsUserExecute
     end
   end
 end

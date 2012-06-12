@@ -12,6 +12,7 @@ TProg *Prog;
 __fastcall TProg::TProg(TComponent* Owner)
         : TForm(Owner)
 {
+SignComplete=true;
 }
 //---------------------------------------------------------------------------
 void __fastcall TProg::FormCreate(TObject *Sender)

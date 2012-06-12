@@ -73,6 +73,7 @@ Zast->Saved=false;
 //Zast->PrepareSaveLogins->Execute();
 
 */
+
 Prog->Show();
 Prog->PB->Min=0;
 Prog->PB->Position=0;
@@ -2611,6 +2612,7 @@ Zast->ReadWriteDoc->Execute();
 
 void __fastcall TDocuments::N31Click(TObject *Sender)
 {
+Prog->SignComplete=true;
 Prog->Show();
 Prog->PB->Min=0;
 Prog->PB->Position=0;
@@ -2804,6 +2806,7 @@ Zast->ReadWriteDoc->Execute();
 
 void __fastcall TDocuments::N41Click(TObject *Sender)
 {
+Prog->SignComplete=true;
 Prog->Show();
 Prog->PB->Min=0;
 Prog->PB->Position=0;

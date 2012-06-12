@@ -668,7 +668,10 @@ MClient->StartAction(S.NameAction);
 else
 {
 Prog->Close();
+if(Prog->SignComplete)
+{
  ShowMessage("Завершено");
+}
 }
 }
 //---------------------------------------------------------------------------
@@ -1415,16 +1418,16 @@ for(Ref->First();!Ref->Eof;Ref->Next())
  TempTerr->Post();
 }
 */
-MDBConnector* DB;
+
 String DBName;
 if(Role==2)
 {
- DB=ADOAspect;
+
  DBName="Аспекты";
 }
 else
 {
- DB=ADOUsrAspect;
+
  DBName="Аспекты_П";
 }
 MP<TADODataSet>Ref(this);
@@ -2161,7 +2164,61 @@ else
 
  Form1->NumLogin=Log->FieldByName("ServerNum")->AsInteger;
 
- Form1->Show();
+
+// Form1->Show();
+Prog->SignComplete=false;
+Prog->Show();
+Prog->PB->Min=0;
+Prog->PB->Position=0;
+Prog->PB->Max=8;
+
+Documents->ReadWrite.clear();
+Str_RW S;
+S.NameAction="ReadMetodika";
+S.Text="Чтение методики...";
+S.Num=1;
+Documents->ReadWrite.push_back(S);
+
+S.NameAction="ReadPodrazd";
+S.Text="Чтение подразделений...";
+S.Num=2;
+Documents->ReadWrite.push_back(S);
+
+S.NameAction="ReadCrit";
+S.Text="Чтение критериев...";
+S.Num=3;
+Documents->ReadWrite.push_back(S);
+
+S.NameAction="ReadSit";
+S.Text="Чтение ситуаций...";
+S.Num=4;
+Documents->ReadWrite.push_back(S);
+
+S.NameAction="ReadVozd1";
+S.Text="Чтение списка воздействий...";
+S.Num=5;
+Documents->ReadWrite.push_back(S);
+
+S.NameAction="ReadMeropr1";
+S.Text="Чтение списка мероприятий...";
+S.Num=6;
+Documents->ReadWrite.push_back(S);
+
+S.NameAction="ReadTerr1";
+S.Text="Чтение списка территорий...";
+S.Num=7;
+Documents->ReadWrite.push_back(S);
+
+S.NameAction="ReadDeyat1";
+S.Text="Чтение списка видов деятельности...";
+S.Num=8;
+Documents->ReadWrite.push_back(S);
+
+S.NameAction="ShowForm1";
+S.Num=8;
+Documents->ReadWrite.push_back(S);
+
+Zast->ReadWriteDoc->Execute();
 }
 }
 //---------------------------------------------------------------------------
@@ -2624,3 +2681,75 @@ Zast->MClient->ReadTable("Аспекты", "Select ObslOtdel.Login, ObslOtdel.NumObslOt
 }
 //---------------------------------------------------------------------------
 
+void __fastcall TZast::ShowForm1Execute(TObject *Sender)
+{
+Form1->Show();
+ReadWriteDoc->Execute();
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TZast::MergeAspectsUserExecute(TObject *Sender)
+{
+/*
+MP<TADODataSet>LPodr(this);
+LPodr->Connection=Zast->ADOUsrAspect;
+LPodr->CommandText="SELECT Подразделения.[Номер подразделения], Подразделения.[Название подразделения], Подразделения.ServerNum FROM Logins INNER JOIN (Подразделения INNER JOIN ObslOtdel ON Подразделения.[Номер подразделения] = ObslOtdel.NumObslOtdel) ON Logins.Num = ObslOtdel.Login WHERE (((Logins.ServerNum)="+IntToStr(NumLogin)+"));";
+LPodr->Active=true;
+*/
+MergeAspects(Form1->NumLogin);
+}
+//---------------------------------------------------------------------------
+void  TZast::MergeAspects(int NumLogin)
+{
+//Zast->MClient->WriteDiaryEvent("NetAspects","Обновление аспектов","");
+try
+{
+MP<TADODataSet>Podr(this);
+Podr->Connection=Zast->ADOUsrAspect;
+Podr->CommandText="Select * From Подразделения";
+Podr->Active=true;
+
+MP<TADODataSet>TempAsp(this);
+TempAsp->Connection=Zast->ADOUsrAspect;
+TempAsp->CommandText="Select * From TempAspects";
+TempAsp->Active=true;
+
+for(TempAsp->First();!TempAsp->Eof;TempAsp->Next())
+{
+ int N=TempAsp->FieldByName("Подразделение")->Value;
+
+ if(Podr->Locate("ServerNum",N,SO))
+ {
+  int Num=Podr->FieldByName("Номер подразделения")->Value;
+
+  TempAsp->Edit();
+  TempAsp->FieldByName("Подразделение")->Value=Num;
+  TempAsp->Post();
+ }
+ else
+ {
+ Zast->MClient->WriteDiaryEvent("NetAspects ошибка","Сбой обновления аспектов","");
+  ShowMessage("Ошибка объединения аспектов");
+ }
+}
+
+MP<TADOCommand>Comm(this);
+Comm->Connection=Zast->ADOUsrAspect;
+Comm->CommandText="Delete * from Аспекты";
+Comm->Execute();
+
+String ST="INSERT INTO Аспекты ( Подразделение, Ситуация, [Вид территории], Деятельность, Специальность, Аспект, Воздействие, G, O, R, S, T, L, N, Z, Значимость, [Проявление воздействия], [Тяжесть последствий], Приоритетность, [Выполняющиеся мероприятия], [Предлагаемые мероприятия], [Мониторинг и контроль], [Предлагаемый мониторинг и контроль], Исполнитель, [Дата создания], [Начало действия], [Конец действия], ServerNum ) ";
+ST=ST+" SELECT TempAspects.Подразделение, TempAspects.Ситуация, TempAspects.[Вид территории], TempAspects.Деятельность, TempAspects.Специальность, TempAspects.Аспект, TempAspects.Воздействие, TempAspects.G, TempAspects.O, TempAspects.R, TempAspects.S, TempAspects.T, TempAspects.L, TempAspects.N, TempAspects.Z, TempAspects.Значимость, TempAspects.[Проявление воздействия], TempAspects.[Тяжесть последствий], TempAspects.Приоритетность, TempAspects.[Выполняющиеся мероприятия], TempAspects.[Предлагаемые мероприятия], TempAspects.[Мониторинг и контроль], TempAspects.[Предлагаемый мониторинг и контроль], TempAspects.Исполнитель, TempAspects.[Дата создания], TempAspects.[Начало действия], TempAspects.[Конец действия], TempAspects.[Номер аспекта] ";
+ST=ST+" FROM TempAspects; ";
+Comm->CommandText=ST;
+Comm->Execute();
+Form1->Initialize();
+ShowMessage("Завершено");
+}
+catch(...)
+{
+Zast->MClient->WriteDiaryEvent("NetAspects ошибка","Ошибка обновления аспектов"," Ошибка "+IntToStr(GetLastError()));
+
+}
+}
+//----------------------------------------------------------------------
