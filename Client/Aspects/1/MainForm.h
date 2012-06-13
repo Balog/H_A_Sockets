@@ -26,6 +26,7 @@
 //#include "SetZn.h"
 #include <ActnList.hpp>
 #include <DBActns.hpp>
+#include <ActnMan.hpp>
 //---------------------------------------------------------------------------
 class TForm1 : public TForm
 {
@@ -141,6 +142,8 @@ __published:	// IDE-managed Components
         TMenuItem *N9;
         TMenuItem *N10;
         TDataSetRefresh *DataSetRefresh1;
+        TActionManager *ActionManager1;
+        TDataSetRefresh *DataSetRefresh2;
         void __fastcall FormClose(TObject *Sender, TCloseAction &Action);
         void __fastcall N8Click(TObject *Sender);
         void __fastcall CPodrazdelClick(TObject *Sender);

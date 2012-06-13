@@ -91,6 +91,7 @@ TForm *Owner;
 void VerifyLicense(String NameDB);
 String IP;
 String TableToStr(String NameDB, String SQLText);
+void PostWriteAspectsUsr();
 
 };
 //****************************************

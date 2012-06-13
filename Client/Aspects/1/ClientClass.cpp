@@ -7,6 +7,7 @@
 #include "MasterPointer.h"
 #include "Main.h"
 #include "Zastavka.h"
+#include "MainForm.h"
 //---------------------------------------------------------------------------
 
 #pragma package(smart_init)
@@ -216,7 +217,7 @@ Zast->BeginWork->Execute();
  }
  case 18:
  {
-
+ PostWriteAspectsUsr();
  break;
  }
 }
@@ -765,6 +766,12 @@ else
 {
  StartAction(VTrigger[NumTrigger].FalseAction);
 }
+}
+//***************************************************************************
+void Client::PostWriteAspectsUsr()
+{
+ Form1->N9->Click();
+ ShowMessage("Завершено");
 }
 //***************************************************************************
 /////////////////////////////////////////////////////////////////////////////

@@ -377,6 +377,7 @@ Parent->WriteDiaryEvent(IP, Login, "AdminARM", "Запись логинов", "Имя: "+Paramet
    case 18:
    {
    MergeAspectsUser(StrToInt(Parameters[0]));
+   this->Socket->SendText("Command:18;0|");
    break;
    }
  }
@@ -1447,9 +1448,141 @@ for(Aspects->First();!Aspects->Eof;Aspects->Next())
 }
 }
 //---------------------------------------------------------------------------
-void MergeAspectsUser(int NumLogin)
+void Client::MergeAspectsUser(int NumLogin)
 {
+TADOConnection *Database=GetDatabase("Аспекты");
+MP<TADODataSet>TempPodr(Form1);
+TempPodr->Connection=Database;
+TempPodr->CommandText="Select * From TempПодразделения";
+TempPodr->Active=true;
 
+MP<TADODataSet>TempAsp(Form1);
+TempAsp->Connection=Database;
+TempAsp->CommandText="select * From TempAspects";
+TempAsp->Active=true;
+
+MP<TADODataSet>Asp(Form1);
+Asp->Connection=Database;
+Asp->CommandText="SELECT Аспекты.*, ObslOtdel.Login FROM (Подразделения INNER JOIN Аспекты ON Подразделения.[Номер подразделения] = Аспекты.Подразделение) INNER JOIN ObslOtdel ON Подразделения.[Номер подразделения] = ObslOtdel.NumObslOtdel WHERE (((ObslOtdel.Login)="+IntToStr(NumLogin)+"));";
+Asp->Active=true;
+/*
+for(TempAsp->First();!TempAsp->Eof;TempAsp->Next())
+{
+ int N=TempAsp->FieldByName("Подразделение")->Value;
+
+ if(TempPodr->Locate("номер подразделения",N,SO))
+ {
+ int NumPodr=TempPodr->FieldByName("ServerNum")->Value;
+
+ TempAsp->Edit();
+ TempAsp->FieldByName("Подразделение")->Value=NumPodr;
+ TempAsp->Post();
+ }
+ else
+ {
+//DiaryEvent->WriteEvent(Now(), this->pNameComp, this->Login, "Сбой", "Сбой объединения аспектов (не найдено подразделение)", "IDC="+IntToStr(IDC())+" DB: "+NameDatabase+" NumLogin: "+IntToStr(NumLogin));
+
+ }
+}
+ */
+
+MP<TADOCommand>Comm(Form1);
+Comm->Connection=Database;
+Comm->CommandText="UPDATE (Подразделения INNER JOIN Аспекты ON Подразделения.[Номер подразделения] = Аспекты.Подразделение) INNER JOIN ObslOtdel ON Подразделения.[Номер подразделения] = ObslOtdel.NumObslOtdel SET Аспекты.Del = False WHERE (((ObslOtdel.Login)="+IntToStr(NumLogin)+"));";
+Comm->Execute();
+
+for(Asp->First();!Asp->Eof;Asp->Next())
+{
+ int N=Asp->FieldByName("Номер аспекта")->Value;
+
+ if(TempAsp->Locate("Номер аспекта", N, SO))
+ {
+  Asp->Edit();
+  Asp->FieldByName("Подразделение")->Value=TempAsp->FieldByName("Подразделение")->Value;
+  Asp->FieldByName("Ситуация")->Value=TempAsp->FieldByName("Ситуация")->Value;
+  Asp->FieldByName("Вид территории")->Value=TempAsp->FieldByName("Вид территории")->Value;
+  Asp->FieldByName("Деятельность")->Value=TempAsp->FieldByName("Деятельность")->Value;
+  Asp->FieldByName("Специальность")->Value=TempAsp->FieldByName("Специальность")->Value;
+  Asp->FieldByName("Аспект")->Value=TempAsp->FieldByName("Аспект")->Value;
+  Asp->FieldByName("Воздействие")->Value=TempAsp->FieldByName("Воздействие")->Value;
+  Asp->FieldByName("G")->Value=TempAsp->FieldByName("G")->Value;
+  Asp->FieldByName("O")->Value=TempAsp->FieldByName("O")->Value;
+  Asp->FieldByName("R")->Value=TempAsp->FieldByName("R")->Value;
+  Asp->FieldByName("S")->Value=TempAsp->FieldByName("S")->Value;
+  Asp->FieldByName("T")->Value=TempAsp->FieldByName("T")->Value;
+  Asp->FieldByName("L")->Value=TempAsp->FieldByName("L")->Value;
+  Asp->FieldByName("N")->Value=TempAsp->FieldByName("N")->Value;
+  Asp->FieldByName("Z")->Value=TempAsp->FieldByName("Z")->Value;
+  Asp->FieldByName("Значимость")->Value=TempAsp->FieldByName("Значимость")->Value;
+  Asp->FieldByName("Проявление воздействия")->Value=TempAsp->FieldByName("Проявление воздействия")->Value;
+  Asp->FieldByName("Тяжесть последствий")->Value=TempAsp->FieldByName("Тяжесть последствий")->Value;
+  Asp->FieldByName("Приоритетность")->Value=TempAsp->FieldByName("Приоритетность")->Value;
+  Asp->FieldByName("Выполняющиеся мероприятия")->Value=TempAsp->FieldByName("Выполняющиеся мероприятия")->Value;
+  Asp->FieldByName("Предлагаемые мероприятия")->Value=TempAsp->FieldByName("Предлагаемые мероприятия")->Value;
+  Asp->FieldByName("Мониторинг и контроль")->Value=TempAsp->FieldByName("Мониторинг и контроль")->Value;
+  Asp->FieldByName("Предлагаемый мониторинг и контроль")->Value=TempAsp->FieldByName("Предлагаемый мониторинг и контроль")->Value;
+  Asp->FieldByName("Исполнитель")->Value=TempAsp->FieldByName("Исполнитель")->Value;
+  Asp->FieldByName("Дата создания")->Value=TempAsp->FieldByName("Дата создания")->Value;
+  Asp->FieldByName("Начало действия")->Value=TempAsp->FieldByName("Начало действия")->Value;
+  Asp->FieldByName("Конец действия")->Value=TempAsp->FieldByName("Конец действия")->Value;
+  Asp->Post();
+
+  TempAsp->Delete();
+ }
+ else
+ {
+  Asp->Edit();
+  Asp->FieldByName("Del")->Value=true;
+  Asp->Post();
+ }
+}
+
+Comm->CommandText="DELETE Аспекты.*, Аспекты.Del, ObslOtdel.Login FROM (Подразделения INNER JOIN Аспекты ON Подразделения.[Номер подразделения] = Аспекты.Подразделение) INNER JOIN ObslOtdel ON Подразделения.[Номер подразделения] = ObslOtdel.NumObslOtdel WHERE (((Аспекты.Del)=True) AND ((ObslOtdel.Login)="+IntToStr(NumLogin)+"));";
+Comm->Execute();
+
+for(TempAsp->First();!TempAsp->Eof;TempAsp->Next())
+{
+  Asp->Insert();
+  Asp->FieldByName("Подразделение")->Value=TempAsp->FieldByName("Подразделение")->Value;
+  Asp->FieldByName("Ситуация")->Value=TempAsp->FieldByName("Ситуация")->Value;
+  Asp->FieldByName("Вид территории")->Value=TempAsp->FieldByName("Вид территории")->Value;
+  Asp->FieldByName("Деятельность")->Value=TempAsp->FieldByName("Деятельность")->Value;
+  Asp->FieldByName("Специальность")->Value=TempAsp->FieldByName("Специальность")->Value;
+  Asp->FieldByName("Аспект")->Value=TempAsp->FieldByName("Аспект")->Value;
+  Asp->FieldByName("Воздействие")->Value=TempAsp->FieldByName("Воздействие")->Value;
+  Asp->FieldByName("G")->Value=TempAsp->FieldByName("G")->Value;
+  Asp->FieldByName("O")->Value=TempAsp->FieldByName("O")->Value;
+  Asp->FieldByName("R")->Value=TempAsp->FieldByName("R")->Value;
+  Asp->FieldByName("S")->Value=TempAsp->FieldByName("S")->Value;
+  Asp->FieldByName("T")->Value=TempAsp->FieldByName("T")->Value;
+  Asp->FieldByName("L")->Value=TempAsp->FieldByName("L")->Value;
+  Asp->FieldByName("N")->Value=TempAsp->FieldByName("N")->Value;
+  Asp->FieldByName("Z")->Value=TempAsp->FieldByName("Z")->Value;
+  Asp->FieldByName("Значимость")->Value=TempAsp->FieldByName("Значимость")->Value;
+  Asp->FieldByName("Проявление воздействия")->Value=TempAsp->FieldByName("Проявление воздействия")->Value;
+  Asp->FieldByName("Тяжесть последствий")->Value=TempAsp->FieldByName("Тяжесть последствий")->Value;
+  Asp->FieldByName("Приоритетность")->Value=TempAsp->FieldByName("Приоритетность")->Value;
+  Asp->FieldByName("Выполняющиеся мероприятия")->Value=TempAsp->FieldByName("Выполняющиеся мероприятия")->Value;
+  Asp->FieldByName("Предлагаемые мероприятия")->Value=TempAsp->FieldByName("Предлагаемые мероприятия")->Value;
+  Asp->FieldByName("Мониторинг и контроль")->Value=TempAsp->FieldByName("Мониторинг и контроль")->Value;
+  Asp->FieldByName("Предлагаемый мониторинг и контроль")->Value=TempAsp->FieldByName("Предлагаемый мониторинг и контроль")->Value;
+  //Asp->FieldByName("Исполнитель")->Value=TempAsp->FieldByName("Исполнитель")->Value;
+  Asp->FieldByName("Дата создания")->Value=TempAsp->FieldByName("Дата создания")->Value;
+  Asp->FieldByName("Начало действия")->Value=TempAsp->FieldByName("Начало действия")->Value;
+  Asp->FieldByName("Конец действия")->Value=TempAsp->FieldByName("Конец действия")->Value;
+  Asp->Post();
+
+  Asp->Active=false;
+  Asp->Active=true;
+  Asp->Last();
+
+  TempAsp->Edit();
+  TempAsp->FieldByName("ServerNum")->Value=Asp->FieldByName("Номер аспекта")->Value;
+  TempAsp->Post();
+}
+
+Comm->CommandText="Delete * From TempПодразделения";
+Comm->Execute();
 }
 //---------------------------------------------------------------------------
 //***************************************************************************

@@ -1505,4 +1505,15 @@ object Form1: TForm1
       DataSource = DataSource1
     end
   end
+  object ActionManager1: TActionManager
+    Left = 24
+    Top = 400
+    object DataSetRefresh2: TDataSetRefresh
+      Category = 'Dataset'
+      Caption = '&Refresh'
+      Hint = 'Refresh'
+      ImageIndex = 9
+      DataSource = DataSource1
+    end
+  end
 end
