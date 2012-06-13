@@ -374,6 +374,11 @@ Parent->WriteDiaryEvent(IP, Login, "AdminARM", "Запись логинов", "Имя: "+Paramet
    this->Socket->SendText("Command:17;0|");
    break;
    }
+   case 18:
+   {
+   MergeAspectsUser(StrToInt(Parameters[0]));
+   break;
+   }
  }
 
 }
@@ -1440,6 +1445,11 @@ for(Aspects->First();!Aspects->Eof;Aspects->Next())
 
  }
 }
+}
+//---------------------------------------------------------------------------
+void MergeAspectsUser(int NumLogin)
+{
+
 }
 //---------------------------------------------------------------------------
 //***************************************************************************

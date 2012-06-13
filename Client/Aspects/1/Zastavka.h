@@ -189,6 +189,7 @@ __published:	// IDE-managed Components
         TAction *StartLoadObslOtdUSR;
         TAction *ShowForm1;
         TAction *MergeAspectsUser;
+        TAction *WriteAspectsUsr;
         void __fastcall Timer1Timer(TObject *Sender);
         void __fastcall Image1Click(TObject *Sender);
         void __fastcall FormShow(TObject *Sender);
@@ -283,6 +284,7 @@ __published:	// IDE-managed Components
         void __fastcall StartLoadObslOtdUSRExecute(TObject *Sender);
         void __fastcall ShowForm1Execute(TObject *Sender);
         void __fastcall MergeAspectsUserExecute(TObject *Sender);
+        void __fastcall WriteAspectsUsrExecute(TObject *Sender);
 private:	// User declarations
 String Path;
 TLocateOptions SO;

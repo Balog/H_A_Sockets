@@ -2753,3 +2753,9 @@ Zast->MClient->WriteDiaryEvent("NetAspects ошибка","Ошибка обновления аспектов",
 }
 }
 //----------------------------------------------------------------------
+void __fastcall TZast::WriteAspectsUsrExecute(TObject *Sender)
+{
+Zast->ClientSocket->Socket->SendText("Command:18;1|"+IntToStr(IntToStr(Form1->NumLogin).Length())+"#"+IntToStr(Form1->NumLogin));
+}
+//---------------------------------------------------------------------------
+

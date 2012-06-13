@@ -214,6 +214,11 @@ Zast->BeginWork->Execute();
  StartAction(Act.ParamComm[0]);
  break;
  }
+ case 18:
+ {
+
+ break;
+ }
 }
 }
 else
@@ -627,6 +632,10 @@ DB=ADOAspect;
 if(NameDB=="Reference")
 {
 DB=ADOConn;
+}
+if(NameDB=="Аспекты_П")
+{
+DB=ADOUsrAspect;
 }
    MP<TADODataSet>Tab(Owner);
    Tab->Connection=DB;

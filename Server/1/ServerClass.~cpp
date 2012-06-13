@@ -1410,17 +1410,17 @@ String Ret="";
 void Client::MergeAspectsMainSpec()
 {
 MP<TADOCommand>Comm(Form1);
-Comm->Connection=GetDBConnection("Аспекты");
+Comm->Connection=GetDatabase("Аспекты");
 Comm->CommandText="UPDATE Аспекты SET Аспекты.Del = False";
 Comm->Execute();
 
 MP<TADODataSet>Aspects(Form1);
-Aspects->Connection=GetDBConnection("Аспекты");
+Aspects->Connection=GetDatabase("Аспекты");
 Aspects->CommandText="Select * From Аспекты";
 Aspects->Active=true;
 
 MP<TADODataSet>Temp(Form1);
-Temp->Connection=GetDBConnection("Аспекты");
+Temp->Connection=GetDatabase("Аспекты");
 Temp->CommandText="Select * From TempAspects";
 Temp->Active=true;
 

@@ -321,6 +321,10 @@ if(NameDB=="Reference")
 {
 DB=ADOConn;
 }
+if(NameDB=="Аспекты_П")
+{
+DB=ADOUsrAspect;
+}
 int FromPos=ClientSQL.LowerCase().Pos("from");
 String DelText="Delete * "+ClientSQL.SubString(FromPos, ClientSQL.Length());
 FromPos=DelText.LowerCase().Pos("order");
@@ -623,6 +627,10 @@ DB=ADOAspect;
 if(NameDB=="Reference")
 {
 DB=ADOConn;
+}
+if(NameDB=="Аспекты_П")
+{
+DB=ADOUsrAspect;
 }
    MP<TADODataSet>Tab(Owner);
    Tab->Connection=DB;
