@@ -221,11 +221,15 @@ __published:	// IDE-managed Components
         void __fastcall N7Click(TObject *Sender);
         void __fastcall FormKeyUp(TObject *Sender, WORD &Key,
           TShiftState Shift);
+        void __fastcall NumRecordKeyDown(TObject *Sender, WORD &Key,
+          TShiftState Shift);
+        void __fastcall NumRecordKeyPress(TObject *Sender, char &Key);
 private:	// User declarations
 bool Registered;
 TLocateOptions SO;
 bool LoadSpravs();
-void SetAspects(String Login);
+void SetAspects(String Login, int NumRec);
+void SavePosition();
 
 bool VerifySit();
 bool VerifyTerr();
@@ -287,6 +291,7 @@ void InpMeropr();
 
 void Calc();
 void Initialize();
+void Initialize(int NumRec);
 bool C1,C2,C3,C4,C5,C6,C7;
 int CurrentRecord;
 /*

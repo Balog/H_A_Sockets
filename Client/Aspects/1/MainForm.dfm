@@ -957,8 +957,9 @@ object Form1: TForm1
     Top = 649
     Width = 41
     Height = 21
-    ReadOnly = True
     TabOrder = 15
+    OnKeyDown = NumRecordKeyDown
+    OnKeyPress = NumRecordKeyPress
   end
   object CountRecord: TEdit
     Left = 329

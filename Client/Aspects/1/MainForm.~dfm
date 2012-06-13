@@ -957,8 +957,9 @@ object Form1: TForm1
     Top = 649
     Width = 41
     Height = 21
-    ReadOnly = True
     TabOrder = 15
+    OnKeyDown = NumRecordKeyDown
+    OnKeyPress = NumRecordKeyPress
   end
   object CountRecord: TEdit
     Left = 329
@@ -1498,6 +1499,17 @@ object Form1: TForm1
       DataSource = DataSource1
     end
     object DataSetRefresh1: TDataSetRefresh
+      Category = 'Dataset'
+      Caption = '&Refresh'
+      Hint = 'Refresh'
+      ImageIndex = 9
+      DataSource = DataSource1
+    end
+  end
+  object ActionManager1: TActionManager
+    Left = 24
+    Top = 400
+    object DataSetRefresh2: TDataSetRefresh
       Category = 'Dataset'
       Caption = '&Refresh'
       Hint = 'Refresh'

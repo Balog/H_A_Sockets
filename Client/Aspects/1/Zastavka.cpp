@@ -2743,7 +2743,13 @@ ST=ST+" SELECT TempAspects.Подразделение, TempAspects.Ситуация, TempAspects.[Вид
 ST=ST+" FROM TempAspects; ";
 Comm->CommandText=ST;
 Comm->Execute();
-Form1->Initialize();
+
+String Path=ExtractFilePath(Application->ExeName);
+MP<TIniFile>Ini(Path+"NetAspects.ini");
+
+int Num=Ini->ReadInteger("Main","CurrentRecord",1);
+Form1->Initialize(Num);
+
 ShowMessage("Завершено");
 }
 catch(...)
