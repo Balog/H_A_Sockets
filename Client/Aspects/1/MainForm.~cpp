@@ -91,6 +91,18 @@ else
 
 N3->Enabled=!Demo;
 
+String Text="";
+MP<TADODataSet>Tab(this);
+Tab->Connection=Zast->ADOAspect;
+Tab->CommandText="Select [Номер территории], [Наименование территории] From Территория Order by [Номер территории]";//"Select [Номер территории], [Наименование территории] From Территория Where [Наименование территории] Like '%з%' Order by [Номер территории]";
+Tab->Active=true;
+
+ComboBox1->Clear();
+for(Tab->First();!Tab->Eof;Tab->Next())
+{
+ComboBox1->Items->Add(Tab->FieldByName("Наименование территории")->AsString);
+}
+
 String Path=ExtractFilePath(Application->ExeName);
 MP<TIniFile>Ini(Path+"NetAspects.ini");
 
@@ -130,6 +142,9 @@ Zast->MClient->Stop();
 
 Zast->MClient->WriteDiaryEvent("NetAspects","Запуск модуля пользователя завершен","");
 */
+
+
+
 }
 //---------------------------------------------------------------------------
 void TForm1::Initialize()
@@ -183,6 +198,17 @@ Aspects->Active=false;
 Aspects->CommandText="SELECT  Аспекты.* FROM Logins INNER JOIN ((Подразделения INNER JOIN Аспекты ON Подразделения.[Номер подразделения] = Аспекты.Подразделение) INNER JOIN ObslOtdel ON Подразделения.[Номер подразделения] = ObslOtdel.NumObslOtdel) ON Logins.Num = ObslOtdel.Login WHERE (((Logins.ServerNum)="+IntToStr(NumLogin)+")) ORDER BY Аспекты.[Номер аспекта];";
 Aspects->Active=true;
 
+
+
+
+Podrazdel->Active=false;
+Podrazdel->CommandText="SELECT Подразделения.* FROM Logins INNER JOIN (Подразделения INNER JOIN ObslOtdel ON Подразделения.[Номер подразделения] = ObslOtdel.NumObslOtdel) ON Logins.Num = ObslOtdel.Login WHERE (((Logins.ServerNum)="+IntToStr(NumLogin)+")) ORDER BY Подразделения.[Название подразделения];";
+Podrazdel->Active=true;
+
+Situaciya->Active=false;
+Situaciya->CommandText="select * from Ситуации where [Номер ситуации]<>0";
+Situaciya->Active=true;
+
 if(NumRec==0)
 {
 BitBtn1->Click();
@@ -197,14 +223,6 @@ if(NumRec>0 & NumRec<=Aspects->RecordCount)
  Aspects->MoveBy(NumRec-1);
 }
 
-
-Podrazdel->Active=false;
-Podrazdel->CommandText="SELECT Подразделения.* FROM Logins INNER JOIN (Подразделения INNER JOIN ObslOtdel ON Подразделения.[Номер подразделения] = ObslOtdel.NumObslOtdel) ON Logins.Num = ObslOtdel.Login WHERE (((Logins.ServerNum)="+IntToStr(NumLogin)+")) ORDER BY Подразделения.[Название подразделения];";
-Podrazdel->Active=true;
-
-Situaciya->Active=false;
-Situaciya->CommandText="select * from Ситуации where [Номер ситуации]<>0";
-Situaciya->Active=true;
 }
 //---------------------------------------------------------
 bool TForm1::LoadSpravs()
@@ -454,7 +472,8 @@ K=0;
 Territoriya->Active=false;
 Territoriya->CommandText="Select * From Территория Where [Номер территории]="+IntToStr(K);
 Territoriya->Active=true;
-Edit1->Text=Territoriya->FieldByName("Наименование территории")->Value;
+ComboBox1->Text=Territoriya->FieldByName("Наименование территории")->Value;
+
 
 if(Aspects->RecordCount!=0)
 {
@@ -1248,7 +1267,7 @@ InputDocs->ShowModal();
 void TForm1::InpTer()
 {
 
-Edit1->Text=InputDocs->TextBr;
+ComboBox1->Text=InputDocs->TextBr;
 Aspects->Edit();
 Aspects->FieldByName("Вид территории")->Value=InputDocs->NumBr;
 Aspects->Post();
@@ -3795,8 +3814,8 @@ CPodrazdel->Enabled=B;
 Label3->Enabled=B;
 CSit->Enabled=B;
 Label4->Enabled=B;
-Edit1->Enabled=B;
-if (!B) Edit1->Text="";
+ComboBox1->Enabled=B;
+if (!B) ComboBox1->Text="";
 Button1->Enabled=B;
 Label5->Enabled=B;
 Edit2->Enabled=B;
@@ -3916,5 +3935,125 @@ if ( (! Dig.Contains(Key)) && (Key != '\b'))
    { Key = 0; Beep();}
 }
 //---------------------------------------------------------------------------\
+
+
+void __fastcall TForm1::ComboBox1Change(TObject *Sender)
+{
+ComboBox1->AutoComplete=false;
+
+String Text=ComboBox1->Text;
+MP<TADODataSet>Tab(this);
+Tab->Connection=Zast->ADOAspect;
+String CT="Select [Номер территории], [Наименование территории] From Территория Where [Наименование территории] Like '%"+Text+"%' AND Показ=true Order by [Номер территории]";
+Tab->CommandText=CT;
+Tab->Active=true;
+
+//ComboBox1->DroppedDown=false;
+
+if(Tab->RecordCount<30)
+{
+ComboBox1->DropDownCount=Tab->RecordCount;
+}
+else
+{
+ComboBox1->DropDownCount=30;
+}
+
+
+
+ComboBox1->Clear();
+//TStrings* TS=ComboBox1->Items;
+for(Tab->First();!Tab->Eof;Tab->Next())
+{
+//TS->Add(Tab->FieldByName("Наименование территории")->AsString);
+ComboBox1->Items->Add(Tab->FieldByName("Наименование территории")->AsString);
+}
+//ComboBox1->Items->Assign(TS);
+ComboBox1->DroppedDown=true;
+
+
+
+ComboBox1->Text=Text;
+ keybd_event(35,0,0,0);
+
+ keybd_event(35,0,KEYEVENTF_KEYUP,0);
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm1::ComboBox1DropDown(TObject *Sender)
+{
+String Text=ComboBox1->Text;
+MP<TADODataSet>Tab(this);
+Tab->Connection=Zast->ADOAspect;
+String CT="Select [Номер территории], [Наименование территории] From Территория Where [Наименование территории] Like '%"+Text+"%' AND Показ=true Order by [Номер территории]";
+Tab->CommandText=CT;
+Tab->Active=true;
+
+if(Tab->RecordCount<30)
+{
+ComboBox1->DropDownCount=Tab->RecordCount;
+}
+else
+{
+ComboBox1->DropDownCount=30;
+}
+
+ComboBox1->Clear();
+for(Tab->First();!Tab->Eof;Tab->Next())
+{
+ComboBox1->Items->Add(Tab->FieldByName("Наименование территории")->AsString);
+}
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm1::ComboBox1KeyPress(TObject *Sender, char &Key)
+{
+if(Key==13)
+{
+String Text=ComboBox1->Text;
+MP<TADODataSet>Tab(this);
+Tab->Connection=Zast->ADOAspect;
+String CT="Select [Номер территории], [Наименование территории] From Территория Where [Наименование территории] Like '%"+Text+"%' AND Показ=true Order by [Номер территории]";
+Tab->CommandText=CT;
+Tab->Active=true;
+
+Tab->First();
+Tab->MoveBy(ComboBox1->ItemIndex);
+ComboBox1->Text=Tab->FieldByName("Наименование территории")->AsString;
+if(ComboBox1->DroppedDown & ComboBox1->ItemIndex!=-1)
+{
+//MAsp->Index=Tab->FieldByName("Номер территории")->AsInteger;
+InputDocs->NumBr=Tab->FieldByName("Номер территории")->AsInteger;
+InputDocs->TextBr=Tab->FieldByName("Наименование территории")->AsString;
+
+InpTer();
+}
+}
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm1::ComboBox1Select(TObject *Sender)
+{
+String Text=ComboBox1->Text;
+MP<TADODataSet>Tab(this);
+Tab->Connection=Zast->ADOAspect;
+String CT="Select [Номер территории], [Наименование территории] From Территория Where [Наименование территории] Like '%"+Text+"%' AND Показ=true Order by [Номер территории]";
+Tab->CommandText=CT;
+Tab->Active=true;
+
+Tab->First();
+Tab->MoveBy(ComboBox1->ItemIndex);
+ComboBox1->Text=Tab->FieldByName("Наименование территории")->AsString;
+if(!ComboBox1->DroppedDown & ComboBox1->ItemIndex!=-1)
+{
+//MAsp->Index=Tab->FieldByName("Номер территории")->AsInteger;
+InputDocs->NumBr=Tab->FieldByName("Номер территории")->AsInteger;
+InputDocs->TextBr=Tab->FieldByName("Наименование территории")->AsString;
+
+InpTer();
+}
+}
+//---------------------------------------------------------------------------
+
 
 

@@ -111,7 +111,6 @@ __published:	// IDE-managed Components
         TComboBox *CPosl;
         TComboBox *CPrior;
         TADODataSet *Znachimost;
-        TEdit *Edit1;
         TEdit *Edit2;
         TEdit *Edit4;
         TEdit *Edit5;
@@ -144,6 +143,7 @@ __published:	// IDE-managed Components
         TDataSetRefresh *DataSetRefresh1;
         TActionManager *ActionManager1;
         TDataSetRefresh *DataSetRefresh2;
+        TComboBox *ComboBox1;
         void __fastcall FormClose(TObject *Sender, TCloseAction &Action);
         void __fastcall N8Click(TObject *Sender);
         void __fastcall CPodrazdelClick(TObject *Sender);
@@ -224,6 +224,10 @@ __published:	// IDE-managed Components
         void __fastcall NumRecordKeyDown(TObject *Sender, WORD &Key,
           TShiftState Shift);
         void __fastcall NumRecordKeyPress(TObject *Sender, char &Key);
+        void __fastcall ComboBox1Change(TObject *Sender);
+        void __fastcall ComboBox1DropDown(TObject *Sender);
+        void __fastcall ComboBox1KeyPress(TObject *Sender, char &Key);
+        void __fastcall ComboBox1Select(TObject *Sender);
 private:	// User declarations
 bool Registered;
 TLocateOptions SO;
