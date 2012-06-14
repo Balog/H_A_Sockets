@@ -111,9 +111,6 @@ __published:	// IDE-managed Components
         TComboBox *CPosl;
         TComboBox *CPrior;
         TADODataSet *Znachimost;
-        TEdit *Edit2;
-        TEdit *Edit4;
-        TEdit *Edit5;
         TCheckBox *CheckBox1;
         TCheckBox *CheckBox2;
         TCheckBox *CheckBox3;
@@ -144,6 +141,9 @@ __published:	// IDE-managed Components
         TActionManager *ActionManager1;
         TDataSetRefresh *DataSetRefresh2;
         TComboBox *ComboBox1;
+        TComboBox *ComboBox2;
+        TComboBox *ComboBox3;
+        TComboBox *ComboBox4;
         void __fastcall FormClose(TObject *Sender, TCloseAction &Action);
         void __fastcall N8Click(TObject *Sender);
         void __fastcall CPodrazdelClick(TObject *Sender);
@@ -228,6 +228,18 @@ __published:	// IDE-managed Components
         void __fastcall ComboBox1DropDown(TObject *Sender);
         void __fastcall ComboBox1KeyPress(TObject *Sender, char &Key);
         void __fastcall ComboBox1Select(TObject *Sender);
+        void __fastcall ComboBox2Change(TObject *Sender);
+        void __fastcall ComboBox2DropDown(TObject *Sender);
+        void __fastcall ComboBox2KeyPress(TObject *Sender, char &Key);
+        void __fastcall ComboBox2Select(TObject *Sender);
+        void __fastcall ComboBox3Change(TObject *Sender);
+        void __fastcall ComboBox3DropDown(TObject *Sender);
+        void __fastcall ComboBox3KeyPress(TObject *Sender, char &Key);
+        void __fastcall ComboBox3Select(TObject *Sender);
+        void __fastcall ComboBox4Change(TObject *Sender);
+        void __fastcall ComboBox4DropDown(TObject *Sender);
+        void __fastcall ComboBox4KeyPress(TObject *Sender, char &Key);
+        void __fastcall ComboBox4Select(TObject *Sender);
 private:	// User declarations
 bool Registered;
 TLocateOptions SO;

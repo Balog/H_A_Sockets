@@ -103,6 +103,39 @@ for(Tab->First();!Tab->Eof;Tab->Next())
 ComboBox1->Items->Add(Tab->FieldByName("Наименование территории")->AsString);
 }
 
+Tab->Active=false;
+String CT="Select [Номер деятельности], [Наименование деятельности] From Деятельность Where [Наименование деятельности] Like '%"+Text+"%' AND Показ=true Order by [Номер деятельности]";
+Tab->CommandText=CT;
+Tab->Active=true;
+
+ComboBox2->Clear();
+for(Tab->First();!Tab->Eof;Tab->Next())
+{
+ComboBox2->Items->Add(Tab->FieldByName("Наименование деятельности")->AsString);
+}
+
+Tab->Active=false;
+CT="Select [Номер аспекта], [Наименование аспекта] From Аспект Where [Наименование аспекта] Like '%"+Text+"%' AND Показ=true Order by [Номер аспекта]";
+Tab->CommandText=CT;
+Tab->Active=true;
+
+ComboBox3->Clear();
+for(Tab->First();!Tab->Eof;Tab->Next())
+{
+ComboBox3->Items->Add(Tab->FieldByName("Наименование аспекта")->AsString);
+}
+
+Tab->Active=false;
+CT="Select [Номер воздействия], [Наименование воздействия] From Воздействия Where [Наименование воздействия] Like '%"+Text+"%' AND Показ=true Order by [Номер воздействия]";
+Tab->CommandText=CT;
+Tab->Active=true;
+
+ComboBox4->Clear();
+for(Tab->First();!Tab->Eof;Tab->Next())
+{
+ComboBox4->Items->Add(Tab->FieldByName("Наименование воздействия")->AsString);
+}
+
 String Path=ExtractFilePath(Application->ExeName);
 MP<TIniFile>Ini(Path+"NetAspects.ini");
 
@@ -486,7 +519,7 @@ K=0;
 Deyatelnost->Active=false;
 Deyatelnost->CommandText="Select * From Деятельность Where [Номер деятельности]="+IntToStr(K);
 Deyatelnost->Active=true;
-Edit2->Text=Deyatelnost->FieldByName("Наименование деятельности")->Value;
+ComboBox2->Text=Deyatelnost->FieldByName("Наименование деятельности")->Value;
 
 if(Aspects->RecordCount!=0)
 {
@@ -499,7 +532,7 @@ K=0;
 Aspect->Active=false;
 Aspect->CommandText="Select * From Аспект Where [Номер аспекта]="+IntToStr(K);
 Aspect->Active=true;
-Edit4->Text=Aspect->FieldByName("Наименование аспекта")->Value;
+ComboBox3->Text=Aspect->FieldByName("Наименование аспекта")->Value;
 
 if(Aspects->RecordCount!=0)
 {
@@ -512,7 +545,7 @@ K=0;
 Vozdeystvie->Active=false;
 Vozdeystvie->CommandText="Select * From Воздействия Where [Номер воздействия]="+IntToStr(K);
 Vozdeystvie->Active=true;
-Edit5->Text=Vozdeystvie->FieldByName("Наименование воздействия")->Value;
+ComboBox4->Text=Vozdeystvie->FieldByName("Наименование воздействия")->Value;
 
 
 //----------
@@ -1277,7 +1310,7 @@ Aspects->Post();
 void TForm1::InpDeyat()
 {
 
-Edit2->Text=InputDocs->TextBr;
+ComboBox2->Text=InputDocs->TextBr;
 Aspects->Edit();
 Aspects->FieldByName("Деятельность")->Value=InputDocs->NumBr;
 Aspects->Post();
@@ -1287,7 +1320,7 @@ Aspects->Post();
 void TForm1::InpAsp()
 {
 
-Edit4->Text=InputDocs->TextBr;
+ComboBox3->Text=InputDocs->TextBr;
 Aspects->Edit();
 Aspects->FieldByName("Аспект")->Value=InputDocs->NumBr;
 Aspects->Post();
@@ -1297,7 +1330,7 @@ Aspects->Post();
 void TForm1::InpVozd()
 {
 
-Edit5->Text=InputDocs->TextBr;
+ComboBox4->Text=InputDocs->TextBr;
 Aspects->Edit();
 Aspects->FieldByName("Воздействие")->Value=InputDocs->NumBr;
 Aspects->Post();
@@ -3818,19 +3851,19 @@ ComboBox1->Enabled=B;
 if (!B) ComboBox1->Text="";
 Button1->Enabled=B;
 Label5->Enabled=B;
-Edit2->Enabled=B;
-if (!B) Edit2->Text="";
+ComboBox2->Enabled=B;
+if (!B) ComboBox2->Text="";
 Button2->Enabled=B;
 Label6->Enabled=B;
 DBEdit2->Enabled=B;
 if (!B) DBEdit2->Text="";
 Label7->Enabled=B;
-Edit4->Enabled=B;
-if (!B) Edit4->Text="";
+ComboBox3->Enabled=B;
+if (!B) ComboBox3->Text="";
 Button3->Enabled=B;
 Label8->Enabled=B;
-Edit5->Enabled=B;
-if (!B) Edit5->Text="";
+ComboBox4->Enabled=B;
+if (!B) ComboBox4->Text="";
 Button4->Enabled=B;
 Button5->Enabled=B;
 LFiltr->Enabled=B;
@@ -3962,13 +3995,10 @@ ComboBox1->DropDownCount=30;
 
 
 ComboBox1->Clear();
-//TStrings* TS=ComboBox1->Items;
 for(Tab->First();!Tab->Eof;Tab->Next())
 {
-//TS->Add(Tab->FieldByName("Наименование территории")->AsString);
 ComboBox1->Items->Add(Tab->FieldByName("Наименование территории")->AsString);
 }
-//ComboBox1->Items->Assign(TS);
 ComboBox1->DroppedDown=true;
 
 
@@ -4056,4 +4086,349 @@ InpTer();
 //---------------------------------------------------------------------------
 
 
+
+void __fastcall TForm1::ComboBox2Change(TObject *Sender)
+{
+ComboBox2->AutoComplete=false;
+
+String Text=ComboBox2->Text;
+MP<TADODataSet>Tab(this);
+Tab->Connection=Zast->ADOAspect;
+String CT="Select [Номер деятельности], [Наименование деятельности] From деятельность Where [Наименование деятельности] Like '%"+Text+"%' AND Показ=true Order by [Номер деятельности]";
+Tab->CommandText=CT;
+Tab->Active=true;
+
+//ComboBox1->DroppedDown=false;
+
+if(Tab->RecordCount<30)
+{
+ComboBox2->DropDownCount=Tab->RecordCount;
+}
+else
+{
+ComboBox2->DropDownCount=30;
+}
+
+
+
+ComboBox2->Clear();
+for(Tab->First();!Tab->Eof;Tab->Next())
+{
+ComboBox2->Items->Add(Tab->FieldByName("Наименование деятельности")->AsString);
+}
+ComboBox2->DroppedDown=true;
+
+
+
+ComboBox2->Text=Text;
+ keybd_event(35,0,0,0);
+
+ keybd_event(35,0,KEYEVENTF_KEYUP,0);
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm1::ComboBox2DropDown(TObject *Sender)
+{
+String Text=ComboBox2->Text;
+MP<TADODataSet>Tab(this);
+Tab->Connection=Zast->ADOAspect;
+String CT="Select [Номер деятельности], [Наименование деятельности] From Деятельность Where [Наименование деятельности] Like '%"+Text+"%' AND Показ=true Order by [Номер деятельности]";
+Tab->CommandText=CT;
+Tab->Active=true;
+
+if(Tab->RecordCount<30)
+{
+ComboBox2->DropDownCount=Tab->RecordCount;
+}
+else
+{
+ComboBox2->DropDownCount=30;
+}
+
+ComboBox2->Clear();
+for(Tab->First();!Tab->Eof;Tab->Next())
+{
+ComboBox2->Items->Add(Tab->FieldByName("Наименование деятельности")->AsString);
+}
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm1::ComboBox2KeyPress(TObject *Sender, char &Key)
+{
+if(Key==13)
+{
+String Text=ComboBox2->Text;
+MP<TADODataSet>Tab(this);
+Tab->Connection=Zast->ADOAspect;
+String CT="Select [Номер деятельности], [Наименование деятельности] From Деятельность Where [Наименование деятельности] Like '%"+Text+"%' AND Показ=true Order by [Номер деятельности]";
+Tab->CommandText=CT;
+Tab->Active=true;
+
+Tab->First();
+Tab->MoveBy(ComboBox2->ItemIndex);
+ComboBox2->Text=Tab->FieldByName("Наименование деятельности")->AsString;
+if(ComboBox2->DroppedDown & ComboBox2->ItemIndex!=-1)
+{
+//MAsp->Index=Tab->FieldByName("Номер территории")->AsInteger;
+InputDocs->NumBr=Tab->FieldByName("Номер деятельности")->AsInteger;
+InputDocs->TextBr=Tab->FieldByName("Наименование деятельности")->AsString;
+
+InpDeyat();
+}
+}
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm1::ComboBox2Select(TObject *Sender)
+{
+String Text=ComboBox2->Text;
+MP<TADODataSet>Tab(this);
+Tab->Connection=Zast->ADOAspect;
+String CT="Select [Номер деятельности], [Наименование деятельности] From Деятельность Where [Наименование деятельности] Like '%"+Text+"%' AND Показ=true Order by [Номер деятельности]";
+Tab->CommandText=CT;
+Tab->Active=true;
+
+Tab->First();
+Tab->MoveBy(ComboBox1->ItemIndex);
+ComboBox2->Text=Tab->FieldByName("Наименование деятельности")->AsString;
+if(!ComboBox2->DroppedDown & ComboBox2->ItemIndex!=-1)
+{
+//MAsp->Index=Tab->FieldByName("Номер территории")->AsInteger;
+InputDocs->NumBr=Tab->FieldByName("Номер деятельности")->AsInteger;
+InputDocs->TextBr=Tab->FieldByName("Наименование деятельности")->AsString;
+
+InpDeyat();
+}        
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm1::ComboBox3Change(TObject *Sender)
+{
+ComboBox3->AutoComplete=false;
+
+String Text=ComboBox3->Text;
+MP<TADODataSet>Tab(this);
+Tab->Connection=Zast->ADOAspect;
+String CT="Select [Номер аспекта], [Наименование аспекта] From Аспект Where [Наименование аспекта] Like '%"+Text+"%' AND Показ=true Order by [Номер аспекта]";
+Tab->CommandText=CT;
+Tab->Active=true;
+
+//ComboBox1->DroppedDown=false;
+
+if(Tab->RecordCount<30)
+{
+ComboBox3->DropDownCount=Tab->RecordCount;
+}
+else
+{
+ComboBox3->DropDownCount=30;
+}
+
+
+
+ComboBox3->Clear();
+for(Tab->First();!Tab->Eof;Tab->Next())
+{
+ComboBox3->Items->Add(Tab->FieldByName("Наименование аспекта")->AsString);
+}
+ComboBox3->DroppedDown=true;
+
+
+
+ComboBox3->Text=Text;
+ keybd_event(35,0,0,0);
+
+ keybd_event(35,0,KEYEVENTF_KEYUP,0);
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm1::ComboBox3DropDown(TObject *Sender)
+{
+String Text=ComboBox3->Text;
+MP<TADODataSet>Tab(this);
+Tab->Connection=Zast->ADOAspect;
+String CT="Select [Номер аспекта], [Наименование аспекта] From Аспект Where [Наименование аспекта] Like '%"+Text+"%' AND Показ=true Order by [Номер аспекта]";
+Tab->CommandText=CT;
+Tab->Active=true;
+
+if(Tab->RecordCount<30)
+{
+ComboBox3->DropDownCount=Tab->RecordCount;
+}
+else
+{
+ComboBox3->DropDownCount=30;
+}
+
+ComboBox3->Clear();
+for(Tab->First();!Tab->Eof;Tab->Next())
+{
+ComboBox3->Items->Add(Tab->FieldByName("Наименование аспекта")->AsString);
+}
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm1::ComboBox3KeyPress(TObject *Sender, char &Key)
+{
+if(Key==13)
+{
+String Text=ComboBox3->Text;
+MP<TADODataSet>Tab(this);
+Tab->Connection=Zast->ADOAspect;
+String CT="Select [Номер аспекта], [Наименование аспекта] From Аспект Where [Наименование аспекта] Like '%"+Text+"%' AND Показ=true Order by [Номер аспекта]";
+Tab->CommandText=CT;
+Tab->Active=true;
+
+Tab->First();
+Tab->MoveBy(ComboBox3->ItemIndex);
+ComboBox3->Text=Tab->FieldByName("Наименование аспекта")->AsString;
+if(ComboBox3->DroppedDown & ComboBox3->ItemIndex!=-1)
+{
+//MAsp->Index=Tab->FieldByName("Номер территории")->AsInteger;
+InputDocs->NumBr=Tab->FieldByName("Номер аспекта")->AsInteger;
+InputDocs->TextBr=Tab->FieldByName("Наименование аспекта")->AsString;
+
+InpAsp();
+}
+}
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm1::ComboBox3Select(TObject *Sender)
+{
+String Text=ComboBox3->Text;
+MP<TADODataSet>Tab(this);
+Tab->Connection=Zast->ADOAspect;
+String CT="Select [Номер аспекта], [Наименование аспекта] From Аспект Where [Наименование аспекта] Like '%"+Text+"%' AND Показ=true Order by [Номер аспекта]";
+Tab->CommandText=CT;
+Tab->Active=true;
+
+Tab->First();
+Tab->MoveBy(ComboBox1->ItemIndex);
+ComboBox3->Text=Tab->FieldByName("Наименование аспекта")->AsString;
+if(!ComboBox3->DroppedDown & ComboBox3->ItemIndex!=-1)
+{
+//MAsp->Index=Tab->FieldByName("Номер территории")->AsInteger;
+InputDocs->NumBr=Tab->FieldByName("Номер аспекта")->AsInteger;
+InputDocs->TextBr=Tab->FieldByName("Наименование аспекта")->AsString;
+
+InpAsp();
+}
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm1::ComboBox4Change(TObject *Sender)
+{
+ComboBox4->AutoComplete=false;
+
+String Text=ComboBox4->Text;
+MP<TADODataSet>Tab(this);
+Tab->Connection=Zast->ADOAspect;
+String CT="Select [Номер воздействия], [Наименование воздействия] From Воздействия Where [Наименование воздействия] Like '%"+Text+"%' AND Показ=true Order by [Номер воздействия]";
+Tab->CommandText=CT;
+Tab->Active=true;
+
+//ComboBox1->DroppedDown=false;
+
+if(Tab->RecordCount<30)
+{
+ComboBox4->DropDownCount=Tab->RecordCount;
+}
+else
+{
+ComboBox4->DropDownCount=30;
+}
+
+
+
+ComboBox4->Clear();
+for(Tab->First();!Tab->Eof;Tab->Next())
+{
+ComboBox4->Items->Add(Tab->FieldByName("Наименование воздействия")->AsString);
+}
+ComboBox4->DroppedDown=true;
+
+
+
+ComboBox4->Text=Text;
+ keybd_event(35,0,0,0);
+
+ keybd_event(35,0,KEYEVENTF_KEYUP,0);
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm1::ComboBox4DropDown(TObject *Sender)
+{
+String Text=ComboBox4->Text;
+MP<TADODataSet>Tab(this);
+Tab->Connection=Zast->ADOAspect;
+String CT="Select [Номер воздействия], [Наименование воздействия] From Воздействия Where [Наименование воздействия] Like '%"+Text+"%' AND Показ=true Order by [Номер воздействия]";
+Tab->CommandText=CT;
+Tab->Active=true;
+
+if(Tab->RecordCount<30)
+{
+ComboBox4->DropDownCount=Tab->RecordCount;
+}
+else
+{
+ComboBox4->DropDownCount=30;
+}
+
+ComboBox4->Clear();
+for(Tab->First();!Tab->Eof;Tab->Next())
+{
+ComboBox4->Items->Add(Tab->FieldByName("Наименование воздействия")->AsString);
+}
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm1::ComboBox4KeyPress(TObject *Sender, char &Key)
+{
+if(Key==13)
+{
+String Text=ComboBox4->Text;
+MP<TADODataSet>Tab(this);
+Tab->Connection=Zast->ADOAspect;
+String CT="Select [Номер воздействия], [Наименование воздействия] From Воздействия Where [Наименование воздействия] Like '%"+Text+"%' AND Показ=true Order by [Номер воздействия]";
+Tab->CommandText=CT;
+Tab->Active=true;
+
+Tab->First();
+Tab->MoveBy(ComboBox4->ItemIndex);
+ComboBox4->Text=Tab->FieldByName("Наименование воздействия")->AsString;
+if(ComboBox4->DroppedDown & ComboBox4->ItemIndex!=-1)
+{
+//MAsp->Index=Tab->FieldByName("Номер территории")->AsInteger;
+InputDocs->NumBr=Tab->FieldByName("Номер воздействия")->AsInteger;
+InputDocs->TextBr=Tab->FieldByName("Наименование воздействия")->AsString;
+
+InpVozd();
+}
+}
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm1::ComboBox4Select(TObject *Sender)
+{
+String Text=ComboBox4->Text;
+MP<TADODataSet>Tab(this);
+Tab->Connection=Zast->ADOAspect;
+String CT="Select [Номер воздействия], [Наименование воздействия] From Воздействия Where [Наименование воздействия] Like '%"+Text+"%' AND Показ=true Order by [Номер воздействия]";
+Tab->CommandText=CT;
+Tab->Active=true;
+
+Tab->First();
+Tab->MoveBy(ComboBox4->ItemIndex);
+ComboBox4->Text=Tab->FieldByName("Наименование воздействия")->AsString;
+if(!ComboBox4->DroppedDown & ComboBox4->ItemIndex!=-1)
+{
+//MAsp->Index=Tab->FieldByName("Номер территории")->AsInteger;
+InputDocs->NumBr=Tab->FieldByName("Номер воздействия")->AsInteger;
+InputDocs->TextBr=Tab->FieldByName("Наименование воздействия")->AsString;
+
+InpVozd();
+}
+}
+//---------------------------------------------------------------------------
 
