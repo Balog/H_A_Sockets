@@ -27,6 +27,7 @@
 #include <ActnList.hpp>
 #include <DBActns.hpp>
 #include <ActnMan.hpp>
+#include <ImgList.hpp>
 //---------------------------------------------------------------------------
 class TForm1 : public TForm
 {
@@ -144,6 +145,11 @@ __published:	// IDE-managed Components
         TComboBox *ComboBox2;
         TComboBox *ComboBox3;
         TComboBox *ComboBox4;
+        TPopupMenu *PopupMenu1;
+        TMenuItem *N11;
+        TMenuItem *N12;
+        TImageList *ImageList1;
+        TMenuItem *AspQ;
         void __fastcall FormClose(TObject *Sender, TCloseAction &Action);
         void __fastcall N8Click(TObject *Sender);
         void __fastcall CPodrazdelClick(TObject *Sender);
@@ -240,6 +246,9 @@ __published:	// IDE-managed Components
         void __fastcall ComboBox4DropDown(TObject *Sender);
         void __fastcall ComboBox4KeyPress(TObject *Sender, char &Key);
         void __fastcall ComboBox4Select(TObject *Sender);
+        void __fastcall N11Click(TObject *Sender);
+        void __fastcall N12Click(TObject *Sender);
+        void __fastcall AspQClick(TObject *Sender);
 private:	// User declarations
 bool Registered;
 TLocateOptions SO;
@@ -283,6 +292,7 @@ public:		// User declarations
         __fastcall TForm1(TComponent* Owner);
 
 bool Demo;
+bool Quit;
 int NumLogin;
 String Login;
 int Role;
@@ -293,6 +303,7 @@ void SynhronAspect();
 void SynhronVozd();
 
 void NewRecord();
+void NewRecord(int Podr, int Sit, int Terr, int Deyat, int Asp, int Vozd);
 void InitCombo();
 void SetCombo();
 

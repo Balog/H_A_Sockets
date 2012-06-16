@@ -29,6 +29,7 @@ TForm1 *Form1;
 __fastcall TForm1::TForm1(TComponent* Owner)
         : TForm(Owner)
 {
+Quit=false;
 Aspects->Connection=Zast->ADOUsrAspect;
 Podrazdel->Connection=Zast->ADOUsrAspect;
 Situaciya->Connection=Zast->ADOUsrAspect;
@@ -139,7 +140,20 @@ ComboBox4->Items->Add(Tab->FieldByName("Наименование воздействия")->AsString);
 String Path=ExtractFilePath(Application->ExeName);
 MP<TIniFile>Ini(Path+"NetAspects.ini");
 
-int Num=Ini->ReadInteger("Main","CurrentRecord",1);
+int Num=Ini->ReadInteger(IntToStr(NumLogin),"CurrentRecord",1);
+Filter->CText=Ini->ReadString(IntToStr(NumLogin),"Filter","");
+if(Filter->CText=="")
+{
+ Filter->SetDefFiltr();
+}
+LFiltr->Caption=Ini->ReadString(IntToStr(NumLogin),"NameFilter","Отключен");
+Filter->NumFiltr=Ini->ReadInteger(IntToStr(NumLogin),"NumFilter", 0);
+
+Form1->LFiltr->Caption=Ini->ReadString(IntToStr(NumLogin),"NameFilter","Отключен");
+
+
+InputDocs->TextBr=Ini->ReadString(IntToStr(NumLogin),"TextFilter","");
+
 Initialize(Num);
 //N9->Enabled=!Demo;
 
@@ -228,7 +242,8 @@ void TForm1::SetAspects(String Login, int NumRec)
 //Задаем условия фильтрации списка подразделений для заполнения списка подразделений
 
 Aspects->Active=false;
-Aspects->CommandText="SELECT  Аспекты.* FROM Logins INNER JOIN ((Подразделения INNER JOIN Аспекты ON Подразделения.[Номер подразделения] = Аспекты.Подразделение) INNER JOIN ObslOtdel ON Подразделения.[Номер подразделения] = ObslOtdel.NumObslOtdel) ON Logins.Num = ObslOtdel.Login WHERE (((Logins.ServerNum)="+IntToStr(NumLogin)+")) ORDER BY Аспекты.[Номер аспекта];";
+Aspects->CommandText=Filter->CText;
+//"SELECT  Аспекты.* FROM Logins INNER JOIN ((Подразделения INNER JOIN Аспекты ON Подразделения.[Номер подразделения] = Аспекты.Подразделение) INNER JOIN ObslOtdel ON Подразделения.[Номер подразделения] = ObslOtdel.NumObslOtdel) ON Logins.Num = ObslOtdel.Login WHERE (((Logins.ServerNum)="+IntToStr(NumLogin)+")) ORDER BY Аспекты.[Номер аспекта];";
 Aspects->Active=true;
 
 
@@ -739,6 +754,11 @@ CountRecord->Text="0";
 //---------------------------------------------------------------------------
 void TForm1::NewRecord()
 {
+ NewRecord(0, 0, 0, 0, 0, 0);
+}
+//---------------------------------------------------------------------------
+void TForm1::NewRecord(int Podr, int Sit, int Terr, int Deyat, int Asp, int Vozd)
+{
 Podrazdel->Active=false;
 Podrazdel->Active=true;
 Situaciya->Active=false;
@@ -748,21 +768,13 @@ Tiagest->Active=true;
 Prioritet->Active=true;
 
 
-
-/*
-if (Podrazdel->RecordCount==0)
-{
- Podrazdel->Append();
- Podrazdel->FieldByName("Название подразделения")->Value="Новое подразделение";
- Podrazdel->Post();
-}
-*/
 if (Situaciya->RecordCount==0)
 {
  Situaciya->Append();
  Situaciya->FieldByName("Название ситуации")->Value="Новая ситуация";
  Situaciya->Post();
 }
+
 
 Podrazdel->First();
 Situaciya->First();
@@ -775,15 +787,29 @@ Prioritet->First();
  Aspects->FieldByName("Деятельность")->Value=0;
  Aspects->FieldByName("Аспект")->Value=0;
  Aspects->FieldByName("Воздействие")->Value=0;
- //Aspects->FieldByName("Значимость")->Value=1;
 
+ if(Podr==0)
+ {
  int NP=Podrazdel->FieldByName("Номер подразделения")->Value;
  Aspects->FieldByName("Подразделение")->Value=NP;
+ }
+ else
+ {
+ Aspects->FieldByName("Подразделение")->Value=Podr;
+ }
+
+ if(Sit==0)
+ {
  int NS=Situaciya->FieldByName("Номер ситуации")->Value;
  Aspects->FieldByName("Ситуация")->Value=NS;
+ }
+ else
+ {
+  Aspects->FieldByName("Ситуация")->Value=Sit;
+ }
+
  Aspects->FieldByName("Специальность")->Value=" ";
-// Aspects->FieldByName("Подразделение")->Value=Podrazdel->FieldByName("Номер подразделения")->Value;
-// Aspects->FieldByName("Ситуация")->Value=Situaciya->FieldByName("Номер ситуации")->Value;
+
  Aspects->FieldByName("Тяжесть последствий")->Value=Tiagest->FieldByName("Номер последствия")->Value;
  Aspects->FieldByName("Проявление воздействия")->Value=Posledstvie->FieldByName("Номер проявления")->Value;
  Aspects->FieldByName("Приоритетность")->Value=Prioritet->FieldByName("Номер приоритетности")->Value;
@@ -793,6 +819,25 @@ Prioritet->First();
  Aspects->FieldByName("Конец действия")->Value=Now();
  Aspects->FieldByName("Demo")->Value=Demo;
 
+ if(Terr!=0)
+ {
+  Aspects->FieldByName("Вид территории")->Value=Terr;
+ }
+
+ if(Deyat!=0)
+ {
+  Aspects->FieldByName("Деятельность")->Value=Deyat;
+ }
+
+ if(Asp!=0)
+ {
+  Aspects->FieldByName("Аспект")->Value=Asp;
+ }
+
+ if(Vozd!=0)
+ {
+  Aspects->FieldByName("Воздействие")->Value=Vozd;
+ }
  Aspects->Post();
 
  CheckBox1->Checked=false;
@@ -811,19 +856,21 @@ CSit->ItemIndex=0;
  InitCombo();
 
 }
-//---------------------------------------------------------------------------
+//----------------------------------------------------------------------------
 void __fastcall TForm1::FormClose(TObject *Sender, TCloseAction &Action)
 {
+SavePosition();
 switch (Application->MessageBoxA("Записать все изменения на сервер?","Выход из программы",MB_YESNOCANCEL	+MB_ICONQUESTION+MB_DEFBUTTON1))
 {
  case IDYES:
  {
+ Quit=true;
 Zast->Stop=true;
 Zast->MClient->Act.WaitCommand=0;
 
 Zast->Saved=false;
 //Zast->PrepareSaveLogins->Execute();
-
+N3->Click();
 
  Action=caNone;
  break;
@@ -1198,9 +1245,20 @@ Aspects->Post();
 
 void __fastcall TForm1::BitBtn5Click(TObject *Sender)
 {
-
-
+if(BitBtn5->Caption=="")
+{
 NewRecord();
+}
+else
+{
+int Podr=Podrazdel->FieldByName("Номер подразделения")->Value;
+int Sit=Situaciya->FieldByName("Номер ситуации")->Value;
+int Terr=Territoriya->FieldByName("Номер территории")->Value;;
+int Deyat=Deyatelnost->FieldByName("Номер деятельности")->Value;
+int Asp=Aspect->FieldByName("Номер аспекта")->Value;
+int Vozd=Vozdeystvie->FieldByName("Номер воздействия")->Value;
+NewRecord(Podr, Sit, Terr, Deyat, Asp, Vozd);
+}
 C1=false;
 C2=false;
 C3=false;
@@ -3955,7 +4013,54 @@ void TForm1::SavePosition()
 {
 String Path=ExtractFilePath(Application->ExeName);
 MP<TIniFile>Ini(Path+"NetAspects.ini");
-Ini->WriteInteger("Main","CurrentRecord",Aspects->RecNo);
+Ini->WriteInteger(IntToStr(NumLogin),"CurrentRecord",Aspects->RecNo);
+Ini->WriteString(IntToStr(NumLogin),"Filter",Filter->CText);
+Ini->WriteString(IntToStr(NumLogin),"NameFilter",LFiltr->Caption);
+Ini->WriteInteger(IntToStr(NumLogin),"NumFilter", Filter->RadioGroup1->ItemIndex);
+switch (Filter->RadioGroup1->ItemIndex)
+{
+ case 0:
+ {
+Ini->WriteString(IntToStr(NumLogin),"TextFilter","");
+ break;
+ }
+ case 1:
+ {
+Ini->WriteString(IntToStr(NumLogin),"TextFilter",Filter->ComboBox1->Text);
+ break;
+ }
+ case 2:
+ {
+Ini->WriteString(IntToStr(NumLogin),"TextFilter",Filter->ComboBox4->Text);
+ break;
+ }
+ case 3:
+ {
+Ini->WriteString(IntToStr(NumLogin),"TextFilter",Filter->ComboBox5->Text);
+ break;
+ }
+ case 4:
+ {
+Ini->WriteString(IntToStr(NumLogin),"TextFilter",Filter->ComboBox6->Text);
+ break;
+ }
+ case 5:
+ {
+Ini->WriteString(IntToStr(NumLogin),"TextFilter",Filter->ComboBox7->Text);
+ break;
+ }
+ case 6:
+ {
+Ini->WriteString(IntToStr(NumLogin),"TextFilter",Filter->ComboBox2->Text);
+ break;
+ }
+ case 7:
+ {
+Ini->WriteString(IntToStr(NumLogin),"TextFilter",Filter->ComboBox3->Text);
+ break;
+ }
+
+}
 }
 //---------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
@@ -4429,6 +4534,35 @@ InputDocs->TextBr=Tab->FieldByName("Наименование воздействия")->AsString;
 
 InpVozd();
 }
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm1::N11Click(TObject *Sender)
+{
+BitBtn5->Hint="Пустая новая";
+BitBtn5->Caption="";
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm1::N12Click(TObject *Sender)
+{
+BitBtn5->Hint="Новая - копия текущей";
+BitBtn5->Caption="C";
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm1::AspQClick(TObject *Sender)
+{
+MP<TADOCommand>Comm(this);
+Comm->Connection=Zast->ADOUsrAspect;
+Comm->CommandText="DELETE Logins.AdmNum, Аспекты.* FROM Logins INNER JOIN ((Подразделения INNER JOIN Аспекты ON Подразделения.[Номер подразделения] = Аспекты.Подразделение) INNER JOIN ObslOtdel ON Подразделения.[Номер подразделения] = ObslOtdel.NumObslOtdel) ON Logins.Num = ObslOtdel.Login WHERE (((Logins.ServerNum)="+IntToStr(NumLogin)+"));";
+Comm->Execute();
+
+ Zast->MClient->Act.ParamComm.clear();
+ Zast->MClient->Act.ParamComm.push_back("MergeAspectsUserQ");
+ String ServerSQL="SELECT Аспекты.[Номер аспекта],     Аспекты.Подразделение,     Аспекты.Ситуация,     Аспекты.[Вид территории],     Аспекты.Деятельность,     Аспекты.Специальность,     Аспекты.Аспект,     Аспекты.Воздействие,     Аспекты.G,     Аспекты.O,     Аспекты.R,     Аспекты.S,     Аспекты.T,     Аспекты.L,     Аспекты.N,     Аспекты.Z,     Аспекты.Значимость,     Аспекты.[Проявление воздействия],     Аспекты.[Тяжесть последствий],     Аспекты.Приоритетность,     Аспекты.[Выполняющиеся мероприятия],     Аспекты.[Предлагаемые мероприятия],     Аспекты.[Мониторинг и контроль],     Аспекты.[Предлагаемый мониторинг и контроль],     Аспекты.Исполнитель,      Аспекты.[Дата создания],     Аспекты.[Начало действия],     Аспекты.[Конец действия] FROM (Подразделения INNER JOIN ObslOtdel ON Подразделения.[Номер подразделения] = ObslOtdel.NumObslOtdel) INNER JOIN Аспекты ON Подразделения.[Номер подразделения] = Аспекты.Подразделение WHERE (((ObslOtdel.Login)="+IntToStr(NumLogin)+"));";
+ String ClientSQL="SELECT TempAspects.[Номер аспекта], TempAspects.Подразделение, TempAspects.Ситуация, TempAspects.[Вид территории], TempAspects.Деятельность, TempAspects.Специальность, TempAspects.Аспект, TempAspects.Воздействие, TempAspects.G, TempAspects.O, TempAspects.R, TempAspects.S, TempAspects.T, TempAspects.L, TempAspects.N, TempAspects.Z, TempAspects.Значимость, TempAspects.[Проявление воздействия], TempAspects.[Тяжесть последствий], TempAspects.Приоритетность, TempAspects.[Выполняющиеся мероприятия], TempAspects.[Предлагаемые мероприятия], TempAspects.[Мониторинг и контроль], TempAspects.[Предлагаемый мониторинг и контроль], TempAspects.Исполнитель,  TempAspects.[Дата создания], TempAspects.[Начало действия], TempAspects.[Конец действия] FROM TempAspects;";
+Zast->MClient->ReadTable("Аспекты", ServerSQL, "Аспекты_П", ClientSQL);
 }
 //---------------------------------------------------------------------------
 

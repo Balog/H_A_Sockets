@@ -15,6 +15,7 @@
 #include "Rep1.h"
 #include "Svod.h"
 #include "FMoveAsp.h"
+#include "InputFiltr.h"
 //---------------------------------------------------------------------------
 #pragma package(smart_init)
 #pragma resource "*.dfm"
@@ -696,6 +697,7 @@ Zast->MClient->ReadTable("Аспекты", "Select Подразделения.[Номер подразделения],
 
 void __fastcall TZast::MergePodrazdExecute(TObject *Sender)
 {
+Filter->SetDefFiltr();
 MDBConnector* DB;
  if(Role==2)
  {
@@ -2690,16 +2692,12 @@ ReadWriteDoc->Execute();
 
 void __fastcall TZast::MergeAspectsUserExecute(TObject *Sender)
 {
-/*
-MP<TADODataSet>LPodr(this);
-LPodr->Connection=Zast->ADOUsrAspect;
-LPodr->CommandText="SELECT Подразделения.[Номер подразделения], Подразделения.[Название подразделения], Подразделения.ServerNum FROM Logins INNER JOIN (Подразделения INNER JOIN ObslOtdel ON Подразделения.[Номер подразделения] = ObslOtdel.NumObslOtdel) ON Logins.Num = ObslOtdel.Login WHERE (((Logins.ServerNum)="+IntToStr(NumLogin)+"));";
-LPodr->Active=true;
-*/
-MergeAspects(Form1->NumLogin);
+
+MergeAspects(Form1->NumLogin, false);
 }
 //---------------------------------------------------------------------------
-void  TZast::MergeAspects(int NumLogin)
+
+void  TZast::MergeAspects(int NumLogin, bool Quit)
 {
 //Zast->MClient->WriteDiaryEvent("NetAspects","Обновление аспектов","");
 try
@@ -2746,11 +2744,71 @@ Comm->Execute();
 
 String Path=ExtractFilePath(Application->ExeName);
 MP<TIniFile>Ini(Path+"NetAspects.ini");
+/*
+Ini->WriteInteger(IntToStr(NumLogin),"CurrentRecord",Aspects->RecNo);
+Ini->WriteString(IntToStr(NumLogin),"Filter",Filter->CText);
+*/
+int Num=Ini->ReadInteger(IntToStr(NumLogin),"CurrentRecord",1);
+Filter->CText=Ini->ReadString(IntToStr(NumLogin),"Filter","");
+if(Filter->CText=="")
+{
+ Filter->SetDefFiltr();
+}
+/*
+Ini->WriteString(IntToStr(NumLogin),"NameFilter",Form1->LFiltr->Caption);
+Ini->WriteInteger(IntToStr(NumLogin),"NumFilter", Filter->RadioGroup1->ItemIndex);
+*/
+Form1->LFiltr->Caption=Ini->ReadString(IntToStr(NumLogin),"NameFilter","Отключен");
+Filter->RadioGroup1->ItemIndex=Ini->ReadInteger(IntToStr(NumLogin),"NameFilter", 0);
+switch (Filter->RadioGroup1->ItemIndex)
+{
+ case 1:
+ {
+Filter->ComboBox1->Text=Ini->ReadString(IntToStr(NumLogin),"TextFilter","");
+ break;
+ }
+ case 2:
+ {
+Filter->ComboBox4->Text=Ini->ReadString(IntToStr(NumLogin),"TextFilter","");
+ break;
+ }
+ case 3:
+ {
+Filter->ComboBox5->Text=Ini->ReadString(IntToStr(NumLogin),"TextFilter","");
+ break;
+ }
+ case 4:
+ {
+Filter->ComboBox6->Text=Ini->ReadString(IntToStr(NumLogin),"TextFilter","");
+ break;
+ }
+ case 5:
+ {
+Filter->ComboBox7->Text=Ini->ReadString(IntToStr(NumLogin),"TextFilter","");
+ break;
+ }
+ case 6:
+ {
+Filter->ComboBox2->Text=Ini->ReadString(IntToStr(NumLogin),"TextFilter","");
+ break;
+ }
+ case 7:
+ {
+Filter->ComboBox3->Text=Ini->ReadString(IntToStr(NumLogin),"TextFilter","");
+ break;
+ }
 
-int Num=Ini->ReadInteger("Main","CurrentRecord",1);
+}
 Form1->Initialize(Num);
 
+if(!Quit)
+{
 ShowMessage("Завершено");
+}
+else
+{
+this->Close();
+}
 }
 catch(...)
 {
@@ -2764,6 +2822,12 @@ void __fastcall TZast::WriteAspectsUsrExecute(TObject *Sender)
  Zast->MClient->Act.ParamComm.clear();
  Zast->MClient->Act.WaitCommand=18;
 Zast->ClientSocket->Socket->SendText("Command:18;1|"+IntToStr(IntToStr(Form1->NumLogin).Length())+"#"+IntToStr(Form1->NumLogin));
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TZast::MergeAspectsUserQExecute(TObject *Sender)
+{
+MergeAspects(Form1->NumLogin, true);
 }
 //---------------------------------------------------------------------------
 

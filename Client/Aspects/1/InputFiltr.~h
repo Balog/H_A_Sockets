@@ -20,10 +20,6 @@ __published:	// IDE-managed Components
         TRadioGroup *RadioGroup1;
         TADODataSet *Podr;
         TDataSource *DataSource1;
-        TEdit *Edit1;
-        TEdit *Edit2;
-        TEdit *Edit3;
-        TEdit *Edit4;
         TButton *Button1;
         TButton *Button2;
         TButton *Button3;
@@ -32,6 +28,10 @@ __published:	// IDE-managed Components
         TComboBox *ComboBox1;
         TComboBox *ComboBox2;
         TComboBox *ComboBox3;
+        TComboBox *ComboBox4;
+        TComboBox *ComboBox5;
+        TComboBox *ComboBox6;
+        TComboBox *ComboBox7;
         void __fastcall Button6Click(TObject *Sender);
         void __fastcall RadioGroup1Click(TObject *Sender);
         void __fastcall FormShow(TObject *Sender);
@@ -53,7 +53,29 @@ __published:	// IDE-managed Components
         void __fastcall Edit4DblClick(TObject *Sender);
         void __fastcall FormKeyUp(TObject *Sender, WORD &Key,
           TShiftState Shift);
+        void __fastcall ComboBox4Change(TObject *Sender);
+        void __fastcall ComboBox4DropDown(TObject *Sender);
+        void __fastcall ComboBox4KeyPress(TObject *Sender, char &Key);
+        void __fastcall ComboBox4Select(TObject *Sender);
+        void __fastcall ComboBox4Enter(TObject *Sender);
+        void __fastcall ComboBox5Change(TObject *Sender);
+        void __fastcall ComboBox5DropDown(TObject *Sender);
+        void __fastcall ComboBox5KeyPress(TObject *Sender, char &Key);
+        void __fastcall ComboBox5Select(TObject *Sender);
+        void __fastcall ComboBox5Enter(TObject *Sender);
+        void __fastcall ComboBox6Change(TObject *Sender);
+        void __fastcall ComboBox6DropDown(TObject *Sender);
+        void __fastcall ComboBox6KeyPress(TObject *Sender, char &Key);
+        void __fastcall ComboBox6Select(TObject *Sender);
+        void __fastcall ComboBox6Enter(TObject *Sender);
+        void __fastcall ComboBox7Change(TObject *Sender);
+        void __fastcall ComboBox7DropDown(TObject *Sender);
+        void __fastcall ComboBox7KeyPress(TObject *Sender, char &Key);
+        void __fastcall ComboBox7Select(TObject *Sender);
+        void __fastcall ComboBox7Enter(TObject *Sender);
 private:	// User declarations
+int NumFiltr;
+int NumItemCombo;
 public:		// User declarations
         __fastcall TFilter(TComponent* Owner);
 
@@ -65,6 +87,7 @@ void InpVozd();
 int Index;
 AnsiString CText;
 AnsiString Filtr1, SeFiltr1, Filtr2;
+void SetDefFiltr();
 };
 //---------------------------------------------------------------------------
 extern PACKAGE TFilter *Filter;

@@ -63,46 +63,6 @@ object Filter: TFilter
     TabOrder = 0
     OnClick = RadioGroup1Click
   end
-  object Edit1: TEdit
-    Left = 184
-    Top = 81
-    Width = 594
-    Height = 21
-    ReadOnly = True
-    TabOrder = 1
-    Visible = False
-    OnDblClick = Edit1DblClick
-  end
-  object Edit2: TEdit
-    Left = 184
-    Top = 108
-    Width = 594
-    Height = 21
-    ReadOnly = True
-    TabOrder = 2
-    Visible = False
-    OnDblClick = Edit2DblClick
-  end
-  object Edit3: TEdit
-    Left = 184
-    Top = 135
-    Width = 594
-    Height = 21
-    ReadOnly = True
-    TabOrder = 3
-    Visible = False
-    OnDblClick = Edit3DblClick
-  end
-  object Edit4: TEdit
-    Left = 184
-    Top = 162
-    Width = 594
-    Height = 21
-    ReadOnly = True
-    TabOrder = 4
-    Visible = False
-    OnDblClick = Edit4DblClick
-  end
   object Button1: TButton
     Left = 784
     Top = 81
@@ -115,7 +75,7 @@ object Filter: TFilter
     Font.Name = 'Arial'
     Font.Style = [fsBold]
     ParentFont = False
-    TabOrder = 5
+    TabOrder = 1
     Visible = False
     OnClick = Button1Click
   end
@@ -131,7 +91,7 @@ object Filter: TFilter
     Font.Name = 'Arial'
     Font.Style = [fsBold]
     ParentFont = False
-    TabOrder = 6
+    TabOrder = 2
     Visible = False
     OnClick = Button2Click
   end
@@ -147,7 +107,7 @@ object Filter: TFilter
     Font.Name = 'Arial'
     Font.Style = [fsBold]
     ParentFont = False
-    TabOrder = 7
+    TabOrder = 3
     Visible = False
     OnClick = Button3Click
   end
@@ -163,7 +123,7 @@ object Filter: TFilter
     Font.Name = 'Arial'
     Font.Style = [fsBold]
     ParentFont = False
-    TabOrder = 8
+    TabOrder = 4
     Visible = False
     OnClick = Button4Click
   end
@@ -174,7 +134,7 @@ object Filter: TFilter
     Height = 25
     Caption = #1042#1074#1086#1076
     Enabled = False
-    TabOrder = 9
+    TabOrder = 5
     OnClick = Button5Click
   end
   object ComboBox1: TComboBox
@@ -184,7 +144,7 @@ object Filter: TFilter
     Height = 21
     Style = csDropDownList
     ItemHeight = 13
-    TabOrder = 10
+    TabOrder = 6
     Visible = False
     OnClick = ComboBox1Click
     OnKeyPress = ComboBox1KeyPress
@@ -196,7 +156,7 @@ object Filter: TFilter
     Height = 21
     Style = csDropDownList
     ItemHeight = 13
-    TabOrder = 11
+    TabOrder = 7
     Visible = False
     OnClick = ComboBox2Click
     OnKeyPress = ComboBox2KeyPress
@@ -211,13 +171,81 @@ object Filter: TFilter
     Height = 21
     Style = csDropDownList
     ItemHeight = 13
-    TabOrder = 12
+    TabOrder = 8
     Visible = False
     OnClick = ComboBox3Click
     OnKeyPress = ComboBox3KeyPress
     Items.Strings = (
       #1047#1085#1072#1095#1080#1084#1099#1077
       #1053#1077#1079#1085#1072#1095#1080#1084#1099#1077)
+  end
+  object ComboBox4: TComboBox
+    Left = 184
+    Top = 81
+    Width = 596
+    Height = 21
+    AutoComplete = False
+    AutoDropDown = True
+    DropDownCount = 30
+    ItemHeight = 13
+    TabOrder = 9
+    Visible = False
+    OnChange = ComboBox4Change
+    OnDropDown = ComboBox4DropDown
+    OnEnter = ComboBox4Enter
+    OnKeyPress = ComboBox4KeyPress
+    OnSelect = ComboBox4Select
+  end
+  object ComboBox5: TComboBox
+    Left = 184
+    Top = 107
+    Width = 596
+    Height = 21
+    AutoComplete = False
+    AutoDropDown = True
+    DropDownCount = 30
+    ItemHeight = 13
+    TabOrder = 10
+    Visible = False
+    OnChange = ComboBox5Change
+    OnDropDown = ComboBox5DropDown
+    OnEnter = ComboBox5Enter
+    OnKeyPress = ComboBox5KeyPress
+    OnSelect = ComboBox5Select
+  end
+  object ComboBox6: TComboBox
+    Left = 184
+    Top = 136
+    Width = 596
+    Height = 21
+    AutoComplete = False
+    AutoDropDown = True
+    DropDownCount = 30
+    ItemHeight = 13
+    TabOrder = 11
+    Visible = False
+    OnChange = ComboBox6Change
+    OnDropDown = ComboBox6DropDown
+    OnEnter = ComboBox6Enter
+    OnKeyPress = ComboBox6KeyPress
+    OnSelect = ComboBox6Select
+  end
+  object ComboBox7: TComboBox
+    Left = 184
+    Top = 162
+    Width = 596
+    Height = 21
+    AutoComplete = False
+    AutoDropDown = True
+    DropDownCount = 30
+    ItemHeight = 13
+    TabOrder = 12
+    Visible = False
+    OnChange = ComboBox7Change
+    OnDropDown = ComboBox7DropDown
+    OnEnter = ComboBox7Enter
+    OnKeyPress = ComboBox7KeyPress
+    OnSelect = ComboBox7Select
   end
   object Podr: TADODataSet
     CursorType = ctStatic
