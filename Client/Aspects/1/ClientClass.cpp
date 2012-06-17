@@ -107,7 +107,11 @@ switch(Comm)
 
  //далее - обновление списка подразделений
  //Может быть стоит показывать Form1 после обновления.
-Zast->BeginWork->Execute();
+Form1->Login=Act.ParamComm[0];
+Zast->Role=StrToInt(Act.ParamComm[1]);
+
+BlockServer("BeginWork");
+//Zast->BeginWork->Execute();
  break;
  }
  case 7:
@@ -204,6 +208,42 @@ Zast->BeginWork->Execute();
  case 18:
  {
  PostWriteAspectsUsr();
+ break;
+ }
+ case 19:
+ {
+ //ответ на команду попытки блокировки сервера
+ //1 - сервер заблокирован этим клиентом и можно работать
+ //0 - сервер уже заблокирован другим клиентом и надо подождать
+ if(Parameters[0]=="1")
+ {
+ //блокирование прошло успешно
+ //работаем дальше
+ Zast->WaitBlockServer(false);
+  StartAction(Act.ParamComm[0]);
+ }
+ else
+ {
+  //блокирование не удалось
+  //запускаем таймер повтора блокировки
+ Zast->WaitBlockServer(true);
+ }
+ break;
+ }
+ case 20:
+ {
+ //ответ на команду попытки разблокировки сервера
+ //1 - сервер разблокирован этим клиентом и можно работать
+ //0 - сервер уже разблокировть не удалось и это ошибка логики работы
+ Zast->UnBlockServer->Enabled=false;
+ if(Parameters[0]=="1")
+ {
+  StartAction(Act.ParamComm[0]);
+ }
+ else
+ {
+  ShowMessage("Ошибка разблокирования сервера!");
+ }
  break;
  }
 }
@@ -714,6 +754,23 @@ else
  Form1->N9->Click();
 }
 
+}
+//***************************************************************************
+void Client::BlockServer(String NextProc)
+{
+//Блокирование сервера
+ Zast->MClient->Act.ParamComm.clear();
+ Zast->MClient->Act.ParamComm.push_back(NextProc);
+ Zast->MClient->Act.WaitCommand=19;
+ Socket->Socket->SendText("Command:19;1|1#1");
+}
+//***************************************************************************
+void Client::UnBlockServer(String NextProc)
+{
+//Разблокирование сервера
+ Zast->MClient->Act.ParamComm.clear();
+ Zast->MClient->Act.ParamComm.push_back(NextProc);
+Zast->UnBlockServer->Enabled=true;
 }
 //***************************************************************************
 /////////////////////////////////////////////////////////////////////////////

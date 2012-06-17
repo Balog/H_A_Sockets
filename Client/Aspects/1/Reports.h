@@ -15,7 +15,7 @@ TADOConnection *Connect;
 int Role;
 private:
 AnsiString Address(Variant Sheet,int x,int y);
-void PrepareReport(int NumPodr);
+
 void PrepareDemoReport();
 void PrepareMergeAspects();
 String ClearString(String ZT);

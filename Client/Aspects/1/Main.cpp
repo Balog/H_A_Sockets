@@ -2302,7 +2302,8 @@ S.NameAction="ReadMetodika";
 S.Text="Чтение методики...";
 S.Num=1;
 ReadWrite.push_back(S);
-Zast->ReadWriteDoc->Execute();
+Zast->MClient->BlockServer("ReadWriteDoc");
+//Zast->ReadWriteDoc->Execute();
 }
 //---------------------------------------------------------------------------
 

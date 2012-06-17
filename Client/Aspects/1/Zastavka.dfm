@@ -10253,5 +10253,21 @@ object Zast: TZast
       Caption = 'MergeAspectsUserQ'
       OnExecute = MergeAspectsUserQExecute
     end
+    object PreLoadLogins: TAction
+      Caption = 'PreLoadLogins'
+      OnExecute = PreLoadLoginsExecute
+    end
+  end
+  object BlockServer: TTimer
+    Enabled = False
+    OnTimer = BlockServerTimer
+    Left = 432
+    Top = 24
+  end
+  object UnBlockServer: TTimer
+    Enabled = False
+    OnTimer = UnBlockServerTimer
+    Left = 432
+    Top = 56
   end
 end

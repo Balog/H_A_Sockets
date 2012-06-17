@@ -181,6 +181,9 @@ __published:	// IDE-managed Components
         TAction *MergeAspectsUser;
         TAction *WriteAspectsUsr;
         TAction *MergeAspectsUserQ;
+        TAction *PreLoadLogins;
+        TTimer *BlockServer;
+        TTimer *UnBlockServer;
         void __fastcall Timer1Timer(TObject *Sender);
         void __fastcall Image1Click(TObject *Sender);
         void __fastcall FormShow(TObject *Sender);
@@ -277,6 +280,9 @@ __published:	// IDE-managed Components
         void __fastcall MergeAspectsUserExecute(TObject *Sender);
         void __fastcall WriteAspectsUsrExecute(TObject *Sender);
         void __fastcall MergeAspectsUserQExecute(TObject *Sender);
+        void __fastcall PreLoadLoginsExecute(TObject *Sender);
+        void __fastcall BlockServerTimer(TObject *Sender);
+        void __fastcall UnBlockServerTimer(TObject *Sender);
 private:	// User declarations
 String Path;
 TLocateOptions SO;
@@ -291,6 +297,7 @@ void MergeLogins();
 void MergeOtdels();
 void MergeAspects(int NumLogin, bool Quit);
 
+
 public:		// User declarations
 bool Saved;
 bool Stop;
@@ -304,7 +311,7 @@ MDBConnector* ADOSvod;
 vector<String>Parameters;
 
 int Role;
-
+void WaitBlockServer(bool Flag);
         __fastcall TZast(TComponent* Owner);
 String ServerName;
 Client *MClient;

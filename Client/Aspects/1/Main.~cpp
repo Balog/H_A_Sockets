@@ -1679,7 +1679,6 @@ Podr->Post();
 
 void __fastcall TDocuments::MenuItem4Click(TObject *Sender)
 {
-// Socket->Socket->SendText("Command:5;2|"+IntToStr(NameDB.Length())+"#"+NameDB+"|"+ServerSQL.Length()+"#"+ServerSQL+"|");
  Zast->MClient->Act.ParamComm.clear();
  Zast->MClient->Act.ParamComm.push_back("DeletePodr");
 
@@ -1695,29 +1694,7 @@ void __fastcall TDocuments::MenuItem1Click(TObject *Sender)
 {
 // Добавить
 Ins=true;
-/*
-ADODataSet1->Last();
-int Max=ADODataSet1->FieldByName("Макс граница")->Value;
-bool Cr=ADODataSet1->FieldByName("Критерий")->Value;
-ADODataSet1->Append();
-ADODataSet1->FieldByName("Мин граница")->Value=Max;
-ADODataSet1->FieldByName("Макс граница")->Value=Max+1;
-ADODataSet1->FieldByName("Критерий")->Value=Cr;
-ADODataSet1->FieldByName("Наименование значимости")->Value="Новая значимость";
-ADODataSet1->FieldByName("Необходимая мера")->Value="Новая необходимая мера";
 
-if (Cr==true)
-{
-ADODataSet1->FieldByName("Критерий1")->Value="Да";
-}
-else
-{
-ADODataSet1->FieldByName("Критерий1")->Value="Нет";
-}
-
-ADODataSet1->Post();
-ADODataSet1->Last();
-*/
 ADODataSet1->Last();
 int Max=ADODataSet1->FieldByName("Макс граница")->Value;
 //int Min=ADODataSet1->FieldByName("Мин граница")->Value;
@@ -1757,22 +1734,7 @@ ADODataSet1->Delete();
 ADODataSet2->Active=false;
 ADODataSet2->CommandText="Select * From Значимость Order By [Мин граница] DESC";
 ADODataSet2->Active=true;
-/*
-int Min=ADODataSet2->FieldByName("Мин граница")->Value;
 
-ADODataSet2->Prior();
-for(int i=1;i<ADODataSet2->RecordCount;i++)
-{
-ADODataSet2->Edit();
-// int Min=ADODataSet1->FieldByName("Мин граница")->Value;
-
-
-ADODataSet2->FieldByName("Макс граница")->Value=Min-1;
-Min=ADODataSet2->FieldByName("Мин граница")->Value;
-ADODataSet2->Post();
-ADODataSet2->Prior();
-}
-*/
 ADODataSet2->First();
 int Min=ADODataSet2->FieldByName("Мин граница")->Value;
 ADODataSet2->Edit();
@@ -1865,7 +1827,7 @@ C=true;
 Crit2(DataSet);
 C=false;
 }
-//Button1->Enabled=true;         
+
 }
 //---------------------------------------------------------------------------
 
@@ -1964,13 +1926,11 @@ ADODataSet1->CommandText="select * from Значимость Order By [Мин граница]";
 ADODataSet1->Active=true;
 DataSet->First();
 
-//bool K=false;
 for(int i=0;i<DataSet->RecordCount;i++)
 {
 if(DataSet->FieldByName("Мин граница")->Value>DataSet->FieldByName("Макс граница")->Value)
 {
  ShowMessage("В списке уже есть минмальная граница равная "+DataSet->FieldByName("Мин граница")->Value+" исправьте ее");
-//K=true;
 
 break;
 }
@@ -2019,9 +1979,7 @@ void __fastcall TDocuments::TreeView1MouseDown(TObject *Sender,
       TMouseButton Button, TShiftState Shift, int X, int Y)
 {
 TTreeNode* N=TreeView1->GetNodeAt(X,Y);
-//if(N!=NULL)
-//{
-//N->Selected=true;
+
 THitTests HT;
 HT=TreeView1->GetHitTestInfoAt(X,Y);
 if (HT.Contains(htOnItem))
@@ -2049,9 +2007,7 @@ SelNode=TreeView1->Selected;
 
 XX=X;
 YY=Y;
-// TreeView1->Items->Delete(TreeView1->GetNodeAt(X,Y));
 }
-//}        
 }
 //---------------------------------------------------------------------------
 
@@ -2202,7 +2158,6 @@ if (HT.Contains(htOnItem))
 {
 N->Selected=true;
 SelNode=TreeView4->Selected;
-//ShowMessage(SelNode->Text);
  if (Button==mbRight)
  {
   TPoint TP;

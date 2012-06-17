@@ -57,7 +57,8 @@ void WriteDiaryEvent(String Comp, String Login, String Type, String Name, String
 void WriteDiaryEvent(String Comp, String Login, String Type, String Name);
 void ConnectDiary(String DiaryPatch);
 void Clients::SearchDubl(String IP, String Login, String AppPatch, TCustomWinSocket *S);
-
+TCustomWinSocket *Block;
+bool IfBlock(TCustomWinSocket *Socket, String Flag);
 };
 //-------------------------------------------------------------------------
 class Client

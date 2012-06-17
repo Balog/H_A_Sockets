@@ -7,7 +7,7 @@
 #include "Reports.h"
 #include "MasterPointer.h"
 #include "Zastavka.h"
-#include "IdGlobal.hpp"
+
 #include "MainForm.h"
 #include "Rep1.h"
 //---------------------------------------------------------------------------

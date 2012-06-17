@@ -87,11 +87,8 @@ if(Start)
 {
 Timer1->Enabled=false;
 //Pass->Show();
- Zast->MClient->Act.ParamComm.clear();
- Zast->MClient->Act.ParamComm.push_back("ViewLogins");
 
- Zast->MClient->ReadTable("Аспекты","Select Login, Code1, Code2, Role from Logins Where Role<>1", "Аспекты", "Select Login, Code1, Code2, Role From TempLogins");
-
+MClient->BlockServer("PreLoadLogins");
 
 Timer1->Enabled=false;
 }
@@ -438,7 +435,7 @@ Pass->CbLogin->Items->Add(Tab->FieldByName("Login")->AsString);
 Pass->CbLogin->ItemIndex=0;
 Pass->EdPass->Text="";
 
-
+MClient->UnBlockServer("");
 Pass->ShowModal();
 
 }
@@ -461,11 +458,6 @@ if(ErrorCode==10061 | ErrorCode==10060)
 
 void __fastcall TZast::BeginWorkExecute(TObject *Sender)
 {
-String Login=MClient->Act.ParamComm[0];
-int Role=StrToInt(MClient->Act.ParamComm[1]);
-
-
-
 switch (Role)
 {
  case 2:
@@ -483,8 +475,8 @@ switch (Role)
  }
  case 3:
  {
-  Form1->Login=Login;
-   Form1->Caption="Пользователь: "+Login;
+  //Form1->Login=Login;
+   Form1->Caption="Пользователь: "+Form1->Login;
 
 
  //тут тоже надо сначала считать обновления данных
@@ -501,8 +493,8 @@ switch (Role)
  {
  //тут тоже надо сначала считать обновления данных
 
- Form1->Login=Login;
- Form1->Caption="Демонстрационный пользователь: "+Login+"                ***ЗАПИСЬ НА СЕРВЕР ОТКЛЮЧЕНА***";
+ //Form1->Login=Login;
+ Form1->Caption="Демонстрационный пользователь: "+Form1->Login+"                ***ЗАПИСЬ НА СЕРВЕР ОТКЛЮЧЕНА***";
  Zast->MClient->Act.ParamComm.clear();
  Zast->MClient->Act.ParamComm.push_back("StartLoadPodrUSR");
  Zast->MClient->ReadTable("Аспекты", "Select Logins.Num, Logins.Login, Logins.Role From Logins Order by Num;", "Аспекты_П", "Select TempLogins.Num, TempLogins.Login, TempLogins.Role From TempLogins Order by Num;");
@@ -571,8 +563,9 @@ Documents->Metod->Active=false;
 Documents->Metod->Active=true;
 
 Zast->MClient->WriteDiaryEvent("NetAspects","Конец загрузки методики (главспец)","");
-
-ReadWriteDoc->Execute();
+//Sleep(1000);
+Zast->MClient->UnBlockServer("ReadWriteDoc");
+//ReadWriteDoc->Execute();
 }
 //---------------------------------------------------------------------------
 
@@ -581,6 +574,7 @@ void __fastcall TZast::ReadMetodikaExecute(TObject *Sender)
  Zast->MClient->Act.ParamComm.clear();
  Zast->MClient->Act.ParamComm.push_back("MergeMetodika");
 Zast->MClient->ReadTable("Reference", "Select [Номер], [Методика] From Методика", "Reference", "Select [Номер], [Методика] From Методика");
+
 
 }
 //---------------------------------------------------------------------------
@@ -1996,6 +1990,7 @@ Comm->Execute();
 
 if(Role==2)
 {
+MClient->UnBlockServer("");
 Documents->Show();
 }
 else
@@ -2510,6 +2505,7 @@ Zast->MClient->ReadTable("Аспекты", "Select ObslOtdel.Login, ObslOtdel.NumObslOt
 void __fastcall TZast::ShowForm1Execute(TObject *Sender)
 {
 Form1->Show();
+MClient->UnBlockServer("");
 ReadWriteDoc->Execute();
 }
 //---------------------------------------------------------------------------
@@ -2645,6 +2641,59 @@ Zast->ClientSocket->Socket->SendText("Command:18;1|"+IntToStr(IntToStr(Form1->Nu
 void __fastcall TZast::MergeAspectsUserQExecute(TObject *Sender)
 {
 MergeAspects(Form1->NumLogin, true);
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TZast::PreLoadLoginsExecute(TObject *Sender)
+{
+ Zast->MClient->Act.ParamComm.clear();
+ Zast->MClient->Act.ParamComm.push_back("ViewLogins");
+
+ Zast->MClient->ReadTable("Аспекты","Select Login, Code1, Code2, Role from Logins Where Role<>1", "Аспекты", "Select Login, Code1, Code2, Role From TempLogins");
+
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TZast::BlockServerTimer(TObject *Sender)
+{
+if(Prog->Position<Prog->PB->Max)
+{
+Prog->PB->Position++;
+}
+else
+{
+ClientSocket->Socket->SendText("Command:19;1|1#1");
+BlockServer->Enabled=false;
+}
+
+
+}
+//---------------------------------------------------------------------------
+void TZast::WaitBlockServer(bool Flag)
+{
+if(Flag)
+{
+ //Начинаем ожидание
+ Prog->PB->Min=0;
+ Prog->PB->Position=0;
+ Prog->PB->Max=9;
+
+ Prog->Show();
+ BlockServer->Enabled=true;
+}
+else
+{
+ //Ожидание закончено
+ BlockServer->Enabled=false;
+ Prog->Close();
+}
+}
+//---------------------------------------------------------------------------
+void __fastcall TZast::UnBlockServerTimer(TObject *Sender)
+{
+
+ Zast->MClient->Act.WaitCommand=20;
+ ClientSocket->Socket->SendText("Command:20;1|1#0");
 }
 //---------------------------------------------------------------------------
 

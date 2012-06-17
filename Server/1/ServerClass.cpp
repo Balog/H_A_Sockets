@@ -13,7 +13,7 @@
 Clients::Clients(TComponent* Owner)
 {
 pOwner=Owner;
-
+Block=0;
 }
 //-------------------------------------------------------
 Clients::~Clients()
@@ -135,6 +135,57 @@ if(ExtractFileName(VClients[i]->AppPatch)=="Hazards.exe")
  Form1->ListBox1->Items->Add(VClients[i]->IP+" "+App+" "+VClients[i]->Login);
 }
 }
+//-------------------------------------------------------------------------
+bool Clients::IfBlock(TCustomWinSocket *Socket, String Flag)
+{
+bool Ret=false;
+if(Block==0)
+{
+ //Сервер не заблокирован
+ if(Flag=="1")
+ {
+ //Команда блокировать
+ //Блокируем
+ Block=Socket;
+ Ret=true;
+ }
+ else
+ {
+ //Сервер не заблокирован
+ //Но разблокировать его конечно можно хоть и бесполезно
+  Ret=true;
+ }
+}
+else
+{
+ //Сервер уже заблокирован
+ //Проверим, заблокирован ли он правильным клиентом
+ if(Block==Socket)
+ {
+  //Клиент правильный
+  if(Flag=="0")
+  {
+   //Команда разблокировки
+   Block=0;
+   Ret=true;
+  }
+  else
+  {
+   //Повторная блокировка тем же клиентом
+   //Можно хоть и бесполезно
+   Ret=true;
+  }
+ }
+ else
+ {
+ //Не тот клиент
+ //Нельзя ни заблокировать ни разблокировать
+  Ret=false;
+ }
+}
+return Ret;
+}
+//-------------------------------------------------------------------------
 //********************************************************
 Client::Client(Clients* Cls)
 {
@@ -378,6 +429,41 @@ Parent->WriteDiaryEvent(IP, Login, "AdminARM", "Запись логинов", "Имя: "+Paramet
    {
    MergeAspectsUser(StrToInt(Parameters[0]));
    this->Socket->SendText("Command:18;0|");
+   break;
+   }
+   case 19:
+   {
+   //:IfBlock(TCustomWinSocket *Socket, bool Flag)
+   bool Res=Parent->IfBlock(this->Socket,"1");
+   if(Res)
+   {
+    //Сервер удалось заблокировать
+    Parent->WriteDiaryEvent(IP, Login, "Сервер", "Сервер заблокирован", "Путь: "+AppPatch);
+    this->Socket->SendText("Command:19;1|1#1");
+   }
+   else
+   {
+    //Сервер не удалось заблокировать
+    Parent->WriteDiaryEvent(IP, Login, "Сервер", "Сервер заблокировать не удалось", "Путь: "+AppPatch);
+    this->Socket->SendText("Command:19;1|1#0");
+   }
+   break;
+   }
+   case 20:
+   {
+   bool Res=Parent->IfBlock(this->Socket,"0");
+   if(Res)
+   {
+    //Сервер разблокирован
+    Parent->WriteDiaryEvent(IP, Login, "Сервер", "Сервер разблокирован", "Путь: "+AppPatch);
+    this->Socket->SendText("Command:20;1|1#1");
+   }
+   else
+   {
+    //Сервер разблокировать не удалось
+    Parent->WriteDiaryEvent(IP, Login, "Сервер", "Сервер разблокировать не удалось", "Путь: "+AppPatch);
+    this->Socket->SendText("Command:20;1|1#0");
+   }
    break;
    }
  }
