@@ -41,7 +41,7 @@ for(int i=0;i<NumBase;i++)
 {
  String NameSect="Base"+IntToStr(i+1);
  BaseItem BI;
-
+ BI.LicCount=0;
  BI.Name=Ini->ReadString(NameSect,"Name","");
 
 int MS=Ini->ReadInteger(NameSect,"MainSpec",0);
@@ -51,7 +51,8 @@ BI.MainSpec=false;
  Base->Items->Add(BI.Name);
 
  String Lic=Ini->ReadString(NameSect,"License","");
-
+if(Lic!="")
+{
  FILE *F;
 String File=ExtractFilePath(Application->ExeName)+Lic;
 //Form1->MyClients->DiaryEvent->WriteEvent(Now(),"Не определен", "Еще не определен", "Лицензия", "Открываю файл лицензии", File);
@@ -75,7 +76,11 @@ else
  BI.LicCount=LC;
 
 }
-
+}
+else
+{
+ BI.LicCount=0;
+}
 }
 else
 {

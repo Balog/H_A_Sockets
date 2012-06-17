@@ -223,6 +223,11 @@ for(unsigned int i=0;i<Cl->VClients.size();i++)
 {
  if(Cl->VClients[i]->Socket==Socket)
  {
+  if(Cl->Block==Socket)
+  {
+   Cl->Block=0;
+  }
+
   Cl->DiaryEvent->WriteEvent(Now(),Cl->VClients[i]->IP,Cl->VClients[i]->Login , "Сервер", "Клиент отключен","Путь: "+Cl->VClients[i]->AppPatch);
   Cl->VClients.erase(Cl->IVC);
   break;
@@ -267,6 +272,10 @@ for(unsigned int i=0;i<Cl->VClients.size();i++)
 {
  if(Cl->VClients[i]->Socket==Socket)
  {
+  if(Cl->Block==Socket)
+  {
+   Cl->Block=0;
+  }
 //Cl->DiaryEvent->WriteEvent(Now(),Cl->VClients[i]->IP,Cl->VClients[i]->Login , "Сервер", "Клиент отключен","Путь: "+Cl->VClients[i]->AppPatch);
  Comp=Cl->VClients[i]->IP;
  Login=Cl->VClients[i]->Login;
