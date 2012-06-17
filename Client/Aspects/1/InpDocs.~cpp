@@ -322,28 +322,32 @@ switch (Mode)
 if(IForm==2)
 {
 //-----
+ MAsp->Index=InputDocs->NumBr;
 switch (Mode)
 {
  case 1:
  {
  MAsp->ComboBox4->Text=InputDocs->TextBr;
- MAsp->Index=InputDocs->NumBr;
+
  MAsp->InpTer();
  break;
  }
  case 2:
  {
+  MAsp->ComboBox5->Text=InputDocs->TextBr;
  MAsp->InpDeyat();
  break;
  }
  case 3:
  {
+  MAsp->ComboBox6->Text=InputDocs->TextBr;
  MAsp->InpAsp();
 
  break;
  }
  case 4:
  {
+  MAsp->ComboBox7->Text=InputDocs->TextBr;
  MAsp->InpVozd();
  break;
  }

@@ -8,9 +8,7 @@
 #include <StdCtrls.hpp>
 #include <Forms.hpp>
 #include <ComCtrls.hpp>
-//#include "Docs.h"
 #include "Main.h"
-//#include "MainForm.h"
 #include "Zastavka.h"
 #include <ADODB.hpp>
 #include <DB.hpp>

@@ -90,7 +90,6 @@ for(int i=0;i<Nodes->RecordCount;i++)
  {
   Nodes->Delete();
  }
-// Nodes->Next();
  }
  Nodes->Next();
 }
@@ -117,8 +116,6 @@ MyNodePtr->Parent=0;
 MyNodePtr->Node=true;
 
 Nodes->Edit();
-//N1=TreeView1->Items->Add(0,Text);
-//N1=TreeView1->Items->AddChildObject(NULL,Text+" "+IntToStr(MyNodePtr->Number)+" "+IntToStr(MyNodePtr->Parent)+" Узел",MyNodePtr);
 N1=TreeView1->Items->AddChildObject(NULL,Text,MyNodePtr);
 
 Nodes->Post();
@@ -137,7 +134,6 @@ MyNodePtr = new TMyNode;
 MyNodePtr->Number=NumBranches;
 MyNodePtr->Parent=BranchesParent;
 MyNodePtr->Node=false;
-//N2=TreeView1->Items->AddChildObject(N1,TextBranches+" "+IntToStr(MyNodePtr->Number)+" "+IntToStr(MyNodePtr->Parent)+" Ветвь",MyNodePtr);
 if (View==true)
 {
 TreeView1->Items->AddChildObject(N1,TextBranches,MyNodePtr);
@@ -174,13 +170,7 @@ MyNodePtr = new TMyNode;
 MyNodePtr->Number=NumNode;
 MyNodePtr->Parent=NumParent;
 MyNodePtr->Node=true;
-//N=TreeView1->Items->AddChildObject(ParNod,TextNode+" "+IntToStr(MyNodePtr->Number)+" "+IntToStr(MyNodePtr->Parent)+" Узел",MyNodePtr);
 N=TreeView1->Items->AddChildObject(ParNod,TextNode,MyNodePtr);
-
-//N=TreeView1->Items->AddChild(ParNod,TextNode);
-//Nodes->Edit();
-
-//Nodes->Post();
 Nod NN;
 NN.Number=NumNode;
 NN.Parent=NumParent;
@@ -204,7 +194,6 @@ MyNodePtr = new TMyNode;
 MyNodePtr->Number=NumBranches;
 MyNodePtr->Parent=BranchesParent;
 MyNodePtr->Node=false;
-//N2=TreeView1->Items->AddChildObject(N,TextBranches+" "+IntToStr(MyNodePtr->Number)+" "+IntToStr(MyNodePtr->Parent)+" Ветвь",MyNodePtr);
 TreeView1->Items->AddChildObject(N,TextBranches,MyNodePtr);
 
 Branches->Edit();
@@ -220,13 +209,6 @@ Branches->Active=false;
 
 TreeView1->Items->EndUpdate();
 TreeView1->Items->Item[0]->Expand(false);
-/*
-for(int i=0;i<TreeView1->Items->Count;i++)
-{
-TreeView1->Items->Item[i]->Expand(true);
-}
-
-*/
 }
 //---------------------------------------------------------------------------
 
@@ -248,15 +230,7 @@ else
 {
 Button1->Enabled=false;
 }
-//ShowMessage(SelNode->Text);
-
-
-//XX=X;
-//YY=Y;
-
 }
-//PMyNode(SelNode->Data)->Node
-//PMyNod(SelNode->Data)->Node
 }
 //---------------------------------------------------------------------------
 

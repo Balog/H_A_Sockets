@@ -16,7 +16,6 @@ object FSvod: TFSvod
   OldCreateOrder = False
   Position = poScreenCenter
   OnActivate = FormActivate
-  OnClose = FormClose
   OnKeyUp = FormKeyUp
   OnShow = FormShow
   PixelsPerInch = 96

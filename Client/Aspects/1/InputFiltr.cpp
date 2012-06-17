@@ -24,12 +24,7 @@ this->Close();
 //---------------------------------------------------------------------------
 void __fastcall TFilter::RadioGroup1Click(TObject *Sender)
 {
-/*
-Edit1->Text="";
-Edit2->Text="";
-Edit3->Text="";
-Edit4->Text="";
-*/
+
  Button5->Enabled=false;
 switch (RadioGroup1->ItemIndex)
 {
@@ -182,21 +177,7 @@ ComboBox3->Visible=true;
 //---------------------------------------------------------------------------
 void __fastcall TFilter::FormShow(TObject *Sender)
 {
-//RadioGroup1->ItemIndex=5;
-/*
-if (Zast->Connect==true)
-{
 
-ComboBox1->Clear();
-Podr->First();
-for(int i=0;i<Podr->RecordCount;i++)
-{
- AnsiString T=Podr->FieldByName("Название подразделения")->Value;
- ComboBox1->Items->Add(T);
- Podr->Next();
-}
-}
-*/
 Podr->Active=false;
 Podr->CommandText=Form1->Podrazdel->CommandText;
 Podr->Connection=Zast->ADOUsrAspect;
@@ -333,7 +314,6 @@ void TFilter::InpDeyat()
 {
 ComboBox5->Text=InputDocs->TextBr;
 Index=InputDocs->NumBr;
-//"SELECT Аспекты.* FROM Logins INNER JOIN ((Подразделения INNER JOIN Аспекты ON Подразделения.[Номер подразделения] = Аспекты.Подразделение) INNER JOIN ObslOtdel ON Подразделения.[Номер подразделения] = ObslOtdel.NumObslOtdel) ON Logins.Num = ObslOtdel.Login WHERE (((Logins.AdmNum)="+IntToStr(NumLogin)+")) ORDER BY Аспекты.[Номер аспекта]"
 CText="SELECT Аспекты.* FROM Logins INNER JOIN ((Подразделения INNER JOIN Аспекты ON Подразделения.[Номер подразделения] = Аспекты.Подразделение) INNER JOIN ObslOtdel ON Подразделения.[Номер подразделения] = ObslOtdel.NumObslOtdel) ON Logins.Num = ObslOtdel.Login WHERE (((Logins.ServerNum)="+IntToStr(Form1->NumLogin)+")) AND Деятельность="+IntToStr(Index)+" Order By [Номер аспекта]";
 Filtr1="Деятельность="+IntToStr(Index);
 Filtr2="Значимость=True AND Деятельность="+IntToStr(Index);
@@ -361,8 +341,6 @@ void TFilter::InpVozd()
 {
 ComboBox7->Text=InputDocs->TextBr;
 Index=InputDocs->NumBr;
-//CText="SELECT Аспекты.* FROM Logins INNER JOIN ((Подразделения INNER JOIN Аспекты ON Подразделения.[Номер подразделения] = Аспекты.Подразделение) INNER JOIN ObslOtdel ON Подразделения.[Номер подразделения] = ObslOtdel.NumObslOtdel) ON Logins.Num = ObslOtdel.Login WHERE (((Logins.Num)="+IntToStr(Form1->NumLogin)+")) AND  Воздействие="+IntToStr(Index)+" Order By [Номер аспекта]";
-
 CText="SELECT Аспекты.* FROM Logins INNER JOIN ((Подразделения INNER JOIN Аспекты ON Подразделения.[Номер подразделения] = Аспекты.Подразделение) INNER JOIN ObslOtdel ON Подразделения.[Номер подразделения] = ObslOtdel.NumObslOtdel) ON Logins.Num = ObslOtdel.Login WHERE (((Logins.ServerNum)="+IntToStr(Form1->NumLogin)+")) AND  Воздействие="+IntToStr(Index)+" Order By [Номер аспекта]";
 
 Filtr1="Воздействие="+IntToStr(Index);
@@ -467,14 +445,7 @@ else
 void __fastcall TFilter::FormClose(TObject *Sender, TCloseAction &Action)
 {
 AnsiString A=Form1->Aspects->CommandText;
-if (A=="Select * From Аспекты Order By [Номер аспекта]")
-{
-  //Form1->BitBtn5->Enabled=true;
-}
-else
-{
-  //Form1->BitBtn5->Enabled=false;
-}
+
 }
 //---------------------------------------------------------------------------
 void __fastcall TFilter::ComboBox2Click(TObject *Sender)
@@ -675,7 +646,6 @@ Tab->MoveBy(ComboBox4->ItemIndex);
 ComboBox4->Text=Tab->FieldByName("Наименование территории")->AsString;
 if(!ComboBox4->DroppedDown & ComboBox4->ItemIndex!=-1)
 {
-//MAsp->Index=Tab->FieldByName("Номер территории")->AsInteger;
 InputDocs->NumBr=Tab->FieldByName("Номер территории")->AsInteger;
 InputDocs->TextBr=Tab->FieldByName("Наименование территории")->AsString;
 InpTer();

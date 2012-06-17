@@ -114,25 +114,15 @@ private:	// User declarations
 bool Cont;
 TLocateOptions SO;
 
-
-String LoadAspects();
 void MergeAspects();
 
-
-
 AnsiString CText;
-
-
-
-
-
 
 public:		// User declarations
 void InpTer();
 void InpDeyat();
 void InpAsp();
 void InpVozd();
-String SaveAspects();
 int Index;
 void ChangeCPodr();
         __fastcall TMAsp(TComponent* Owner);

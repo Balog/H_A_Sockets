@@ -9,7 +9,6 @@
 #include "MasterPointer.h"
 #include "PassForm.h"
 #include "Zastavka.h"
-//#include "EditLogin.h"
 #include "Progress.h"
 #include "About.h"
 #include "Rep1.h"
@@ -65,15 +64,6 @@ switch (Application->MessageBoxA("Записать все изменения на сервер?","Выход из п
 {
  case IDYES:
  {
- /*
-Zast->Stop=true;
-Zast->MClient->Act.WaitCommand=0;
-
-Zast->Saved=false;
-//Zast->PrepareSaveLogins->Execute();
-
-*/
-
 Prog->Show();
 Prog->PB->Min=0;
 Prog->PB->Position=0;
@@ -175,7 +165,6 @@ ADODataSet1->Active=true;
 //***
 Initialize();
 //***
-//PageControl1->TabIndex=0;
 PageControl1->ActivePageIndex=0;
 
 Metod->Active=true;
@@ -185,7 +174,6 @@ DBMemo1->ReadOnly=!ReadMetod->Checked;
 //---------------------------------------------------------------------------
 void __fastcall TDocuments::N9Click(TObject *Sender)
 {
-//this->Close();
 //Добавить проверку на отсутствие у родителя удаляемой ветви (узла) потомков
 //и перевода его в категорию ветвей
 TTreeNode *N;
@@ -247,8 +235,6 @@ if (Branches->RecordCount==0 & Nodes->RecordCount==0)
  PMyNode(ParNode->Data)->Number=Number;
  PMyNode(ParNode->Data)->Parent=NumParent;
  PMyNode(ParNode->Data)->Node=false;
- //
- //ParNode->Text=Text+" "+IntToStr(Number)+" "+IntToStr(NumParent)+" Ветвь";
 }
 }
 }
@@ -309,7 +295,6 @@ MyNodePtr = new TMyNode;
 
 TTreeNode *N;
 TTreeNode *N1;
-//TTreeNode *N2;
 int NumParent;
 TreeView1->Items->BeginUpdate();
 TreeView1->Items->Clear();
@@ -423,15 +408,7 @@ Branches->Active=false;
 
 TreeView1->Items->EndUpdate();
 
-//ShowMessage(TreeView1->Items->Item[0]->Text);
 TreeView1->Items->Item[0]->Expand(false);
-/*
-for(int i=0;i<TreeView1->Items->Count;i++)
-{
-ShowMessage(TreeView1->Items->Item[i]->Text);
-TreeView1->Items->Item[i]->Expand(false);
-}
-*/
 }
 //-------------------------------------------------------------------------------------------------
 void TDocuments::LoadTab2()
@@ -452,7 +429,6 @@ for(int i=0;i<Nodes->RecordCount;i++)
  {
   Nodes->Delete();
  }
-// Nodes->Next();
  }
  Nodes->Next();
 }
@@ -581,12 +557,6 @@ Branches->Active=false;
 
 TreeView2->Items->EndUpdate();
 TreeView2->Items->Item[0]->Expand(false);
-/*
-for(int i=0;i<TreeView2->Items->Count;i++)
-{
-TreeView2->Items->Item[i]->Expand(true);
-}
-*/
 }
 //---------------------------------------------------------------------------------
 void TDocuments::LoadTab3()
@@ -607,7 +577,6 @@ for(int i=0;i<Nodes->RecordCount;i++)
  {
   Nodes->Delete();
  }
-// Nodes->Next();
  }
  Nodes->Next();
 }
@@ -688,10 +657,8 @@ MyNodePtr = new TMyNode;
 MyNodePtr->Number=NumNode;
 MyNodePtr->Parent=NumParent;
 MyNodePtr->Node=true;
-//N=TreeView1->Items->AddChildObject(ParNod,TextNode+" "+IntToStr(MyNodePtr->Number)+" "+IntToStr(MyNodePtr->Parent)+" Узел",MyNodePtr);
 N=TreeView3->Items->AddChildObject(ParNod,TextNode,MyNodePtr);
 
-//N=TreeView1->Items->AddChild(ParNod,TextNode);
 Nodes->Edit();
 
 Nodes->Post();
@@ -734,12 +701,6 @@ Branches->Active=false;
 
 TreeView3->Items->EndUpdate();
 TreeView3->Items->Item[0]->Expand(false);
-/*
-for(int i=0;i<TreeView3->Items->Count;i++)
-{
-TreeView3->Items->Item[i]->Expand(true);
-}
-*/
 }
 //------------------------------------------------------------------------------
 void TDocuments::LoadTab4()
@@ -841,10 +802,8 @@ MyNodePtr = new TMyNode;
 MyNodePtr->Number=NumNode;
 MyNodePtr->Parent=NumParent;
 MyNodePtr->Node=true;
-//N=TreeView1->Items->AddChildObject(ParNod,TextNode+" "+IntToStr(MyNodePtr->Number)+" "+IntToStr(MyNodePtr->Parent)+" Узел",MyNodePtr);
 N=TreeView4->Items->AddChildObject(ParNod,TextNode,MyNodePtr);
 
-//N=TreeView1->Items->AddChild(ParNod,TextNode);
 Nodes->Edit();
 
 Nodes->Post();
@@ -887,12 +846,7 @@ Branches->Active=false;
 
 TreeView4->Items->EndUpdate();
 TreeView4->Items->Item[0]->Expand(false);
-/*
-for(int i=0;i<TreeView4->Items->Count;i++)
-{
-TreeView4->Items->Item[i]->Expand(true);
-}
-*/
+
 }
 //---------------------------------------------------------------------------------
 void TDocuments::LoadTab5()
@@ -913,7 +867,7 @@ for(int i=0;i<Nodes->RecordCount;i++)
  {
   Nodes->Delete();
  }
-// Nodes->Next();
+
  }
  Nodes->Next();
 }
@@ -1038,12 +992,7 @@ Branches->Active=false;
 
 TreeView5->Items->EndUpdate();
 TreeView5->Items->Item[0]->Expand(false);
-/*
-for(int i=0;i<TreeView5->Items->Count;i++)
-{
-TreeView5->Items->Item[i]->Expand(true);
-}
-*/
+
 }
 //-----------------------------------------------------------------------------------------------------
 void __fastcall TDocuments::N3Click(TObject *Sender)
@@ -1051,7 +1000,6 @@ void __fastcall TDocuments::N3Click(TObject *Sender)
 int Number;
 bool IsNode;
 TTreeNode *N;
-//PMyNode(TreeView1->Selected->Data)->Number;
 
 //Номер предка
 //Нужно узнать номер новой ветви
@@ -1097,7 +1045,6 @@ Nodes->FieldByName("Название")->Value=Text;
 Nodes->Post();
 Nodes->Last();
 
-//PMyNode(TreeView1->Selected->Data)->Node
 PMyNode(SelNode->Data)->Number=Nodes->FieldByName("Номер узла")->Value;
 PMyNode(SelNode->Data)->Parent=Nodes->FieldByName("Родитель")->Value;
 PMyNode(SelNode->Data)->Node=true;
@@ -1127,7 +1074,6 @@ void __fastcall TDocuments::N10Click(TObject *Sender)
 int Number;
 bool IsNode;
 TTreeNode *N;
-//PMyNode(TreeView1->Selected->Data)->Number;
 
 //Номер предка
 //Нужно узнать номер новой ветви
@@ -1173,7 +1119,6 @@ Nodes->FieldByName("Название")->Value=Text;
 Nodes->Post();
 Nodes->Last();
 
-//PMyNode(TreeView1->Selected->Data)->Node
 PMyNode(SelNode->Data)->Number=Nodes->FieldByName("Номер узла")->Value;
 PMyNode(SelNode->Data)->Parent=Nodes->FieldByName("Родитель")->Value;
 PMyNode(SelNode->Data)->Node=true;
@@ -1258,8 +1203,7 @@ if (Branches->RecordCount==0 & Nodes->RecordCount==0)
  PMyNode(ParNode->Data)->Number=Number;
  PMyNode(ParNode->Data)->Parent=NumParent;
  PMyNode(ParNode->Data)->Node=false;
- //
- //ParNode->Text=Text+" "+IntToStr(Number)+" "+IntToStr(NumParent)+" Ветвь";
+
 }
 }
 }
@@ -1273,7 +1217,6 @@ void __fastcall TDocuments::N12Click(TObject *Sender)
 int Number;
 bool IsNode;
 TTreeNode *N;
-//PMyNode(TreeView1->Selected->Data)->Number;
 
 //Номер предка
 //Нужно узнать номер новой ветви
@@ -1319,7 +1262,6 @@ Nodes->FieldByName("Название")->Value=Text;
 Nodes->Post();
 Nodes->Last();
 
-//PMyNode(TreeView1->Selected->Data)->Node
 PMyNode(SelNode->Data)->Number=Nodes->FieldByName("Номер узла")->Value;
 PMyNode(SelNode->Data)->Parent=Nodes->FieldByName("Родитель")->Value;
 PMyNode(SelNode->Data)->Node=true;
@@ -1349,7 +1291,6 @@ void __fastcall TDocuments::N13Click(TObject *Sender)
 //Добавить проверку на отсутствие у родителя удаляемой ветви (узла) потомков
 //и перевода его в категорию ветвей
 TTreeNode *N;
-//N=TreeView1->GetNodeAt(XX,YY);
 
 int Number=PMyNode(TreeView3->Selected->Data)->Number;
 int Parent=PMyNode(TreeView3->Selected->Data)->Parent;
@@ -1404,8 +1345,7 @@ if (Branches->RecordCount==0 & Nodes->RecordCount==0)
  PMyNode(ParNode->Data)->Number=Number;
  PMyNode(ParNode->Data)->Parent=NumParent;
  PMyNode(ParNode->Data)->Node=false;
- //
- //ParNode->Text=Text+" "+IntToStr(Number)+" "+IntToStr(NumParent)+" Ветвь";
+
 }
 }
 }
@@ -1496,7 +1436,6 @@ void __fastcall TDocuments::N15Click(TObject *Sender)
 //Добавить проверку на отсутствие у родителя удаляемой ветви (узла) потомков
 //и перевода его в категорию ветвей
 TTreeNode *N;
-//N=TreeView1->GetNodeAt(XX,YY);
 
 int Number=PMyNode(TreeView4->Selected->Data)->Number;
 int Parent=PMyNode(TreeView4->Selected->Data)->Parent;
@@ -1551,8 +1490,7 @@ if (Branches->RecordCount==0 & Nodes->RecordCount==0)
  PMyNode(ParNode->Data)->Number=Number;
  PMyNode(ParNode->Data)->Parent=NumParent;
  PMyNode(ParNode->Data)->Node=false;
- //
- //ParNode->Text=Text+" "+IntToStr(Number)+" "+IntToStr(NumParent)+" Ветвь";
+
 }
 }
 }
@@ -1741,7 +1679,6 @@ Podr->Post();
 
 void __fastcall TDocuments::MenuItem4Click(TObject *Sender)
 {
-// Socket->Socket->SendText("Command:5;2|"+IntToStr(NameDB.Length())+"#"+NameDB+"|"+ServerSQL.Length()+"#"+ServerSQL+"|");
  Zast->MClient->Act.ParamComm.clear();
  Zast->MClient->Act.ParamComm.push_back("DeletePodr");
 
@@ -1757,32 +1694,10 @@ void __fastcall TDocuments::MenuItem1Click(TObject *Sender)
 {
 // Добавить
 Ins=true;
-/*
+
 ADODataSet1->Last();
 int Max=ADODataSet1->FieldByName("Макс граница")->Value;
-bool Cr=ADODataSet1->FieldByName("Критерий")->Value;
-ADODataSet1->Append();
-ADODataSet1->FieldByName("Мин граница")->Value=Max;
-ADODataSet1->FieldByName("Макс граница")->Value=Max+1;
-ADODataSet1->FieldByName("Критерий")->Value=Cr;
-ADODataSet1->FieldByName("Наименование значимости")->Value="Новая значимость";
-ADODataSet1->FieldByName("Необходимая мера")->Value="Новая необходимая мера";
-
-if (Cr==true)
-{
-ADODataSet1->FieldByName("Критерий1")->Value="Да";
-}
-else
-{
-ADODataSet1->FieldByName("Критерий1")->Value="Нет";
-}
-
-ADODataSet1->Post();
-ADODataSet1->Last();
-*/
-ADODataSet1->Last();
-int Max=ADODataSet1->FieldByName("Макс граница")->Value;
-int Min=ADODataSet1->FieldByName("Мин граница")->Value;
+//int Min=ADODataSet1->FieldByName("Мин граница")->Value;
 bool Cr=ADODataSet1->FieldByName("Критерий")->Value;
 ADODataSet1->Edit();
 ADODataSet1->FieldByName("Макс граница")->Value=Max-1;
@@ -1819,22 +1734,7 @@ ADODataSet1->Delete();
 ADODataSet2->Active=false;
 ADODataSet2->CommandText="Select * From Значимость Order By [Мин граница] DESC";
 ADODataSet2->Active=true;
-/*
-int Min=ADODataSet2->FieldByName("Мин граница")->Value;
 
-ADODataSet2->Prior();
-for(int i=1;i<ADODataSet2->RecordCount;i++)
-{
-ADODataSet2->Edit();
-// int Min=ADODataSet1->FieldByName("Мин граница")->Value;
-
-
-ADODataSet2->FieldByName("Макс граница")->Value=Min-1;
-Min=ADODataSet2->FieldByName("Мин граница")->Value;
-ADODataSet2->Post();
-ADODataSet2->Prior();
-}
-*/
 ADODataSet2->First();
 int Min=ADODataSet2->FieldByName("Мин граница")->Value;
 ADODataSet2->Edit();
@@ -1927,7 +1827,7 @@ C=true;
 Crit2(DataSet);
 C=false;
 }
-//Button1->Enabled=true;         
+
 }
 //---------------------------------------------------------------------------
 
@@ -2026,13 +1926,11 @@ ADODataSet1->CommandText="select * from Значимость Order By [Мин граница]";
 ADODataSet1->Active=true;
 DataSet->First();
 
-//bool K=false;
 for(int i=0;i<DataSet->RecordCount;i++)
 {
 if(DataSet->FieldByName("Мин граница")->Value>DataSet->FieldByName("Макс граница")->Value)
 {
  ShowMessage("В списке уже есть минмальная граница равная "+DataSet->FieldByName("Мин граница")->Value+" исправьте ее");
-//K=true;
 
 break;
 }
@@ -2081,9 +1979,7 @@ void __fastcall TDocuments::TreeView1MouseDown(TObject *Sender,
       TMouseButton Button, TShiftState Shift, int X, int Y)
 {
 TTreeNode* N=TreeView1->GetNodeAt(X,Y);
-//if(N!=NULL)
-//{
-//N->Selected=true;
+
 THitTests HT;
 HT=TreeView1->GetHitTestInfoAt(X,Y);
 if (HT.Contains(htOnItem))
@@ -2111,9 +2007,7 @@ SelNode=TreeView1->Selected;
 
 XX=X;
 YY=Y;
-// TreeView1->Items->Delete(TreeView1->GetNodeAt(X,Y));
 }
-//}        
 }
 //---------------------------------------------------------------------------
 
@@ -2264,7 +2158,6 @@ if (HT.Contains(htOnItem))
 {
 N->Selected=true;
 SelNode=TreeView4->Selected;
-//ShowMessage(SelNode->Text);
  if (Button==mbRight)
  {
   TPoint TP;

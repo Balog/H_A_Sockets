@@ -115,7 +115,7 @@ bool Cont;
 TLocateOptions SO;
 
 
-String LoadAspects();
+//String LoadAspects();
 void MergeAspects();
 
 
@@ -132,7 +132,7 @@ void InpTer();
 void InpDeyat();
 void InpAsp();
 void InpVozd();
-String SaveAspects();
+//String SaveAspects();
 int Index;
 void ChangeCPodr();
         __fastcall TMAsp(TComponent* Owner);

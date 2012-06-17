@@ -149,6 +149,7 @@ __published:	// IDE-managed Components
         TMenuItem *N11;
         TMenuItem *N12;
         TImageList *ImageList1;
+        TMenuItem *AspQ;
         void __fastcall FormClose(TObject *Sender, TCloseAction &Action);
         void __fastcall N8Click(TObject *Sender);
         void __fastcall CPodrazdelClick(TObject *Sender);
@@ -247,49 +248,51 @@ __published:	// IDE-managed Components
         void __fastcall ComboBox4Select(TObject *Sender);
         void __fastcall N11Click(TObject *Sender);
         void __fastcall N12Click(TObject *Sender);
+        void __fastcall AspQClick(TObject *Sender);
 private:	// User declarations
 bool Registered;
 TLocateOptions SO;
-bool LoadSpravs();
+//bool LoadSpravs();
 void SetAspects(String Login, int NumRec);
 void SavePosition();
 
-bool VerifySit();
-bool VerifyTerr();
-bool VerifyDeyat();
-bool VerifyAsp();
-bool VerifyVozd();
-bool VerifyCryt();
-bool VerifyMeropr();
+//bool VerifySit();
+//bool VerifyTerr();
+//bool VerifyDeyat();
+//bool VerifyAsp();
+//bool VerifyVozd();
+//bool VerifyCryt();
+//bool VerifyMeropr();
 
 bool LoadSit();
 void MergeSit();
 
-bool LoadTerr();
+//bool LoadTerr();
 void MergeTerr();
 
-bool LoadDeyat();
+//bool LoadDeyat();
 void MergeDeyat();
 
-bool LoadAsp();
+//bool LoadAsp();
 void MergeAsp();
 
-bool LoadVozd();
+//bool LoadVozd();
 void MergeVozd();
 
-bool LoadCryt();
+//bool LoadCryt();
 void MergeCryt();
 
 
 void RefreshLocalReference(String NameNode, String NameBranch);
 
-bool LoadPodr();
+//bool LoadPodr();
 void EnabledForm(bool B);
 
 public:		// User declarations
         __fastcall TForm1(TComponent* Owner);
 
 bool Demo;
+bool Quit;
 int NumLogin;
 String Login;
 int Role;
@@ -327,9 +330,9 @@ void CreateReport2(int Podr, TDateTime Date1, TDateTime Date2, AnsiString Isp);
 */
 AnsiString Filtr1, Filtr2;
 
-bool  PrepareSaveAspects();
-bool  SaveAspects();
-bool LoadAspects(int NumLogin);
+//bool  PrepareSaveAspects();
+//bool  SaveAspects();
+//bool LoadAspects(int NumLogin);
 void PrepareMergeAspects();
 void  MergeAspects(int NumLogin);
 

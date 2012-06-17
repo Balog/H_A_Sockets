@@ -190,6 +190,7 @@ __published:	// IDE-managed Components
         TAction *ShowForm1;
         TAction *MergeAspectsUser;
         TAction *WriteAspectsUsr;
+        TAction *MergeAspectsUserQ;
         void __fastcall Timer1Timer(TObject *Sender);
         void __fastcall Image1Click(TObject *Sender);
         void __fastcall FormShow(TObject *Sender);
@@ -285,6 +286,7 @@ __published:	// IDE-managed Components
         void __fastcall ShowForm1Execute(TObject *Sender);
         void __fastcall MergeAspectsUserExecute(TObject *Sender);
         void __fastcall WriteAspectsUsrExecute(TObject *Sender);
+        void __fastcall MergeAspectsUserQExecute(TObject *Sender);
 private:	// User declarations
 String Path;
 TLocateOptions SO;
@@ -297,7 +299,7 @@ int Port;
 bool Start;
 void MergeLogins();
 void MergeOtdels();
-void MergeAspects(int NumLogin);
+void MergeAspects(int NumLogin, bool Quit);
 
 public:		// User declarations
 bool Saved;

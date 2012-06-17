@@ -14,6 +14,8 @@ USEFORM("FMoveAsp.cpp", MAsp);
 USEFORM("InpDocs.cpp", InputDocs);
 USEFORM("InputFiltr.cpp", Filter);
 USEFORM("About.cpp", FAbout);
+USEFORM("F_Vvedenie.cpp", Vvedenie);
+USEFORM("Metod.cpp", Metodika);
 //---------------------------------------------------------------------------
 WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 {
@@ -31,6 +33,8 @@ WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
                  Application->CreateForm(__classid(TInputDocs), &InputDocs);
                  Application->CreateForm(__classid(TFilter), &Filter);
                  Application->CreateForm(__classid(TFAbout), &FAbout);
+                 Application->CreateForm(__classid(TVvedenie), &Vvedenie);
+                 Application->CreateForm(__classid(TMetodika), &Metodika);
                  Application->Run();
         }
         catch (Exception &exception)

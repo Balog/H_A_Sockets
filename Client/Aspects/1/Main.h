@@ -3,7 +3,6 @@
 #include <Controls.hpp>
 #include <StdCtrls.hpp>
 #include <Forms.hpp>
-//#include "ServerClass.h"
 #include <ADODB.hpp>
 #include <DB.hpp>
 #include <ExtCtrls.hpp>
@@ -20,17 +19,11 @@
 #include <vector>
 #include <deque>
 #include "MDBConnector.h"
-//#include "Diary.h"
 #ifndef MainH
 #define MainH
 //---------------------------------------------------------------------------
-
-
-
-
 typedef struct MyNode
 {
-//  AnsiString FName, LName;
 int Number;
 int Parent;
  bool Node;
@@ -308,9 +301,6 @@ void LoadTab3();
 void LoadTab4();
 void LoadTab5();
 
-
-
-//Client *MClient;
         BEGIN_MESSAGE_MAP
           VCL_MESSAGE_HANDLER(WM_SYSCOMMAND, TMessage, WMSysCommand)
         END_MESSAGE_MAP(TComponent);

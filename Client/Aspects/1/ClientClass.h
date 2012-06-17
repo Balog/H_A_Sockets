@@ -74,7 +74,6 @@ void RegisterDatabase(String Name, int NumLic);
 MDBConnector* ADOConn;
 MDBConnector* ADOAspect;
 MDBConnector* ADOUsrAspect;
-//MDBConnector* Diary;
 void LoginResult(String Login, String Pass, int NumRole, bool Ok);
 int GetLicenseCount(String DBName);
 void WriteDiaryEvent(String Type, String Name, String Prim);
@@ -88,7 +87,7 @@ TClientSocket *Socket;
 
 TActionManager *ActionManager;
 TForm *Owner;
-void VerifyLicense(String NameDB);
+//void VerifyLicense(String NameDB);
 String IP;
 String TableToStr(String NameDB, String SQLText);
 void PostWriteAspectsUsr();

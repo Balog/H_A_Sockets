@@ -25,47 +25,7 @@ TZast *Zast;
 __fastcall TZast::TZast(TComponent* Owner)
         : TForm(Owner)
 {
-/*
-Saved=false;
-Stop=false;
-Start=false;
-Path=ExtractFilePath(Application->ExeName);
-MP<TIniFile>Ini(Path+"Admin.ini");
 
-int AbsPathAspect=Ini->ReadInteger("Main","AbsPathAspect",1);
-String AspectBase=Ini->ReadString("Main","AdminBase","");
-String DiaryBase=Ini->ReadString("Main","DiaryBase","");
-String AdminDatabase;
-String DiaryDatabase;
-if(AbsPathAspect==0)
-{
-AdminDatabase=Path+AspectBase;
-DiaryDatabase=Path+DiaryBase;
-}
-else
-{
-AdminDatabase= AspectBase;
-DiaryDatabase=DiaryBase;
-}
-MClient=new Client(ClientSocket, ActionManager1, this);
-MClient->Database=new MDBConnector(ExtractFilePath(AdminDatabase), ExtractFileName(AdminDatabase), this);
-MClient->Database->SetPatchBackUp("Archive");
-
-int Days=Ini->ReadInteger("Main","StoreArchive",0);
-MClient->Database->ClearArchive(Days);
-MClient->Database->PackDB();
-MClient->Database->Backup("Archive");
-
-MClient->Diary=new MDBConnector(ExtractFilePath(DiaryDatabase), ExtractFileName(DiaryDatabase), this);
-MClient->Diary->SetPatchBackUp("Archive");
-
-
-MClient->Diary->ClearArchive(Days);
-MClient->Diary->PackDB();
-MClient->Diary->Backup("Archive");
-*/
-//Reg=false;
-//Start=false;
 MClient=new Client(ClientSocket, ActionManager1, this);
 String Path=ExtractFilePath(Application->ExeName);
 MP<TIniFile>Ini(Path+"NetAspects.ini");
@@ -118,7 +78,6 @@ void __fastcall TZast::Timer1Timer(TObject *Sender)
 {
 
 this->Hide();
-//
 
 this->BorderStyle=bsSingle;
 
@@ -158,10 +117,6 @@ void __fastcall TZast::MyException(TObject *Sender,
 {
 
 }
-
-
-
-
 //---------------------------------------------------
 
 void __fastcall TZast::FormShow(TObject *Sender)
@@ -172,8 +127,7 @@ Server=Ini->ReadString("Server","Server","localhost");
 Port=Ini->ReadInteger("Server","Port",2000);
 
 MClient->VDB.clear();
-//Form1->CBDatabase->Clear();
-//ServerName=Ini->ReadString("Server","ServerName","");
+
 int Num=Ini->ReadInteger("Server","NumServerBase",0);
 for(int i=0;i<Num;i++)
 {
@@ -189,25 +143,12 @@ DBI.NumDatabase=Ini->ReadInteger(S,"NumDatabase",-1);
 
 if(DBI.NumDatabase>=0)
 {
-//Form1->CBDatabase->Items->Add(Name);
+
 MClient->VDB.push_back(DBI);
 }
 
 
 }
-//Form1->CBDatabase->ItemIndex=0;
-/*
-MP<TADODataSet>Roles(this);
-Roles->CommandText="Select * from Roles order by Num";
-Roles->Connection=MClient->Database;
-Roles->Active=true;
-Form1->Role->Clear();
-for(Roles->First();!Roles->Eof;Roles->Next())
-{
-Form1->Role->Items->Add(Roles->FieldByName("Name")->AsString);
-}
-Form1->Role->ItemIndex=0;
-*/
 HRGN MyRegion, MyRegion2, RoundReg, TempReg, MyRegion3, MyRegion4, MyRegion5, MyRegion6, MyRegion7;
 
 MyRegion = CreateEllipticRgn(1, 1, 466, 466);
@@ -433,11 +374,6 @@ MClient->CommandExec(Comm, Parameters);
 }        
 }
 //---------------------------------------------------------------------------
-
-
-
-
-
 void __fastcall TZast::PrepareConnectBaseExecute(TObject *Sender)
 {
 
@@ -464,7 +400,7 @@ void __fastcall TZast::ConnectBaseExecute(TObject *Sender)
 {
 
 int TekNumBase=StrToInt(MClient->VTrigger[0].Var);
-//MClient->Act.ParamComm.clear();
+
 String Path=ExtractFilePath(Application->ExeName);
 MP<TIniFile>Ini(Path+"NetAspects.ini");
 int NumDatabase=MClient->VDB[TekNumBase].Num;
@@ -504,7 +440,7 @@ Pass->EdPass->Text="";
 
 
 Pass->ShowModal();
-//Pass->ViewLogins();
+
 }
 //---------------------------------------------------------------------------
 
@@ -543,7 +479,6 @@ switch (Role)
  Zast->MClient->Act.ParamComm.push_back("StartLoadPodr");
  Zast->MClient->ReadTable("Аспекты", "Select Logins.Num, Logins.Login, Logins.Role From Logins Order by Num;", "Аспекты", "Select TempLogins.Num, TempLogins.Login, TempLogins.Role From TempLogins Order by Num;");
 
-//  Documents->Show();
  break;
  }
  case 3:
@@ -555,7 +490,6 @@ switch (Role)
  //тут тоже надо сначала считать обновления данных
  Zast->MClient->Act.ParamComm.clear();
  Zast->MClient->Act.ParamComm.push_back("StartLoadPodrUSR");
- //Zast->MClient->Act.ParamComm.push_back("Аспекты_П");
  Zast->MClient->ReadTable("Аспекты", "Select Logins.Num, Logins.Login, Logins.Role From Logins Order by Num;", "Аспекты_П", "Select TempLogins.Num, TempLogins.Login, TempLogins.Role From TempLogins Order by Num;");
 
 
@@ -571,7 +505,6 @@ switch (Role)
  Form1->Caption="Демонстрационный пользователь: "+Login+"                ***ЗАПИСЬ НА СЕРВЕР ОТКЛЮЧЕНА***";
  Zast->MClient->Act.ParamComm.clear();
  Zast->MClient->Act.ParamComm.push_back("StartLoadPodrUSR");
- //Zast->MClient->Act.ParamComm.push_back("Аспекты_П");
  Zast->MClient->ReadTable("Аспекты", "Select Logins.Num, Logins.Login, Logins.Role From Logins Order by Num;", "Аспекты_П", "Select TempLogins.Num, TempLogins.Login, TempLogins.Role From TempLogins Order by Num;");
 
 
@@ -762,11 +695,6 @@ Form1->Initialize();
 
 Zast->MClient->WriteDiaryEvent("NetAspects","Конец загрузки подразделений (пользователь)","");
 }
-
-
-
-
-
 ReadWriteDoc->Execute();
 }
 //---------------------------------------------------------------------------
@@ -784,10 +712,6 @@ void __fastcall TZast::MergeCritExecute(TObject *Sender)
 {
 MP<TADOCommand>Comm(this);
 Comm->Connection=Zast->ADOConn;
-/*
-Comm->CommandText="Delete * From TempZn";
-Comm->Execute();
-*/
 
 MP<TADODataSet>TempZn(this);
 TempZn->Connection=Zast->ADOConn;
@@ -963,10 +887,6 @@ Form1->Initialize();
 
 Zast->MClient->WriteDiaryEvent("NetAspects","Конец загрузки ситуаций (пользователь)","");
  }
-
-
-
-
 ReadWriteDoc->Execute();
 }
 //---------------------------------------------------------------------------
@@ -1109,30 +1029,6 @@ void __fastcall TZast::MergeMeroprExecute(TObject *Sender)
 //Добавить перенос данных ветвей в соответствующую таблицу аспектов и пользовательских аспектов
 Documents->MergeNode("Узлы_4");
 Documents->MergeBranch("Ветви_4");
-/*
-MDBConnector* DB;
-if(Role==2)
-{
- DB=ADOAspect;
-}
-else
-{
- DB=ADOUsrAspect;
-}
-MP<TADOCommand>Comm(this);
-Comm->Connection=Zast->ADOConn;
-Comm->CommandText="UPDATE Ветви_4 SET Ветви_4.Del = True WHERE (((Ветви_4.Показ)=True));";
-Comm->Execute();
-
-MP<TADODataSet>Temp(this);
-Temp->Connection=Zast->ADOConn;
-Temp->CommandText="Select * From Ветви4";
-Temp->Active=true;
-
-MP<TADODataSet>Tab(this);
-Tab->Connection=DB;
-Tab->CommandText="Select * from ";
- */
 if(Role==2)
 {
 Documents->LoadTab2();
@@ -1380,46 +1276,7 @@ Zast->MClient->ReadTable("Аспекты", "Select Деятельность.[Номер деятельности], Д
 
 void __fastcall TZast::MergeDeyat2Execute(TObject *Sender)
 {
-/*
-MDBConnector* DB;
-String DBName;
-if(Role==2)
-{
- DB=ADOAspect;
- DBName="Аспекты";
-}
-else
-{
- DB=ADOUsrAspect;
- DBName="Аспекты_П";
-}
-MP<TADODataSet>Ref(this);
-Ref->Connection=Zast->ADOConn;
-Ref->CommandText="Select * From Ветви_5";
-Ref->Active=true;
 
-MP<TADOCommand>Comm(this);
-Comm->Connection=DB;
-Comm->CommandText="UPDATE Территория SET Территория.Del = False;";
-Comm->Execute();
-
-Comm->CommandText="Delete * From TempTerr";
-Comm->Execute();
-
-MP<TADODataSet>TempTerr(this);
-TempTerr->Connection=DB;
-TempTerr->CommandText="Select TempTerr.[Номер территории], TempTerr.[Наименование территории], TempTerr.[Показ] From TempTerr order by [Номер территории]";
-TempTerr->Active=true;
-
-for(Ref->First();!Ref->Eof;Ref->Next())
-{
- TempTerr->Append();
- TempTerr->FieldByName("Номер территории")->Value=Ref->FieldByName("Номер ветви")->Value;
- TempTerr->FieldByName("Наименование территории")->Value=Ref->FieldByName("Название")->Value;
- TempTerr->FieldByName("Показ")->Value=Ref->FieldByName("Показ")->Value;
- TempTerr->Post();
-}
-*/
 
 String DBName;
 if(Role==2)
@@ -1630,7 +1487,6 @@ MClient->WriteTable("Reference","Select Номер, Методика From Методика Order by н
 
 Zast->MClient->WriteDiaryEvent("NetAspects","Конец записи методики (главспец)","");
 
-//ReadWriteDoc->Execute();
 }
 //---------------------------------------------------------------------------
 
@@ -1686,12 +1542,7 @@ else
 ShowMessage("Ошибка записи подразделений Номер="+IntToStr(N));
 }
 }
-/*
-Zast->MClient->SetCommandText("Аспекты","Delete * From TempПодразделения");
-Zast->MClient->CommandExec("Аспекты");
 
-Zast->MClient->WriteDiaryEvent("NetAspects","Конец сохранения подразделений (главспец)","");
-*/
 MP<TADOCommand>Comm(this);
 Comm->Connection=Zast->ADOAspect;
 Comm->CommandText="Delete * from TempПодразделения";
@@ -1836,7 +1687,6 @@ void __fastcall TZast::MergeServerVozdExecute(TObject *Sender)
  MClient->Act.ParamComm.clear();
  MClient->Act.ParamComm.push_back("EndMergeServerVozd");
 
- //"Reference", "Узлы_3","Ветви_3","Аспекты","Воздействия","Воздействие","Номер воздействия","Наименование воздействия"
  String DB="Reference";
  String Node="Узлы_3";
  String Branch="Ветви_3";
@@ -1923,7 +1773,6 @@ void __fastcall TZast::MergeServerTerrExecute(TObject *Sender)
  MClient->Act.ParamComm.clear();
  MClient->Act.ParamComm.push_back("EndMergeServerVozd");
 
- //"Reference", "Узлы_5","Ветви_5","Аспекты","Территория","Вид территории","Номер территории","Наименование территории"
  String DB="Reference";
  String Node="Узлы_5";
  String Branch="Ветви_5";
@@ -1969,7 +1818,6 @@ void __fastcall TZast::MergeServerDeyatExecute(TObject *Sender)
  MClient->Act.ParamComm.clear();
  MClient->Act.ParamComm.push_back("EndMergeServerDeyat");
 
- //"Reference", "Узлы_6","Ветви_6","Аспекты","Деятельность","Деятельность","Номер деятельности","Наименование деятельности"
  String DB="Reference";
  String Node="Узлы_6";
  String Branch="Ветви_6";
@@ -2015,7 +1863,6 @@ void __fastcall TZast::MergeServerAspectExecute(TObject *Sender)
  MClient->Act.ParamComm.clear();
  MClient->Act.ParamComm.push_back("EndMergeServerAspect");
 
- //"Reference", "Узлы_7","Ветви_7","Аспекты","Аспект","Аспект","Номер аспекта","Наименование аспекта"
  String DB="Reference";
  String Node="Узлы_7";
  String Branch="Ветви_7";
@@ -2140,13 +1987,7 @@ for(ToTable->First();!ToTable->Eof;ToTable->Next())
  {
   ShowMessage("Ошибка перекодировки логинов N="+IntToStr(N));
  }
-
-
-
-
 }
-
-
 Comm->CommandText="INSERT INTO ObslOtdel ( Login, NumObslOtdel) SELECT TempObslOtdel.Login, TempObslOtdel.NumObslOtdel FROM TempObslOtdel;";
 Comm->Execute();
 
@@ -2166,8 +2007,6 @@ else
 
  Form1->NumLogin=Log->FieldByName("ServerNum")->AsInteger;
 
-
-// Form1->Show();
 Prog->SignComplete=false;
 Prog->Show();
 Prog->PB->Min=0;
@@ -2328,19 +2167,11 @@ else
 //Ненайден
 //Это подразделение на сервере удалено
 //Пометить к удалению
-/*
-Otdels->Edit();
-Otdels->FieldByName("Del")->Value=true;
-Otdels->Post();
-*/
+
 }
 }
 
 //Удалить лишние подразделения
-/*
-Comm->CommandText="Delete * from Подразделения Where Del=true";
-Comm->Execute();
-*/
 
 //если в TempПодразделения остались записи то это новые подразделения на сервере
 //Перенести их в Подразделения
@@ -2366,9 +2197,7 @@ void __fastcall TZast::CompareMSpecAspectsExecute(TObject *Sender)
 //для принятия решения о необходимости чтения таблицы аспектов
 MP<TADODataSet>Tab(this);
 Tab->Connection=ADOAspect;
-/*
-" SELECT Аспекты.[Номер аспекта], Аспекты.Подразделение, Аспекты.Ситуация, Аспекты.[Вид территории], Аспекты.Деятельность, Аспекты.Специальность, Аспекты.Аспект, Аспекты.Воздействие, Аспекты.G, Аспекты.O, Аспекты.R, Аспекты.S, Аспекты.T, Аспекты.L, Аспекты.N, Аспекты.Z, Аспекты.Значимость, Аспекты.[Проявление воздействия], Аспекты.[Тяжесть последствий], Аспекты.Приоритетность, Аспекты.[Выполняющиеся мероприятия], Аспекты.[Предлагаемые мероприятия], Аспекты.[Мониторинг и контроль], Аспекты.[Предлагаемый мониторинг и контроль], Аспекты.Исполнитель, Аспекты.[Дата создания], Аспекты.[Начало действия], Аспекты.[Конец действия], Аспекты.ServerNum FROM Аспекты;"
-*/
+
 Tab->CommandText="SELECT Аспекты.[Номер аспекта], Аспекты.Ситуация, Аспекты.[Вид территории], Аспекты.Деятельность, Аспекты.Аспект, Аспекты.Воздействие,  Аспекты.Z, Аспекты.Значимость FROM Аспекты ORDER BY Аспекты.[Номер аспекта];";
 Tab->Active=true;
 
@@ -2386,7 +2215,6 @@ if(Tab->RecordCount==Temp->RecordCount)
  {
   for(int i=0;i<Tab->Fields->Count;i++)
   {
-  //Tab->FieldList->Fields[i]
 
    if(Tab->FieldList->Fields[i]->AsString==Temp->FieldList->Fields[i]->AsString)
    {
@@ -2501,9 +2329,6 @@ void __fastcall TZast::CompareMSpecAspects2Execute(TObject *Sender)
 //для принятия решения о необходимости записи таблицы аспектов
 MP<TADODataSet>Tab(this);
 Tab->Connection=ADOAspect;
-/*
-" SELECT Аспекты.[Номер аспекта], Аспекты.Подразделение, Аспекты.Ситуация, Аспекты.[Вид территории], Аспекты.Деятельность, Аспекты.Специальность, Аспекты.Аспект, Аспекты.Воздействие, Аспекты.G, Аспекты.O, Аспекты.R, Аспекты.S, Аспекты.T, Аспекты.L, Аспекты.N, Аспекты.Z, Аспекты.Значимость, Аспекты.[Проявление воздействия], Аспекты.[Тяжесть последствий], Аспекты.Приоритетность, Аспекты.[Выполняющиеся мероприятия], Аспекты.[Предлагаемые мероприятия], Аспекты.[Мониторинг и контроль], Аспекты.[Предлагаемый мониторинг и контроль], Аспекты.Исполнитель, Аспекты.[Дата создания], Аспекты.[Начало действия], Аспекты.[Конец действия], Аспекты.ServerNum FROM Аспекты;"
-*/
 Tab->CommandText="SELECT Аспекты.[Номер аспекта], Подразделения.ServerNum FROM Подразделения INNER JOIN Аспекты ON Подразделения.[Номер подразделения] = Аспекты.Подразделение ORDER BY Аспекты.[Номер аспекта];";
 Tab->Active=true;
 
@@ -2521,7 +2346,6 @@ if(Tab->RecordCount==Temp->RecordCount)
  {
   for(int i=0;i<Tab->Fields->Count;i++)
   {
-  //Tab->FieldList->Fields[i]
 
    if(Tab->FieldList->Fields[i]->AsString==Temp->FieldList->Fields[i]->AsString)
    {
@@ -2699,7 +2523,6 @@ MergeAspects(Form1->NumLogin, false);
 
 void  TZast::MergeAspects(int NumLogin, bool Quit)
 {
-//Zast->MClient->WriteDiaryEvent("NetAspects","Обновление аспектов","");
 try
 {
 MP<TADODataSet>Podr(this);
@@ -2744,20 +2567,14 @@ Comm->Execute();
 
 String Path=ExtractFilePath(Application->ExeName);
 MP<TIniFile>Ini(Path+"NetAspects.ini");
-/*
-Ini->WriteInteger(IntToStr(NumLogin),"CurrentRecord",Aspects->RecNo);
-Ini->WriteString(IntToStr(NumLogin),"Filter",Filter->CText);
-*/
+
 int Num=Ini->ReadInteger(IntToStr(NumLogin),"CurrentRecord",1);
 Filter->CText=Ini->ReadString(IntToStr(NumLogin),"Filter","");
 if(Filter->CText=="")
 {
  Filter->SetDefFiltr();
 }
-/*
-Ini->WriteString(IntToStr(NumLogin),"NameFilter",Form1->LFiltr->Caption);
-Ini->WriteInteger(IntToStr(NumLogin),"NumFilter", Filter->RadioGroup1->ItemIndex);
-*/
+
 Form1->LFiltr->Caption=Ini->ReadString(IntToStr(NumLogin),"NameFilter","Отключен");
 Filter->RadioGroup1->ItemIndex=Ini->ReadInteger(IntToStr(NumLogin),"NameFilter", 0);
 switch (Filter->RadioGroup1->ItemIndex)

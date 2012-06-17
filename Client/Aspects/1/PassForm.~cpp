@@ -19,32 +19,10 @@ __fastcall TPass::TPass(TComponent* Owner)
 }
 //---------------------------------------------------------------------------
 
-void __fastcall TPass::FormShow(TObject *Sender)
-{
-
- Zast->MClient->Act.ParamComm.clear();
- Zast->MClient->Act.ParamComm.push_back("ViewLogins");
-
- Zast->MClient->ReadTable("Аспекты","Select Login, Code1, Code2, Role from Logins Where Role<>1", "Select Login, Code1, Code2, Role From TempLogins");
-
-}
-//---------------------------------------------------------------------------
 void TPass::ViewLogins()
 {
 
-MP<TADODataSet>Tab(this);
-Tab->Connection=Zast->MClient->ADOAspect;
-Tab->CommandText="Select Login, Code1, Code2 From TempLogins";
-Tab->Active=true;
 
-CbLogin->Clear();
-for(Tab->First();!Tab->Eof;Tab->Next())
-{
-CbLogin->Items->Add(Tab->FieldByName("Login")->AsString);
-}
-CbLogin->ItemIndex=0;
-EdPass->Text="";
-EdPass->SetFocus();
 
 }
 //---------------------------------------------------------------------------
@@ -116,6 +94,12 @@ this->BringToFront();
 void __fastcall TPass::CbLoginClick(TObject *Sender)
 {
 EdPass->SetFocus();
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TPass::FormShow(TObject *Sender)
+{
+Pass->EdPass->SetFocus();        
 }
 //---------------------------------------------------------------------------
 

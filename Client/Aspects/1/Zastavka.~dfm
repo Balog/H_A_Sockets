@@ -10249,5 +10249,9 @@ object Zast: TZast
       Caption = 'WriteAspectsUsr'
       OnExecute = WriteAspectsUsrExecute
     end
+    object MergeAspectsUserQ: TAction
+      Caption = 'MergeAspectsUserQ'
+      OnExecute = MergeAspectsUserQExecute
+    end
   end
 end

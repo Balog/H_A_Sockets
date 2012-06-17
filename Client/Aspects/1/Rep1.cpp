@@ -21,42 +21,6 @@ Registration=false;
 //---------------------------------------------------------------------------
 void __fastcall TReport1::FormShow(TObject *Sender)
 {
-/*
-if(!Registration)
-{
-Registration=true;
- Zast->MClient->Start();
- Zast->MClient->RegForm(this);
- Zast->MClient->Stop();
-}
-*/
-/*
-MP<TADODataSet>TempPodr(this);
-TempPodr->Connection=Zast->ADOAspect;
-TempPodr->CommandText="Select TempПодразделения.[ServerNum], TempПодразделения.[Название подразделения] From TempDeyat Order by [ServerNum]";
-
-MP<TADOCommand>Comm(this);
-Comm->Connection=Zast->ADOAspect;
-Comm->CommandText="Delete * From TempПодразделения";
-Comm->Execute();
-
-Table* SPodr=Zast->MClient->CreateTable(this, Zast->ServerName, Zast->VDB[Zast->GetIDDBName("Аспекты")].ServerDB);
-
-SPodr->SetCommandText("Select Подразделения.[Номер подразделения], Подразделения.[Название подразделения] From Деятельность Order by [Номер подразделения]");
-SPodr->Active(true);
-TempDeyat->Active=true;
-Zast->MClient->LoadTable(SPodr, TempPodr);
-
-
-if(Zast->MClient->VerifyTable(SPodr, TempPodr)==0)
-{
-
-}
-Zast->MClient->DeleteTable(this, SPodr);
-*/
-
-
-
 Podr->Active=false;
 Podr->Connection=RepBase;
 Podr->CommandText=PodrComText;
@@ -116,38 +80,11 @@ else
 Zast->MClient->ReadTable("Аспекты",ServerSQL, "Аспекты_П", ClientSQL);
 }
 }
-/*
-Podr->Active=true;
-Podr->First();
-
-Podr->MoveBy(CPodrazdel->ItemIndex);
-int NumPodr=Podr->FieldByName("ServerNum")->Value;
-Zast->MClient->Start();
-if(NumRep==1)
-{
-//Form1->CreateReport1(NumPodr, Date1->Date, Date2->Date, Edit1->Text);
-Reports *R=new Reports();
-R->Connect=RepBase;
-R->Role=Role;
-R->CreateReport1(NumPodr, Date1->Date, Date2->Date, Edit1->Text, Flt, FltName);
-delete R;
-}
-else
-{
-Reports *R=new Reports();
-R->Connect=RepBase;
-R->Role=Role;
-R->CreateReport2(NumPodr, Date1->Date, Date2->Date, Edit1->Text, Flt, FltName);
-delete R;
-}
-Zast->MClient->Stop();
-this->Close();
-*/
 }
 //---------------------------------------------------------------------------
 void __fastcall TReport1::CPodrazdelKeyPress(TObject *Sender, char &Key)
 {
-Key=0;        
+Key=0;
 }
 //---------------------------------------------------------------------------
 
@@ -188,7 +125,6 @@ int NumPodr=Podr->FieldByName("ServerNum")->Value;
 
 if(NumRep==1)
 {
-//Form1->CreateReport1(NumPodr, Date1->Date, Date2->Date, Edit1->Text);
 Reports *R=new Reports();
 R->Connect=RepBase;
 R->Role=Role;

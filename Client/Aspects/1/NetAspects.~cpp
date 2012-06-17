@@ -13,6 +13,7 @@ USEFORM("Svod.cpp", FSvod);
 USEFORM("FMoveAsp.cpp", MAsp);
 USEFORM("InpDocs.cpp", InputDocs);
 USEFORM("InputFiltr.cpp", Filter);
+USEFORM("About.cpp", FAbout);
 //---------------------------------------------------------------------------
 WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 {
@@ -29,6 +30,7 @@ WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
                  Application->CreateForm(__classid(TMAsp), &MAsp);
                  Application->CreateForm(__classid(TInputDocs), &InputDocs);
                  Application->CreateForm(__classid(TFilter), &Filter);
+                 Application->CreateForm(__classid(TFAbout), &FAbout);
                  Application->Run();
         }
         catch (Exception &exception)

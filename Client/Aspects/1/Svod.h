@@ -35,34 +35,18 @@ __published:	// IDE-managed Components
         TLabel *Label2;
         void __fastcall FormActivate(TObject *Sender);
         void __fastcall FormShow(TObject *Sender);
-        void __fastcall FormClose(TObject *Sender, TCloseAction &Action);
         void __fastcall N13Click(TObject *Sender);
         void __fastcall N14Click(TObject *Sender);
         void __fastcall N15Click(TObject *Sender);
         void __fastcall N16Click(TObject *Sender);
         void __fastcall Button1Click(TObject *Sender);
-        void __fastcall N4Click(TObject *Sender);
-        void __fastcall N5Click(TObject *Sender);
-        void __fastcall N6Click(TObject *Sender);
-        void __fastcall N2Click(TObject *Sender);
-        void __fastcall N9Click(TObject *Sender);
-        void __fastcall N11Click(TObject *Sender);
-        void __fastcall N12Click(TObject *Sender);
-        void __fastcall N7Click(TObject *Sender);
-        void __fastcall DocumentsN29Click(TObject *Sender);
-        void __fastcall N18Click(TObject *Sender);
-        void __fastcall N19Click(TObject *Sender);
-        void __fastcall N20Click(TObject *Sender);
-        void __fastcall N21Click(TObject *Sender);
         void __fastcall N1Click(TObject *Sender);
         void __fastcall N8Click(TObject *Sender);
-        void __fastcall N22Click(TObject *Sender);
         void __fastcall Button2Click(TObject *Sender);
         void __fastcall FormKeyUp(TObject *Sender, WORD &Key,
           TShiftState Shift);
 private:	// User declarations
 void CreateMainSvod();
-void AddMainSvod(TADODataSet *Table);
 void CreateRep(TADODataSet *TempTable, Variant App, Variant Book, Variant Sheet, int& Start, int& NN, int Number);
 void EndSvod(Variant App, Variant Sheet, int Start);
 
@@ -70,7 +54,6 @@ void PrepareMergeAspects();
 bool Registered;
 public:		// User declarations
         __fastcall TFSvod(TComponent* Owner);
-//        void __fastcall MyException(TObject *Sender, Exception *E);
 AnsiString TFSvod::Address(Variant Sheet,int x,int y);
 void TFSvod::Initialize();
 void ContSvodReport();

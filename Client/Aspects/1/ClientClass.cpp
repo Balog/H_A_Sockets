@@ -89,20 +89,6 @@ switch(Comm)
  }
  case 4:
  {
- /*
- String Action=Act.ParamComm[0];
- StartAction(Action);
- */
-
- /*
- ShowMessage(Act.ParamComm[0]);
- ShowMessage(Act.ParamComm[1]);
- ShowMessage(Act.ParamComm[2]);
- ShowMessage(Act.ParamComm[3]);
- ShowMessage(Act.ParamComm[4]);
- ShowMessage(Act.ParamComm[5]);
- ShowMessage(Act.ParamComm[6]);
- */
  RegisterDatabase(Parameters[2], StrToInt(Parameters[1]));
  this->VTrigger[0].Var++;
  this->ActTrigger(0);
@@ -247,7 +233,6 @@ String Client::GetIP()
     h = gethostbyname(&Buf[0]);
     if (h != NULL)
     {
-    //ShowMessage(inet_ntoa (*(reinterpret_cast<in_addr *>(*(h->h_addr_list)))));
     addr=inet_ntoa (*(reinterpret_cast<in_addr *>(*(h->h_addr_list))));
 
     }
@@ -304,7 +289,6 @@ Socket->Socket->SendText(Mess);
 //*************************************************************************
 void Client::ReadTable(String NameDBFrom, String ServerSQL, String NameDBTo, String ClientSQL)
 {
- //Act.ParamComm.clear();
  Act.WaitCommand=5;
  Act.ParamComm.push_back(NameDBTo);
  Act.ParamComm.push_back(ClientSQL);
@@ -351,7 +335,6 @@ DelText=DelText.SubString(0, FromPos-2);
 
     //Формат передачи таблицы
    //Начало таблицы 27 1
-   //int Esc=27;
    int S1=1;
    int S2=2;
    int S3=3;
@@ -418,7 +401,6 @@ DelText=DelText.SubString(0, FromPos-2);
        {
         case 1:
         {
-        //String N=Tab->FieldList->Fields[i]->FullName;
         Tab->FieldList->Fields[i]->Value=Field.SubString(2, Field.Length());
         break;
         }
@@ -471,10 +453,6 @@ DelText=DelText.SubString(0, FromPos-2);
      while(Record.Length()!=0);
        Tab->Post();
      Text=Text.SubString(EndRecordPos+2, Text.Length());
-    }
-    else
-    {
-//     ShowMessage("Нет знака начала записи");
     }
     }
     while(Text.Length()!=0);
@@ -567,53 +545,11 @@ if(Name!="Reference")
 }
 }
 }
-//*************************************************************************
-void Client::VerifyLicense(String NameDB)
-{
-/*
-int NumDB;
-int LicCount;
-for(unsigned int i=0;i<VDB.size();i++)
-{
- if(VDB[i].Name==NameDB)
- {
-  NumDB=VDB[i].NumDatabase;
-  LicCount=VDB[i].NumLicense;
-  break;
- }
-}
 
-MP<TADODataSet>Log3(Owner);
-Log3->Connection=Database;
-Log3->CommandText="Select * From Logins Where Role=3 AND NumDatabase="+IntToStr(NumDB);
-Log3->Active=true;
-
-if(LicCount==-1)
-{
-//Main->MClient->WriteDiaryEvent("AdminARM лицензия","Неограниченая лицензия","База данных: "+CBDatabase->Text);
-
-}
-else
-{
-if(Log3->RecordCount>LicCount)
-{
-//Main->MClient->WriteDiaryEvent("AdminARM лицензия","Удалено часть пользователей по причине лицензии","База данных: "+CBDatabase->Text+" Было: "+IntToStr(Log3->RecordCount)+" Стало: "+IntToStr(LicCount));
-//Main->MClient->WriteDiaryEvent("AdminARM лицензия","Чтение списка логинов","База данных: "+CBDatabase->Text+" Было: "+IntToStr(Log3->RecordCount)+" Стало: "+IntToStr(LicCount));
-
-StartAction("LoadLogins");
-//LoadLogins();
- //загрузка логинов
-// Main->MClient->WriteDiaryEvent("AdminARM лицензия","Загрузка логинов завершена","База данных: "+CBDatabase->Text);
-
-}
-}
-*/
-}
 //************************************************************************
 void Client::WriteDiaryEvent(String Type, String Name, String Prim)
 {
-//Act.WaitCommand=0;
-//Act.ParamComm.clear();
+
 Socket->Socket->SendText("Command:7;5|"+IntToStr(IP.Length())+"#"+IP+"|"+IntToStr(Login.Length())+"#"+Login+"|"+IntToStr(Type.Length())+"#"+Type+"|"+IntToStr(Name.Length())+"#"+Name+"|"+IntToStr(Prim.Length())+"#"+Prim+"|");
 
 }
@@ -760,7 +696,6 @@ if(VTrigger[NumTrigger].Var<VTrigger[NumTrigger].Max)
 {
 
  StartAction(VTrigger[NumTrigger].TrueAction);
- //VTrigger[NumTrigger].Var++;
 }
 else
 {
@@ -778,7 +713,7 @@ else
 {
  Form1->N9->Click();
 }
- //ShowMessage("Завершено");
+
 }
 //***************************************************************************
 /////////////////////////////////////////////////////////////////////////////

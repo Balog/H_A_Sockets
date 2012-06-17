@@ -9,11 +9,8 @@
 #include <Forms.hpp>
 #include <ExtCtrls.hpp>
 #include <Graphics.hpp>
-//#include "F_Vvedenie.h"
-//#include "MainForm.h"
 #include <ADODB.hpp>
 #include <DB.hpp>
-//#include "Form_SendFile.h"
 #include <Dialogs.hpp>
 #include "inifiles.hpp"
 #include <jpeg.hpp>
@@ -25,14 +22,7 @@
 #include <vector>
 using namespace std;
 //---------------------------------------------------------------------------
-/*
-struct CDBItem
-{
-int Num;
-String Name;
-String ServerDB;
-};
-*/
+
 class TZast : public TForm
 {
 __published:	// IDE-managed Components
@@ -311,42 +301,18 @@ MDBConnector* ADOAspect;
 MDBConnector* ADOUsrAspect;
 MDBConnector* ADOSvod;
 
-//bool LoadLogin(MDBConnector* DB);
-//void MergeOtdels();
-//void MergeLogins();
-//void MergeLogins(MDBConnector* DB);
 vector<String>Parameters;
 
 int Role;
-//vector<CDBItem>VDB;
+
         __fastcall TZast(TComponent* Owner);
-//MDBConnector* Database;
-//MDBConnector* Diary;
-//MDBConnector* ADOUsrAspect;
-//MDBConnector* ADOSvod;
 String ServerName;
 Client *MClient;
-/*
-AnsiString HardText();
-bool VerifyKey();
-bool Registered;
-AnsiString CodeKey(AnsiString,AnsiString);
-AnsiString DecodeKey(AnsiString,AnsiString);
-AnsiString DecodeFile(AnsiString Patch, AnsiString Pass);
-AnsiString Patch1, Patch2, Patch3;
-String B1, B2, B3;
-TIniFile *Ini;
-TIniFile *Admin;
-bool Connect;
-AnsiString FullPatch;
-*/
+
 void __fastcall MyException(TObject *Sender,
                                     Exception *E);
-//void TZast::CopyZn();
 
-//bool WrMetod, MEcolog;
 void CompactDB(TADOConnection * Conn, String B);
-//bool Start;
 
 int GetIDDBName(String Name);
 };
