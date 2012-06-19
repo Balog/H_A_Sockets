@@ -69,7 +69,7 @@ object Form1: TForm1
         Width = 129
         Height = 21
         Style = csDropDownList
-        ItemHeight = 0
+        ItemHeight = 13
         TabOrder = 0
         OnClick = RoleClick
       end
@@ -116,7 +116,7 @@ object Form1: TForm1
         Width = 157
         Height = 21
         Style = csDropDownList
-        ItemHeight = 0
+        ItemHeight = 13
         TabOrder = 5
         OnClick = BaseClick
       end
