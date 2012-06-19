@@ -176,8 +176,8 @@ MoveAspects->Post();
 
 void __fastcall TMAsp::BitBtn5Click(TObject *Sender)
 {
-Zast->SaveAspectsMSpec0->Execute();
-
+//Zast->SaveAspectsMSpec0->Execute();
+Zast->MClient->BlockServer("SaveAspectsMSpec0");
 }
 //---------------------------------------------------------------------------
 
@@ -185,11 +185,7 @@ void __fastcall TMAsp::BitBtn6Click(TObject *Sender)
 {
 if(Application->MessageBoxA("Вы действительно хотите прочесть список аспектов с сервера?\rВсе несохраненные изменения по перемещению аспектов будут удалены!","Чтение списка аспектов",MB_YESNO+MB_ICONWARNING+MB_DEFBUTTON2+MB_APPLMODAL)==IDYES)
 {
- Zast->MClient->Act.ParamComm.clear();
- Zast->MClient->Act.ParamComm.push_back("LoadMSpecAspects");
- String ServerSQL="SELECT Аспекты.[Номер аспекта], Аспекты.Подразделение, Аспекты.Ситуация, Аспекты.[Вид территории], Аспекты.Деятельность, Аспекты.Специальность, Аспекты.Аспект, Аспекты.Воздействие, Аспекты.G, Аспекты.O, Аспекты.R, Аспекты.S, Аспекты.T, Аспекты.L, Аспекты.N, Аспекты.Z, Аспекты.Значимость, Аспекты.[Проявление воздействия], Аспекты.[Тяжесть последствий], Аспекты.Приоритетность,  Аспекты.[Выполняющиеся мероприятия],  Аспекты.[предлагаемые мероприятия],  Аспекты.[Мониторинг и контроль], Аспекты.[Предлагаемый мониторинг и контроль], Аспекты.[Дата создания], Аспекты.[Начало действия], Аспекты.[Конец действия] FROM Аспекты;";
- String ClientSQL="SELECT TempAspects.[Номер аспекта], TempAspects.Подразделение, TempAspects.Ситуация, TempAspects.[Вид территории], TempAspects.Деятельность, TempAspects.Специальность, TempAspects.Аспект, TempAspects.Воздействие, TempAspects.G, TempAspects.O, TempAspects.R, TempAspects.S, TempAspects.T, TempAspects.L, TempAspects.N, TempAspects.Z, TempAspects.Значимость, TempAspects.[Проявление воздействия], TempAspects.[Тяжесть последствий], TempAspects.Приоритетность, TempAspects.[Выполняющиеся мероприятия],  TempAspects.[предлагаемые мероприятия],  TempAspects.[Мониторинг и контроль], TempAspects.[Предлагаемый мониторинг и контроль],  TempAspects.[Дата создания], TempAspects.[Начало действия], TempAspects.[Конец действия] FROM TempAspects;";
-Zast->MClient->ReadTable("Аспекты",ServerSQL, "Аспекты", ClientSQL);
+Zast->MClient->BlockServer("ReadAspectsMSpec");
 }
 
 }

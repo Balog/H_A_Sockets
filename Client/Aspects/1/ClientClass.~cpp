@@ -160,28 +160,29 @@ BlockServer("BeginWork");
  {
  Zast->MClient->WriteDiaryEvent("NetAspects","Конец записи критериев (главспец)","");
 
- Zast->ReadWriteDoc->Execute();
+ //Zast->ReadWriteDoc->Execute();
+  Zast->MClient->UnBlockServer("ReadWriteDoc");
  break;
  }
  case 13:
  {
  Zast->MClient->WriteDiaryEvent("NetAspects","Конец записи ситуаций (главспец)","");
 
- Zast->ReadWriteDoc->Execute();
+  Zast->MClient->UnBlockServer("ReadWriteDoc");
  break;
  }
  case 14:
  {
  StartAction(Act.ParamComm[0]);
 
- Zast->ReadWriteDoc->Execute();
+  Zast->MClient->UnBlockServer("ReadWriteDoc");
  break;
  }
  case 15:
  {
  StartAction(Act.ParamComm[0]);
 
- Zast->ReadWriteDoc->Execute();
+  Zast->MClient->UnBlockServer("ReadWriteDoc");
  break;
  }
  case 16:
@@ -235,6 +236,7 @@ BlockServer("BeginWork");
  //ответ на команду попытки разблокировки сервера
  //1 - сервер разблокирован этим клиентом и можно работать
  //0 - сервер уже разблокировть не удалось и это ошибка логики работы
+ Zast->UnBlockServer->Enabled=false;
  if(Parameters[0]=="1")
  {
   StartAction(Act.ParamComm[0]);
@@ -769,8 +771,7 @@ void Client::UnBlockServer(String NextProc)
 //Разблокирование сервера
  Zast->MClient->Act.ParamComm.clear();
  Zast->MClient->Act.ParamComm.push_back(NextProc);
- Zast->MClient->Act.WaitCommand=20; 
- Socket->Socket->SendText("Command:20;1|1#0");
+Zast->UnBlockServer->Enabled=true;
 }
 //***************************************************************************
 /////////////////////////////////////////////////////////////////////////////

@@ -184,6 +184,16 @@ __published:	// IDE-managed Components
         TAction *PreLoadLogins;
         TTimer *BlockServer;
         TTimer *UnBlockServer;
+        TAction *UnblockAndRWD;
+        TAction *ReadAspectsMSpec;
+        TAction *PrepareCompareMSpecAspects;
+        TAction *EndReadAspectsMSpec;
+        TAction *StopProgram2;
+        TAction *PrepStartMergeLoginPodr;
+        TAction *PrepareReadAspectsUsr;
+        TAction *MergeAspectsUser1;
+        TAction *PrepWriteAspUsr;
+        TAction *PrepMergeAspectsUserQ;
         void __fastcall Timer1Timer(TObject *Sender);
         void __fastcall Image1Click(TObject *Sender);
         void __fastcall FormShow(TObject *Sender);
@@ -283,6 +293,16 @@ __published:	// IDE-managed Components
         void __fastcall PreLoadLoginsExecute(TObject *Sender);
         void __fastcall BlockServerTimer(TObject *Sender);
         void __fastcall UnBlockServerTimer(TObject *Sender);
+        void __fastcall UnblockAndRWDExecute(TObject *Sender);
+        void __fastcall ReadAspectsMSpecExecute(TObject *Sender);
+        void __fastcall PrepareCompareMSpecAspectsExecute(TObject *Sender);
+        void __fastcall EndReadAspectsMSpecExecute(TObject *Sender);
+        void __fastcall StopProgram2Execute(TObject *Sender);
+        void __fastcall PrepStartMergeLoginPodrExecute(TObject *Sender);
+        void __fastcall PrepareReadAspectsUsrExecute(TObject *Sender);
+        void __fastcall MergeAspectsUser1Execute(TObject *Sender);
+        void __fastcall PrepWriteAspUsrExecute(TObject *Sender);
+        void __fastcall PrepMergeAspectsUserQExecute(TObject *Sender);
 private:	// User declarations
 String Path;
 TLocateOptions SO;

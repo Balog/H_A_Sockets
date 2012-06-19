@@ -7,8 +7,6 @@
 #include <Controls.hpp>
 #include <StdCtrls.hpp>
 #include <Forms.hpp>
-//#include "F_Vvedenie.h"
-//#include "Metod.h"
 #include <Menus.hpp>
 #include <ADODB.hpp>
 #include <DB.hpp>
@@ -18,12 +16,7 @@
 #include "Main.h"
 #include <ExtCtrls.hpp>
 #include <Mask.hpp>
-//#include "InpDocs.h"
-//#include "Settings.h"
-//#include "InputFiltr.h"
-//#include "Form_SendFile.h"
 #include "Winbase.h"
-//#include "SetZn.h"
 #include <ActnList.hpp>
 #include <DBActns.hpp>
 #include <ActnMan.hpp>
@@ -189,10 +182,8 @@ __published:	// IDE-managed Components
         void __fastcall Button6Click(TObject *Sender);
         void __fastcall Button5Click(TObject *Sender);
         void __fastcall BitBtn7Click(TObject *Sender);
-        void __fastcall FormHide(TObject *Sender);
         void __fastcall N9Click(TObject *Sender);
         void __fastcall FormActivate(TObject *Sender);
-        void __fastcall Cdjlysqhttcnhfcgtrnjd1Click(TObject *Sender);
         void __fastcall BitBtn9Click(TObject *Sender);
         void __fastcall DBMemo1Exit(TObject *Sender);
         void __fastcall DBMemo2Exit(TObject *Sender);
@@ -202,7 +193,6 @@ __published:	// IDE-managed Components
         void __fastcall N14Click(TObject *Sender);
         void __fastcall N15Click(TObject *Sender);
         void __fastcall N16Click(TObject *Sender);
-        void __fastcall N17Click(TObject *Sender);
         void __fastcall CProyavKeyPress(TObject *Sender, char &Key);
         void __fastcall CPoslKeyPress(TObject *Sender, char &Key);
         void __fastcall CPriorKeyPress(TObject *Sender, char &Key);
@@ -215,7 +205,6 @@ __published:	// IDE-managed Components
         void __fastcall DateTimePicker3KeyPress(TObject *Sender,
           char &Key);
         void __fastcall N1Click(TObject *Sender);
-        void __fastcall N18Click(TObject *Sender);
         void __fastcall Edit1DblClick(TObject *Sender);
         void __fastcall Edit2DblClick(TObject *Sender);
         void __fastcall Edit4DblClick(TObject *Sender);
@@ -252,40 +241,11 @@ __published:	// IDE-managed Components
 private:	// User declarations
 bool Registered;
 TLocateOptions SO;
-//bool LoadSpravs();
 void SetAspects(String Login, int NumRec);
 void SavePosition();
 
-//bool VerifySit();
-//bool VerifyTerr();
-//bool VerifyDeyat();
-//bool VerifyAsp();
-//bool VerifyVozd();
-//bool VerifyCryt();
-//bool VerifyMeropr();
-
 bool LoadSit();
-void MergeSit();
 
-//bool LoadTerr();
-void MergeTerr();
-
-//bool LoadDeyat();
-void MergeDeyat();
-
-//bool LoadAsp();
-void MergeAsp();
-
-//bool LoadVozd();
-void MergeVozd();
-
-//bool LoadCryt();
-void MergeCryt();
-
-
-void RefreshLocalReference(String NameNode, String NameBranch);
-
-//bool LoadPodr();
 void EnabledForm(bool B);
 
 public:		// User declarations
@@ -321,18 +281,9 @@ void Initialize();
 void Initialize(int NumRec);
 bool C1,C2,C3,C4,C5,C6,C7;
 int CurrentRecord;
-/*
-AnsiString Address(Variant Sheet,int x,int y);
 
-
-void CreateReport1(int Podr, TDateTime Date1, TDateTime Date2, AnsiString Isp);
-void CreateReport2(int Podr, TDateTime Date1, TDateTime Date2, AnsiString Isp);
-*/
 AnsiString Filtr1, Filtr2;
 
-//bool  PrepareSaveAspects();
-//bool  SaveAspects();
-//bool LoadAspects(int NumLogin);
 void PrepareMergeAspects();
 void  MergeAspects(int NumLogin);
 

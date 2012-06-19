@@ -160,28 +160,29 @@ BlockServer("BeginWork");
  {
  Zast->MClient->WriteDiaryEvent("NetAspects","Конец записи критериев (главспец)","");
 
- Zast->ReadWriteDoc->Execute();
+ //Zast->ReadWriteDoc->Execute();
+  Zast->MClient->UnBlockServer("ReadWriteDoc");
  break;
  }
  case 13:
  {
  Zast->MClient->WriteDiaryEvent("NetAspects","Конец записи ситуаций (главспец)","");
 
- Zast->ReadWriteDoc->Execute();
+  Zast->MClient->UnBlockServer("ReadWriteDoc");
  break;
  }
  case 14:
  {
  StartAction(Act.ParamComm[0]);
 
- Zast->ReadWriteDoc->Execute();
+  Zast->MClient->UnBlockServer("ReadWriteDoc");
  break;
  }
  case 15:
  {
  StartAction(Act.ParamComm[0]);
 
- Zast->ReadWriteDoc->Execute();
+  Zast->MClient->UnBlockServer("ReadWriteDoc");
  break;
  }
  case 16:
@@ -745,7 +746,9 @@ else
 //***************************************************************************
 void Client::PostWriteAspectsUsr()
 {
-if(Form1->Quit)
+ Zast->MClient->WriteDiaryEvent("NetAspects","Конец записи аспектов (пользователь)","");
+ Sleep(1000);
+ if(Form1->Quit)
 {
  Form1->AspQ->Click();
 }
@@ -753,7 +756,6 @@ else
 {
  Form1->N9->Click();
 }
-
 }
 //***************************************************************************
 void Client::BlockServer(String NextProc)

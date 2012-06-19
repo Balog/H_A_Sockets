@@ -587,11 +587,13 @@ if(Documents->ReadWrite.size()!=0)
 Documents->RW=Documents->ReadWrite.begin();
 S=Documents->ReadWrite[0];
 Documents->ReadWrite.erase(Documents->RW);
+//Prog->Visible=true;
 Prog->Label1->Caption=S.Text;
 Prog->PB->Position=S.Num;
 Prog->Repaint();
 Sleep(1000);
-MClient->StartAction(S.NameAction);
+Zast->MClient->BlockServer(S.NameAction);
+//MClient->StartAction(S.NameAction);
 }
 else
 {
@@ -689,7 +691,7 @@ Form1->Initialize();
 
 Zast->MClient->WriteDiaryEvent("NetAspects","Конец загрузки подразделений (пользователь)","");
 }
-ReadWriteDoc->Execute();
+Zast->MClient->UnBlockServer("ReadWriteDoc");
 }
 //---------------------------------------------------------------------------
 
@@ -760,7 +762,7 @@ Zast->MClient->WriteDiaryEvent("NetAspects","Конец загрузки критериев (пользоват
 
 
 
-ReadWriteDoc->Execute();
+Zast->MClient->UnBlockServer("ReadWriteDoc");
 }
 //---------------------------------------------------------------------------
 
@@ -881,7 +883,7 @@ Form1->Initialize();
 
 Zast->MClient->WriteDiaryEvent("NetAspects","Конец загрузки ситуаций (пользователь)","");
  }
-ReadWriteDoc->Execute();
+Zast->MClient->UnBlockServer("ReadWriteDoc");
 }
 //---------------------------------------------------------------------------
 
@@ -996,7 +998,7 @@ Form1->Initialize();
 Zast->MClient->WriteDiaryEvent("NetAspects","Конец загрузки воздействий (пользователь)","");
 }
 
-ReadWriteDoc->Execute();
+Zast->MClient->UnBlockServer("ReadWriteDoc");
 }
 //---------------------------------------------------------------------------
 
@@ -1035,7 +1037,7 @@ Form1->Initialize();
 Zast->MClient->WriteDiaryEvent("NetAspects","Конец загрузки мероприятий (пользователь)","");
 }
 
-ReadWriteDoc->Execute();
+Zast->MClient->UnBlockServer("ReadWriteDoc");
 }
 //---------------------------------------------------------------------------
 
@@ -1216,7 +1218,7 @@ Form1->Initialize();
 Zast->MClient->WriteDiaryEvent("NetAspects","Конец загрузки территорий (пользователь)","");
 }
 
-ReadWriteDoc->Execute();
+Zast->MClient->UnBlockServer("ReadWriteDoc");
 }
 //---------------------------------------------------------------------------
 
@@ -1357,7 +1359,7 @@ Form1->Initialize();
 Zast->MClient->WriteDiaryEvent("NetAspects","Конец загрузки деятельностей (пользователь)","");
 }
 
-ReadWriteDoc->Execute();
+Zast->MClient->UnBlockServer("ReadWriteDoc");
 
 }
 //---------------------------------------------------------------------------
@@ -1446,7 +1448,7 @@ Comm->Execute();
 
 Zast->MClient->WriteDiaryEvent("NetAspects","Конец загрузки экологических аспектов (главспец)","");
 
-ReadWriteDoc->Execute();
+Zast->MClient->UnBlockServer("ReadWriteDoc");
 }
 //---------------------------------------------------------------------------
 
@@ -1476,9 +1478,9 @@ void __fastcall TZast::WriteMetodikaExecute(TObject *Sender)
 {
 
 MClient->Act.ParamComm.clear();
-MClient->Act.ParamComm.push_back("ReadWriteDoc");
+MClient->Act.ParamComm.push_back("UnblockAndRWD");
 MClient->WriteTable("Reference","Select Номер, Методика From Методика Order by номер", "Reference","Select Номер, Методика From Методика Order by номер");
-
+Sleep(1000);
 Zast->MClient->WriteDiaryEvent("NetAspects","Конец записи методики (главспец)","");
 
 }
@@ -1544,7 +1546,8 @@ Comm->Execute();
 
  Zast->MClient->WriteDiaryEvent("NetAspects","Конец записи подразделений (главспец)","");
 
- Zast->ReadWriteDoc->Execute();
+ //Zast->ReadWriteDoc->Execute();
+ Zast->MClient->UnBlockServer("ReadWriteDoc");
 }
 //---------------------------------------------------------------------------
 void __fastcall TZast::WriteCritExecute(TObject *Sender)
@@ -1765,7 +1768,7 @@ void __fastcall TZast::MergeServerTerrExecute(TObject *Sender)
 {
  MClient->Act.WaitCommand=14;
  MClient->Act.ParamComm.clear();
- MClient->Act.ParamComm.push_back("EndMergeServerVozd");
+ MClient->Act.ParamComm.push_back("EndMergeServerTerr");
 
  String DB="Reference";
  String Node="Узлы_5";
@@ -1904,7 +1907,8 @@ Zast->MClient->ReadTable("Аспекты", "Select Подразделения.[Номер подразделения],
 void __fastcall TZast::StartLoadObslOtdExecute(TObject *Sender)
 {
  Zast->MClient->Act.ParamComm.clear();
- Zast->MClient->Act.ParamComm.push_back("StartMergeLoginsPodr");
+ //Zast->MClient->Act.ParamComm.push_back("StartMergeLoginsPodr");
+ Zast->MClient->Act.ParamComm.push_back("PrepStartMergeLoginPodr");
 Zast->MClient->ReadTable("Аспекты", "Select ObslOtdel.Login, ObslOtdel.NumObslOtdel From ObslOtdel Order by Login, NumObslOtdel;", "Аспекты", "Select TempObslOtdel.Login, TempObslOtdel.NumObslOtdel From TempObslOtdel Order by Login, NumObslOtdel;");
 
 }
@@ -1990,7 +1994,7 @@ Comm->Execute();
 
 if(Role==2)
 {
-MClient->UnBlockServer("");
+
 Documents->Show();
 }
 else
@@ -2294,6 +2298,8 @@ CT=CT+" Order by Аспекты.[Номер аспекта]; ";
 MAsp->MoveAspects->CommandText=CT;
 MAsp->MoveAspects->Connection=Zast->ADOAspect;
 MAsp->MoveAspects->Active=true;
+
+MClient->UnBlockServer("");
 MAsp->ShowModal();
 }
 //---------------------------------------------------------------------------
@@ -2312,8 +2318,8 @@ ClientSocket->Socket->SendText("Command:17;0|");
 void __fastcall TZast::EndsaveAspectsMSpecExecute(TObject *Sender)
 {
 Zast->MClient->WriteDiaryEvent("NetAspects","Конец записи аспектов (главспец)","");
-
-Zast->ReadWriteDoc->Execute();
+Sleep(1000);
+ Zast->MClient->UnBlockServer("ReadWriteDoc");
 //ShowMessage("Запись данных завершена");
 }
 //---------------------------------------------------------------------------
@@ -2463,7 +2469,7 @@ MAsp->MoveAspects->Connection=Zast->ADOAspect;
 MAsp->MoveAspects->Active=true;
 
 MAsp->ChangeCPodr();
-
+ Zast->MClient->UnBlockServer("EndReadAspectsMSpec");
 ShowMessage("Чтение завершено");
 }
 //---------------------------------------------------------------------------
@@ -2479,7 +2485,8 @@ Zast->MClient->WriteTable("Аспекты","SELECT Аспекты.[Номер аспекта], Подразделен
 
 void __fastcall TZast::StopProgramExecute(TObject *Sender)
 {
-Zast->Close();
+MClient->UnBlockServer("StopProgram2");
+
 }
 //---------------------------------------------------------------------------
 
@@ -2496,7 +2503,8 @@ Zast->MClient->ReadTable("Аспекты", "Select Подразделения.[Номер подразделения],
 void __fastcall TZast::StartLoadObslOtdUSRExecute(TObject *Sender)
 {
  Zast->MClient->Act.ParamComm.clear();
- Zast->MClient->Act.ParamComm.push_back("StartMergeLoginsPodr");
+ //Zast->MClient->Act.ParamComm.push_back("StartMergeLoginsPodr");
+ Zast->MClient->Act.ParamComm.push_back("PrepStartMergeLoginPodr");
 Zast->MClient->ReadTable("Аспекты", "Select ObslOtdel.Login, ObslOtdel.NumObslOtdel From ObslOtdel Order by Login, NumObslOtdel;", "Аспекты_П", "Select TempObslOtdel.Login, TempObslOtdel.NumObslOtdel From TempObslOtdel Order by Login, NumObslOtdel;");
 
 }
@@ -2513,7 +2521,7 @@ ReadWriteDoc->Execute();
 void __fastcall TZast::MergeAspectsUserExecute(TObject *Sender)
 {
 
-MergeAspects(Form1->NumLogin, false);
+MClient->UnBlockServer("MergeAspectsUser1");
 }
 //---------------------------------------------------------------------------
 
@@ -2640,7 +2648,7 @@ Zast->ClientSocket->Socket->SendText("Command:18;1|"+IntToStr(IntToStr(Form1->Nu
 
 void __fastcall TZast::MergeAspectsUserQExecute(TObject *Sender)
 {
-MergeAspects(Form1->NumLogin, true);
+MClient->UnBlockServer("PrepMergeAspectsUserQ");
 }
 //---------------------------------------------------------------------------
 
@@ -2671,9 +2679,11 @@ BlockServer->Enabled=false;
 //---------------------------------------------------------------------------
 void TZast::WaitBlockServer(bool Flag)
 {
+String Mess="Сервер занят, ожидаем...";
 if(Flag)
 {
  //Начинаем ожидание
+ Prog->Label1->Caption=Mess;
  Prog->PB->Min=0;
  Prog->PB->Position=0;
  Prog->PB->Max=9;
@@ -2684,8 +2694,11 @@ if(Flag)
 else
 {
  //Ожидание закончено
- BlockServer->Enabled=false;
+  BlockServer->Enabled=false;
+ if(Prog->Label1->Caption==Mess)
+ {
  Prog->Close();
+ }
 }
 }
 //---------------------------------------------------------------------------
@@ -2694,6 +2707,90 @@ void __fastcall TZast::UnBlockServerTimer(TObject *Sender)
 
  Zast->MClient->Act.WaitCommand=20;
  ClientSocket->Socket->SendText("Command:20;1|1#0");
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TZast::UnblockAndRWDExecute(TObject *Sender)
+{
+Zast->MClient->UnBlockServer("ReadWriteDoc");
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TZast::ReadAspectsMSpecExecute(TObject *Sender)
+{
+ Zast->MClient->Act.ParamComm.clear();
+ Zast->MClient->Act.ParamComm.push_back("LoadMSpecAspects");
+ String ServerSQL="SELECT Аспекты.[Номер аспекта], Аспекты.Подразделение, Аспекты.Ситуация, Аспекты.[Вид территории], Аспекты.Деятельность, Аспекты.Специальность, Аспекты.Аспект, Аспекты.Воздействие, Аспекты.G, Аспекты.O, Аспекты.R, Аспекты.S, Аспекты.T, Аспекты.L, Аспекты.N, Аспекты.Z, Аспекты.Значимость, Аспекты.[Проявление воздействия], Аспекты.[Тяжесть последствий], Аспекты.Приоритетность,  Аспекты.[Выполняющиеся мероприятия],  Аспекты.[предлагаемые мероприятия],  Аспекты.[Мониторинг и контроль], Аспекты.[Предлагаемый мониторинг и контроль], Аспекты.[Дата создания], Аспекты.[Начало действия], Аспекты.[Конец действия] FROM Аспекты;";
+ String ClientSQL="SELECT TempAspects.[Номер аспекта], TempAspects.Подразделение, TempAspects.Ситуация, TempAspects.[Вид территории], TempAspects.Деятельность, TempAspects.Специальность, TempAspects.Аспект, TempAspects.Воздействие, TempAspects.G, TempAspects.O, TempAspects.R, TempAspects.S, TempAspects.T, TempAspects.L, TempAspects.N, TempAspects.Z, TempAspects.Значимость, TempAspects.[Проявление воздействия], TempAspects.[Тяжесть последствий], TempAspects.Приоритетность, TempAspects.[Выполняющиеся мероприятия],  TempAspects.[предлагаемые мероприятия],  TempAspects.[Мониторинг и контроль], TempAspects.[Предлагаемый мониторинг и контроль],  TempAspects.[Дата создания], TempAspects.[Начало действия], TempAspects.[Конец действия] FROM TempAspects;";
+Zast->MClient->ReadTable("Аспекты",ServerSQL, "Аспекты", ClientSQL);
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TZast::PrepareCompareMSpecAspectsExecute(TObject *Sender)
+{
+ Zast->MClient->Act.ParamComm.clear();
+ Zast->MClient->Act.ParamComm.push_back("CompareMSpecAspects");
+ String ServerSQL="SELECT Аспекты.[Номер аспекта], Аспекты.Подразделение, Аспекты.Ситуация, Аспекты.[Вид территории], Аспекты.Деятельность, Аспекты.Специальность, Аспекты.Аспект, Аспекты.Воздействие, Аспекты.G, Аспекты.O, Аспекты.R, Аспекты.S, Аспекты.T, Аспекты.L, Аспекты.N, Аспекты.Z, Аспекты.Значимость, Аспекты.[Проявление воздействия], Аспекты.[Тяжесть последствий], Аспекты.Приоритетность,  Аспекты.[Выполняющиеся мероприятия],  Аспекты.[предлагаемые мероприятия],  Аспекты.[Мониторинг и контроль], Аспекты.[Предлагаемый мониторинг и контроль], Аспекты.[Дата создания], Аспекты.[Начало действия], Аспекты.[Конец действия] FROM Аспекты;";
+ String ClientSQL="SELECT TempAspects.[Номер аспекта], TempAspects.Подразделение, TempAspects.Ситуация, TempAspects.[Вид территории], TempAspects.Деятельность, TempAspects.Специальность, TempAspects.Аспект, TempAspects.Воздействие, TempAspects.G, TempAspects.O, TempAspects.R, TempAspects.S, TempAspects.T, TempAspects.L, TempAspects.N, TempAspects.Z, TempAspects.Значимость, TempAspects.[Проявление воздействия], TempAspects.[Тяжесть последствий], TempAspects.Приоритетность, TempAspects.[Выполняющиеся мероприятия],  TempAspects.[предлагаемые мероприятия],  TempAspects.[Мониторинг и контроль], TempAspects.[Предлагаемый мониторинг и контроль],  TempAspects.[Дата создания], TempAspects.[Начало действия], TempAspects.[Конец действия] FROM TempAspects;";
+Zast->MClient->ReadTable("Аспекты",ServerSQL, "Аспекты", ClientSQL);
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TZast::EndReadAspectsMSpecExecute(TObject *Sender)
+{
+Zast->MClient->WriteDiaryEvent("NetAspects","Конец чтения аспектов (главспец)","");
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TZast::StopProgram2Execute(TObject *Sender)
+{
+Zast->Close();        
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TZast::PrepStartMergeLoginPodrExecute(TObject *Sender)
+{
+MClient->UnBlockServer("StartMergeLoginsPodr");
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TZast::PrepareReadAspectsUsrExecute(TObject *Sender)
+{
+MP<TADOCommand>Comm(this);
+Comm->Connection=Zast->ADOUsrAspect;
+Comm->CommandText="DELETE Logins.AdmNum, Аспекты.* FROM Logins INNER JOIN ((Подразделения INNER JOIN Аспекты ON Подразделения.[Номер подразделения] = Аспекты.Подразделение) INNER JOIN ObslOtdel ON Подразделения.[Номер подразделения] = ObslOtdel.NumObslOtdel) ON Logins.Num = ObslOtdel.Login WHERE (((Logins.ServerNum)="+IntToStr(Form1->NumLogin)+"));";
+Comm->Execute();
+
+ Zast->MClient->Act.ParamComm.clear();
+ Zast->MClient->Act.ParamComm.push_back("MergeAspectsUser");
+ String ServerSQL="SELECT Аспекты.[Номер аспекта],     Аспекты.Подразделение,     Аспекты.Ситуация,     Аспекты.[Вид территории],     Аспекты.Деятельность,     Аспекты.Специальность,     Аспекты.Аспект,     Аспекты.Воздействие,     Аспекты.G,     Аспекты.O,     Аспекты.R,     Аспекты.S,     Аспекты.T,     Аспекты.L,     Аспекты.N,     Аспекты.Z,     Аспекты.Значимость,     Аспекты.[Проявление воздействия],     Аспекты.[Тяжесть последствий],     Аспекты.Приоритетность,     Аспекты.[Выполняющиеся мероприятия],     Аспекты.[Предлагаемые мероприятия],     Аспекты.[Мониторинг и контроль],     Аспекты.[Предлагаемый мониторинг и контроль],     Аспекты.Исполнитель,      Аспекты.[Дата создания],     Аспекты.[Начало действия],     Аспекты.[Конец действия] FROM (Подразделения INNER JOIN ObslOtdel ON Подразделения.[Номер подразделения] = ObslOtdel.NumObslOtdel) INNER JOIN Аспекты ON Подразделения.[Номер подразделения] = Аспекты.Подразделение WHERE (((ObslOtdel.Login)="+IntToStr(Form1->NumLogin)+"));";
+ String ClientSQL="SELECT TempAspects.[Номер аспекта], TempAspects.Подразделение, TempAspects.Ситуация, TempAspects.[Вид территории], TempAspects.Деятельность, TempAspects.Специальность, TempAspects.Аспект, TempAspects.Воздействие, TempAspects.G, TempAspects.O, TempAspects.R, TempAspects.S, TempAspects.T, TempAspects.L, TempAspects.N, TempAspects.Z, TempAspects.Значимость, TempAspects.[Проявление воздействия], TempAspects.[Тяжесть последствий], TempAspects.Приоритетность, TempAspects.[Выполняющиеся мероприятия], TempAspects.[Предлагаемые мероприятия], TempAspects.[Мониторинг и контроль], TempAspects.[Предлагаемый мониторинг и контроль], TempAspects.Исполнитель,  TempAspects.[Дата создания], TempAspects.[Начало действия], TempAspects.[Конец действия] FROM TempAspects;";
+Zast->MClient->ReadTable("Аспекты", ServerSQL, "Аспекты_П", ClientSQL);
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TZast::MergeAspectsUser1Execute(TObject *Sender)
+{
+MergeAspects(Form1->NumLogin, false);
+Zast->MClient->WriteDiaryEvent("NetAspects","Конец чтения аспектов (пользователь)","");
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TZast::PrepWriteAspUsrExecute(TObject *Sender)
+{
+Form1->DataSetRefresh2->Execute();
+Zast->MClient->Act.ParamComm.clear();
+Zast->MClient->Act.ParamComm.push_back("WriteAspectsUsr");
+String ClientSQL="SELECT Аспекты.[ServerNum],      Подразделения.ServerNum,     Аспекты.Ситуация,     Аспекты.[Вид территории],     Аспекты.Деятельность,     Аспекты.Специальность,     Аспекты.Аспект,     Аспекты.Воздействие,     Аспекты.G,     Аспекты.O,     Аспекты.R,     Аспекты.S,     Аспекты.T,     Аспекты.L,     Аспекты.N,     Аспекты.Z,     Аспекты.Значимость,     Аспекты.[Проявление воздействия],     Аспекты.[Тяжесть последствий],     Аспекты.Приоритетность,     Аспекты.[Выполняющиеся мероприятия],     Аспекты.[Предлагаемые мероприятия],     Аспекты.[Мониторинг и контроль],     Аспекты.[Предлагаемый мониторинг и контроль],     Аспекты.Исполнитель,      Аспекты.[Дата создания],     Аспекты.[Начало действия],     Аспекты.[Конец действия] FROM Подразделения INNER JOIN Аспекты ON Подразделения.[Номер подразделения] = Аспекты.Подразделение ORDER BY Аспекты.[Номер аспекта];";
+String ServerSQL="SELECT TempAspects.[Номер аспекта], TempAspects.Подразделение, TempAspects.Ситуация, TempAspects.[Вид территории], TempAspects.Деятельность, TempAspects.Специальность, TempAspects.Аспект, TempAspects.Воздействие, TempAspects.G, TempAspects.O, TempAspects.R, TempAspects.S, TempAspects.T, TempAspects.L, TempAspects.N, TempAspects.Z, TempAspects.Значимость, TempAspects.[Проявление воздействия], TempAspects.[Тяжесть последствий], TempAspects.Приоритетность, TempAspects.[Выполняющиеся мероприятия], TempAspects.[Предлагаемые мероприятия], TempAspects.[Мониторинг и контроль], TempAspects.[Предлагаемый мониторинг и контроль], TempAspects.Исполнитель,  TempAspects.[Дата создания], TempAspects.[Начало действия], TempAspects.[Конец действия] FROM TempAspects;";
+Zast->MClient->WriteTable("Аспекты_П", ClientSQL, "Аспекты", ServerSQL);
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TZast::PrepMergeAspectsUserQExecute(TObject *Sender)
+{
+MergeAspects(Form1->NumLogin, true);
+Zast->MClient->WriteDiaryEvent("NetAspects","Конец записи аспектов (пользователь)","");
 }
 //---------------------------------------------------------------------------
 

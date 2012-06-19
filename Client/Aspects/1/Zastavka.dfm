@@ -1,6 +1,6 @@
 object Zast: TZast
-  Left = 274
-  Top = 127
+  Left = 206
+  Top = 136
   BorderIcons = []
   BorderStyle = bsNone
   Caption = 'Zast'
@@ -10256,6 +10256,46 @@ object Zast: TZast
     object PreLoadLogins: TAction
       Caption = 'PreLoadLogins'
       OnExecute = PreLoadLoginsExecute
+    end
+    object UnblockAndRWD: TAction
+      Caption = 'UnblockAndRWD'
+      OnExecute = UnblockAndRWDExecute
+    end
+    object ReadAspectsMSpec: TAction
+      Caption = 'ReadAspectsMSpec'
+      OnExecute = ReadAspectsMSpecExecute
+    end
+    object PrepareCompareMSpecAspects: TAction
+      Caption = 'PrepareCompareMSpecAspects'
+      OnExecute = PrepareCompareMSpecAspectsExecute
+    end
+    object EndReadAspectsMSpec: TAction
+      Caption = 'EndReadAspectsMSpec'
+      OnExecute = EndReadAspectsMSpecExecute
+    end
+    object StopProgram2: TAction
+      Caption = 'StopProgram2'
+      OnExecute = StopProgram2Execute
+    end
+    object PrepStartMergeLoginPodr: TAction
+      Caption = 'PrepStartMergeLoginPodr'
+      OnExecute = PrepStartMergeLoginPodrExecute
+    end
+    object PrepareReadAspectsUsr: TAction
+      Caption = 'PrepareReadAspectsUsr'
+      OnExecute = PrepareReadAspectsUsrExecute
+    end
+    object MergeAspectsUser1: TAction
+      Caption = 'MergeAspectsUser1'
+      OnExecute = MergeAspectsUser1Execute
+    end
+    object PrepWriteAspUsr: TAction
+      Caption = 'PrepWriteAspUsr'
+      OnExecute = PrepWriteAspUsrExecute
+    end
+    object PrepMergeAspectsUserQ: TAction
+      Caption = 'PrepMergeAspectsUserQ'
+      OnExecute = PrepMergeAspectsUserQExecute
     end
   end
   object BlockServer: TTimer
