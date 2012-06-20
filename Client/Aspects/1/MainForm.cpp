@@ -16,6 +16,7 @@
 #include "inifiles.hpp"
 #include "F_Vvedenie.h"
 #include "Metod.h"
+#include "Winuser.h"
 //---------------------------------------------------------------------------
 #pragma package(smart_init)
 #pragma resource "*.dfm"
@@ -1649,7 +1650,13 @@ Report1->PodrComText=Podrazdel->CommandText;
 Report1->NumRep=1;
 Report1->RepBase=Zast->ADOUsrAspect;
 Report1->Role=Role;
-Report1->ShowModal();
+Report1->NumLogin=NumLogin;
+
+ Zast->MClient->Act.ParamComm.clear();
+ Zast->MClient->Act.ParamComm.push_back("ContStartReports");
+ String ServerSQL="SELECT Подразделения.[Номер подразделения], Подразделения.[Название подразделения] FROM (Подразделения INNER JOIN ObslOtdel ON Подразделения.[Номер подразделения] = ObslOtdel.NumObslOtdel) INNER JOIN Аспекты ON Подразделения.[Номер подразделения] = Аспекты.Подразделение GROUP BY ObslOtdel.Login, Подразделения.[Номер подразделения], Подразделения.[Название подразделения] HAVING (((ObslOtdel.Login)="+IntToStr(NumLogin)+")) ORDER BY Подразделения.[Название подразделения];";
+ String ClientSQL="Select [ServerNum], [Название подразделения] From TempПодразделения";
+ Zast->MClient->ReadTable("Аспекты",ServerSQL, "Аспекты_П", ClientSQL);
 
 }
 //---------------------------------------------------------------------------
@@ -1662,6 +1669,7 @@ Aspects->UpdateBatch();
 
 void __fastcall TForm1::N9Click(TObject *Sender)
 {
+Zast->BlockMK(true);
 Zast->MClient->BlockServer("PrepareReadAspectsUsr");
 }
 //------------------------------------------------------------------------
@@ -1838,7 +1846,13 @@ Report1->PodrComText=Podrazdel->CommandText;
 Report1->NumRep=2;
 Report1->RepBase=Zast->ADOUsrAspect;
 Report1->Role=Role;
-Report1->ShowModal();
+Report1->NumLogin=NumLogin;
+
+ Zast->MClient->Act.ParamComm.clear();
+ Zast->MClient->Act.ParamComm.push_back("ContStartReports");
+ String ServerSQL="SELECT Подразделения.[Номер подразделения], Подразделения.[Название подразделения] FROM (Подразделения INNER JOIN ObslOtdel ON Подразделения.[Номер подразделения] = ObslOtdel.NumObslOtdel) INNER JOIN Аспекты ON Подразделения.[Номер подразделения] = Аспекты.Подразделение GROUP BY ObslOtdel.Login, Подразделения.[Номер подразделения], Подразделения.[Название подразделения] HAVING (((ObslOtdel.Login)="+IntToStr(NumLogin)+")) ORDER BY Подразделения.[Название подразделения];";
+ String ClientSQL="Select [ServerNum], [Название подразделения] From TempПодразделения";
+ Zast->MClient->ReadTable("Аспекты",ServerSQL, "Аспекты_П", ClientSQL);
 
 }
 
@@ -1971,6 +1985,8 @@ Button4->Click();
 
 void __fastcall TForm1::N10Click(TObject *Sender)
 {
+Zast->BlockMK(true);
+
 Prog->SignComplete=true;
 Prog->Show();
 Prog->PB->Min=0;
@@ -2024,6 +2040,8 @@ Zast->ReadWriteDoc->Execute();
 //---------------------------------------------------------------------------
 void __fastcall TForm1::N3Click(TObject *Sender)
 {
+Zast->BlockMK(true);
+
 Zast->MClient->BlockServer("PrepWriteAspUsr");
 }
 //---------------------------------------------------------------------------
@@ -2719,4 +2737,8 @@ Comm->Execute();
 Zast->MClient->ReadTable("Аспекты", ServerSQL, "Аспекты_П", ClientSQL);
 }
 //---------------------------------------------------------------------------
+
+
+
+
 

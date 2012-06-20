@@ -10297,6 +10297,14 @@ object Zast: TZast
       Caption = 'PrepMergeAspectsUserQ'
       OnExecute = PrepMergeAspectsUserQExecute
     end
+    object ContStartReports: TAction
+      Caption = 'ContStartReports'
+      OnExecute = ContStartReportsExecute
+    end
+    object CloseMAsp: TAction
+      Caption = 'CloseMAsp'
+      OnExecute = CloseMAspExecute
+    end
   end
   object BlockServer: TTimer
     Enabled = False

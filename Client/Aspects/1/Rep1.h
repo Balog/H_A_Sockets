@@ -41,6 +41,7 @@ String Flt;
 String FltName;
 String PodrComText;
 TADOConnection *RepBase;
+int NumLogin;
 void CreateRep();
 };
 //---------------------------------------------------------------------------

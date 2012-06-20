@@ -177,6 +177,7 @@ MoveAspects->Post();
 void __fastcall TMAsp::BitBtn5Click(TObject *Sender)
 {
 //Zast->SaveAspectsMSpec0->Execute();
+Zast->BlockMK(true);
 Zast->MClient->BlockServer("SaveAspectsMSpec0");
 }
 //---------------------------------------------------------------------------
@@ -185,6 +186,7 @@ void __fastcall TMAsp::BitBtn6Click(TObject *Sender)
 {
 if(Application->MessageBoxA("Вы действительно хотите прочесть список аспектов с сервера?\rВсе несохраненные изменения по перемещению аспектов будут удалены!","Чтение списка аспектов",MB_YESNO+MB_ICONWARNING+MB_DEFBUTTON2+MB_APPLMODAL)==IDYES)
 {
+Zast->BlockMK(true);
 Zast->MClient->BlockServer("ReadAspectsMSpec");
 }
 
@@ -251,12 +253,9 @@ Zast->MClient->WriteDiaryEvent("NetAspects ошибка","Ошибка объединения аспектов 
 void __fastcall TMAsp::FormClose(TObject *Sender, TCloseAction &Action)
 {
 
+Zast->MClient->BlockServer("CloseMAsp");
 
- Zast->MClient->Act.ParamComm.clear();
- Zast->MClient->Act.ParamComm.push_back("CompareMSpecAspects2");
- String ServerSQL="SELECT Аспекты.[Номер аспекта], Аспекты.Подразделение FROM Аспекты order by Аспекты.[номер аспекта];";
- String ClientSQL="SELECT TempAspects.[Номер аспекта], TempAspects.Подразделение FROM TempAspects;";
-Zast->MClient->ReadTable("Аспекты",ServerSQL, "Аспекты", ClientSQL);
+
 }
 //----------------------------------------------------
 void __fastcall TMAsp::RadioGroup1Click(TObject *Sender)

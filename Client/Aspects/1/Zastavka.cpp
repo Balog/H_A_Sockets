@@ -21,10 +21,17 @@
 #pragma resource "*.dfm"
 TZast *Zast;
 
+  HINSTANCE hDll;
+  //ниже прототип будущей функции
+  DWORD __stdcall (*BlockInput)(bool Status);
+  DWORD Result;
+  TCursor Save_Cursor;
 //---------------------------------------------------------------------------
 __fastcall TZast::TZast(TComponent* Owner)
         : TForm(Owner)
 {
+Result=false;
+Save_Cursor = Screen->Cursor;
 
 MClient=new Client(ClientSocket, ActionManager1, this);
 String Path=ExtractFilePath(Application->ExeName);
@@ -565,6 +572,7 @@ Documents->Metod->Active=true;
 Zast->MClient->WriteDiaryEvent("NetAspects","Конец загрузки методики (главспец)","");
 //Sleep(1000);
 Zast->MClient->UnBlockServer("ReadWriteDoc");
+
 //ReadWriteDoc->Execute();
 }
 //---------------------------------------------------------------------------
@@ -598,6 +606,7 @@ Zast->MClient->BlockServer(S.NameAction);
 else
 {
 Prog->Close();
+Zast->BlockMK(false);
 if(Prog->SignComplete)
 {
  ShowMessage("Завершено");
@@ -1358,8 +1367,9 @@ else
 Form1->Initialize();
 Zast->MClient->WriteDiaryEvent("NetAspects","Конец загрузки деятельностей (пользователь)","");
 }
-
+Zast->BlockMK(false);
 Zast->MClient->UnBlockServer("ReadWriteDoc");
+
 
 }
 //---------------------------------------------------------------------------
@@ -2328,6 +2338,8 @@ void __fastcall TZast::CompareMSpecAspects2Execute(TObject *Sender)
 {
 //Сравнение таблицы аспектов для главспеца по числу записей и составу
 //для принятия решения о необходимости записи таблицы аспектов
+
+
 MP<TADODataSet>Tab(this);
 Tab->Connection=ADOAspect;
 Tab->CommandText="SELECT Аспекты.[Номер аспекта], Подразделения.ServerNum FROM Подразделения INNER JOIN Аспекты ON Подразделения.[Номер подразделения] = Аспекты.Подразделение ORDER BY Аспекты.[Номер аспекта];";
@@ -2373,22 +2385,25 @@ else
 
 if(!Res)
 {
+
  if(Application->MessageBoxA(Mess.c_str(),"Запись аспектов",MB_YESNO+MB_ICONQUESTION+MB_DEFBUTTON1)==IDYES)
  {
   //Запись списка аспектов главспецом
+  /*
 Documents->ReadWrite.clear();
 Str_RW S;
 Documents->ReadWrite.push_back(S);
-
-
+ */
+Zast->BlockMK(true);
 Zast->MClient->Act.ParamComm.clear();
 Zast->MClient->Act.ParamComm.push_back("SaveAspectsMSpec2");
 Zast->MClient->WriteTable("Аспекты","SELECT Аспекты.[Номер аспекта], Подразделения.ServerNum FROM Подразделения INNER JOIN Аспекты ON Подразделения.[Номер подразделения] = Аспекты.Подразделение Order by Аспекты.[Номер аспекта]; ", "Аспекты", "SELECT TempAspects.[Номер аспекта], TempAspects.Подразделение From TempAspects order by [Номер аспекта];");
 
-Zast->ReadWriteDoc->Execute();
+//Zast->ReadWriteDoc->Execute();
  }
  else
  {
+
  Zast->MClient->WriteDiaryEvent("NetAspects","Отказ от сохранения движения аспектов (главспец)","");
  }
 }
@@ -2409,6 +2424,7 @@ ClientSocket->Socket->SendText("Command:17;0|");
 void __fastcall TZast::EndsaveAspectsMSpec2Execute(TObject *Sender)
 {
 Zast->MClient->WriteDiaryEvent("NetAspects","Конец записи аспектов (главспец)","");
+Zast->BlockMK(false);
 }
 //---------------------------------------------------------------------------
 
@@ -2470,6 +2486,7 @@ MAsp->MoveAspects->Active=true;
 
 MAsp->ChangeCPodr();
  Zast->MClient->UnBlockServer("EndReadAspectsMSpec");
+ Zast->BlockMK(false);
 ShowMessage("Чтение завершено");
 }
 //---------------------------------------------------------------------------
@@ -2522,6 +2539,7 @@ void __fastcall TZast::MergeAspectsUserExecute(TObject *Sender)
 {
 
 MClient->UnBlockServer("MergeAspectsUser1");
+Zast->BlockMK(false);
 }
 //---------------------------------------------------------------------------
 
@@ -2801,3 +2819,79 @@ Zast->MClient->WriteDiaryEvent("NetAspects","Конец записи аспектов (пользователь
 }
 //---------------------------------------------------------------------------
 
+void __fastcall TZast::ContStartReportsExecute(TObject *Sender)
+{
+
+
+
+ Report1->ShowModal();
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TZast::CloseMAspExecute(TObject *Sender)
+{
+ Zast->MClient->Act.ParamComm.clear();
+ Zast->MClient->Act.ParamComm.push_back("CompareMSpecAspects2");
+ String ServerSQL="SELECT Аспекты.[Номер аспекта], Аспекты.Подразделение FROM Аспекты order by Аспекты.[номер аспекта];";
+ String ClientSQL="SELECT TempAspects.[Номер аспекта], TempAspects.Подразделение FROM TempAspects;";
+Zast->MClient->ReadTable("Аспекты",ServerSQL, "Аспекты", ClientSQL);
+}
+//---------------------------------------------------------------------------
+void TZast::BlockMK(bool B)
+{
+if(B)
+{
+Save_Cursor = Screen->Cursor;
+
+Screen->Cursor = crNone;
+}
+else
+{
+Screen->Cursor=Save_Cursor;
+}
+
+if(Result | B)
+{
+if(B)
+{
+//Documents->Memo1->Lines->Add("Инициализация");
+  hDll = LoadLibrary("User32.dll");
+  BlockInput = (DWORD __stdcall (*)(bool Status))GetProcAddress(hDll, "BlockInput");
+
+  if(!BlockInput)
+  {
+    FreeLibrary(hDll);
+    return;
+  }
+}
+  Result = BlockInput(B);
+
+if(B)
+{
+//Documents->Memo1->Lines->Add("B=true");
+}
+else
+{
+//Documents->Memo1->Lines->Add("B=false");
+}
+
+if(Result)
+{
+//Documents->Memo1->Lines->Add("Result=true");
+}
+else
+{
+//Documents->Memo1->Lines->Add("Result=false");
+}
+
+  if(!B | !Result)
+  {
+  FreeLibrary(hDll);
+  Result=false;
+
+//Documents->Memo1->Lines->Add("Освобождение");
+  }
+}
+//Documents->Memo1->Lines->Add("Конец");
+}
+//---------------------------------------------------------------------------

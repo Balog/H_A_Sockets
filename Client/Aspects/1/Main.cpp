@@ -69,6 +69,7 @@ Prog->PB->Min=0;
 Prog->PB->Position=0;
 Prog->PB->Max=10;
 
+Zast->BlockMK(true);
 ReadWrite.clear();
 Str_RW S;
 S.NameAction="WriteMetodika";
@@ -2296,6 +2297,7 @@ Application->HelpFile=ExtractFilePath(Application->ExeName)+"NetAspects.HLP";
 
 void __fastcall TDocuments::N2Click(TObject *Sender)
 {
+Zast->BlockMK(true);
 ReadWrite.clear();
 Str_RW S;
 S.NameAction="ReadMetodika";
@@ -2309,6 +2311,7 @@ Zast->MClient->BlockServer("ReadWriteDoc");
 
 void __fastcall TDocuments::N27Click(TObject *Sender)
 {
+Zast->BlockMK(true);
 ReadWrite.clear();
 Str_RW S;
 S.NameAction="ReadPodrazd";
@@ -2322,6 +2325,7 @@ Zast->MClient->BlockServer("ReadWriteDoc");
 
 void __fastcall TDocuments::N26Click(TObject *Sender)
 {
+Zast->BlockMK(true);
 ReadWrite.clear();
 Str_RW S;
 S.NameAction="ReadCrit";
@@ -2335,6 +2339,7 @@ Zast->MClient->BlockServer("ReadWriteDoc");
 
 void __fastcall TDocuments::N28Click(TObject *Sender)
 {
+Zast->BlockMK(true);
 ReadWrite.clear();
 Str_RW S;
 S.NameAction="ReadSit";
@@ -2348,6 +2353,7 @@ Zast->MClient->BlockServer("ReadWriteDoc");
 
 void __fastcall TDocuments::N6Click(TObject *Sender)
 {
+Zast->BlockMK(true);
 ReadWrite.clear();
 Str_RW S;
 S.NameAction="ReadVozd1";
@@ -2462,6 +2468,7 @@ Comm->Execute();
 
 void __fastcall TDocuments::N7Click(TObject *Sender)
 {
+Zast->BlockMK(true);
 ReadWrite.clear();
 Str_RW S;
 S.NameAction="ReadMeropr1";
@@ -2475,6 +2482,7 @@ Zast->MClient->BlockServer("ReadWriteDoc");
 
 void __fastcall TDocuments::N20Click(TObject *Sender)
 {
+Zast->BlockMK(true);
 ReadWrite.clear();
 Str_RW S;
 S.NameAction="ReadTerr1";
@@ -2488,6 +2496,7 @@ Zast->MClient->BlockServer("ReadWriteDoc");
 
 void __fastcall TDocuments::N24Click(TObject *Sender)
 {
+Zast->BlockMK(true);
 ReadWrite.clear();
 Str_RW S;
 S.NameAction="ReadDeyat1";
@@ -2501,6 +2510,7 @@ Zast->MClient->BlockServer("ReadWriteDoc");
 
 void __fastcall TDocuments::N25Click(TObject *Sender)
 {
+Zast->BlockMK(true);
 ReadWrite.clear();
 Str_RW S;
 S.NameAction="ReadAspect1";
@@ -2514,6 +2524,7 @@ Zast->MClient->BlockServer("ReadWriteDoc");
 
 void __fastcall TDocuments::N31Click(TObject *Sender)
 {
+Zast->BlockMK(true);
 Prog->SignComplete=true;
 Prog->Show();
 Prog->PB->Min=0;
@@ -2591,6 +2602,7 @@ DataSetPost4->Execute();
 //---------------------------------------------------------------------------
 void __fastcall TDocuments::N18Click(TObject *Sender)
 {
+Zast->BlockMK(true);
 DataSetRefresh4->Execute();
 DataSetPost1->Execute();
 
@@ -2606,6 +2618,7 @@ Zast->ReadWriteDoc->Execute();
 //---------------------------------------------------------------------------
 void __fastcall TDocuments::N38Click(TObject *Sender)
 {
+Zast->BlockMK(true);
 DataSetRefresh3->Execute();
 DataSetPost3->Execute();
 
@@ -2620,6 +2633,7 @@ Zast->ReadWriteDoc->Execute();
 //---------------------------------------------------------------------------
 void __fastcall TDocuments::N37Click(TObject *Sender)
 {
+Zast->BlockMK(true);
 DataSetRefresh2->Execute();
 DataSetPost2->Execute();
 
@@ -2635,6 +2649,7 @@ Zast->ReadWriteDoc->Execute();
 
 void __fastcall TDocuments::N39Click(TObject *Sender)
 {
+Zast->BlockMK(true);
 DataSetRefresh1->Execute();
 DataSetPost4->Execute();
 
@@ -2650,6 +2665,7 @@ Zast->ReadWriteDoc->Execute();
 
 void __fastcall TDocuments::N32Click(TObject *Sender)
 {
+Zast->BlockMK(true);
 ReadWrite.clear();
 Str_RW S;
 S.NameAction="WriteVozd1";
@@ -2662,6 +2678,7 @@ Zast->ReadWriteDoc->Execute();
 
 void __fastcall TDocuments::N33Click(TObject *Sender)
 {
+Zast->BlockMK(true);
 ReadWrite.clear();
 Str_RW S;
 S.NameAction="WriteMeropr1";
@@ -2674,6 +2691,7 @@ Zast->ReadWriteDoc->Execute();
 
 void __fastcall TDocuments::N34Click(TObject *Sender)
 {
+Zast->BlockMK(true);
 ReadWrite.clear();
 Str_RW S;
 S.NameAction="WriteTerr1";
@@ -2686,6 +2704,7 @@ Zast->ReadWriteDoc->Execute();
 
 void __fastcall TDocuments::N35Click(TObject *Sender)
 {
+Zast->BlockMK(true);
 ReadWrite.clear();
 Str_RW S;
 S.NameAction="WriteDeyat1";
@@ -2698,6 +2717,7 @@ Zast->ReadWriteDoc->Execute();
 
 void __fastcall TDocuments::N36Click(TObject *Sender)
 {
+Zast->BlockMK(true);
 ReadWrite.clear();
 Str_RW S;
 S.NameAction="WriteAspect1";
@@ -2710,6 +2730,7 @@ Zast->ReadWriteDoc->Execute();
 
 void __fastcall TDocuments::N41Click(TObject *Sender)
 {
+Zast->BlockMK(true);
 Prog->SignComplete=true;
 Prog->Show();
 Prog->PB->Min=0;
@@ -2780,11 +2801,18 @@ void __fastcall TDocuments::N00111Click(TObject *Sender)
 Report1->Role=2;
 Report1->Flt="";
 Report1->FltName="Отключен";
-Report1->PodrComText="select * From Подразделения Order by [Название подразделения]";
+Report1->PodrComText="SELECT Подразделения.[Номер подразделения], Подразделения.[Название подразделения] FROM (Подразделения INNER JOIN ObslOtdel ON Подразделения.[Номер подразделения] = ObslOtdel.NumObslOtdel) INNER JOIN Аспекты ON Подразделения.[Номер подразделения] = Аспекты.Подразделение GROUP BY ObslOtdel.Login, Подразделения.[Номер подразделения], Подразделения.[Название подразделения] ORDER BY Подразделения.[Название подразделения];";
 
 Report1->NumRep=1;
 Report1->RepBase=Zast->ADOAspect;
-Report1->ShowModal();        
+
+ Zast->MClient->Act.ParamComm.clear();
+ Zast->MClient->Act.ParamComm.push_back("ContStartReports");
+ String ServerSQL=Report1->PodrComText;
+ String ClientSQL="Select [ServerNum], [Название подразделения] From TempПодразделения";
+ Zast->MClient->ReadTable("Аспекты",ServerSQL, "Аспекты", ClientSQL);
+
+
 }
 //---------------------------------------------------------------------------
 
@@ -2794,11 +2822,18 @@ void __fastcall TDocuments::N00121Click(TObject *Sender)
 Report1->Role=2;
 Report1->Flt="";
 Report1->FltName="Отключен";
-Report1->PodrComText="select * From Подразделения Order by [Название подразделения]";
+Report1->PodrComText="SELECT Подразделения.[Номер подразделения], Подразделения.[Название подразделения] FROM (Подразделения INNER JOIN ObslOtdel ON Подразделения.[Номер подразделения] = ObslOtdel.NumObslOtdel) INNER JOIN Аспекты ON Подразделения.[Номер подразделения] = Аспекты.Подразделение GROUP BY ObslOtdel.Login, Подразделения.[Номер подразделения], Подразделения.[Название подразделения] ORDER BY Подразделения.[Название подразделения];";
 
 Report1->NumRep=2;
 Report1->RepBase=Zast->ADOAspect;
-Report1->ShowModal();        
+
+ Zast->MClient->Act.ParamComm.clear();
+ Zast->MClient->Act.ParamComm.push_back("ContStartReports");
+ String ServerSQL=Report1->PodrComText;
+ String ClientSQL="Select [ServerNum], [Название подразделения] From TempПодразделения";
+ Zast->MClient->ReadTable("Аспекты",ServerSQL, "Аспекты", ClientSQL);
+
+
 }
 //---------------------------------------------------------------------------
 

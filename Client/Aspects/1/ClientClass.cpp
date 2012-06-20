@@ -747,15 +747,20 @@ else
 void Client::PostWriteAspectsUsr()
 {
  Zast->MClient->WriteDiaryEvent("NetAspects"," онец записи аспектов (пользователь)","");
+
  Sleep(1000);
+
  if(Form1->Quit)
 {
+  Zast->BlockMK(false);
  Form1->AspQ->Click();
 }
 else
 {
+  Zast->BlockMK(false);
  Form1->N9->Click();
 }
+
 }
 //***************************************************************************
 void Client::BlockServer(String NextProc)

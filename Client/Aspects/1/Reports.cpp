@@ -39,9 +39,14 @@ Report->Active=true;
 
 AnsiString T="Ф-001_1 ";
 TempAspects->Active=false;
+AnsiString NP="Все подразделения";
+if(Podr!=0)
+{
 TempAspects->CommandText="Select * From Подразделения Where [ServerNum]="+IntToStr(Podr);
 TempAspects->Active=true;
-AnsiString NP=TempAspects->FieldByName("Название подразделения")->Value;
+NP=TempAspects->FieldByName("Название подразделения")->Value;
+}
+
 T=T+" Перечень "+IntToStr(Podr);
 AnsiString PP1=WideString(ExtractFilePath(Application->ExeName)+"\Templates\\Ф-001_1.xlt");
 AnsiString PP2=WideString(ExtractFilePath(Application->ExeName)+"\Templates\\"+T+".xlt");
@@ -64,11 +69,13 @@ int Start=17;
 AnsiString Text;
 int Num;
 T="Перечень экологических аспектов c "+Date1.DateString()+" по "+Date2.DateString();
+/*
 App.OlePropertyGet("Cells",9,1).OlePropertySet("Value",T.c_str());
 TempAspects->Active=false;
 TempAspects->CommandText="Select * From Подразделения Where [ServerNum]="+IntToStr(Podr);
 TempAspects->Active=true;
 NP=TempAspects->FieldByName("Название подразделения")->Value;
+*/
 T=" "+NP;
 App.OlePropertyGet("Cells",10,1).OlePropertySet("Value",T.c_str());
 T="Фильтр - "+LFiltr;
@@ -282,9 +289,17 @@ Report->Active=true;
 
 AnsiString T="Ф-001.2 ";
 TempAspects->Active=false;
+
+
+AnsiString NP="Все подразделения";
+if(Podr!=0)
+{
 TempAspects->CommandText="Select * From Подразделения Where [ServerNum]="+IntToStr(Podr);
 TempAspects->Active=true;
-AnsiString NP=TempAspects->FieldByName("Название подразделения")->Value;
+NP=TempAspects->FieldByName("Название подразделения")->Value;
+}
+
+
 T=T+" Перечень "+IntToStr(Podr);
 
 AnsiString P1=WideString(ExtractFilePath(Application->ExeName)+"\Templates\\Ф-001_2.xlt");
@@ -305,10 +320,12 @@ AnsiString Text;
 int Num;
 T="Реестр значимых экологических аспектов с "+Date1.DateString()+" по "+Date2.DateString();
 App.OlePropertyGet("Cells",9,1).OlePropertySet("Value",T.c_str());
+/*
 TempAspects->Active=false;
 TempAspects->CommandText="Select * From Подразделения Where [ServerNum]="+IntToStr(Podr);
 TempAspects->Active=true;
 NP=TempAspects->FieldByName("Название подразделения")->Value;
+*/
 T=" "+NP;
 App.OlePropertyGet("Cells",10,1).OlePropertySet("Value",T.c_str());
 

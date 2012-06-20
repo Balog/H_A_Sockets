@@ -194,6 +194,8 @@ __published:	// IDE-managed Components
         TAction *MergeAspectsUser1;
         TAction *PrepWriteAspUsr;
         TAction *PrepMergeAspectsUserQ;
+        TAction *ContStartReports;
+        TAction *CloseMAsp;
         void __fastcall Timer1Timer(TObject *Sender);
         void __fastcall Image1Click(TObject *Sender);
         void __fastcall FormShow(TObject *Sender);
@@ -303,6 +305,8 @@ __published:	// IDE-managed Components
         void __fastcall MergeAspectsUser1Execute(TObject *Sender);
         void __fastcall PrepWriteAspUsrExecute(TObject *Sender);
         void __fastcall PrepMergeAspectsUserQExecute(TObject *Sender);
+        void __fastcall ContStartReportsExecute(TObject *Sender);
+        void __fastcall CloseMAspExecute(TObject *Sender);
 private:	// User declarations
 String Path;
 TLocateOptions SO;
@@ -342,6 +346,8 @@ void __fastcall MyException(TObject *Sender,
 void CompactDB(TADOConnection * Conn, String B);
 
 int GetIDDBName(String Name);
+
+void BlockMK(bool B);
 };
 //---------------------------------------------------------------------------
 extern PACKAGE TZast *Zast;
