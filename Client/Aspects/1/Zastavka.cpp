@@ -569,23 +569,35 @@ Application->MessageBoxA(S.c_str(),"Удаление подразделения",MB_ICONEXCLAMATION);
 
 void __fastcall TZast::MergeMetodikaExecute(TObject *Sender)
 {
+try
+{
 Documents->Metod->Active=false;
 Documents->Metod->Active=true;
 
 Zast->MClient->WriteDiaryEvent("NetAspects","Конец загрузки методики (главспец)","");
 //Sleep(1000);
 Zast->MClient->UnBlockServer("ReadWriteDoc");
-
+}
+catch(...)
+{
+Zast->BlockMK(false);
+}
 //ReadWriteDoc->Execute();
 }
 //---------------------------------------------------------------------------
 
 void __fastcall TZast::ReadMetodikaExecute(TObject *Sender)
 {
+try
+{
  Zast->MClient->Act.ParamComm.clear();
  Zast->MClient->Act.ParamComm.push_back("MergeMetodika");
 Zast->MClient->ReadTable("Reference", "Select [Номер], [Методика] From Методика", "Reference", "Select [Номер], [Методика] From Методика");
-
+}
+catch(...)
+{
+Zast->BlockMK(false);
+}
 
 }
 //---------------------------------------------------------------------------
@@ -594,6 +606,8 @@ void __fastcall TZast::ReadWriteDocExecute(TObject *Sender)
 {
 Str_RW S;
 if(Documents->ReadWrite.size()!=0)
+{
+try
 {
 Documents->RW=Documents->ReadWrite.begin();
 S=Documents->ReadWrite[0];
@@ -604,6 +618,11 @@ Prog->PB->Position=S.Num;
 Prog->Repaint();
 Sleep(1000);
 Zast->MClient->BlockServer(S.NameAction);
+}
+catch(...)
+{
+Zast->BlockMK(false);
+}
 //MClient->StartAction(S.NameAction);
 }
 else
@@ -620,6 +639,8 @@ if(Prog->SignComplete)
 
 void __fastcall TZast::ReadPodrazdExecute(TObject *Sender)
 {
+try
+{
  Zast->MClient->Act.ParamComm.clear();
  Zast->MClient->Act.ParamComm.push_back("MergePodrazd");
  String DBTo;
@@ -632,11 +653,17 @@ void __fastcall TZast::ReadPodrazdExecute(TObject *Sender)
   DBTo="Аспекты_П";
  }
 Zast->MClient->ReadTable("Аспекты", "Select Подразделения.[Номер подразделения], Подразделения.[Название подразделения] From Подразделения order by [Номер подразделения]", DBTo, "Select TempПодразделения.[Номер подразделения], TempПодразделения.[Название подразделения] From TempПодразделения order by [Номер подразделения]");
-
+}
+catch(...)
+{
+ Zast->BlockMK(false);
+}
 }
 //---------------------------------------------------------------------------
 
 void __fastcall TZast::MergePodrazdExecute(TObject *Sender)
+{
+try
 {
 Filter->SetDefFiltr();
 MDBConnector* DB;
@@ -705,18 +732,31 @@ Zast->MClient->WriteDiaryEvent("NetAspects","Конец загрузки подразделений (польз
 }
 Zast->MClient->UnBlockServer("ReadWriteDoc");
 }
+catch(...)
+{
+ Zast->BlockMK(false);
+}
+}
 //---------------------------------------------------------------------------
 
 void __fastcall TZast::ReadCritExecute(TObject *Sender)
 {
+try
+{
  Zast->MClient->Act.ParamComm.clear();
  Zast->MClient->Act.ParamComm.push_back("MergeCrit");
 Zast->MClient->ReadTable("Reference", "Select Значимость.[Номер значимости], Значимость.[Наименование значимости], Значимость.[Критерий1], Значимость.[Критерий], Значимость.[Мин граница], Значимость.[Макс граница], Значимость.[Необходимая мера] From Значимость Order by [Номер значимости];", "Reference", "Select TempZn.[Номер значимости], TempZn.[Наименование значимости], TempZn.[Критерий1], TempZn.[Критерий], TempZn.[Мин граница], TempZn.[Макс граница], TempZn.[Необходимая мера] From TempZn Order by [Номер значимости];");
-
+}
+catch(...)
+{
+ Zast->BlockMK(false);
+}
 }
 //---------------------------------------------------------------------------
 
 void __fastcall TZast::MergeCritExecute(TObject *Sender)
+{
+try
 {
 MP<TADOCommand>Comm(this);
 Comm->Connection=Zast->ADOConn;
@@ -776,18 +816,31 @@ Zast->MClient->WriteDiaryEvent("NetAspects","Конец загрузки критериев (пользоват
 
 Zast->MClient->UnBlockServer("ReadWriteDoc");
 }
+catch(...)
+{
+ Zast->BlockMK(false);
+}
+}
 //---------------------------------------------------------------------------
 
 void __fastcall TZast::ReadSitExecute(TObject *Sender)
 {
+try
+{
  Zast->MClient->Act.ParamComm.clear();
  Zast->MClient->Act.ParamComm.push_back("MergeSit1");
 Zast->MClient->ReadTable("Reference", "Select Ситуации.[Номер ситуации], Ситуации.[Название ситуации] From Ситуации order by [Номер ситуации];", "Reference", "Select TempSit.[Номер ситуации], TempSit.[Название ситуации] From TempSit order by [Номер ситуации];");
-
+}
+catch(...)
+{
+ Zast->BlockMK(false);
+}
 }
 //---------------------------------------------------------------------------
 
 void __fastcall TZast::MergeSit1Execute(TObject *Sender)
+{
+try
 {
 MP<TADOCommand>Comm(this);
 Comm->Connection=Zast->ADOConn;
@@ -818,11 +871,17 @@ Comm->Execute();
  Zast->MClient->Act.ParamComm.clear();
  Zast->MClient->Act.ParamComm.push_back("MergeSit2");
 Zast->MClient->ReadTable("Аспекты", "Select Ситуации.[Номер ситуации], Ситуации.[Название ситуации] From Ситуации Where Показ=True order by [Номер ситуации];", DBName, "Select TempSit.[Номер ситуации], TempSit.[Название ситуации] From TempSit order by [Номер ситуации];");
-
+}
+catch(...)
+{
+ Zast->BlockMK(false);
+}
 }
 //---------------------------------------------------------------------------
 
 void __fastcall TZast::MergeSit2Execute(TObject *Sender)
+{
+try
 {
 MDBConnector* DB;
  if(Role==2)
@@ -897,27 +956,46 @@ Zast->MClient->WriteDiaryEvent("NetAspects","Конец загрузки ситуаций (пользовате
  }
 Zast->MClient->UnBlockServer("ReadWriteDoc");
 }
+catch(...)
+{
+ Zast->BlockMK(false);
+}
+}
 //---------------------------------------------------------------------------
 
 void __fastcall TZast::ReadVozd1Execute(TObject *Sender)
 {
+try
+{
  Zast->MClient->Act.ParamComm.clear();
  Zast->MClient->Act.ParamComm.push_back("ReadVozd2");
 Zast->MClient->ReadTable("Reference", "Select Узлы_3.[Номер узла], Узлы_3.[Родитель], Узлы_3.[Название] From Узлы_3 Order by Родитель, [Номер узла];", "Reference", "Select TempNode.[Номер узла], TempNode.[Родитель], TempNode.[Название] From TempNode Order by Родитель, [Номер узла];");
-
+}
+catch(...)
+{
+ Zast->BlockMK(false);
+}
 }
 //---------------------------------------------------------------------------
 
 void __fastcall TZast::ReadVozd2Execute(TObject *Sender)
 {
+try
+{
  Zast->MClient->Act.ParamComm.clear();
  Zast->MClient->Act.ParamComm.push_back("MergeVozd");
 Zast->MClient->ReadTable("Reference", "Select Ветви_3.[Номер ветви], Ветви_3.[Номер родителя], Ветви_3.[Название], Ветви_3.[Показ] From Ветви_3 Order by [Номер родителя], [Номер ветви];", "Reference", "Select TempBranch.[Номер ветви], TempBranch.[Номер родителя], TempBranch.[Название], TempBranch.[Показ] From TempBranch Order by [Номер родителя], [Номер ветви];");
-
+}
+catch(...)
+{
+ Zast->BlockMK(false);
+}
 }
 //---------------------------------------------------------------------------
 
 void __fastcall TZast::MergeVozdExecute(TObject *Sender)
+{
+try
 {
 Documents->MergeNode("Узлы_3");
 Documents->MergeBranch("Ветви_3");
@@ -937,11 +1015,17 @@ else
  Zast->MClient->Act.ParamComm.clear();
  Zast->MClient->Act.ParamComm.push_back("MergeVozd2");
 Zast->MClient->ReadTable("Аспекты", "Select Воздействия.[Номер воздействия], Воздействия.[Наименование воздействия], Воздействия.[Показ] From Воздействия order by [Номер воздействия];", DBName, "Select TempVozd.[Номер воздействия], TempVozd.[Наименование воздействия], TempVozd.[Показ] From TempVozd order by [Номер воздействия];");
-
+}
+catch(...)
+{
+ Zast->BlockMK(false);
+}
 }
 //---------------------------------------------------------------------------
 
 void __fastcall TZast::MergeVozd2Execute(TObject *Sender)
+{
+try
 {
 MDBConnector* DB;
 if(Role==2)
@@ -1012,27 +1096,46 @@ Zast->MClient->WriteDiaryEvent("NetAspects","Конец загрузки воздействий (пользов
 
 Zast->MClient->UnBlockServer("ReadWriteDoc");
 }
+catch(...)
+{
+ Zast->BlockMK(false);
+}
+}
 //---------------------------------------------------------------------------
 
 
 void __fastcall TZast::ReadMeropr1Execute(TObject *Sender)
 {
+try
+{
  Zast->MClient->Act.ParamComm.clear();
  Zast->MClient->Act.ParamComm.push_back("ReadMeropr2");
 Zast->MClient->ReadTable("Reference", "Select Узлы_4.[Номер узла], Узлы_4.[Родитель], Узлы_4.[Название] From Узлы_4 Order by Родитель, [Номер узла];", "Reference", "Select TempNode.[Номер узла], TempNode.[Родитель], TempNode.[Название] From TempNode Order by Родитель, [Номер узла];");
-
+}
+catch(...)
+{
+ Zast->BlockMK(false);
+}
 }
 //---------------------------------------------------------------------------
 void __fastcall TZast::ReadMeropr2Execute(TObject *Sender)
 {
+try
+{
  Zast->MClient->Act.ParamComm.clear();
  Zast->MClient->Act.ParamComm.push_back("MergeMeropr");
 Zast->MClient->ReadTable("Reference", "Select Ветви_4.[Номер ветви], Ветви_4.[Номер родителя], Ветви_4.[Название], Ветви_4.[Показ] From Ветви_4 Order by [Номер родителя], [Номер ветви];", "Reference", "Select TempBranch.[Номер ветви], TempBranch.[Номер родителя], TempBranch.[Название], TempBranch.[Показ] From TempBranch Order by [Номер родителя], [Номер ветви];");
-
+}
+catch(...)
+{
+ Zast->BlockMK(false);
+}
 }
 //---------------------------------------------------------------------------
 
 void __fastcall TZast::MergeMeroprExecute(TObject *Sender)
+{
+try
 {
 //Добавить перенос данных ветвей в соответствующую таблицу аспектов и пользовательских аспектов
 Documents->MergeNode("Узлы_4");
@@ -1050,6 +1153,11 @@ Zast->MClient->WriteDiaryEvent("NetAspects","Конец загрузки мероприятий (пользов
 }
 
 Zast->MClient->UnBlockServer("ReadWriteDoc");
+}
+catch(...)
+{
+ Zast->BlockMK(false);
+}
 }
 //---------------------------------------------------------------------------
 
@@ -1489,13 +1597,18 @@ Prog->Close();
 
 void __fastcall TZast::WriteMetodikaExecute(TObject *Sender)
 {
-
+try
+{
 MClient->Act.ParamComm.clear();
 MClient->Act.ParamComm.push_back("UnblockAndRWD");
 MClient->WriteTable("Reference","Select Номер, Методика From Методика Order by номер", "Reference","Select Номер, Методика From Методика Order by номер");
 Sleep(1000);
 Zast->MClient->WriteDiaryEvent("NetAspects","Конец записи методики (главспец)","");
-
+}
+catch(...)
+{
+ Zast->BlockMK(false);
+}
 }
 //---------------------------------------------------------------------------
 
@@ -2740,7 +2853,14 @@ void __fastcall TZast::UnBlockServerTimer(TObject *Sender)
 
 void __fastcall TZast::UnblockAndRWDExecute(TObject *Sender)
 {
+try
+{
 Zast->MClient->UnBlockServer("ReadWriteDoc");
+}
+catch(...)
+{
+Zast->BlockMK(false);
+}
 }
 //---------------------------------------------------------------------------
 

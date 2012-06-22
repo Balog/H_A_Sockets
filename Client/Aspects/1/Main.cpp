@@ -70,6 +70,8 @@ Prog->PB->Position=0;
 Prog->PB->Max=10;
 
 Zast->BlockMK(true);
+try
+{
 ReadWrite.clear();
 Str_RW S;
 S.NameAction="WriteMetodika";
@@ -137,6 +139,11 @@ Zast->ReadWriteDoc->Execute();
 
  Action=caNone;
  break;
+}
+catch(...)
+{
+Zast->BlockMK(false);
+}
  }
  case IDNO:
  {
@@ -2298,6 +2305,8 @@ Application->HelpFile=ExtractFilePath(Application->ExeName)+"NetAspects.HLP";
 void __fastcall TDocuments::N2Click(TObject *Sender)
 {
 Zast->BlockMK(true);
+try
+{
 ReadWrite.clear();
 Str_RW S;
 S.NameAction="ReadMetodika";
@@ -2305,6 +2314,11 @@ S.Text="Чтение методики...";
 S.Num=1;
 ReadWrite.push_back(S);
 Zast->MClient->BlockServer("ReadWriteDoc");
+}
+catch(...)
+{
+Zast->BlockMK(false);
+}
 //Zast->ReadWriteDoc->Execute();
 }
 //---------------------------------------------------------------------------
@@ -2312,6 +2326,8 @@ Zast->MClient->BlockServer("ReadWriteDoc");
 void __fastcall TDocuments::N27Click(TObject *Sender)
 {
 Zast->BlockMK(true);
+try
+{
 ReadWrite.clear();
 Str_RW S;
 S.NameAction="ReadPodrazd";
@@ -2319,6 +2335,11 @@ S.Text="Чтение подразделений...";
 S.Num=2;
 ReadWrite.push_back(S);
 Zast->MClient->BlockServer("ReadWriteDoc");
+}
+catch(...)
+{
+Zast->BlockMK(false);
+}
 //Zast->ReadWriteDoc->Execute();
 }
 //---------------------------------------------------------------------------
@@ -2326,6 +2347,8 @@ Zast->MClient->BlockServer("ReadWriteDoc");
 void __fastcall TDocuments::N26Click(TObject *Sender)
 {
 Zast->BlockMK(true);
+try
+{
 ReadWrite.clear();
 Str_RW S;
 S.NameAction="ReadCrit";
@@ -2333,6 +2356,11 @@ S.Text="Чтение критериев...";
 S.Num=3;
 ReadWrite.push_back(S);
 Zast->MClient->BlockServer("ReadWriteDoc");
+}
+catch(...)
+{
+ Zast->BlockMK(false);
+}
 //Zast->ReadWriteDoc->Execute();
 }
 //---------------------------------------------------------------------------
@@ -2340,6 +2368,8 @@ Zast->MClient->BlockServer("ReadWriteDoc");
 void __fastcall TDocuments::N28Click(TObject *Sender)
 {
 Zast->BlockMK(true);
+try
+{
 ReadWrite.clear();
 Str_RW S;
 S.NameAction="ReadSit";
@@ -2347,11 +2377,18 @@ S.Text="Чтение ситуаций...";
 S.Num=4;
 ReadWrite.push_back(S);
 Zast->MClient->BlockServer("ReadWriteDoc");
+}
+catch(...)
+{
+ Zast->BlockMK(false);
+}
 //Zast->ReadWriteDoc->Execute();
 }
 //---------------------------------------------------------------------------
 
 void __fastcall TDocuments::N6Click(TObject *Sender)
+{
+try
 {
 Zast->BlockMK(true);
 ReadWrite.clear();
@@ -2361,6 +2398,11 @@ S.Text="Чтение списка воздействий...";
 S.Num=5;
 ReadWrite.push_back(S);
 Zast->MClient->BlockServer("ReadWriteDoc");
+}
+catch(...)
+{
+ Zast->BlockMK(false);
+}
 //Zast->ReadWriteDoc->Execute();
 }
 //---------------------------------------------------------------------------
@@ -2468,6 +2510,8 @@ Comm->Execute();
 
 void __fastcall TDocuments::N7Click(TObject *Sender)
 {
+try
+{
 Zast->BlockMK(true);
 ReadWrite.clear();
 Str_RW S;
@@ -2476,6 +2520,11 @@ S.Text="Чтение списка мероприятий...";
 S.Num=6;
 ReadWrite.push_back(S);
 Zast->MClient->BlockServer("ReadWriteDoc");
+}
+catch(...)
+{
+ Zast->BlockMK(false);
+}
 //Zast->ReadWriteDoc->Execute();
 }
 //---------------------------------------------------------------------------

@@ -134,7 +134,10 @@ Form1->LFiltr->Caption=Ini->ReadString(IntToStr(NumLogin),"NameFilter","Отключен
 InputDocs->TextBr=Ini->ReadString(IntToStr(NumLogin),"TextFilter","");
 
 Initialize(Num);
+if(Aspects->RecordCount!=0)
+{
 CPodrazdel->SetFocus();
+}
 }
 //---------------------------------------------------------------------------
 void TForm1::Initialize()
