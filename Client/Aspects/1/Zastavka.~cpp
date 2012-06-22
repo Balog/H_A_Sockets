@@ -484,7 +484,7 @@ switch (Role)
  {
   //Form1->Login=Login;
    Form1->Caption="Пользователь: "+Form1->Login;
-
+  Form1->Demo=false;
 
  //тут тоже надо сначала считать обновления данных
  Zast->MClient->Act.ParamComm.clear();
@@ -502,6 +502,7 @@ switch (Role)
 
  //Form1->Login=Login;
  Form1->Caption="Демонстрационный пользователь: "+Form1->Login+"                ***ЗАПИСЬ НА СЕРВЕР ОТКЛЮЧЕНА***";
+ Form1->Demo=true;
  Zast->MClient->Act.ParamComm.clear();
  Zast->MClient->Act.ParamComm.push_back("StartLoadPodrUSR");
  Zast->MClient->ReadTable("Аспекты", "Select Logins.Num, Logins.Login, Logins.Role From Logins Order by Num;", "Аспекты_П", "Select TempLogins.Num, TempLogins.Login, TempLogins.Role From TempLogins Order by Num;");
@@ -2338,7 +2339,7 @@ void __fastcall TZast::CompareMSpecAspects2Execute(TObject *Sender)
 {
 //Сравнение таблицы аспектов для главспеца по числу записей и составу
 //для принятия решения о необходимости записи таблицы аспектов
- Zast->BlockMK(false);
+
 
 MP<TADODataSet>Tab(this);
 Tab->Connection=ADOAspect;
@@ -2854,6 +2855,7 @@ if(Result | B)
 {
 if(B)
 {
+//Documents->Memo1->Lines->Add("Инициализация");
   hDll = LoadLibrary("User32.dll");
   BlockInput = (DWORD __stdcall (*)(bool Status))GetProcAddress(hDll, "BlockInput");
 
@@ -2865,11 +2867,32 @@ if(B)
 }
   Result = BlockInput(B);
 
+if(B)
+{
+//Documents->Memo1->Lines->Add("B=true");
+}
+else
+{
+//Documents->Memo1->Lines->Add("B=false");
+}
+
+if(Result)
+{
+//Documents->Memo1->Lines->Add("Result=true");
+}
+else
+{
+//Documents->Memo1->Lines->Add("Result=false");
+}
+
   if(!B | !Result)
   {
   FreeLibrary(hDll);
   Result=false;
+
+//Documents->Memo1->Lines->Add("Освобождение");
   }
 }
+//Documents->Memo1->Lines->Add("Конец");
 }
 //---------------------------------------------------------------------------

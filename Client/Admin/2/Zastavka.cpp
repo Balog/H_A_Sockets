@@ -20,6 +20,11 @@
 #pragma resource "*.dfm"
 TZast *Zast;
 
+  HINSTANCE hDll;
+  //ниже прототип будущей функции
+  DWORD __stdcall (*BlockInput)(bool Status);
+  DWORD Result;
+  TCursor Save_Cursor;
 //---------------------------------------------------------------------------
 __fastcall TZast::TZast(TComponent* Owner)
         : TForm(Owner)
@@ -76,7 +81,9 @@ Timer2->Enabled=false;
 if(Start)
 {
 Timer1->Enabled=false;
-Pass->Show();
+//Pass->Show();
+//PreViewLogins1
+MClient->BlockServer("PreViewLogins1");
 
 Timer1->Enabled=false;
 }
@@ -536,7 +543,8 @@ Start=true;
 
 void __fastcall TZast::ViewLoginsExecute(TObject *Sender)
 {
-Pass->ViewLogins();
+//ViewLogins2
+MClient->UnBlockServer("ViewLogins2");
 }
 //---------------------------------------------------------------------------
 
@@ -799,21 +807,8 @@ MClient->ActTrigger(0);
 
 void __fastcall TZast::PostSaveLoginsExecute(TObject *Sender)
 {
-Zast->MClient->Act.ParamComm.clear();
-Zast->MClient->Act.WaitCommand=0;
-Prog->PB->Position++;
-Zast->Saved=true;
-if(!Stop)
-{
-Prog->Close();
-ShowMessage("Запись завершена");
-}
-else
-{
-Zast->MClient->WriteDiaryEvent("AdminARM","Завершение работы запись данных","");
-Sleep(2000);
- this->Close();
-}
+MClient->UnBlockServer("PostSaveLogins1");
+Zast->BlockMK(false);
 }
 //---------------------------------------------------------------------------
 
@@ -922,18 +917,8 @@ MClient->ActTrigger(0);
 
 void __fastcall TZast::PostReadExecute(TObject *Sender)
 {
-Form1->UpdateTempLogin();
-Form1->Users->ItemIndex=0;
-Form1->UpdateOtdel(0);
-
-Zast->MClient->Act.ParamComm.clear();
-
-Zast->MClient->VTrigger.clear();
- Zast->MClient->Act.ParamComm.clear();
-  Zast->MClient->Act.WaitCommand=0;
-  Prog->PB->Position++;
-  Prog->Close();
-ShowMessage("Чтение завершено");
+MClient->UnBlockServer("PostRead1");
+Zast->BlockMK(false);
 }
 //---------------------------------------------------------------------------
 
@@ -952,13 +937,8 @@ MClient->ActTrigger(0);
 
 void __fastcall TZast::PostUpdateOtdExecute(TObject *Sender)
 {
-//
- Form1->Show();
-
-Form1->Users->ItemIndex=0;
-Form1->UpdateOtdel(0);
-
-Zast->MClient->WriteDiaryEvent("AdminARM","Завершение запуска","");
+//PostUpdateOtd1
+MClient->UnBlockServer("PostUpdateOtd1");
 }
 //---------------------------------------------------------------------------
 
@@ -1114,6 +1094,173 @@ else
 {
 FDiary->Refresh();
 }
+}
+//---------------------------------------------------------------------------
+void TZast::BlockMK(bool B)
+{
+if(B)
+{
+Save_Cursor = Screen->Cursor;
+
+Screen->Cursor = crNone;
+}
+else
+{
+Screen->Cursor=Save_Cursor;
+}
+
+if(Result | B)
+{
+if(B)
+{
+//Documents->Memo1->Lines->Add("Инициализация");
+  hDll = LoadLibrary("User32.dll");
+  BlockInput = (DWORD __stdcall (*)(bool Status))GetProcAddress(hDll, "BlockInput");
+
+  if(!BlockInput)
+  {
+    FreeLibrary(hDll);
+    return;
+  }
+}
+  Result = BlockInput(B);
+
+if(B)
+{
+//Documents->Memo1->Lines->Add("B=true");
+}
+else
+{
+//Documents->Memo1->Lines->Add("B=false");
+}
+
+if(Result)
+{
+//Documents->Memo1->Lines->Add("Result=true");
+}
+else
+{
+//Documents->Memo1->Lines->Add("Result=false");
+}
+
+  if(!B | !Result)
+  {
+  FreeLibrary(hDll);
+  Result=false;
+
+//Documents->Memo1->Lines->Add("Освобождение");
+  }
+}
+//Documents->Memo1->Lines->Add("Конец");
+}
+//---------------------------------------------------------------------------
+void __fastcall TZast::BlockServerTimer(TObject *Sender)
+{
+ClientSocket->Socket->SendText("Command:19;1|1#1");
+BlockServer->Enabled=false;        
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TZast::UnBlockServerTimer(TObject *Sender)
+{
+ Zast->MClient->Act.WaitCommand=20;
+ ClientSocket->Socket->SendText("Command:20;1|1#0");
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TZast::PostRead1Execute(TObject *Sender)
+{
+Form1->UpdateTempLogin();
+Form1->Users->ItemIndex=0;
+Form1->UpdateOtdel(0);
+
+Zast->MClient->Act.ParamComm.clear();
+
+Zast->MClient->VTrigger.clear();
+ Zast->MClient->Act.ParamComm.clear();
+  Zast->MClient->Act.WaitCommand=0;
+  Prog->PB->Position++;
+  Prog->Close();
+ShowMessage("Чтение завершено");        
+}
+//---------------------------------------------------------------------------
+void TZast::WaitBlockServer(bool Flag)
+{
+String Mess="Сервер занят, ожидаем...";
+if(Flag)
+{
+ //Начинаем ожидание
+ Prog->Label1->Caption=Mess;
+ /*
+ Prog->PB->Min=0;
+ Prog->PB->Position=0;
+ Prog->PB->Max=9;
+ */
+
+ Prog->Show();
+ BlockServer->Enabled=true;
+}
+else
+{
+ //Ожидание закончено
+  BlockServer->Enabled=false;
+  
+/*
+ if(Prog->Label1->Caption==Mess)
+ {
+ Prog->Close();
+ }
+*/
+}
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TZast::PostSaveLogins1Execute(TObject *Sender)
+{
+Zast->MClient->Act.ParamComm.clear();
+Zast->MClient->Act.WaitCommand=0;
+Prog->PB->Position++;
+Zast->Saved=true;
+if(!Stop)
+{
+Prog->Close();
+ShowMessage("Запись завершена");
+}
+else
+{
+Zast->MClient->WriteDiaryEvent("AdminARM","Завершение работы запись данных","");
+Sleep(2000);
+ this->Close();
+}        
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TZast::PreViewLogins1Execute(TObject *Sender)
+{
+ Zast->MClient->Act.ParamComm.clear();
+ Zast->MClient->Act.ParamComm.push_back("ViewLogins");
+
+ Zast->MClient->ReadTable("Аспекты","Select Login, Code1, Code2 from Logins Where Role=1", "Select Login, Code1, Code2 From TempLogins");
+
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TZast::ViewLogins2Execute(TObject *Sender)
+{
+Pass->ViewLogins();
+Pass->Show();
+Pass->EdPass->SetFocus();
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TZast::PostUpdateOtd1Execute(TObject *Sender)
+{
+ Form1->Show();
+
+Form1->Users->ItemIndex=0;
+Form1->UpdateOtdel(0);
+
+Zast->MClient->WriteDiaryEvent("AdminARM","Завершение запуска","");
 }
 //---------------------------------------------------------------------------
 

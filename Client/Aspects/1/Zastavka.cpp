@@ -484,7 +484,8 @@ switch (Role)
  {
   //Form1->Login=Login;
    Form1->Caption="Пользователь: "+Form1->Login;
-
+  Form1->Demo=false;
+  Form1->Role=3;
 
  //тут тоже надо сначала считать обновления данных
  Zast->MClient->Act.ParamComm.clear();
@@ -501,7 +502,9 @@ switch (Role)
  //тут тоже надо сначала считать обновления данных
 
  //Form1->Login=Login;
+ Form1->Role=4;
  Form1->Caption="Демонстрационный пользователь: "+Form1->Login+"                ***ЗАПИСЬ НА СЕРВЕР ОТКЛЮЧЕНА***";
+ Form1->Demo=true;
  Zast->MClient->Act.ParamComm.clear();
  Zast->MClient->Act.ParamComm.push_back("StartLoadPodrUSR");
  Zast->MClient->ReadTable("Аспекты", "Select Logins.Num, Logins.Login, Logins.Role From Logins Order by Num;", "Аспекты_П", "Select TempLogins.Num, TempLogins.Login, TempLogins.Role From TempLogins Order by Num;");

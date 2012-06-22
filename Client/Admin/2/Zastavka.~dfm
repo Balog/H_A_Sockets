@@ -1,6 +1,6 @@
 object Zast: TZast
-  Left = 218
-  Top = 163
+  Left = 274
+  Top = 127
   BorderIcons = []
   BorderStyle = bsNone
   Caption = 'Zast'
@@ -10044,6 +10044,14 @@ object Zast: TZast
       Caption = 'MergeEvents'
       OnExecute = MergeEventsExecute
     end
+    object PostRead1: TAction
+      Caption = 'PostRead1'
+      OnExecute = PostRead1Execute
+    end
+    object PostSaveLogins1: TAction
+      Caption = 'PostSaveLogins1'
+      OnExecute = PostSaveLogins1Execute
+    end
   end
   object ActionManager2: TActionManager
     Left = 112
@@ -10063,5 +10071,17 @@ object Zast: TZast
     object MergeEvents1: TAction
       Caption = 'MergeEvents1'
     end
+  end
+  object UnBlockServer: TTimer
+    Enabled = False
+    OnTimer = UnBlockServerTimer
+    Left = 432
+    Top = 56
+  end
+  object BlockServer: TTimer
+    Enabled = False
+    OnTimer = BlockServerTimer
+    Left = 432
+    Top = 24
   end
 end

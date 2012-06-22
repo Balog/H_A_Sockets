@@ -134,6 +134,7 @@ Form1->LFiltr->Caption=Ini->ReadString(IntToStr(NumLogin),"NameFilter","Отключен
 InputDocs->TextBr=Ini->ReadString(IntToStr(NumLogin),"TextFilter","");
 
 Initialize(Num);
+CPodrazdel->SetFocus();
 }
 //---------------------------------------------------------------------------
 void TForm1::Initialize()
@@ -702,6 +703,8 @@ CSit->ItemIndex=0;
 void __fastcall TForm1::FormClose(TObject *Sender, TCloseAction &Action)
 {
 SavePosition();
+if(!Demo)
+{
 switch (Application->MessageBoxA("Записать все изменения на сервер?","Выход из программы",MB_YESNOCANCEL	+MB_ICONQUESTION+MB_DEFBUTTON1))
 {
  case IDYES:
@@ -732,7 +735,11 @@ Zast->Close();
  }
 }
 
-
+}
+else
+{
+ Zast->Close();
+}
 }
 //---------------------------------------------------------------------------
 void __fastcall TForm1::N8Click(TObject *Sender)
@@ -1651,6 +1658,7 @@ Report1->NumRep=1;
 Report1->RepBase=Zast->ADOUsrAspect;
 Report1->Role=Role;
 Report1->NumLogin=NumLogin;
+
 
  Zast->MClient->Act.ParamComm.clear();
  Zast->MClient->Act.ParamComm.push_back("ContStartReports");

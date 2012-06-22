@@ -494,6 +494,7 @@ object Form1: TForm1
     Font.Style = [fsBold]
     ParentFont = False
     TabOrder = 0
+    TabStop = False
     OnClick = Button1Click
   end
   object Button2: TButton
@@ -508,7 +509,8 @@ object Form1: TForm1
     Font.Name = 'Arial'
     Font.Style = [fsBold]
     ParentFont = False
-    TabOrder = 4
+    TabOrder = 25
+    TabStop = False
     OnClick = Button2Click
   end
   object Button3: TButton
@@ -523,7 +525,8 @@ object Form1: TForm1
     Font.Name = 'Arial'
     Font.Style = [fsBold]
     ParentFont = False
-    TabOrder = 5
+    TabOrder = 26
+    TabStop = False
     OnClick = Button3Click
   end
   object Button4: TButton
@@ -538,7 +541,8 @@ object Form1: TForm1
     Font.Name = 'Arial'
     Font.Style = [fsBold]
     ParentFont = False
-    TabOrder = 6
+    TabOrder = 27
+    TabStop = False
     OnClick = Button4Click
   end
   object Button5: TButton
@@ -547,7 +551,8 @@ object Form1: TForm1
     Width = 65
     Height = 25
     Caption = #1060#1080#1083#1100#1090#1088
-    TabOrder = 7
+    TabOrder = 28
+    TabStop = False
     OnClick = Button5Click
   end
   object DateTimePicker1: TDateTimePicker
@@ -595,7 +600,7 @@ object Form1: TForm1
     DateMode = dmComboBox
     Kind = dtkDate
     ParseInput = False
-    TabOrder = 10
+    TabOrder = 23
     OnChange = DateTimePicker2Change
     OnKeyPress = DateTimePicker2KeyPress
   end
@@ -611,7 +616,7 @@ object Form1: TForm1
     DateMode = dmComboBox
     Kind = dtkDate
     ParseInput = False
-    TabOrder = 11
+    TabOrder = 24
     OnChange = DateTimePicker3Change
     OnKeyPress = DateTimePicker3KeyPress
   end
@@ -623,7 +628,8 @@ object Form1: TForm1
     Hint = 'First'
     ParentShowHint = False
     ShowHint = True
-    TabOrder = 12
+    TabOrder = 30
+    TabStop = False
     OnClick = BitBtn1Click
     Glyph.Data = {
       76050000424D7605000000000000360000002800000015000000150000000100
@@ -679,7 +685,8 @@ object Form1: TForm1
     Hint = 'Prior'
     ParentShowHint = False
     ShowHint = True
-    TabOrder = 13
+    TabOrder = 31
+    TabStop = False
     OnClick = BitBtn2Click
     Glyph.Data = {
       76050000424D7605000000000000360000002800000015000000150000000100
@@ -735,7 +742,8 @@ object Form1: TForm1
     Hint = 'Next'
     ParentShowHint = False
     ShowHint = True
-    TabOrder = 14
+    TabOrder = 32
+    TabStop = False
     OnClick = BitBtn3Click
     Glyph.Data = {
       76050000424D7605000000000000360000002800000015000000150000000100
@@ -791,7 +799,8 @@ object Form1: TForm1
     Hint = 'Last'
     ParentShowHint = False
     ShowHint = True
-    TabOrder = 15
+    TabOrder = 33
+    TabStop = False
     OnClick = BitBtn4Click
     Glyph.Data = {
       76050000424D7605000000000000360000002800000015000000150000000100
@@ -854,7 +863,8 @@ object Form1: TForm1
     ParentShowHint = False
     PopupMenu = PopupMenu1
     ShowHint = True
-    TabOrder = 16
+    TabOrder = 34
+    TabStop = False
     OnClick = BitBtn5Click
     Glyph.Data = {
       76050000424D7605000000000000360000002800000015000000150000000100
@@ -911,7 +921,8 @@ object Form1: TForm1
     Hint = 'Delete'
     ParentShowHint = False
     ShowHint = True
-    TabOrder = 17
+    TabOrder = 35
+    TabStop = False
     OnClick = BitBtn6Click
     Glyph.Data = {
       76050000424D7605000000000000360000002800000015000000150000000100
@@ -964,7 +975,8 @@ object Form1: TForm1
     Top = 649
     Width = 41
     Height = 21
-    TabOrder = 18
+    TabStop = False
+    TabOrder = 36
     OnKeyDown = NumRecordKeyDown
     OnKeyPress = NumRecordKeyPress
   end
@@ -973,15 +985,17 @@ object Form1: TForm1
     Top = 649
     Width = 41
     Height = 21
+    TabStop = False
     ReadOnly = True
-    TabOrder = 19
+    TabOrder = 37
   end
   object BitBtn7: TBitBtn
     Left = 769
     Top = 641
     Width = 33
     Height = 34
-    TabOrder = 20
+    TabOrder = 38
+    TabStop = False
     OnClick = BitBtn7Click
     Glyph.Data = {
       0E060000424D0E06000000000000360000002800000016000000160000000100
@@ -1039,7 +1053,8 @@ object Form1: TForm1
     Top = 641
     Width = 33
     Height = 34
-    TabOrder = 21
+    TabOrder = 39
+    TabStop = False
     OnClick = BitBtn9Click
     Glyph.Data = {
       0E060000424D0E06000000000000360000002800000016000000160000000100
@@ -1100,7 +1115,7 @@ object Form1: TForm1
     DataField = #1042#1099#1087#1086#1083#1085#1103#1102#1097#1080#1077#1089#1103' '#1084#1077#1088#1086#1087#1088#1080#1103#1090#1080#1103
     DataSource = DataSource1
     ScrollBars = ssVertical
-    TabOrder = 22
+    TabOrder = 19
     OnExit = DBMemo1Exit
   end
   object DBMemo2: TDBMemo
@@ -1111,7 +1126,7 @@ object Form1: TForm1
     DataField = #1052#1086#1085#1080#1090#1086#1088#1080#1085#1075' '#1080' '#1082#1086#1085#1090#1088#1086#1083#1100
     DataSource = DataSource1
     ScrollBars = ssVertical
-    TabOrder = 23
+    TabOrder = 21
     OnExit = DBMemo2Exit
   end
   object DBMemo4: TDBMemo
@@ -1122,7 +1137,7 @@ object Form1: TForm1
     DataField = #1055#1088#1077#1076#1083#1072#1075#1072#1077#1084#1099#1081' '#1084#1086#1085#1080#1090#1086#1088#1080#1085#1075' '#1080' '#1082#1086#1085#1090#1088#1086#1083#1100
     DataSource = DataSource1
     ScrollBars = ssVertical
-    TabOrder = 24
+    TabOrder = 22
     OnExit = DBMemo4Exit
   end
   object CPodrazdel: TComboBox
@@ -1153,7 +1168,7 @@ object Form1: TForm1
     Height = 21
     Style = csDropDownList
     ItemHeight = 13
-    TabOrder = 25
+    TabOrder = 16
     OnClick = CProyavClick
     OnKeyPress = CProyavKeyPress
   end
@@ -1164,7 +1179,7 @@ object Form1: TForm1
     Height = 21
     Style = csDropDownList
     ItemHeight = 13
-    TabOrder = 26
+    TabOrder = 17
     OnChange = CPoslChange
     OnClick = CPoslClick
     OnKeyPress = CPoslKeyPress
@@ -1176,7 +1191,7 @@ object Form1: TForm1
     Height = 21
     Style = csDropDownList
     ItemHeight = 13
-    TabOrder = 27
+    TabOrder = 18
     OnClick = CPriorClick
     OnKeyPress = CPriorKeyPress
   end
@@ -1186,7 +1201,7 @@ object Form1: TForm1
     Width = 505
     Height = 17
     Caption = #1071#1074#1083#1103#1077#1090#1089#1103' '#1083#1080' '#1069#1040' '#1087#1088#1077#1076#1084#1077#1090#1086#1084' '#1079#1072#1082#1086#1085#1086#1076#1072#1090#1077#1083#1100#1085#1086#1075#1086' '#1088#1077#1075#1091#1083#1080#1088#1086#1074#1072#1085#1080#1103'?'
-    TabOrder = 28
+    TabOrder = 9
     OnClick = CheckBox1Click
   end
   object CheckBox2: TCheckBox
@@ -1197,7 +1212,7 @@ object Form1: TForm1
     Caption = 
       #1052#1086#1078#1077#1090' '#1083#1080' '#1069#1040' '#1086#1090#1088#1080#1094#1072#1090#1077#1083#1100#1085#1086' '#1087#1086#1074#1083#1080#1103#1090#1100' '#1085#1072' '#1088#1077#1087#1091#1090#1072#1094#1080#1102' '#1086#1088#1075#1072#1085#1080#1079#1072#1094#1080#1080' '#1087#1088#1080' '#1086 +
       #1090#1089#1091#1090#1089#1090#1074#1080#1080' '
-    TabOrder = 29
+    TabOrder = 10
     OnClick = CheckBox2Click
   end
   object CheckBox3: TCheckBox
@@ -1208,7 +1223,7 @@ object Form1: TForm1
     Caption = 
       #1071#1074#1083#1103#1077#1090#1089#1103' '#1083#1080' '#1074#1086#1079#1076#1077#1081#1089#1090#1074#1080#1077' '#1069#1040' '#1087#1088#1086#1076#1086#1083#1078#1080#1090#1077#1083#1100#1085#1099#1084' '#1080' / '#1080#1083#1080' '#1087#1086#1074#1090#1086#1088#1103#1102#1097#1080#1084#1089#1103 +
       '?'
-    TabOrder = 30
+    TabOrder = 11
     OnClick = CheckBox3Click
   end
   object CheckBox4: TCheckBox
@@ -1219,7 +1234,7 @@ object Form1: TForm1
     Caption = 
       #1058#1088#1077#1073#1091#1102#1090#1089#1103' '#1083#1080' '#1079#1085#1072#1095#1080#1090#1077#1083#1100#1085#1099#1077' '#1092#1080#1085#1072#1085#1089#1086#1074#1099#1077' '#1079#1072#1090#1088#1072#1090#1099' '#1085#1072' '#1091#1087#1088#1072#1074#1083#1077#1085#1080#1077' '#1069#1040' '#1080' ' +
       #1089#1085#1080#1078#1077#1085#1080#1077' '#1077#1075#1086' '
-    TabOrder = 31
+    TabOrder = 12
     OnClick = CheckBox4Click
   end
   object CheckBox5: TCheckBox
@@ -1230,7 +1245,7 @@ object Form1: TForm1
     Caption = 
       #1071#1074#1083#1103#1077#1090#1089#1103' '#1083#1080' '#1069#1040' '#1087#1088#1077#1076#1084#1077#1090#1086#1084' '#1089#1091#1097#1077#1089#1090#1074#1091#1102#1097#1077#1081' '#1080#1083#1080' '#1087#1086#1090#1077#1085#1094#1080#1072#1083#1100#1085#1086#1081' '#1086#1079#1072#1073#1086#1095#1077#1085 +
       #1085#1086#1089#1090#1080' '
-    TabOrder = 32
+    TabOrder = 13
     OnClick = CheckBox5Click
   end
   object CheckBox6: TCheckBox
@@ -1241,7 +1256,7 @@ object Form1: TForm1
     Caption = 
       #1057#1074#1103#1079#1072#1085' '#1083#1080' '#1069#1040' '#1080#1083#1080' '#1074#1080#1076' '#1074#1086#1079#1076#1077#1081#1089#1090#1074#1080#1103' '#1089' '#1088#1080#1089#1082#1086#1084' '#1080#1083#1080' '#1087#1088#1103#1084#1099#1084' '#1074#1088#1077#1076#1086#1084' '#1076#1083#1103' ' +
       #1079#1076#1086#1088#1086#1074#1100#1103' '#1085#1072#1089#1077#1083#1077#1085#1080#1103' '
-    TabOrder = 33
+    TabOrder = 14
     OnClick = CheckBox6Click
   end
   object CheckBox7: TCheckBox
@@ -1252,7 +1267,7 @@ object Form1: TForm1
     Caption = 
       #1048#1084#1077#1102#1090#1089#1103' '#1083#1080' '#1089#1083#1091#1095#1072#1080' '#1085#1077#1074#1099#1087#1086#1083#1085#1077#1085#1080#1103' '#1090#1088#1077#1073#1086#1074#1072#1085#1080#1081' '#1085#1086#1088#1084#1072#1090#1080#1074#1085#1099#1093' '#1087#1088#1080#1088#1086#1076#1086#1086#1093#1088 +
       #1072#1085#1085#1099#1093' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' '
-    TabOrder = 34
+    TabOrder = 15
     OnClick = CheckBox7Click
   end
   object Edit6: TEdit
@@ -1260,8 +1275,9 @@ object Form1: TForm1
     Top = 373
     Width = 158
     Height = 21
+    TabStop = False
     ReadOnly = True
-    TabOrder = 35
+    TabOrder = 40
   end
   object DBEdit2: TDBEdit
     Left = 216
@@ -1270,7 +1286,7 @@ object Form1: TForm1
     Height = 21
     DataField = #1057#1087#1077#1094#1080#1072#1083#1100#1085#1086#1089#1090#1100
     DataSource = DataSource1
-    TabOrder = 36
+    TabOrder = 5
   end
   object Button6: TButton
     Left = 484
@@ -1284,7 +1300,8 @@ object Form1: TForm1
     Font.Name = 'Arial'
     Font.Style = [fsBold]
     ParentFont = False
-    TabOrder = 37
+    TabOrder = 41
+    TabStop = False
     OnClick = Button6Click
   end
   object DBMemo31: TDBMemo
@@ -1295,7 +1312,7 @@ object Form1: TForm1
     DataField = #1055#1088#1077#1076#1083#1072#1075#1072#1077#1084#1099#1077' '#1084#1077#1088#1086#1087#1088#1080#1103#1090#1080#1103
     DataSource = DataSource1
     ScrollBars = ssVertical
-    TabOrder = 38
+    TabOrder = 20
     OnExit = DBMemo31Exit
   end
   object Edit3: TEdit
@@ -1303,14 +1320,16 @@ object Form1: TForm1
     Top = 373
     Width = 58
     Height = 21
+    TabStop = False
     ReadOnly = True
-    TabOrder = 39
+    TabOrder = 42
   end
   object Zmax: TEdit
     Left = 455
     Top = 373
     Width = 58
     Height = 21
+    TabStop = False
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
     Font.Height = -11
@@ -1318,7 +1337,7 @@ object Form1: TForm1
     Font.Style = [fsBold]
     ParentFont = False
     ReadOnly = True
-    TabOrder = 40
+    TabOrder = 43
   end
   object ComboBox1: TComboBox
     Left = 216
@@ -1344,7 +1363,7 @@ object Form1: TForm1
     AutoDropDown = True
     DropDownCount = 30
     ItemHeight = 13
-    TabOrder = 41
+    TabOrder = 4
     OnChange = ComboBox2Change
     OnDropDown = ComboBox2DropDown
     OnKeyPress = ComboBox2KeyPress
@@ -1358,7 +1377,7 @@ object Form1: TForm1
     AutoComplete = False
     AutoDropDown = True
     ItemHeight = 13
-    TabOrder = 42
+    TabOrder = 6
     OnChange = ComboBox3Change
     OnDropDown = ComboBox3DropDown
     OnKeyPress = ComboBox3KeyPress
@@ -1372,7 +1391,7 @@ object Form1: TForm1
     AutoComplete = False
     AutoDropDown = True
     ItemHeight = 13
-    TabOrder = 43
+    TabOrder = 7
     OnChange = ComboBox4Change
     OnDropDown = ComboBox4DropDown
     OnKeyPress = ComboBox4KeyPress

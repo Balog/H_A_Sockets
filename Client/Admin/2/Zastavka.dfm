@@ -10044,6 +10044,26 @@ object Zast: TZast
       Caption = 'MergeEvents'
       OnExecute = MergeEventsExecute
     end
+    object PostRead1: TAction
+      Caption = 'PostRead1'
+      OnExecute = PostRead1Execute
+    end
+    object PostSaveLogins1: TAction
+      Caption = 'PostSaveLogins1'
+      OnExecute = PostSaveLogins1Execute
+    end
+    object PreViewLogins1: TAction
+      Caption = 'PreViewLogins1'
+      OnExecute = PreViewLogins1Execute
+    end
+    object ViewLogins2: TAction
+      Caption = 'ViewLogins2'
+      OnExecute = ViewLogins2Execute
+    end
+    object PostUpdateOtd1: TAction
+      Caption = 'PostUpdateOtd1'
+      OnExecute = PostUpdateOtd1Execute
+    end
   end
   object ActionManager2: TActionManager
     Left = 112
@@ -10063,5 +10083,17 @@ object Zast: TZast
     object MergeEvents1: TAction
       Caption = 'MergeEvents1'
     end
+  end
+  object UnBlockServer: TTimer
+    Enabled = False
+    OnTimer = UnBlockServerTimer
+    Left = 432
+    Top = 56
+  end
+  object BlockServer: TTimer
+    Enabled = False
+    OnTimer = BlockServerTimer
+    Left = 432
+    Top = 24
   end
 end

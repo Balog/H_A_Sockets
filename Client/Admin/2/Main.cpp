@@ -37,7 +37,9 @@ Zast->Stop=true;
 Zast->MClient->Act.WaitCommand=0;
 
 Zast->Saved=false;
-Zast->PrepareSaveLogins->Execute();
+//Zast->PrepareSaveLogins->Execute();
+Zast->BlockMK(true);
+Zast->MClient->BlockServer("PrepareSaveLogins");
 
 
  Action=caNone;
@@ -373,7 +375,9 @@ Prog->PB->Min=0;
 Prog->PB->Position=0;
 Prog->PB->Max=Zast->MClient->VDB.size()*5;
 Prog->Show();
-Zast->PrepareRead->Execute();
+Zast->BlockMK(true);
+Zast->MClient->BlockServer("PrepareRead");
+//Zast->PrepareRead->Execute();
 }
 //---------------------------------------------------------------------------
 
@@ -386,7 +390,9 @@ Prog->PB->Position=0;
 Prog->PB->Max=Zast->MClient->VDB.size()*5;
 Prog->Show();
 Zast->Saved=false;
-Zast->PrepareSaveLogins->Execute();
+Zast->BlockMK(true);
+Zast->MClient->BlockServer("PrepareSaveLogins");
+//Zast->PrepareSaveLogins->Execute();
 }
 //---------------------------------------------------------------------------
 

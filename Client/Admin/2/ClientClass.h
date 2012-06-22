@@ -80,6 +80,10 @@ void WriteDiaryEvent(String Type, String Name);
 String Login;
 void WriteTable(String Database, String ClientSQLText, String ServerSQLText);
 bool Reg;
+void BlockServer(String NextProc);
+void UnBlockServer(String NextProc);
+
+
 private:
 String GetIP();
 TClientSocket *Socket;
@@ -89,6 +93,7 @@ TForm *Owner;
 void VerifyLicense(String NameDB);
 String IP;
 String TableToStr(String SQLText);
+
 
 };
 //****************************************

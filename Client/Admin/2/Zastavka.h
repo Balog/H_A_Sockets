@@ -145,6 +145,13 @@ __published:	// IDE-managed Components
         TAction *MergeType_Op;
         TAction *LoadEvents;
         TAction *MergeEvents;
+        TTimer *UnBlockServer;
+        TTimer *BlockServer;
+        TAction *PostRead1;
+        TAction *PostSaveLogins1;
+        TAction *PreViewLogins1;
+        TAction *ViewLogins2;
+        TAction *PostUpdateOtd1;
         void __fastcall Timer1Timer(TObject *Sender);
         void __fastcall Image1Click(TObject *Sender);
         void __fastcall FormShow(TObject *Sender);
@@ -187,6 +194,13 @@ __published:	// IDE-managed Components
         void __fastcall MergeType_OpExecute(TObject *Sender);
         void __fastcall LoadEventsExecute(TObject *Sender);
         void __fastcall MergeEventsExecute(TObject *Sender);
+        void __fastcall BlockServerTimer(TObject *Sender);
+        void __fastcall UnBlockServerTimer(TObject *Sender);
+        void __fastcall PostRead1Execute(TObject *Sender);
+        void __fastcall PostSaveLogins1Execute(TObject *Sender);
+        void __fastcall PreViewLogins1Execute(TObject *Sender);
+        void __fastcall ViewLogins2Execute(TObject *Sender);
+        void __fastcall PostUpdateOtd1Execute(TObject *Sender);
 private:	// User declarations
 String Path;
 TLocateOptions SO;
@@ -240,6 +254,8 @@ void CompactDB(TADOConnection * Conn, String B);
 //bool Start;
 
 int GetIDDBName(String Name);
+void BlockMK(bool B);
+void WaitBlockServer(bool Flag);
 };
 //---------------------------------------------------------------------------
 extern PACKAGE TZast *Zast;
