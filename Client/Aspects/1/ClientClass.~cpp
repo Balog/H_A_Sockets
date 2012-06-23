@@ -38,6 +38,8 @@ Socket->Active=true;
 //********************************************************************
 void Client::CommandExec(int Comm, vector<String>Parameters)
 {
+try
+{
 if(Act.WaitCommand==Comm | Act.WaitCommand==0 | Comm==7 | Comm==0)
 {
 switch(Comm)
@@ -256,6 +258,11 @@ else
  ShowMessage("ќжидалась команда "+IntToStr(Act.WaitCommand)+" а пришел ответ на команду "+IntToStr(Comm));
 
 
+}
+}
+catch(...)
+{
+ Zast->BlockMK(false);
 }
 }
 //*********************************************************************
@@ -590,14 +597,26 @@ if(Name!="Reference")
 //************************************************************************
 void Client::WriteDiaryEvent(String Type, String Name, String Prim)
 {
-
+try
+{
 Socket->Socket->SendText("Command:7;5|"+IntToStr(IP.Length())+"#"+IP+"|"+IntToStr(Login.Length())+"#"+Login+"|"+IntToStr(Type.Length())+"#"+Type+"|"+IntToStr(Name.Length())+"#"+Name+"|"+IntToStr(Prim.Length())+"#"+Prim+"|");
-
+}
+catch(...)
+{
+ Zast->BlockMK(false);
+}
 }
 //************************************************************************
 void Client::WriteDiaryEvent(String Type, String Name)
 {
+try
+{
 WriteDiaryEvent(Type, Name, "");
+}
+catch(...)
+{
+ Zast->BlockMK(false);
+}
 }
 //************************************************************************
 String Client::TableToStr(String NameDB, String SQLText)
@@ -732,6 +751,8 @@ Act.WaitCommand=8;
 //***************************************************************************
 void Client::ActTrigger(int NumTrigger)
 {
+try
+{
 Sleep(200);
 if(VTrigger[NumTrigger].Var<VTrigger[NumTrigger].Max)
 {
@@ -743,20 +764,29 @@ else
  StartAction(VTrigger[NumTrigger].FalseAction);
 }
 }
+catch(...)
+{
+Zast->BlockMK(false);
+}
+}
 //***************************************************************************
 void Client::PostWriteAspectsUsr()
 {
  Zast->MClient->WriteDiaryEvent("NetAspects"," онец записи аспектов (пользователь)","");
- Zast->BlockMK(false);
+
  Sleep(1000);
+
  if(Form1->Quit)
 {
+  Zast->BlockMK(false);
  Form1->AspQ->Click();
 }
 else
 {
+  Zast->BlockMK(false);
  Form1->N9->Click();
 }
+
 }
 //***************************************************************************
 void Client::BlockServer(String NextProc)

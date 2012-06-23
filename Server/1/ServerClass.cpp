@@ -213,7 +213,8 @@ if(LastCommand==Comm | LastCommand==0)
  {
   case 0:
   {
-
+    try
+    {
    //если существующий логин ответил то надо подать команду на отключение нового клиента
    //this->Socket->SendText("Command:10;1|1#0");
    for(unsigned int i=0; i<Parent->VClients.size();i++)
@@ -223,6 +224,12 @@ if(LastCommand==Comm | LastCommand==0)
     Parent->WriteDiaryEvent(Parent->VClients[i]->IP, Login, "Сервер", "Передача команды прекращения работы", "Уже работает на IP: "+IP);
      Parent->VClients[i]->Socket->SendText("Command:10;1|1#0");
     }
+   }
+   }
+   catch(...)
+   {
+
+   Form1->UnBlockClients();
    }
   break;
   }
@@ -313,6 +320,8 @@ if(ExtractFileName(Parent->VClients[i]->AppPatch)=="Hazards.exe")
   case 5:
    {
    //Прием команды чтения таблицы
+   try
+   {
    Parent->WriteDiaryEvent(IP, Login, "Служебное", "Передача таблицы", "Имя: "+Parameters[0]+" SQL: "+Parameters[1]);
 
    String Text=TableToStr(Parameters[0], Parameters[1]);
@@ -321,7 +330,12 @@ if(ExtractFileName(Parent->VClients[i]->AppPatch)=="Hazards.exe")
 
    this->Socket->SendText(Text);
    //Text=Text.SubString(Rec+1,Text.Length());
+   }
+   catch(...)
+   {
 
+   Form1->UnBlockClients();
+   }
    break;
    }
    case 6:
@@ -367,11 +381,18 @@ Parent->WriteDiaryEvent(Parameters[0], Parameters[1], Parameters[2], Parameters[
    ShowMessage(Parameters[1]);  //SQL
    ShowMessage(Parameters[2]);  //Data
    */
+   try
+   {
 Parent->WriteDiaryEvent(IP, Login, "Служебное", "Прием таблицы", "Имя: "+Parameters[0]+" SQL: "+Parameters[1]);
 
    DecodeTable(Parameters[0],Parameters[1], Parameters[2]);
 
    this->Socket->SendText("Command:8;0|");
+   }
+   catch(...)
+   {
+    Form1->UnBlockClients();
+   }
    break;
    }
    case 9:
@@ -385,32 +406,67 @@ Parent->WriteDiaryEvent(IP, Login, "AdminARM", "Запись логинов", "Имя: "+Paramet
    }
    case 11:
    {
+   try
+   {
    MergePodr(Parameters[0]);
    this->Socket->SendText("Command:11;0|");
+   }
+   catch(...)
+   {
+    Form1->UnBlockClients();
+   }
    break;
    }
    case 12:
    {
+   try
+   {
    MergeCrit(Parameters[0], Parameters[1]);
    this->Socket->SendText("Command:12;0|");
+   }
+   catch(...)
+   {
+    Form1->UnBlockClients();
+   }
    break;
    }
    case 13:
    {
+   try
+   {
    MergeSit(Parameters[0], Parameters[1]);
    this->Socket->SendText("Command:13;0|");
+   }
+   catch(...)
+   {
+    Form1->UnBlockClients();
+   }
    break;
    }
    case 14:
    {
+   try
+   {
    MergeNodeBranch(Parameters[0], Parameters[1], Parameters[2], Parameters[3], Parameters[4], Parameters[5], Parameters[6], Parameters[7]);
    this->Socket->SendText("Command:14;0|");
+   }
+   catch(...)
+   {
+    Form1->UnBlockClients();
+   }
    break;
    }
    case 15:
    {
+   try
+   {
    MergeNodeBranch(Parameters[0], Parameters[1], Parameters[2]);
    this->Socket->SendText("Command:15;0|");
+   }
+   catch(...)
+   {
+    Form1->UnBlockClients();
+   }
    break;
    }
    case 16:
@@ -421,19 +477,35 @@ Parent->WriteDiaryEvent(IP, Login, "AdminARM", "Запись логинов", "Имя: "+Paramet
    }
    case 17:
    {
+   try
+   {
    MergeAspectsMainSpec();
    this->Socket->SendText("Command:17;0|");
+   }
+   catch(...)
+   {
+    Form1->UnBlockClients();
+   }
    break;
    }
    case 18:
    {
+   try
+   {
    MergeAspectsUser(StrToInt(Parameters[0]));
    this->Socket->SendText("Command:18;0|");
+   }
+   catch(...)
+   {
+    Form1->UnBlockClients();
+   }
    break;
    }
    case 19:
    {
    //:IfBlock(TCustomWinSocket *Socket, bool Flag)
+   try
+   {
    bool Res=Parent->IfBlock(this->Socket,"1");
    if(Res)
    {
@@ -447,9 +519,16 @@ Parent->WriteDiaryEvent(IP, Login, "AdminARM", "Запись логинов", "Имя: "+Paramet
     Parent->WriteDiaryEvent(IP, Login, "Сервер", "Сервер заблокировать не удалось", "Путь: "+AppPatch);
     this->Socket->SendText("Command:19;1|1#0");
    }
+   }
+   catch(...)
+   {
+    Form1->UnBlockClients();
+   }
    break;
    }
    case 20:
+   {
+   try
    {
    bool Res=Parent->IfBlock(this->Socket,"0");
    if(Res)
@@ -463,6 +542,11 @@ Parent->WriteDiaryEvent(IP, Login, "AdminARM", "Запись логинов", "Имя: "+Paramet
     //Сервер разблокировать не удалось
     Parent->WriteDiaryEvent(IP, Login, "Сервер", "Сервер разблокировать не удалось", "Путь: "+AppPatch);
     this->Socket->SendText("Command:20;1|1#0");
+   }
+   }
+   catch(...)
+   {
+    Form1->UnBlockClients();
    }
    break;
    }

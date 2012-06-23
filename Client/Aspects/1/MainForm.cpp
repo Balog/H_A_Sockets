@@ -1681,7 +1681,14 @@ Aspects->UpdateBatch();
 void __fastcall TForm1::N9Click(TObject *Sender)
 {
 Zast->BlockMK(true);
+try
+{
 Zast->MClient->BlockServer("PrepareReadAspectsUsr");
+}
+catch(...)
+{
+ Zast->BlockMK(false);
+}
 }
 //------------------------------------------------------------------------
 void TForm1::PrepareMergeAspects()
@@ -1997,7 +2004,8 @@ Button4->Click();
 void __fastcall TForm1::N10Click(TObject *Sender)
 {
 Zast->BlockMK(true);
-
+try
+{
 Prog->SignComplete=true;
 Prog->Show();
 Prog->PB->Min=0;
@@ -2048,12 +2056,23 @@ Documents->ReadWrite.push_back(S);
 
 Zast->ReadWriteDoc->Execute();
 }
+catch(...)
+{
+ Zast->BlockMK(false);
+}
+}
 //---------------------------------------------------------------------------
 void __fastcall TForm1::N3Click(TObject *Sender)
 {
 Zast->BlockMK(true);
-
+try
+{
 Zast->MClient->BlockServer("PrepWriteAspUsr");
+}
+catch(...)
+{
+ Zast->BlockMK(false);
+}
 }
 //---------------------------------------------------------------------------
 void __fastcall TForm1::N4Click(TObject *Sender)

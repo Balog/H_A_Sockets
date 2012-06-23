@@ -10052,6 +10052,18 @@ object Zast: TZast
       Caption = 'PostSaveLogins1'
       OnExecute = PostSaveLogins1Execute
     end
+    object PreViewLogins1: TAction
+      Caption = 'PreViewLogins1'
+      OnExecute = PreViewLogins1Execute
+    end
+    object ViewLogins2: TAction
+      Caption = 'ViewLogins2'
+      OnExecute = ViewLogins2Execute
+    end
+    object PostUpdateOtd1: TAction
+      Caption = 'PostUpdateOtd1'
+      OnExecute = PostUpdateOtd1Execute
+    end
   end
   object ActionManager2: TActionManager
     Left = 112

@@ -37,6 +37,8 @@ Socket->Active=true;
 //********************************************************************
 void Client::CommandExec(int Comm, vector<String>Parameters)
 {
+try
+{
 if(Act.WaitCommand==Comm | Act.WaitCommand==0)
 {
 switch(Comm)
@@ -120,7 +122,8 @@ switch(Comm)
 
  //далее - обновление списка подразделений
  //Может быть стоит показывать Form1 после обновления.
-Zast->PrepareUpdateOtd->Execute();
+BlockServer("PrepareUpdateOtd");
+//Zast->PrepareUpdateOtd->Execute();
  break;
  }
  case 7:
@@ -200,6 +203,11 @@ Zast->PrepareUpdateOtd->Execute();
 else
 {
  ShowMessage("Ожидалась команда "+IntToStr(Act.WaitCommand)+" а пришел ответ на команду "+IntToStr(Comm));
+}
+}
+catch(...)
+{
+Zast->BlockMK(false);
 }
 }
 //*********************************************************************
@@ -688,6 +696,8 @@ void Client::WriteTable(String Database, String ClientSQLText, String ServerSQLT
 //***************************************************************************
 void Client::ActTrigger(int NumTrigger)
 {
+try
+{
 Sleep(200);
 if(VTrigger[NumTrigger].Var<VTrigger[NumTrigger].Max)
 {
@@ -698,6 +708,11 @@ if(VTrigger[NumTrigger].Var<VTrigger[NumTrigger].Max)
 else
 {
  StartAction(VTrigger[NumTrigger].FalseAction);
+}
+}
+catch(...)
+{
+Zast->BlockMK(false);
 }
 }
 //****************************************************************************

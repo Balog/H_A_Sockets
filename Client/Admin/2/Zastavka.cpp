@@ -402,6 +402,8 @@ void __fastcall TZast::ClientSocketRead(TObject *Sender,
       TCustomWinSocket *Socket)
 {
 //
+try
+{
 String Mess="";
 String Mess1="";
 do
@@ -447,6 +449,11 @@ String Par1;
 }
 MClient->CommandExec(Comm, Parameters);
 //}
+}
+}
+catch(...)
+{
+Zast->BlockMK(false);
 }        
 }
 //---------------------------------------------------------------------------
@@ -583,6 +590,8 @@ Form1->Users->ItemIndex=0;
 
 void __fastcall TZast::UpdateOtdelsManExecute(TObject *Sender)
 {
+try
+{
 MP<TADOCommand>Comm(this);
 Comm->Connection=MClient->Database;
 
@@ -597,12 +606,18 @@ Comm->Execute();
 
  Prog->PB->Position++;
  Zast->MClient->ReadTable(Zast->MClient->VDB[StrToInt(MClient->VTrigger[0].Var)].Name,"Select [Num], [Login], [Code1], [Code2], Role from Logins", "Select [Num], [Login], [Code1], [Code2], Role from TempLogins");
-
+}
+catch(...)
+{
+Zast->BlockMK(false);
+}
 
 }
 //---------------------------------------------------------------------------
 
 void __fastcall TZast::UpdateLoginsManExecute(TObject *Sender)
+{
+try
 {
 //Чтение таблицы распределения
 MP<TADOCommand>Comm(this);
@@ -616,10 +631,16 @@ Comm->Execute();
 
  Prog->PB->Position++;
  Zast->MClient->ReadTable(Zast->MClient->VDB[StrToInt(MClient->VTrigger[0].Var)].Name,"Select [Login], [NumObslOtdel] from ObslOtdel", "Select [Login], [NumObslOtdel] from TempObslOtdel");
-
+}
+catch(...)
+{
+Zast->BlockMK(false);
+}
 }
 //---------------------------------------------------------------------------
 void __fastcall TZast::UpdateObslOtdelManExecute(TObject *Sender)
+{
+try
 {
 MP<TADOCommand>Comm(this);
 Comm->Connection=MClient->Database;
@@ -680,6 +701,11 @@ Comm->Execute();
  Prog->PB->Position++;
   MClient->VTrigger[0].Var++;
   MClient->ActTrigger(0);
+}
+catch(...)
+{
+Zast->BlockMK(false);
+}
 }
 //---------------------------------------------------------------------------
 void TZast::MergeLogins()
@@ -757,28 +783,42 @@ catch(...)
 
 void __fastcall TZast::SaveLoginsExecute(TObject *Sender)
 {
+try
+{
 Prog->PB->Position++;
 Zast->MClient->Act.ParamComm.clear();
 Zast->MClient->Act.ParamComm.push_back("SaveObslOtd");
 Zast->MClient->Act.WaitCommand=8;
 
 Zast->MClient->WriteTable(Zast->MClient->VDB[StrToInt(MClient->VTrigger[0].Var)].Name,"Select [Num], [Login], [Code1], [Code2], [Role], [ServerNum] From Logins Where NumDatabase="+IntToStr(Zast->MClient->VDB[StrToInt(MClient->VTrigger[0].Var)].NumDatabase), "Select [Num], [Login], [Code1], [Code2], [Role], [ServerNum] From TempLogins");
-
+}
+catch(...)
+{
+Zast->BlockMK(false);
+}
 }
 //---------------------------------------------------------------------------
 
 void __fastcall TZast::SaveObslOtdExecute(TObject *Sender)
+{
+try
 {
 Prog->PB->Position++;
 Zast->MClient->Act.ParamComm[0]="SaveTempPodr";
 Zast->MClient->Act.WaitCommand=8;
 
 Zast->MClient->WriteTable(Zast->MClient->VDB[StrToInt(MClient->VTrigger[0].Var)].Name,"Select [Login], [NumObslOtdel] From ObslOtdel Where NumDatabase="+IntToStr(Zast->MClient->VDB[StrToInt(MClient->VTrigger[0].Var)].NumDatabase), "Select [Login], [NumObslOtdel] From TempObslOtdel");
-
+}
+catch(...)
+{
+Zast->BlockMK(false);
+}
 }
 //---------------------------------------------------------------------------
 
 void __fastcall TZast::SendMergeSaveExecute(TObject *Sender)
+{
+try
 {
 Prog->PB->Position++;
 //отослать команду на начало объединения данных на сервере
@@ -786,9 +826,16 @@ Zast->MClient->Act.WaitCommand=9;
 
 ClientSocket->Socket->SendText("Command:9;1|"+IntToStr(Zast->MClient->VDB[StrToInt(MClient->VTrigger[0].Var)].Name.Length())+"#"+Zast->MClient->VDB[StrToInt(MClient->VTrigger[0].Var)].Name+"|");
 }
+catch(...)
+{
+Zast->BlockMK(false);
+}
+}
 //---------------------------------------------------------------------------
 
 void __fastcall TZast::PrepareSaveLoginsExecute(TObject *Sender)
+{
+try
 {
 Prog->PB->Position++;
 Zast->MClient->Act.ParamComm.clear();
@@ -803,6 +850,11 @@ T.FalseAction="PostSaveLogins";
 Zast->MClient->VTrigger.push_back(T);
 MClient->ActTrigger(0);
 }
+catch(...)
+{
+Zast->BlockMK(false);
+}
+}
 //---------------------------------------------------------------------------
 
 void __fastcall TZast::PostSaveLoginsExecute(TObject *Sender)
@@ -814,12 +866,18 @@ Zast->BlockMK(false);
 
 void __fastcall TZast::SaveTempPodrExecute(TObject *Sender)
 {
+try
+{
 Prog->PB->Position++;
 Zast->MClient->Act.ParamComm[0]="SendMergeSave";
 Zast->MClient->Act.WaitCommand=8;
 
 Zast->MClient->WriteTable(Zast->MClient->VDB[StrToInt(MClient->VTrigger[0].Var)].Name,"Select [Номер подразделения], [Название подразделения], [ServerNum] From Подразделения Where NumDatabase="+IntToStr(Zast->MClient->VDB[StrToInt(MClient->VTrigger[0].Var)].NumDatabase), "Select [Номер подразделения], [Название подразделения], [ServerNum] From TempПодразделения");
-
+}
+catch(...)
+{
+Zast->BlockMK(false);
+}
 }
 //---------------------------------------------------------------------------
 
@@ -881,6 +939,8 @@ for(TempLogin->First();!TempLogin->Eof;TempLogin->Next())
 void __fastcall TZast::ReadOtdelsExecute(TObject *Sender)
 {
 //Чтение подразделений
+try
+{
 MP<TADOCommand>Comm(this);
 Comm->Connection=Zast->MClient->Database;
 Comm->CommandText="Delete * From TempПодразделения";
@@ -893,11 +953,17 @@ Comm->Execute();
  Prog->PB->Position++;
 
  Zast->MClient->ReadTable(Zast->MClient->VDB[StrToInt(MClient->VTrigger[0].Var)].Name,"Select [Номер подразделения], [Название подразделения] from Подразделения", "Select [Номер подразделения], [Название подразделения] from TempПодразделения");
-
+}
+catch(...)
+{
+Zast->BlockMK(false);
+}
 }
 //---------------------------------------------------------------------------
 
 void __fastcall TZast::PrepareReadExecute(TObject *Sender)
+{
+try
 {
 Zast->MClient->Act.ParamComm.clear();
 
@@ -912,6 +978,11 @@ Zast->MClient->VTrigger.push_back(T);
 Prog->PB->Position++;
 
 MClient->ActTrigger(0);
+}
+catch(...)
+{
+Zast->BlockMK(false);
+}
 }
 //---------------------------------------------------------------------------
 

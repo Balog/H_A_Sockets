@@ -37,8 +37,16 @@ Zast->Stop=true;
 Zast->MClient->Act.WaitCommand=0;
 
 Zast->Saved=false;
-Zast->PrepareSaveLogins->Execute();
-
+//Zast->PrepareSaveLogins->Execute();
+Zast->BlockMK(true);
+try
+{
+Zast->MClient->BlockServer("PrepareSaveLogins");
+}
+catch(...)
+{
+Zast->BlockMK(false);
+}
 
  Action=caNone;
  break;

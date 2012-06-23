@@ -119,6 +119,7 @@ void UpdateTempLogin();
 void UpdateOtdel(int NumLogin);
 void SaveCode(String Login, String Password);
 TNotifyIconData NID;
+void UnBlockClients();
 
         BEGIN_MESSAGE_MAP
           VCL_MESSAGE_HANDLER(MyTrayIcon,TMessage,MTIcon);

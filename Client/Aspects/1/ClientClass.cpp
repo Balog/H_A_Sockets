@@ -38,7 +38,9 @@ Socket->Active=true;
 //********************************************************************
 void Client::CommandExec(int Comm, vector<String>Parameters)
 {
-if(Act.WaitCommand==Comm | Act.WaitCommand==0 | Comm==7 | Comm==0)
+try
+{
+if(Act.WaitCommand==Comm | Act.WaitCommand==0 | Comm==7 | Comm==0 | Comm==21)
 {
 switch(Comm)
 {
@@ -247,6 +249,14 @@ BlockServer("BeginWork");
  }
  break;
  }
+ case 21:
+ {
+ // оманда аварийной разблокировки клиента
+
+Zast->BlockMK(false);
+
+ break;
+ }
 }
 }
 else
@@ -256,6 +266,11 @@ else
  ShowMessage("ќжидалась команда "+IntToStr(Act.WaitCommand)+" а пришел ответ на команду "+IntToStr(Comm));
 
 
+}
+}
+catch(...)
+{
+ Zast->BlockMK(false);
 }
 }
 //*********************************************************************
@@ -330,11 +345,18 @@ Socket->Socket->SendText(Mess);
 //*************************************************************************
 void Client::ReadTable(String NameDBFrom, String ServerSQL, String NameDBTo, String ClientSQL)
 {
+try
+{
  Act.WaitCommand=5;
  Act.ParamComm.push_back(NameDBTo);
  Act.ParamComm.push_back(ClientSQL);
 
  Socket->Socket->SendText("Command:5;2|"+IntToStr(NameDBFrom.Length())+"#"+NameDBFrom+"|"+ServerSQL.Length()+"#"+ServerSQL+"|");
+}
+catch(...)
+{
+ Zast->BlockMK(false);
+}
 }
 //*************************************************************************
 void Client::DecodeTable(String NameDB, String ClientSQL, String Text)
@@ -590,14 +612,26 @@ if(Name!="Reference")
 //************************************************************************
 void Client::WriteDiaryEvent(String Type, String Name, String Prim)
 {
-
+try
+{
 Socket->Socket->SendText("Command:7;5|"+IntToStr(IP.Length())+"#"+IP+"|"+IntToStr(Login.Length())+"#"+Login+"|"+IntToStr(Type.Length())+"#"+Type+"|"+IntToStr(Name.Length())+"#"+Name+"|"+IntToStr(Prim.Length())+"#"+Prim+"|");
-
+}
+catch(...)
+{
+ Zast->BlockMK(false);
+}
 }
 //************************************************************************
 void Client::WriteDiaryEvent(String Type, String Name)
 {
+try
+{
 WriteDiaryEvent(Type, Name, "");
+}
+catch(...)
+{
+ Zast->BlockMK(false);
+}
 }
 //************************************************************************
 String Client::TableToStr(String NameDB, String SQLText)
@@ -725,12 +759,21 @@ DB=ADOUsrAspect;
 //****************************************************************************
 void Client::WriteTable(String DatabaseFrom, String ClientSQLText, String DatabaseTo, String ServerSQLText)
 {
+try
+{
 Act.WaitCommand=8;
  String Text=TableToStr(DatabaseFrom, ClientSQLText);
  Socket->Socket->SendText("Command:8;3|"+IntToStr(DatabaseTo.Length())+"#"+DatabaseTo+"|"+IntToStr(ServerSQLText.Length())+"#"+ServerSQLText+"|"+IntToStr(Text.Length())+"#"+Text+"|");
+ }
+ catch(...)
+{
+ Zast->BlockMK(false);
+}
 }
 //***************************************************************************
 void Client::ActTrigger(int NumTrigger)
+{
+try
 {
 Sleep(200);
 if(VTrigger[NumTrigger].Var<VTrigger[NumTrigger].Max)
@@ -741,6 +784,11 @@ if(VTrigger[NumTrigger].Var<VTrigger[NumTrigger].Max)
 else
 {
  StartAction(VTrigger[NumTrigger].FalseAction);
+}
+}
+catch(...)
+{
+Zast->BlockMK(false);
 }
 }
 //***************************************************************************

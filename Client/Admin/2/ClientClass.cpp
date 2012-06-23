@@ -37,7 +37,9 @@ Socket->Active=true;
 //********************************************************************
 void Client::CommandExec(int Comm, vector<String>Parameters)
 {
-if(Act.WaitCommand==Comm | Act.WaitCommand==0)
+try
+{
+if(Act.WaitCommand==Comm | Act.WaitCommand==0 | Comm==7 | Comm==0 | Comm==21)
 {
 switch(Comm)
 {
@@ -196,11 +198,24 @@ BlockServer("PrepareUpdateOtd");
  }
  break;
  }
+ case 21:
+ {
+ // оманда аварийной разблокировки клиента
+
+Zast->BlockMK(false);
+
+ break;
+ } 
 }
 }
 else
 {
  ShowMessage("ќжидалась команда "+IntToStr(Act.WaitCommand)+" а пришел ответ на команду "+IntToStr(Comm));
+}
+}
+catch(...)
+{
+Zast->BlockMK(false);
 }
 }
 //*********************************************************************
@@ -689,6 +704,8 @@ void Client::WriteTable(String Database, String ClientSQLText, String ServerSQLT
 //***************************************************************************
 void Client::ActTrigger(int NumTrigger)
 {
+try
+{
 Sleep(200);
 if(VTrigger[NumTrigger].Var<VTrigger[NumTrigger].Max)
 {
@@ -699,6 +716,11 @@ if(VTrigger[NumTrigger].Var<VTrigger[NumTrigger].Max)
 else
 {
  StartAction(VTrigger[NumTrigger].FalseAction);
+}
+}
+catch(...)
+{
+Zast->BlockMK(false);
 }
 }
 //****************************************************************************

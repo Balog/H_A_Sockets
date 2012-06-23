@@ -1167,6 +1167,13 @@ for(int i=0;i<MyClients->ClientCount();i++)
 */
 }
 //-------------------------------------
-
+void TForm1::UnBlockClients()
+{
+for(unsigned int i=0; i<Cl->VClients.size(); i++)
+{
+ Cl->VClients[i]->Socket->SendText("Command:21;0|");
+}
+}
+//-----------------------------------------------------------------------------
 
 

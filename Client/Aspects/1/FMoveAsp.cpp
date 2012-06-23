@@ -178,7 +178,14 @@ void __fastcall TMAsp::BitBtn5Click(TObject *Sender)
 {
 //Zast->SaveAspectsMSpec0->Execute();
 Zast->BlockMK(true);
+try
+{
 Zast->MClient->BlockServer("SaveAspectsMSpec0");
+}
+catch(...)
+{
+ Zast->BlockMK(false);
+}
 }
 //---------------------------------------------------------------------------
 
@@ -187,7 +194,14 @@ void __fastcall TMAsp::BitBtn6Click(TObject *Sender)
 if(Application->MessageBoxA("¬ы действительно хотите прочесть список аспектов с сервера?\r¬се несохраненные изменени€ по перемещению аспектов будут удалены!","„тение списка аспектов",MB_YESNO+MB_ICONWARNING+MB_DEFBUTTON2+MB_APPLMODAL)==IDYES)
 {
 Zast->BlockMK(true);
+try
+{
 Zast->MClient->BlockServer("ReadAspectsMSpec");
+}
+catch(...)
+{
+ Zast->BlockMK(false);
+}
 }
 
 }

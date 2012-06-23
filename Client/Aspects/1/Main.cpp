@@ -2531,6 +2531,8 @@ catch(...)
 
 void __fastcall TDocuments::N20Click(TObject *Sender)
 {
+try
+{
 Zast->BlockMK(true);
 ReadWrite.clear();
 Str_RW S;
@@ -2539,11 +2541,18 @@ S.Text="Чтение списка территорий...";
 S.Num=7;
 ReadWrite.push_back(S);
 Zast->MClient->BlockServer("ReadWriteDoc");
+}
+catch(...)
+{
+ Zast->BlockMK(false);
+}
 //Zast->ReadWriteDoc->Execute();
 }
 //---------------------------------------------------------------------------
 
 void __fastcall TDocuments::N24Click(TObject *Sender)
+{
+try
 {
 Zast->BlockMK(true);
 ReadWrite.clear();
@@ -2553,11 +2562,18 @@ S.Text="Чтение списка видов деятельности...";
 S.Num=8;
 ReadWrite.push_back(S);
 Zast->MClient->BlockServer("ReadWriteDoc");
+}
+catch(...)
+{
+ Zast->BlockMK(false);
+}
 //Zast->ReadWriteDoc->Execute();
 }
 //---------------------------------------------------------------------------
 
 void __fastcall TDocuments::N25Click(TObject *Sender)
+{
+try
 {
 Zast->BlockMK(true);
 ReadWrite.clear();
@@ -2569,11 +2585,18 @@ ReadWrite.push_back(S);
 Zast->MClient->BlockServer("ReadWriteDoc");
 //Zast->ReadWriteDoc->Execute();
 }
+catch(...)
+{
+ Zast->BlockMK(false);
+}
+}
 //---------------------------------------------------------------------------
 
 void __fastcall TDocuments::N31Click(TObject *Sender)
 {
 Zast->BlockMK(true);
+try
+{
 Prog->SignComplete=true;
 Prog->Show();
 Prog->PB->Min=0;
@@ -2629,6 +2652,11 @@ ReadWrite.push_back(S);
 //Zast->MClient->BlockServer("ReadWriteDoc");
 Zast->ReadWriteDoc->Execute();
 }
+catch(...)
+{
+ Zast->BlockMK(false);
+}
+}
 //---------------------------------------------------------------------------
 void __fastcall TDocuments::DBMemo1Exit(TObject *Sender)
 {
@@ -2652,6 +2680,8 @@ DataSetPost4->Execute();
 void __fastcall TDocuments::N18Click(TObject *Sender)
 {
 Zast->BlockMK(true);
+try
+{
 DataSetRefresh4->Execute();
 DataSetPost1->Execute();
 
@@ -2664,10 +2694,17 @@ ReadWrite.push_back(S);
 //Zast->MClient->BlockServer("ReadWriteDoc");
 Zast->ReadWriteDoc->Execute();
 }
+catch(...)
+{
+ Zast->BlockMK(false);
+}
+}
 //---------------------------------------------------------------------------
 void __fastcall TDocuments::N38Click(TObject *Sender)
 {
 Zast->BlockMK(true);
+try
+{
 DataSetRefresh3->Execute();
 DataSetPost3->Execute();
 
@@ -2679,8 +2716,15 @@ S.Num=2;
 ReadWrite.push_back(S);
 Zast->ReadWriteDoc->Execute();
 }
+catch(...)
+{
+ Zast->BlockMK(false);
+}
+}
 //---------------------------------------------------------------------------
 void __fastcall TDocuments::N37Click(TObject *Sender)
+{
+try
 {
 Zast->BlockMK(true);
 DataSetRefresh2->Execute();
@@ -2694,9 +2738,16 @@ S.Num=3;
 ReadWrite.push_back(S);
 Zast->ReadWriteDoc->Execute();
 }
+catch(...)
+{
+ Zast->BlockMK(false);
+}
+}
 //---------------------------------------------------------------------------
 
 void __fastcall TDocuments::N39Click(TObject *Sender)
+{
+try
 {
 Zast->BlockMK(true);
 DataSetRefresh1->Execute();
@@ -2710,11 +2761,18 @@ S.Num=4;
 ReadWrite.push_back(S);
 Zast->ReadWriteDoc->Execute();
 }
+catch(...)
+{
+ Zast->BlockMK(false);
+}
+}
 //---------------------------------------------------------------------------
 
 void __fastcall TDocuments::N32Click(TObject *Sender)
 {
 Zast->BlockMK(true);
+try
+{
 ReadWrite.clear();
 Str_RW S;
 S.NameAction="WriteVozd1";
@@ -2723,9 +2781,16 @@ S.Num=5;
 ReadWrite.push_back(S);
 Zast->ReadWriteDoc->Execute();
 }
+catch(...)
+{
+ Zast->BlockMK(false);
+}
+}
 //---------------------------------------------------------------------------
 
 void __fastcall TDocuments::N33Click(TObject *Sender)
+{
+try
 {
 Zast->BlockMK(true);
 ReadWrite.clear();
@@ -2736,9 +2801,16 @@ S.Num=6;
 ReadWrite.push_back(S);
 Zast->ReadWriteDoc->Execute();
 }
+catch(...)
+{
+ Zast->BlockMK(false);
+}
+}
 //---------------------------------------------------------------------------
 
 void __fastcall TDocuments::N34Click(TObject *Sender)
+{
+try
 {
 Zast->BlockMK(true);
 ReadWrite.clear();
@@ -2749,11 +2821,18 @@ S.Num=7;
 ReadWrite.push_back(S);
 Zast->ReadWriteDoc->Execute();
 }
+catch(...)
+{
+ Zast->BlockMK(false);
+}
+}
 //---------------------------------------------------------------------------
 
 void __fastcall TDocuments::N35Click(TObject *Sender)
 {
 Zast->BlockMK(true);
+try
+{
 ReadWrite.clear();
 Str_RW S;
 S.NameAction="WriteDeyat1";
@@ -2762,11 +2841,18 @@ S.Num=8;
 ReadWrite.push_back(S);
 Zast->ReadWriteDoc->Execute();
 }
+catch(...)
+{
+ Zast->BlockMK(false);
+}
+}
 //---------------------------------------------------------------------------
 
 void __fastcall TDocuments::N36Click(TObject *Sender)
 {
 Zast->BlockMK(true);
+try
+{
 ReadWrite.clear();
 Str_RW S;
 S.NameAction="WriteAspect1";
@@ -2775,11 +2861,18 @@ S.Num=9;
 ReadWrite.push_back(S);
 Zast->ReadWriteDoc->Execute();
 }
+catch(...)
+{
+ Zast->BlockMK(false);
+}
+}
 //---------------------------------------------------------------------------
 
 void __fastcall TDocuments::N41Click(TObject *Sender)
 {
 Zast->BlockMK(true);
+try
+{
 Prog->SignComplete=true;
 Prog->Show();
 Prog->PB->Min=0;
@@ -2841,6 +2934,11 @@ S.Num=9;
 ReadWrite.push_back(S);
 
 Zast->ReadWriteDoc->Execute();
+}
+catch(...)
+{
+ Zast->BlockMK(false);
+}
 }
 //---------------------------------------------------------------------------
 

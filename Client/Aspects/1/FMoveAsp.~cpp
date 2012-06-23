@@ -178,7 +178,14 @@ void __fastcall TMAsp::BitBtn5Click(TObject *Sender)
 {
 //Zast->SaveAspectsMSpec0->Execute();
 Zast->BlockMK(true);
+try
+{
 Zast->MClient->BlockServer("SaveAspectsMSpec0");
+}
+catch(...)
+{
+ Zast->BlockMK(false);
+}
 }
 //---------------------------------------------------------------------------
 
@@ -252,7 +259,7 @@ Zast->MClient->WriteDiaryEvent("NetAspects ошибка","Ошибка объединения аспектов 
 //----------------------------------------------
 void __fastcall TMAsp::FormClose(TObject *Sender, TCloseAction &Action)
 {
-Zast->BlockMK(true);
+
 Zast->MClient->BlockServer("CloseMAsp");
 
 
