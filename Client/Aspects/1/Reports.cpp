@@ -15,6 +15,30 @@
 #pragma package(smart_init)
 void Reports::CreateReport1(int Podr, TDateTime Date1, TDateTime Date2, AnsiString Isp, String Filtr1, String LFiltr)
 {
+AnsiString T="Ф-001_1 ";
+T=T+" Перечень "+IntToStr(Podr);
+AnsiString PP1=WideString(ExtractFilePath(Application->ExeName)+"\Templates\\Ф-001_1.xlt");
+AnsiString PP2=WideString(ExtractFilePath(Application->ExeName)+"\Templates\\"+T+".xlt");
+//CopyFileTo(PP1.c_str() ,PP2.c_str());
+
+//Variant App1 =Variant::CreateObject("Excel.Application");
+Variant App =Variant::CreateObject("Excel.Application");
+App.OlePropertySet("Visible",true);
+Variant Book;
+
+
+Book=App.OlePropertyGet("Workbooks").OleFunction("Add", PP1.c_str());
+//Book=App.OlePropertyGet("Workbooks").OleFunction("Add", PP1.c_str());
+
+Variant Sheet=App.OlePropertyGet("ActiveSheet");
+//Добавление листов
+Sheet.OleFunction("Copy",Book.OlePropertyGet("Sheets",1));
+Sheet.OleFunction("Copy",Book.OlePropertyGet("Sheets",1));
+//Sheet.OlePropertySet("Name","Ф-001.1");
+
+DeleteFile(PP2);
+
+/*
 AnsiString G;
 if (Filtr1=="")
 {
@@ -69,13 +93,7 @@ int Start=17;
 AnsiString Text;
 int Num;
 T="Перечень экологических аспектов c "+Date1.DateString()+" по "+Date2.DateString();
-/*
-App.OlePropertyGet("Cells",9,1).OlePropertySet("Value",T.c_str());
-TempAspects->Active=false;
-TempAspects->CommandText="Select * From Подразделения Where [ServerNum]="+IntToStr(Podr);
-TempAspects->Active=true;
-NP=TempAspects->FieldByName("Название подразделения")->Value;
-*/
+
 T=" "+NP;
 App.OlePropertyGet("Cells",10,1).OlePropertySet("Value",T.c_str());
 T="Фильтр - "+LFiltr;
@@ -263,6 +281,7 @@ App.OlePropertySet("Visible",true);
 App=NULL;
 Book=NULL;
 Sheet=NULL;
+*/
 }
 //------------------------------------------------------------------------------------------------------------------
 void Reports::CreateReport2(int Podr, TDateTime Date1, TDateTime Date2, AnsiString Isp, String Filtr2, String LFiltr)

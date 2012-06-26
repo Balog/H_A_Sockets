@@ -98,7 +98,7 @@ object Report1: TReport1
   object CPodrazdel: TComboBox
     Left = 232
     Top = 8
-    Width = 385
+    Width = 390
     Height = 21
     Style = csDropDownList
     ItemHeight = 13
@@ -108,7 +108,7 @@ object Report1: TReport1
   object Edit1: TEdit
     Left = 232
     Top = 32
-    Width = 385
+    Width = 390
     Height = 21
     TabOrder = 1
   end
@@ -150,6 +150,16 @@ object Report1: TReport1
     Caption = #1057#1086#1079#1076#1072#1090#1100' '#1086#1090#1095#1077#1090
     TabOrder = 4
     OnClick = Button1Click
+  end
+  object CheckBox1: TCheckBox
+    Left = 423
+    Top = 57
+    Width = 112
+    Height = 17
+    Caption = #1053#1072' '#1086#1076#1085#1086#1084' '#1083#1080#1089#1090#1077
+    Checked = True
+    State = cbChecked
+    TabOrder = 5
   end
   object Podr: TADODataSet
     Parameters = <>

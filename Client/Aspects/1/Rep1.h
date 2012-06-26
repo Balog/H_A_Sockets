@@ -24,6 +24,7 @@ __published:	// IDE-managed Components
         TLabel *Label4;
         TButton *Button1;
         TADODataSet *Podr;
+        TCheckBox *CheckBox1;
         void __fastcall FormShow(TObject *Sender);
         void __fastcall Button1Click(TObject *Sender);
         void __fastcall CPodrazdelKeyPress(TObject *Sender, char &Key);
