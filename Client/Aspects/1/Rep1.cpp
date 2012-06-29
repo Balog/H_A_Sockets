@@ -172,7 +172,7 @@ if(NumRep==1)
 Reports *R=new Reports();
 R->Connect=RepBase;
 R->Role=Role;
-R->CreateReport1(NumPodr, Date1->Date, Date2->Date, Edit1->Text, Flt, FltName);
+R->CreateReport1(NumPodr, Date1->Date, Date2->Date, Edit1->Text, Flt, FltName, CheckBox1->Checked);
 delete R;
 }
 else
@@ -180,7 +180,7 @@ else
 Reports *R=new Reports();
 R->Connect=RepBase;
 R->Role=Role;
-R->CreateReport2(NumPodr, Date1->Date, Date2->Date, Edit1->Text, Flt, FltName);
+R->CreateReport2(NumPodr, Date1->Date, Date2->Date, Edit1->Text, Flt, FltName, CheckBox1->Checked);
 delete R;
 }
 }

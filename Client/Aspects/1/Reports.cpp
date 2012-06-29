@@ -13,8 +13,11 @@
 //---------------------------------------------------------------------------
 
 #pragma package(smart_init)
-void Reports::CreateReport1(int Podr, TDateTime Date1, TDateTime Date2, AnsiString Isp, String Filtr1, String LFiltr)
+void Reports::CreateReport1(int Podr, TDateTime Date1, TDateTime Date2, AnsiString Isp, String Filtr1, String LFiltr, bool OneList)
 {
+int Start=17;
+int Number=0;
+int i=0;
 AnsiString T="Ф-001_1 ";
 T=T+" Перечень "+IntToStr(Podr);
 AnsiString PP1=WideString(ExtractFilePath(Application->ExeName)+"\Templates\\Ф-001_1.xlt");
@@ -50,9 +53,17 @@ TempAspects->Connection=Connect;
 
 MP<TADODataSet>Podrazd(Zast);
 Podrazd->Connection=this->Connect;
+
 if(Podr==0)
 {
+if(OneList)
+{
+Podrazd->CommandText="Select * from TempПодразделения Order by [Название подразделения]";
+}
+else
+{
 Podrazd->CommandText="Select * from TempПодразделения Order by [Название подразделения]  DESC";
+}
 }
 else
 {
@@ -65,6 +76,8 @@ for(Podrazd->First();!Podrazd->Eof;Podrazd->Next())
 {
 int NumPodrazd=Podrazd->FieldByName("ServerNum")->AsInteger;
 
+if(!OneList)
+{
 Sheet1=Book.OlePropertyGet("Sheets",ListCount);
 Sheet1.OleFunction("Copy",Book.OlePropertyGet("Sheets",1));
 Sheet=Book.OlePropertyGet("Sheets",1);
@@ -72,7 +85,11 @@ Sheet=Book.OlePropertyGet("Sheets",1);
 
 Sheet.OlePropertySet("Name",("Подразделение "+IntToStr(ListCount1)).c_str());
 App.OlePropertyGet("Cells",10,1).OlePropertySet("Value",Podrazd->FieldByName("Название подразделения")->AsString.c_str());
-
+}
+else
+{
+Sheet.OlePropertySet("Name",("Подразделение "+IntToStr(ListCount1)).c_str());
+}
 //****************************
 AnsiString NP;
 NP=Podrazd->FieldByName("Название подразделения")->AsString;
@@ -95,7 +112,7 @@ TempAspects->Active=false;
 TempAspects->CommandText="Select * From Подразделения Where [ServerNum]="+IntToStr(NumPodrazd);
 TempAspects->Active=true;
 
-int Start=17;
+
 AnsiString Text;
 int Num;
 T="Перечень экологических аспектов c "+Date1.DateString()+" по "+Date2.DateString();
@@ -105,12 +122,29 @@ App.OlePropertyGet("Cells",10,1).OlePropertySet("Value",T.c_str());
 T="Фильтр - "+LFiltr;
 App.OlePropertyGet("Cells",12,1).OlePropertySet("Value",T.c_str());
 
-Report->First();
-int Number=0;
-for(int i=0;i<Report->RecordCount;i++)
+//Report->First();
+
+
+if(OneList & Podr==0)
 {
-Number=i;
-App.OlePropertyGet("Cells",Start+i,1).OlePropertySet("Value",i+1);
+
+App.OlePropertyGet("Range",(Address(Sheet,1,Start+i)+":"+Address(Sheet,17,Start+i)).c_str()).OlePropertySet("MergeCells",true);
+App.OlePropertyGet("Cells",Start+i,1).OlePropertySet("Value",Podrazd->FieldByName("Название подразделения")->AsString.c_str());
+App.OlePropertyGet("Range",(Address(Sheet,1,Start+i)).c_str()).OlePropertySet("HorizontalAlignment",-4108);
+i++;
+
+}
+else
+{
+i=0;
+Number=0;
+}
+
+for(Report->First();!Report->Eof;Report->Next())
+{
+//Number=i;
+
+App.OlePropertyGet("Cells",Start+i,1).OlePropertySet("Value",Number+1);
 Num=Report->FieldByName("Деятельность")->Value;
 TempAspects->Active=false;
 TempAspects->CommandText="Select * From Деятельность Where [Номер деятельности]="+IntToStr(Num);
@@ -245,51 +279,85 @@ Text="Незначимый";
 App.OlePropertyGet("Cells",Start+i,17).OlePropertySet("Value",Text.c_str());
 
 
-
-Report->Next();
+Number++;
+i++;
 }
 
-App.OlePropertyGet("Range",(Address(Sheet,1,Start)+":"+Address(Sheet,17,Start+Number)).c_str()).OlePropertySet("VerticalAlignment",-4160);
-App.OlePropertyGet("Range",(Address(Sheet,1,Start)+":"+Address(Sheet,17,Start+Number)).c_str()).OlePropertySet("WrapText",true);
-App.OlePropertyGet("Range",(Address(Sheet,1,Start)+":"+Address(Sheet,17,Start+Number)).c_str()).OlePropertyGet("Borders",7).OlePropertySet("Weight",4);
-App.OlePropertyGet("Range",(Address(Sheet,1,Start)+":"+Address(Sheet,17,Start+Number)).c_str()).OlePropertyGet("Borders",8).OlePropertySet("Weight",4);
-App.OlePropertyGet("Range",(Address(Sheet,1,Start)+":"+Address(Sheet,17,Start+Number)).c_str()).OlePropertyGet("Borders",9).OlePropertySet("Weight",4);
-App.OlePropertyGet("Range",(Address(Sheet,1,Start)+":"+Address(Sheet,17,Start+Number)).c_str()).OlePropertyGet("Borders",10).OlePropertySet("Weight",4);
-App.OlePropertyGet("Range",(Address(Sheet,1,Start)+":"+Address(Sheet,17,Start+Number)).c_str()).OlePropertyGet("Borders",11).OlePropertySet("Weight",4);
-if (Number>=1)
-{
-App.OlePropertyGet("Range",(Address(Sheet,1,Start)+":"+Address(Sheet,17,Start+Number)).c_str()).OlePropertyGet("Borders",12).OlePropertySet("Weight",4);
-}
 
-T="Составил: _________________";
-App.OlePropertyGet("Cells",Start+Number+4,2).OlePropertySet("Value",T.c_str());
-App.OlePropertyGet("Cells",Start+Number+4,3).OlePropertySet("Value",Isp.c_str());
-App.OlePropertyGet("Range",(Address(Sheet,3,Start+Number+4)).c_str()).OlePropertyGet("Borders",9).OlePropertySet("Weight",2);
-App.OlePropertyGet("Range",(Address(Sheet,4,Start+Number+4)).c_str()).OlePropertySet("HorizontalAlignment",-4152);
-App.OlePropertyGet("Cells",Start+Number+4,4).OlePropertySet("Value","________________________");
-
-App.OlePropertyGet("Cells",Start+Number+5,2).OlePropertySet("Value","должность");
-App.OlePropertyGet("Cells",Start+Number+5,2).OlePropertyGet("Font").OlePropertySet("Size",8);
-App.OlePropertyGet("Range",(Address(Sheet,2,Start+Number+5)).c_str()).OlePropertySet("IndentLevel",9);
-
-App.OlePropertyGet("Cells",Start+Number+5,3).OlePropertySet("Value","Ф.И.О.");
-App.OlePropertyGet("Cells",Start+Number+5,3).OlePropertyGet("Font").OlePropertySet("Size",8);
-App.OlePropertyGet("Range",(Address(Sheet,3,Start+Number+5)).c_str()).OlePropertySet("IndentLevel",7);
-
-App.OlePropertyGet("Cells",Start+Number+5,4).OlePropertySet("Value","подпись");
-App.OlePropertyGet("Cells",Start+Number+5,4).OlePropertyGet("Font").OlePropertySet("Size",8);
-App.OlePropertyGet("Range",(Address(Sheet,4,Start+Number+5)).c_str()).OlePropertySet("IndentLevel",7);
-
-AnsiString Patch=ExtractFilePath(Application->ExeName);
-AnsiString NameReport=Patch+"\Reports\\Ф-001.1.xls";
 //****************************
 
 ListCount1--;
 ListCount++;
+
+App.OlePropertyGet("Range",(Address(Sheet,1,Start)+":"+Address(Sheet,17,Start+i-1)).c_str()).OlePropertySet("VerticalAlignment",-4160);
+App.OlePropertyGet("Range",(Address(Sheet,1,Start)+":"+Address(Sheet,17,Start+i-1)).c_str()).OlePropertySet("WrapText",true);
+App.OlePropertyGet("Range",(Address(Sheet,1,Start)+":"+Address(Sheet,17,Start+i-1)).c_str()).OlePropertyGet("Borders",7).OlePropertySet("Weight",4);
+App.OlePropertyGet("Range",(Address(Sheet,1,Start)+":"+Address(Sheet,17,Start+i-1)).c_str()).OlePropertyGet("Borders",8).OlePropertySet("Weight",4);
+App.OlePropertyGet("Range",(Address(Sheet,1,Start)+":"+Address(Sheet,17,Start+i-1)).c_str()).OlePropertyGet("Borders",9).OlePropertySet("Weight",4);
+App.OlePropertyGet("Range",(Address(Sheet,1,Start)+":"+Address(Sheet,17,Start+i-1)).c_str()).OlePropertyGet("Borders",10).OlePropertySet("Weight",4);
+App.OlePropertyGet("Range",(Address(Sheet,1,Start)+":"+Address(Sheet,17,Start+i-1)).c_str()).OlePropertyGet("Borders",11).OlePropertySet("Weight",4);
+if (Number>=1)
+{
+App.OlePropertyGet("Range",(Address(Sheet,1,Start)+":"+Address(Sheet,17,Start+i-1)).c_str()).OlePropertyGet("Borders",12).OlePropertySet("Weight",4);
 }
+
+if(!OneList)
+{
+T="Составил: _________________";
+App.OlePropertyGet("Cells",Start+i+4,2).OlePropertySet("Value",T.c_str());
+App.OlePropertyGet("Cells",Start+i+4,3).OlePropertySet("Value",Isp.c_str());
+App.OlePropertyGet("Range",(Address(Sheet,3,Start+i+4)).c_str()).OlePropertyGet("Borders",9).OlePropertySet("Weight",2);
+App.OlePropertyGet("Range",(Address(Sheet,4,Start+i+4)).c_str()).OlePropertySet("HorizontalAlignment",-4152);
+App.OlePropertyGet("Cells",Start+i+4,4).OlePropertySet("Value","________________________");
+
+App.OlePropertyGet("Cells",Start+i+5,2).OlePropertySet("Value","должность");
+App.OlePropertyGet("Cells",Start+i+5,2).OlePropertyGet("Font").OlePropertySet("Size",8);
+App.OlePropertyGet("Range",(Address(Sheet,2,Start+i+5)).c_str()).OlePropertySet("IndentLevel",9);
+
+App.OlePropertyGet("Cells",Start+i+5,3).OlePropertySet("Value","Ф.И.О.");
+App.OlePropertyGet("Cells",Start+i+5,3).OlePropertyGet("Font").OlePropertySet("Size",8);
+App.OlePropertyGet("Range",(Address(Sheet,3,Start+i+5)).c_str()).OlePropertySet("IndentLevel",7);
+
+App.OlePropertyGet("Cells",Start+i+5,4).OlePropertySet("Value","подпись");
+App.OlePropertyGet("Cells",Start+i+5,4).OlePropertyGet("Font").OlePropertySet("Size",8);
+App.OlePropertyGet("Range",(Address(Sheet,4,Start+i+5)).c_str()).OlePropertySet("IndentLevel",7);
+
+AnsiString Patch=ExtractFilePath(Application->ExeName);
+AnsiString NameReport=Patch+"\Reports\\Ф-001.1.xls";
+}
+}
+
+
+if(!OneList)
+{
 App.OlePropertySet("DisplayAlerts",false);
 Sheet1.OleFunction("Delete");
 App.OlePropertySet("DisplayAlerts",true);
+}
+else
+{
+T="Составил: _________________";
+App.OlePropertyGet("Cells",Start+i+4,2).OlePropertySet("Value",T.c_str());
+App.OlePropertyGet("Cells",Start+i+4,3).OlePropertySet("Value",Isp.c_str());
+App.OlePropertyGet("Range",(Address(Sheet,3,Start+i+4)).c_str()).OlePropertyGet("Borders",9).OlePropertySet("Weight",2);
+App.OlePropertyGet("Range",(Address(Sheet,4,Start+i+4)).c_str()).OlePropertySet("HorizontalAlignment",-4152);
+App.OlePropertyGet("Cells",Start+i+4,4).OlePropertySet("Value","________________________");
+
+App.OlePropertyGet("Cells",Start+i+5,2).OlePropertySet("Value","должность");
+App.OlePropertyGet("Cells",Start+i+5,2).OlePropertyGet("Font").OlePropertySet("Size",8);
+App.OlePropertyGet("Range",(Address(Sheet,2,Start+i+5)).c_str()).OlePropertySet("IndentLevel",9);
+
+App.OlePropertyGet("Cells",Start+i+5,3).OlePropertySet("Value","Ф.И.О.");
+App.OlePropertyGet("Cells",Start+i+5,3).OlePropertyGet("Font").OlePropertySet("Size",8);
+App.OlePropertyGet("Range",(Address(Sheet,3,Start+i+5)).c_str()).OlePropertySet("IndentLevel",7);
+
+App.OlePropertyGet("Cells",Start+i+5,4).OlePropertySet("Value","подпись");
+App.OlePropertyGet("Cells",Start+i+5,4).OlePropertyGet("Font").OlePropertySet("Size",8);
+App.OlePropertyGet("Range",(Address(Sheet,4,Start+i+5)).c_str()).OlePropertySet("IndentLevel",7);
+
+AnsiString Patch=ExtractFilePath(Application->ExeName);
+AnsiString NameReport=Patch+"\Reports\\Ф-001.1.xls";
+}
 /*
 AnsiString G;
 if (Filtr1=="")
@@ -536,7 +604,7 @@ Sheet=NULL;
 */
 }
 //------------------------------------------------------------------------------------------------------------------
-void Reports::CreateReport2(int Podr, TDateTime Date1, TDateTime Date2, AnsiString Isp, String Filtr2, String LFiltr)
+void Reports::CreateReport2(int Podr, TDateTime Date1, TDateTime Date2, AnsiString Isp, String Filtr2, String LFiltr, bool OneList)
 {
 AnsiString G;
 if (Filtr2=="")
