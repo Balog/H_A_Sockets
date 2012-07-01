@@ -196,6 +196,7 @@ __published:	// IDE-managed Components
         TAction *PrepMergeAspectsUserQ;
         TAction *ContStartReports;
         TAction *CloseMAsp;
+        TAction *ContStartReports2;
         void __fastcall Timer1Timer(TObject *Sender);
         void __fastcall Image1Click(TObject *Sender);
         void __fastcall FormShow(TObject *Sender);
@@ -272,7 +273,6 @@ __published:	// IDE-managed Components
         void __fastcall WriteAspect2Execute(TObject *Sender);
         void __fastcall MergeServerAspectExecute(TObject *Sender);
         void __fastcall EndMergeServerAspectExecute(TObject *Sender);
-        void __fastcall ContReportExecute(TObject *Sender);
         void __fastcall ContSvodReportExecute(TObject *Sender);
         void __fastcall StartLoadPodrExecute(TObject *Sender);
         void __fastcall StartLoadObslOtdExecute(TObject *Sender);
@@ -307,6 +307,7 @@ __published:	// IDE-managed Components
         void __fastcall PrepMergeAspectsUserQExecute(TObject *Sender);
         void __fastcall ContStartReportsExecute(TObject *Sender);
         void __fastcall CloseMAspExecute(TObject *Sender);
+        void __fastcall ContStartReports2Execute(TObject *Sender);
 private:	// User declarations
 String Path;
 TLocateOptions SO;

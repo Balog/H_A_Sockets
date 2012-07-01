@@ -1661,6 +1661,12 @@ Report1->NumRep=1;
 Report1->RepBase=Zast->ADOUsrAspect;
 Report1->Role=Role;
 Report1->NumLogin=NumLogin;
+//ShowMessage(Filter->CText);
+int NWhere=Filter->CText.LowerCase().Pos("where")+5;
+String SR=Filter->CText.SubString(NWhere, Filter->CText.Length());
+int NOrder=SR.LowerCase().Pos("order")-1;
+Report1->Flt=SR.SubString(0, NOrder);
+Report1->FltName=LFiltr->Caption;
 
 
  Zast->MClient->Act.ParamComm.clear();

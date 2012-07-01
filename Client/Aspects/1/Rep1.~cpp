@@ -23,20 +23,51 @@ void __fastcall TReport1::FormShow(TObject *Sender)
 {
 Podr->Active=false;
 Podr->Connection=Report1->RepBase;
-Podr->CommandText="Select * from TempПодразделения";
+Podr->CommandText="Select * from TempПодразделения Order by [Название подразделения]";
 Podr->Active=true;
 
+MP<TADODataSet>Temp(this);
+Temp->Connection=Report1->RepBase;
 
 
  Report1->CPodrazdel->Clear();
 Report1->CPodrazdel->Items->Add("Все подразделения");
 for(Report1->Podr->First();!Report1->Podr->Eof;Report1->Podr->Next())
 {
- Report1->CPodrazdel->Items->Add(Report1->Podr->FieldByName("Название подразделения")->Value);
+Temp->Active=false;
+if(Flt!="")
+{
+Temp->CommandText="SELECT TempAspects.*, Logins.ServerNum, Подразделения.ServerNum FROM (Logins INNER JOIN (Подразделения INNER JOIN ObslOtdel ON Подразделения.[Номер подразделения] = ObslOtdel.NumObslOtdel) ON Logins.Num = ObslOtdel.Login) INNER JOIN TempAspects ON Подразделения.ServerNum = TempAspects.Подразделение Where Подразделение="+IntToStr(Report1->Podr->FieldByName("ServerNum")->AsInteger)+" AND "+Flt+" Order By [Номер аспекта]";
+}
+else
+{
+Temp->CommandText="SELECT TempAspects.*, Logins.ServerNum, Подразделения.ServerNum FROM (Logins INNER JOIN (Подразделения INNER JOIN ObslOtdel ON Подразделения.[Номер подразделения] = ObslOtdel.NumObslOtdel) ON Logins.Num = ObslOtdel.Login) INNER JOIN TempAspects ON Подразделения.ServerNum = TempAspects.Подразделение Where Подразделение="+IntToStr(Report1->Podr->FieldByName("ServerNum")->AsInteger)+" Order By [Номер аспекта]";
 
 }
+Temp->Active=true;
+Report1->Podr->Edit();
+if(Temp->RecordCount!=0)
+{
+ Report1->CPodrazdel->Items->Add(Report1->Podr->FieldByName("Название подразделения")->Value);
+Report1->Podr->FieldByName("Номер подразделения")->Value=-1;
+}
+else
+{
+Report1->Podr->FieldByName("Номер подразделения")->Value=0;
+}
+Report1->Podr->Post();
+}
  Report1->CPodrazdel->ItemIndex=0;
-
+if(Report1->CPodrazdel->Items->Count==1)
+{
+CPodrazdel->Enabled=false;
+Button1->Enabled=false;
+}
+else
+{
+CPodrazdel->Enabled=true;
+Button1->Enabled=true;
+}
 
 
 Date1->Date=Now();
@@ -45,79 +76,7 @@ Date2->Date=Now();
 //---------------------------------------------------------------------------
 void __fastcall TReport1::Button1Click(TObject *Sender)
 {
- String ServerSQL;
-
-
-
-
-
-//Очищаем TempAspects
-MP<TADOCommand>Comm(this);
-Comm->Connection=RepBase;
-Comm->CommandText="Delete * From TempAspects";
-Comm->Execute();
-
-
-if(Role==4)
-{
- //Демопользователь
- //Берем локальные данные
-
- //Изменить на новый список подразделений!!!
-
-String S="INSERT INTO TempAspects ( [Номер аспекта], Подразделение, Ситуация, [Вид территории], Деятельность, Специальность, Аспект, Воздействие, G, O, R, S, T, L, N, Z, Значимость, [Проявление воздействия], [Тяжесть последствий], Приоритетность, [Выполняющиеся мероприятия], [Предлагаемые мероприятия], [Мониторинг и контроль], [Предлагаемый мониторинг и контроль], Исполнитель, [Дата создания], [Начало действия], [Конец действия], ServerNum ) ";
-S=S+" SELECT TOP 2 Аспекты.[Номер аспекта], Аспекты.Подразделение, Аспекты.Ситуация, Аспекты.[Вид территории], Аспекты.Деятельность, Аспекты.Специальность, Аспекты.Аспект, Аспекты.Воздействие, Аспекты.G, Аспекты.O, Аспекты.R, Аспекты.S, Аспекты.T, Аспекты.L, Аспекты.N, Аспекты.Z, Аспекты.Значимость, Аспекты.[Проявление воздействия], Аспекты.[Тяжесть последствий], Аспекты.Приоритетность, Аспекты.[Выполняющиеся мероприятия], Аспекты.[Предлагаемые мероприятия], Аспекты.[Мониторинг и контроль], Аспекты.[Предлагаемый мониторинг и контроль], Аспекты.Исполнитель, Аспекты.[Дата создания], Аспекты.[Начало действия], Аспекты.[Конец действия], Аспекты.ServerNum ";
-S=S+" FROM Аспекты;";
-Comm->CommandText=S;
-Comm->Execute();
-
-CreateRep();
-
-}
-else
-{
- //Главспец или пользователь
- //запрашиваем данные с сервера
- Zast->MClient->Act.ParamComm.clear();
- Zast->MClient->Act.ParamComm.push_back("ContReport");
-// String ServerSQL="SELECT Аспекты.[Номер аспекта], Аспекты.Подразделение, Аспекты.Ситуация, Аспекты.[Вид территории], Аспекты.Деятельность, Аспекты.Специальность, Аспекты.Аспект, Аспекты.Воздействие, Аспекты.G, Аспекты.O, Аспекты.R, Аспекты.S, Аспекты.T, Аспекты.L, Аспекты.N, Аспекты.Z, Аспекты.Значимость, Аспекты.[Проявление воздействия], Аспекты.[Тяжесть последствий], Аспекты.Приоритетность,  Аспекты.[Выполняющиеся мероприятия],  Аспекты.[предлагаемые мероприятия],  Аспекты.[Мониторинг и контроль], Аспекты.[Предлагаемый мониторинг и контроль], Аспекты.[Дата создания], Аспекты.[Начало действия], Аспекты.[Конец действия] FROM Аспекты Where Подразделение="+IntToStr(NumPodr)+" ;";
- String ClientSQL="SELECT TempAspects.[Номер аспекта], TempAspects.Подразделение, TempAspects.Ситуация, TempAspects.[Вид территории], TempAspects.Деятельность, TempAspects.Специальность, TempAspects.Аспект, TempAspects.Воздействие, TempAspects.G, TempAspects.O, TempAspects.R, TempAspects.S, TempAspects.T, TempAspects.L, TempAspects.N, TempAspects.Z, TempAspects.Значимость, TempAspects.[Проявление воздействия], TempAspects.[Тяжесть последствий], TempAspects.Приоритетность, TempAspects.[Выполняющиеся мероприятия],  TempAspects.[предлагаемые мероприятия],  TempAspects.[Мониторинг и контроль], TempAspects.[Предлагаемый мониторинг и контроль],  TempAspects.[Дата создания], TempAspects.[Начало действия], TempAspects.[Конец действия] FROM TempAspects;";
-if(Role==2)
-{
-if(CPodrazdel->ItemIndex==0)
-{
-ServerSQL="SELECT Аспекты.[Номер аспекта], Аспекты.Подразделение, Аспекты.Ситуация, Аспекты.[Вид территории], Аспекты.Деятельность, Аспекты.Специальность, Аспекты.Аспект, Аспекты.Воздействие, Аспекты.G, Аспекты.O, Аспекты.R, Аспекты.S, Аспекты.T, Аспекты.L, Аспекты.N, Аспекты.Z, Аспекты.Значимость, Аспекты.[Проявление воздействия], Аспекты.[Тяжесть последствий], Аспекты.Приоритетность,  Аспекты.[Выполняющиеся мероприятия],  Аспекты.[предлагаемые мероприятия],  Аспекты.[Мониторинг и контроль], Аспекты.[Предлагаемый мониторинг и контроль], Аспекты.[Дата создания], Аспекты.[Начало действия], Аспекты.[Конец действия] FROM Аспекты ;";
-
-}
-else
-{
-Podr->First();
-Podr->MoveBy(CPodrazdel->ItemIndex-1);
-int NumPodr=Podr->FieldByName("ServerNum")->Value;
-ServerSQL="SELECT Аспекты.[Номер аспекта], Аспекты.Подразделение, Аспекты.Ситуация, Аспекты.[Вид территории], Аспекты.Деятельность, Аспекты.Специальность, Аспекты.Аспект, Аспекты.Воздействие, Аспекты.G, Аспекты.O, Аспекты.R, Аспекты.S, Аспекты.T, Аспекты.L, Аспекты.N, Аспекты.Z, Аспекты.Значимость, Аспекты.[Проявление воздействия], Аспекты.[Тяжесть последствий], Аспекты.Приоритетность,  Аспекты.[Выполняющиеся мероприятия],  Аспекты.[предлагаемые мероприятия],  Аспекты.[Мониторинг и контроль], Аспекты.[Предлагаемый мониторинг и контроль], Аспекты.[Дата создания], Аспекты.[Начало действия], Аспекты.[Конец действия] FROM Аспекты Where Подразделение="+IntToStr(NumPodr)+" ;";
-
-}
-Zast->MClient->ReadTable("Аспекты",ServerSQL, "Аспекты", ClientSQL);
-}
-else
-{
-
-if(CPodrazdel->ItemIndex==0)
-{
-ServerSQL="SELECT Аспекты.[Номер аспекта], Аспекты.Подразделение, Аспекты.Ситуация, Аспекты.[Вид территории], Аспекты.Деятельность, Аспекты.Специальность, Аспекты.Аспект, Аспекты.Воздействие, Аспекты.G, Аспекты.O, Аспекты.R, Аспекты.S, Аспекты.T, Аспекты.L, Аспекты.N, Аспекты.Z, Аспекты.Значимость, Аспекты.[Проявление воздействия], Аспекты.[Тяжесть последствий], Аспекты.Приоритетность, Аспекты.[Выполняющиеся мероприятия], Аспекты.[Предлагаемые мероприятия], Аспекты.[Мониторинг и контроль], Аспекты.[Предлагаемый мониторинг и контроль], Аспекты.[Дата создания], Аспекты.[Начало действия], Аспекты.[Конец действия] FROM (Подразделения INNER JOIN ObslOtdel ON Подразделения.[Номер подразделения] = ObslOtdel.NumObslOtdel) INNER JOIN Аспекты ON Подразделения.[Номер подразделения] = Аспекты.Подразделение WHERE (((ObslOtdel.Login)="+IntToStr(NumLogin)+"));";
-}
-else
-{
-Podr->First();
-Podr->MoveBy(CPodrazdel->ItemIndex-1);
-int NumPodr=Podr->FieldByName("ServerNum")->Value;
-ServerSQL="SELECT Аспекты.[Номер аспекта], Аспекты.Подразделение, Аспекты.Ситуация, Аспекты.[Вид территории], Аспекты.Деятельность, Аспекты.Специальность, Аспекты.Аспект, Аспекты.Воздействие, Аспекты.G, Аспекты.O, Аспекты.R, Аспекты.S, Аспекты.T, Аспекты.L, Аспекты.N, Аспекты.Z, Аспекты.Значимость, Аспекты.[Проявление воздействия], Аспекты.[Тяжесть последствий], Аспекты.Приоритетность,  Аспекты.[Выполняющиеся мероприятия],  Аспекты.[предлагаемые мероприятия],  Аспекты.[Мониторинг и контроль], Аспекты.[Предлагаемый мониторинг и контроль], Аспекты.[Дата создания], Аспекты.[Начало действия], Аспекты.[Конец действия] FROM Аспекты Where Подразделение="+IntToStr(NumPodr)+" ;";
-
-}
-
-Zast->MClient->ReadTable("Аспекты",ServerSQL, "Аспекты_П", ClientSQL);
-}
-}
+ Report1->CreateRep();
 }
 //---------------------------------------------------------------------------
 void __fastcall TReport1::CPodrazdelKeyPress(TObject *Sender, char &Key)
@@ -157,12 +116,17 @@ else
 //---------------------------------------------------------------------------
 void TReport1::CreateRep()
 {
+MP<TADODataSet>Temp(this);
+Temp->Connection=Report1->RepBase;
+Temp->CommandText="Select * from TempПодразделения Where [Номер подразделения]=0 Order by [Название подразделения]";
+Temp->Active=true;
+
 int NumPodr=0;
 if(CPodrazdel->ItemIndex!=0)
 {
-Podr->First();
-Podr->MoveBy(CPodrazdel->ItemIndex-1);
-NumPodr=Podr->FieldByName("ServerNum")->Value;
+Temp->First();
+Temp->MoveBy(CPodrazdel->ItemIndex-1);
+NumPodr=Temp->FieldByName("ServerNum")->Value;
 }
 
 
@@ -172,7 +136,7 @@ if(NumRep==1)
 Reports *R=new Reports();
 R->Connect=RepBase;
 R->Role=Role;
-R->CreateReport1(NumPodr, Date1->Date, Date2->Date, Edit1->Text, Flt, FltName);
+R->CreateReport1(NumPodr, Date1->Date, Date2->Date, Edit1->Text, Flt, FltName, CheckBox1->Checked);
 delete R;
 }
 else
@@ -180,7 +144,7 @@ else
 Reports *R=new Reports();
 R->Connect=RepBase;
 R->Role=Role;
-R->CreateReport2(NumPodr, Date1->Date, Date2->Date, Edit1->Text, Flt, FltName);
+R->CreateReport2(NumPodr, Date1->Date, Date2->Date, Edit1->Text, Flt, FltName, CheckBox1->Checked);
 delete R;
 }
 }

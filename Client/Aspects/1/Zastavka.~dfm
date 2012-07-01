@@ -10175,7 +10175,6 @@ object Zast: TZast
     end
     object ContReport: TAction
       Caption = 'ContReport'
-      OnExecute = ContReportExecute
     end
     object ContSvodReport: TAction
       Caption = 'ContSvodReport'
@@ -10304,6 +10303,10 @@ object Zast: TZast
     object CloseMAsp: TAction
       Caption = 'CloseMAsp'
       OnExecute = CloseMAspExecute
+    end
+    object ContStartReports2: TAction
+      Caption = 'ContStartReports2'
+      OnExecute = ContStartReports2Execute
     end
   end
   object BlockServer: TTimer
