@@ -78,7 +78,7 @@ G="select * from TempAspects Where Подразделение="+IntToStr(NumPodrazd)+" Order 
 }
 else
 {
-G="SELECT TempAspects.*, Logins.ServerNum, Подразделения.ServerNum FROM (Logins INNER JOIN (Подразделения INNER JOIN ObslOtdel ON Подразделения.[Номер подразделения] = ObslOtdel.NumObslOtdel) ON Logins.Num = ObslOtdel.Login) INNER JOIN TempAspects ON Подразделения.[Номер подразделения] = TempAspects.Подразделение  Where Подразделение="+IntToStr(NumPodrazd)+" AND "+Filtr1+" Order By [Номер аспекта]";
+G="SELECT TempAspects.*, Logins.ServerNum, Подразделения.ServerNum FROM (Logins INNER JOIN (Подразделения INNER JOIN ObslOtdel ON Подразделения.[Номер подразделения] = ObslOtdel.NumObslOtdel) ON Logins.Num = ObslOtdel.Login) INNER JOIN TempAspects ON Подразделения.ServerNum = TempAspects.Подразделение Where Подразделение="+IntToStr(NumPodrazd)+" AND "+Filtr1+" Order By [Номер аспекта]";
 }
 
 Report->CommandText=G;

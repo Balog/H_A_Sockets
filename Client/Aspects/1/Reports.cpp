@@ -917,6 +917,170 @@ App=NULL;
 Book=NULL;
 Sheet=NULL;
 */
+AnsiString G;
+if (Filtr2=="")
+{
+G="select * from TempAspects  Order By [Номер аспекта]";
+}
+else
+{
+G="select * from TempAspects Where "+Filtr2+" Order By [Номер аспекта]";
+}
+MP<TADODataSet>Report(Zast);
+Report->Connection=Connect;
+
+MP<TADODataSet>TempAspects(Zast);
+TempAspects->Connection=Connect;
+
+Report->Active=false;
+
+Report->CommandText=G;
+Report->Active=true;
+
+AnsiString T="Ф-001.2 ";
+TempAspects->Active=false;
+
+
+AnsiString NP="Все подразделения";
+if(Podr!=0)
+{
+TempAspects->CommandText="Select * From Подразделения Where [ServerNum]="+IntToStr(Podr);
+TempAspects->Active=true;
+NP=TempAspects->FieldByName("Название подразделения")->Value;
+}
+
+
+T=T+" Перечень "+IntToStr(Podr);
+
+AnsiString P1=WideString(ExtractFilePath(Application->ExeName)+"\Templates\\Ф-001_2.xlt");
+AnsiString P2=WideString(ExtractFilePath(Application->ExeName)+"\Templates\\"+T+".xlt");
+CopyFile(P1.c_str() ,P2.c_str() , false);
+
+Variant App =Variant::CreateObject("Excel.Application");
+App.OlePropertySet("Visible",false);
+Variant Book=App.OlePropertyGet("Workbooks").OleFunction("Add", P2.c_str());
+Variant Sheet=App.OlePropertyGet("ActiveSheet");
+Sheet.OlePropertySet("Name","Ф-001.2");
+App.OlePropertySet("Visible",false);
+
+DeleteFile(P2);
+
+int Start=16;
+AnsiString Text;
+int Num;
+T="Реестр значимых экологических аспектов с "+Date1.DateString()+" по "+Date2.DateString();
+App.OlePropertyGet("Cells",9,1).OlePropertySet("Value",T.c_str());
+
+T=" "+NP;
+App.OlePropertyGet("Cells",10,1).OlePropertySet("Value",T.c_str());
+
+T="Фильтр - "+LFiltr;
+App.OlePropertyGet("Cells",12,1).OlePropertySet("Value",T.c_str());
+
+Report->First();
+int Number=0;
+for(int i=0;i<Report->RecordCount;i++)
+{
+Number=i;
+App.OlePropertyGet("Cells",Start+i,1).OlePropertySet("Value",i+1);
+
+Num=Report->FieldByName("Деятельность")->Value;
+TempAspects->Active=false;
+TempAspects->CommandText="Select * From Деятельность Where [Номер деятельности]="+IntToStr(Num);
+TempAspects->Active=true;
+Text=TempAspects->FieldByName("Наименование деятельности")->Value;
+App.OlePropertyGet("Cells",Start+i,2).OlePropertySet("Value",Text.c_str());
+
+Num=Report->FieldByName("Аспект")->Value;
+TempAspects->Active=false;
+TempAspects->CommandText="Select * From Аспект Where [Номер аспекта]="+IntToStr(Num);
+TempAspects->Active=true;
+Text=TempAspects->FieldByName("Наименование аспекта")->Value;
+App.OlePropertyGet("Cells",Start+i,3).OlePropertySet("Value",Text.c_str());
+
+Num=Report->FieldByName("Воздействие")->Value;
+TempAspects->Active=false;
+TempAspects->CommandText="Select * From Воздействия Where [Номер воздействия]="+IntToStr(Num);
+TempAspects->Active=true;
+Text=TempAspects->FieldByName("Наименование воздействия")->Value;
+App.OlePropertyGet("Cells",Start+i,4).OlePropertySet("Value",Text.c_str());
+
+Num=Report->FieldByName("Ситуация")->Value;
+TempAspects->Active=false;
+TempAspects->CommandText="Select * From Ситуации Where [Номер ситуации]="+IntToStr(Num);
+TempAspects->Active=true;
+Text=TempAspects->FieldByName("Название ситуации")->Value;
+App.OlePropertyGet("Cells",Start+i,5).OlePropertySet("Value",Text.c_str());
+
+int Z=Report->FieldByName("Z")->Value;
+App.OlePropertyGet("Cells",Start+i,6).OlePropertySet("Value",Z);
+
+AnsiString ZT=ClearString(Report->FieldByName("Мониторинг и контроль")->AsString);
+App.OlePropertyGet("Cells",Start+i,7).OlePropertySet("Value",ZT.c_str());
+
+ZT=ClearString(Report->FieldByName("Предлагаемый мониторинг и контроль")->AsString);
+
+App.OlePropertyGet("Cells",Start+i,8).OlePropertySet("Value",ZT.c_str());
+
+ZT=ClearString(Report->FieldByName("Предлагаемые мероприятия")->AsString);
+
+App.OlePropertyGet("Cells",Start+i,9).OlePropertySet("Value",ZT.c_str());
+
+Report->Next();
+}
+App.OlePropertyGet("Range",(Address(Sheet,1,Start)+":"+Address(Sheet,9,Start+Number)).c_str()).OlePropertySet("VerticalAlignment",-4160);
+App.OlePropertyGet("Range",(Address(Sheet,1,Start)+":"+Address(Sheet,9,Start+Number)).c_str()).OlePropertySet("WrapText",true);
+App.OlePropertyGet("Range",(Address(Sheet,1,Start)+":"+Address(Sheet,9,Start+Number)).c_str()).OlePropertyGet("Borders",7).OlePropertySet("Weight",4);
+App.OlePropertyGet("Range",(Address(Sheet,1,Start)+":"+Address(Sheet,9,Start+Number)).c_str()).OlePropertyGet("Borders",8).OlePropertySet("Weight",4);
+App.OlePropertyGet("Range",(Address(Sheet,1,Start)+":"+Address(Sheet,9,Start+Number)).c_str()).OlePropertyGet("Borders",9).OlePropertySet("Weight",4);
+App.OlePropertyGet("Range",(Address(Sheet,1,Start)+":"+Address(Sheet,9,Start+Number)).c_str()).OlePropertyGet("Borders",10).OlePropertySet("Weight",4);
+App.OlePropertyGet("Range",(Address(Sheet,1,Start)+":"+Address(Sheet,9,Start+Number)).c_str()).OlePropertyGet("Borders",11).OlePropertySet("Weight",4);
+if (Number>=1)
+{
+App.OlePropertyGet("Range",(Address(Sheet,1,Start)+":"+Address(Sheet,9,Start+Number)).c_str()).OlePropertyGet("Borders",12).OlePropertySet("Weight",4);
+}
+
+App.OlePropertyGet("Cells",Start+Number+3,2).OlePropertySet("Value","Согласовано:");
+App.OlePropertyGet("Range",(Address(Sheet,2,Start+Number+5)).c_str()).OlePropertyGet("Borders",9).OlePropertySet("Weight",2);
+App.OlePropertyGet("Cells",Start+Number+6,2).OlePropertySet("Value","(должность)");
+App.OlePropertyGet("Cells",Start+Number+6,2).OlePropertyGet("Font").OlePropertySet("Size",8);
+App.OlePropertyGet("Range",(Address(Sheet,2,Start+Number+6)).c_str()).OlePropertySet("HorizontalAlignment",-4108);
+
+App.OlePropertyGet("Range",(Address(Sheet,2,Start+Number+8)).c_str()).OlePropertyGet("Borders",9).OlePropertySet("Weight",2);
+App.OlePropertyGet("Cells",Start+Number+9,2).OlePropertySet("Value","(должность)");
+App.OlePropertyGet("Cells",Start+Number+9,2).OlePropertyGet("Font").OlePropertySet("Size",8);
+App.OlePropertyGet("Range",(Address(Sheet,2,Start+Number+9)).c_str()).OlePropertySet("HorizontalAlignment",-4108);
+
+App.OlePropertyGet("Range",(Address(Sheet,4,Start+Number+5)).c_str()).OlePropertyGet("Borders",9).OlePropertySet("Weight",2);
+App.OlePropertyGet("Cells",Start+Number+6,4).OlePropertySet("Value","(подпись)");
+App.OlePropertyGet("Cells",Start+Number+6,4).OlePropertyGet("Font").OlePropertySet("Size",8);
+App.OlePropertyGet("Range",(Address(Sheet,4,Start+Number+6)).c_str()).OlePropertySet("HorizontalAlignment",-4108);
+
+App.OlePropertyGet("Range",(Address(Sheet,4,Start+Number+8)).c_str()).OlePropertyGet("Borders",9).OlePropertySet("Weight",2);
+App.OlePropertyGet("Cells",Start+Number+9,4).OlePropertySet("Value","(подпись)");
+App.OlePropertyGet("Cells",Start+Number+9,4).OlePropertyGet("Font").OlePropertySet("Size",8);
+App.OlePropertyGet("Range",(Address(Sheet,4,Start+Number+9)).c_str()).OlePropertySet("HorizontalAlignment",-4108);
+
+App.OlePropertyGet("Range",(Address(Sheet,6,Start+Number+5)+":"+Address(Sheet,7,Start+Number+5)).c_str()).OlePropertySet("MergeCells",true);
+App.OlePropertyGet("Range",(Address(Sheet,6,Start+Number+5)+":"+Address(Sheet,7,Start+Number+5)).c_str()).OlePropertyGet("Borders",9).OlePropertySet("Weight",2);
+App.OlePropertyGet("Range",(Address(Sheet,6,Start+Number+6)+":"+Address(Sheet,7,Start+Number+6)).c_str()).OlePropertySet("MergeCells",true);
+App.OlePropertyGet("Cells",Start+Number+6,6).OlePropertySet("Value","(Ф.И.О.)");
+App.OlePropertyGet("Cells",Start+Number+6,6).OlePropertyGet("Font").OlePropertySet("Size",8);
+App.OlePropertyGet("Range",(Address(Sheet,6,Start+Number+6)).c_str()).OlePropertySet("HorizontalAlignment",-4108);
+
+App.OlePropertyGet("Range",(Address(Sheet,6,Start+Number+8)+":"+Address(Sheet,7,Start+Number+8)).c_str()).OlePropertySet("MergeCells",true);
+App.OlePropertyGet("Range",(Address(Sheet,6,Start+Number+8)+":"+Address(Sheet,7,Start+Number+8)).c_str()).OlePropertyGet("Borders",9).OlePropertySet("Weight",2);
+App.OlePropertyGet("Range",(Address(Sheet,6,Start+Number+9)+":"+Address(Sheet,7,Start+Number+9)).c_str()).OlePropertySet("MergeCells",true);
+App.OlePropertyGet("Cells",Start+Number+9,6).OlePropertySet("Value","(Ф.И.О.)");
+App.OlePropertyGet("Cells",Start+Number+9,6).OlePropertyGet("Font").OlePropertySet("Size",8);
+App.OlePropertyGet("Range",(Address(Sheet,6,Start+Number+9)).c_str()).OlePropertySet("HorizontalAlignment",-4108);
+
+
+App.OlePropertySet("Visible",true);
+
+App=NULL;
+Book=NULL;
+Sheet=NULL;
 }
 
 //------------------------------------------------------------------------------------------------------------------
