@@ -1678,6 +1678,8 @@ if(this->Role<4)
 }
 else
 {
+Report1->Podr->Active=false;
+
 MP<TADOCommand>Comm(this);
 Comm->Connection=Zast->ADOUsrAspect;
 Comm->CommandText="Delete * From TempПодразделения";

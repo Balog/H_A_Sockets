@@ -42,11 +42,12 @@ Temp->CommandText="SELECT TempAspects.*, Logins.ServerNum, Подразделения.ServerN
 else
 {
 Temp->CommandText="SELECT TempAspects.*, Logins.ServerNum, Подразделения.ServerNum FROM (Logins INNER JOIN (Подразделения INNER JOIN ObslOtdel ON Подразделения.[Номер подразделения] = ObslOtdel.NumObslOtdel) ON Logins.Num = ObslOtdel.Login) INNER JOIN TempAspects ON Подразделения.ServerNum = TempAspects.Подразделение Where Подразделение="+IntToStr(Report1->Podr->FieldByName("ServerNum")->AsInteger)+" Order By [Номер аспекта]";
-
 }
+
+
 Temp->Active=true;
 Report1->Podr->Edit();
-if(Temp->RecordCount!=0)
+if(Temp->RecordCount!=0 | this->Role==4)
 {
  Report1->CPodrazdel->Items->Add(Report1->Podr->FieldByName("Название подразделения")->Value);
 Report1->Podr->FieldByName("Номер подразделения")->Value=0;
