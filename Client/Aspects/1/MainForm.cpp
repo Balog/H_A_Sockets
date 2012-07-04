@@ -1668,13 +1668,27 @@ int NOrder=SR.LowerCase().Pos("order")-1;
 Report1->Flt=SR.SubString(0, NOrder);
 Report1->FltName=LFiltr->Caption;
 
-
+if(this->Role<4)
+{
  Zast->MClient->Act.ParamComm.clear();
  Zast->MClient->Act.ParamComm.push_back("ContStartReports");
  String ServerSQL="SELECT Подразделения.[Номер подразделения], Подразделения.[Название подразделения] FROM (Подразделения INNER JOIN ObslOtdel ON Подразделения.[Номер подразделения] = ObslOtdel.NumObslOtdel) INNER JOIN Аспекты ON Подразделения.[Номер подразделения] = Аспекты.Подразделение GROUP BY ObslOtdel.Login, Подразделения.[Номер подразделения], Подразделения.[Название подразделения] HAVING (((ObslOtdel.Login)="+IntToStr(NumLogin)+")) ORDER BY Подразделения.[Название подразделения];";
  String ClientSQL="Select [ServerNum], [Название подразделения] From TempПодразделения";
  Zast->MClient->ReadTable("Аспекты",ServerSQL, "Аспекты_П", ClientSQL);
+}
+else
+{
+Report1->Podr->Active=false;
 
+MP<TADOCommand>Comm(this);
+Comm->Connection=Zast->ADOUsrAspect;
+Comm->CommandText="Delete * From TempПодразделения";
+Comm->Execute();
+
+Comm->CommandText="INSERT INTO TempПодразделения ( [Номер подразделения], [Название подразделения], ServerNum ) SELECT Подразделения.[Номер подразделения], Подразделения.[Название подразделения], Подразделения.ServerNum FROM Logins INNER JOIN (Подразделения INNER JOIN ObslOtdel ON Подразделения.[Номер подразделения] = ObslOtdel.NumObslOtdel) ON Logins.Num = ObslOtdel.Login WHERE (((Logins.Role)=4));";
+Comm->Execute();
+Zast->ContStartReports->Execute();
+}
 }
 //---------------------------------------------------------------------------
 
