@@ -62,14 +62,30 @@ Podrazd->CommandText="Select * from TempПодразделения Order by [Название подразд
 }
 else
 {
+if(this->Role==4)
+{
+Podrazd->CommandText="Select * from TempПодразделения Where [Номер подразделения]="+IntToStr(Podr)+"  Order by [Название подразделения]  DESC";
+
+}
+else
+{
 Podrazd->CommandText="Select * from TempПодразделения Where ServerNum="+IntToStr(Podr)+"  Order by [Название подразделения]  DESC";
+}
 }
 Podrazd->Active=true;
 int ListCount=1;
 int ListCount1=Podrazd->RecordCount;
 for(Podrazd->First();!Podrazd->Eof;Podrazd->Next())
 {
-int NumPodrazd=Podrazd->FieldByName("ServerNum")->AsInteger;
+int NumPodrazd;
+if(this->Role<4)
+{
+NumPodrazd=Podrazd->FieldByName("ServerNum")->AsInteger;
+}
+else
+{
+NumPodrazd=Podrazd->FieldByName("Номер подразделения")->AsInteger;
+}
 
 Report->Active=false;
 if (Filtr1=="")

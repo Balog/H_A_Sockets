@@ -35,6 +35,8 @@ Report1->CPodrazdel->Items->Add("Все подразделения");
 for(Report1->Podr->First();!Report1->Podr->Eof;Report1->Podr->Next())
 {
 Temp->Active=false;
+if(Role!=4)
+{
 if(Flt!="")
 {
 Temp->CommandText="SELECT TempAspects.*, Logins.ServerNum, Подразделения.ServerNum FROM (Logins INNER JOIN (Подразделения INNER JOIN ObslOtdel ON Подразделения.[Номер подразделения] = ObslOtdel.NumObslOtdel) ON Logins.Num = ObslOtdel.Login) INNER JOIN TempAspects ON Подразделения.ServerNum = TempAspects.Подразделение Where Подразделение="+IntToStr(Report1->Podr->FieldByName("ServerNum")->AsInteger)+" AND "+Flt+" Order By [Номер аспекта]";
@@ -43,10 +45,23 @@ else
 {
 Temp->CommandText="SELECT TempAspects.*, Logins.ServerNum, Подразделения.ServerNum FROM (Logins INNER JOIN (Подразделения INNER JOIN ObslOtdel ON Подразделения.[Номер подразделения] = ObslOtdel.NumObslOtdel) ON Logins.Num = ObslOtdel.Login) INNER JOIN TempAspects ON Подразделения.ServerNum = TempAspects.Подразделение Where Подразделение="+IntToStr(Report1->Podr->FieldByName("ServerNum")->AsInteger)+" Order By [Номер аспекта]";
 }
+}
+else
+{
+if(Flt!="")
+{
+Temp->CommandText="SELECT TempAspects.*, Logins.ServerNum, Подразделения.[Номер подразделения] FROM (Logins INNER JOIN (Подразделения INNER JOIN ObslOtdel ON Подразделения.[Номер подразделения] = ObslOtdel.NumObslOtdel) ON Logins.Num = ObslOtdel.Login) INNER JOIN TempAspects ON Подразделения.[Номер подразделения] = TempAspects.Подразделение Where Подразделение="+IntToStr(Report1->Podr->FieldByName("Номер подразделения")->AsInteger)+" AND "+Flt+" Order By [Номер аспекта]";
+}
+else
+{
+Temp->CommandText="SELECT TempAspects.*, Logins.ServerNum, Подразделения.[Номер подразделения] FROM (Logins INNER JOIN (Подразделения INNER JOIN ObslOtdel ON Подразделения.[Номер подразделения] = ObslOtdel.NumObslOtdel) ON Logins.Num = ObslOtdel.Login) INNER JOIN TempAspects ON Подразделения.[Номер подразделения] = TempAspects.Подразделение Where Подразделение="+IntToStr(Report1->Podr->FieldByName("Номер подразделения")->AsInteger)+" Order By [Номер аспекта]";
+}
+}
+
 
 Temp->Active=true;
 Report1->Podr->Edit();
-if(Temp->RecordCount!=0 | this->Role==4)
+if(Temp->RecordCount!=0)
 {
  Report1->CPodrazdel->Items->Add(Report1->Podr->FieldByName("Название подразделения")->Value);
 Report1->Podr->FieldByName("Номер подразделения")->Value=0;
