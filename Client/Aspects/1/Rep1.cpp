@@ -133,7 +133,7 @@ void TReport1::CreateRep()
 {
 MP<TADODataSet>Temp(this);
 Temp->Connection=Report1->RepBase;
-Temp->CommandText="Select * from TempПодразделения Where [Номер подразделения]=0 Order by [Название подразделения]";
+Temp->CommandText="Select * from TempПодразделения Where [Ver]=true Order by [Название подразделения]";
 Temp->Active=true;
 
 int NumPodr=0;
@@ -141,7 +141,14 @@ if(CPodrazdel->ItemIndex!=0)
 {
 Temp->First();
 Temp->MoveBy(CPodrazdel->ItemIndex-1);
+if(Role!=4)
+{
 NumPodr=Temp->FieldByName("ServerNum")->Value;
+}
+else
+{
+NumPodr=Temp->FieldByName("Номер подразделения")->Value;
+}
 }
 
 

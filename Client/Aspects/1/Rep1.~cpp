@@ -64,11 +64,11 @@ Report1->Podr->Edit();
 if(Temp->RecordCount!=0)
 {
  Report1->CPodrazdel->Items->Add(Report1->Podr->FieldByName("Название подразделения")->Value);
-Report1->Podr->FieldByName("Номер подразделения")->Value=0;
+Report1->Podr->FieldByName("Ver")->Value=true;
 }
 else
 {
-Report1->Podr->FieldByName("Номер подразделения")->Value=-1;
+Report1->Podr->FieldByName("Ver")->Value=false;
 }
 Report1->Podr->Post();
 }
@@ -141,7 +141,14 @@ if(CPodrazdel->ItemIndex!=0)
 {
 Temp->First();
 Temp->MoveBy(CPodrazdel->ItemIndex-1);
+if(Role!=4)
+{
 NumPodr=Temp->FieldByName("ServerNum")->Value;
+}
+else
+{
+NumPodr=Temp->FieldByName("Номер подразделения")->Value;
+}
 }
 
 
