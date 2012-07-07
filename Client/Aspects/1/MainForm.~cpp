@@ -1688,7 +1688,7 @@ Comm->Execute();
 /*
 Comm->CommandText="INSERT INTO TempПодразделения ( [Номер подразделения], [Название подразделения], ServerNum ) SELECT Подразделения.[Номер подразделения], Подразделения.[Название подразделения], Подразделения.ServerNum FROM Logins INNER JOIN (Подразделения INNER JOIN ObslOtdel ON Подразделения.[Номер подразделения] = ObslOtdel.NumObslOtdel) ON Logins.Num = ObslOtdel.Login WHERE (((Logins.Role)=4));";
 */
-Comm->CommandText="INSERT INTO TempПодразделения ( [Номер подразделения], [Название подразделения], ServerNum ) SELECT TOP 2 Подразделения.[Номер подразделения], Подразделения.[Название подразделения], Подразделения.ServerNum FROM Logins INNER JOIN ((Подразделения INNER JOIN Аспекты ON Подразделения.[Номер подразделения] = Аспекты.Подразделение) INNER JOIN ObslOtdel ON Подразделения.[Номер подразделения] = ObslOtdel.NumObslOtdel) ON Logins.Num = ObslOtdel.Login GROUP BY Logins.Role, Подразделения.[Номер подразделения], Подразделения.[Название подразделения], Подразделения.ServerNum, Аспекты.Подразделение HAVING (((Logins.Role)=4));";
+Comm->CommandText="INSERT INTO TempПодразделения ( [Номер подразделения], [Название подразделения], ServerNum ) SELECT Подразделения.[Номер подразделения], Подразделения.[Название подразделения], Подразделения.ServerNum FROM Logins INNER JOIN ((Подразделения INNER JOIN Аспекты ON Подразделения.[Номер подразделения] = Аспекты.Подразделение) INNER JOIN ObslOtdel ON Подразделения.[Номер подразделения] = ObslOtdel.NumObslOtdel) ON Logins.Num = ObslOtdel.Login GROUP BY Logins.Role, Подразделения.[Номер подразделения], Подразделения.[Название подразделения], Подразделения.ServerNum, Аспекты.Подразделение HAVING (((Logins.Role)=4));";
 Comm->Execute();
 Zast->ContStartReports->Execute();
 }
