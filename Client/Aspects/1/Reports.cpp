@@ -998,7 +998,7 @@ App.OlePropertyGet("Cells",12,1).OlePropertySet("Value",T.c_str());
 if(OneList & Podr==0)
 {
 
-App.OlePropertyGet("Range",(Address(Sheet,1,Start+i)+":"+Address(Sheet,17,Start+i)).c_str()).OlePropertySet("MergeCells",true);
+App.OlePropertyGet("Range",(Address(Sheet,1,Start+i)+":"+Address(Sheet,9,Start+i)).c_str()).OlePropertySet("MergeCells",true);
 App.OlePropertyGet("Cells",Start+i,1).OlePropertySet("Value",Podrazd->FieldByName("Название подразделения")->AsString.c_str());
 App.OlePropertyGet("Range",(Address(Sheet,1,Start+i)).c_str()).OlePropertySet("HorizontalAlignment",-4108);
 i++;
@@ -1142,16 +1142,16 @@ ListCount1--;
 ListCount++;
 
 
-App.OlePropertyGet("Range",(Address(Sheet,1,Start)+":"+Address(Sheet,9,Start+Number-1)).c_str()).OlePropertySet("VerticalAlignment",-4160);
-App.OlePropertyGet("Range",(Address(Sheet,1,Start)+":"+Address(Sheet,9,Start+Number-1)).c_str()).OlePropertySet("WrapText",true);
-App.OlePropertyGet("Range",(Address(Sheet,1,Start)+":"+Address(Sheet,9,Start+Number-1)).c_str()).OlePropertyGet("Borders",7).OlePropertySet("Weight",4);
-App.OlePropertyGet("Range",(Address(Sheet,1,Start)+":"+Address(Sheet,9,Start+Number-1)).c_str()).OlePropertyGet("Borders",8).OlePropertySet("Weight",4);
-App.OlePropertyGet("Range",(Address(Sheet,1,Start)+":"+Address(Sheet,9,Start+Number-1)).c_str()).OlePropertyGet("Borders",9).OlePropertySet("Weight",4);
-App.OlePropertyGet("Range",(Address(Sheet,1,Start)+":"+Address(Sheet,9,Start+Number-1)).c_str()).OlePropertyGet("Borders",10).OlePropertySet("Weight",4);
-App.OlePropertyGet("Range",(Address(Sheet,1,Start)+":"+Address(Sheet,9,Start+Number-1)).c_str()).OlePropertyGet("Borders",11).OlePropertySet("Weight",4);
+App.OlePropertyGet("Range",(Address(Sheet,1,Start)+":"+Address(Sheet,9,Start+i-1)).c_str()).OlePropertySet("VerticalAlignment",-4160);
+App.OlePropertyGet("Range",(Address(Sheet,1,Start)+":"+Address(Sheet,9,Start+i-1)).c_str()).OlePropertySet("WrapText",true);
+App.OlePropertyGet("Range",(Address(Sheet,1,Start)+":"+Address(Sheet,9,Start+i-1)).c_str()).OlePropertyGet("Borders",7).OlePropertySet("Weight",4);
+App.OlePropertyGet("Range",(Address(Sheet,1,Start)+":"+Address(Sheet,9,Start+i-1)).c_str()).OlePropertyGet("Borders",8).OlePropertySet("Weight",4);
+App.OlePropertyGet("Range",(Address(Sheet,1,Start)+":"+Address(Sheet,9,Start+i-1)).c_str()).OlePropertyGet("Borders",9).OlePropertySet("Weight",4);
+App.OlePropertyGet("Range",(Address(Sheet,1,Start)+":"+Address(Sheet,9,Start+i-1)).c_str()).OlePropertyGet("Borders",10).OlePropertySet("Weight",4);
+App.OlePropertyGet("Range",(Address(Sheet,1,Start)+":"+Address(Sheet,9,Start+i-1)).c_str()).OlePropertyGet("Borders",11).OlePropertySet("Weight",4);
 if (Number!=1)
 {
-App.OlePropertyGet("Range",(Address(Sheet,1,Start)+":"+Address(Sheet,9,Start+Number-1)).c_str()).OlePropertyGet("Borders",12).OlePropertySet("Weight",4);
+App.OlePropertyGet("Range",(Address(Sheet,1,Start)+":"+Address(Sheet,9,Start+i-1)).c_str()).OlePropertyGet("Borders",12).OlePropertySet("Weight",4);
 }
 
 
@@ -1192,7 +1192,7 @@ App.OlePropertyGet("Cells",Start+Number+9,6).OlePropertySet("Value","(Ф.И.О.)");
 App.OlePropertyGet("Cells",Start+Number+9,6).OlePropertyGet("Font").OlePropertySet("Size",8);
 App.OlePropertyGet("Range",(Address(Sheet,6,Start+Number+9)).c_str()).OlePropertySet("HorizontalAlignment",-4108);
 }
-
+}
 if(!OneList)
 {
 //try
@@ -1241,7 +1241,8 @@ App.OlePropertyGet("Range",(Address(Sheet,6,Start+Number+9)+":"+Address(Sheet,7,
 App.OlePropertyGet("Cells",Start+Number+9,6).OlePropertySet("Value","(Ф.И.О.)");
 App.OlePropertyGet("Cells",Start+Number+9,6).OlePropertyGet("Font").OlePropertySet("Size",8);
 App.OlePropertyGet("Range",(Address(Sheet,6,Start+Number+9)).c_str()).OlePropertySet("HorizontalAlignment",-4108);
-}
+
+
 }
 App.OlePropertySet("Visible",true);
 
