@@ -26,7 +26,7 @@ AnsiString PP2=WideString(ExtractFilePath(Application->ExeName)+"\Templates\\"+T
 
 Variant App =Variant::CreateObject("Excel.Application");
 //Variant App1 =Variant::CreateObject("Excel.Application");
-App.OlePropertySet("Visible",true);
+App.OlePropertySet("Visible",false);
 
 
 Variant Book=App.OlePropertyGet("Workbooks").OleFunction("Add", PP1.c_str());
@@ -847,7 +847,7 @@ AnsiString PP2=WideString(ExtractFilePath(Application->ExeName)+"\Templates\\"+T
 
 Variant App =Variant::CreateObject("Excel.Application");
 //Variant App1 =Variant::CreateObject("Excel.Application");
-App.OlePropertySet("Visible",true);
+App.OlePropertySet("Visible",false);
 
 
 Variant Book=App.OlePropertyGet("Workbooks").OleFunction("Add", PP1.c_str());
@@ -913,22 +913,22 @@ if(Role==4)
 {
 if (Filtr2=="")
 {
-G="select TOP 2 * from TempAspects Where Подразделение="+IntToStr(NumPodrazd)+" Order By [Номер аспекта]";
+G="select TOP 2 * from TempAspects Where Подразделение="+IntToStr(NumPodrazd)+" AND Значимость=true Order By [Номер аспекта]";
 }
 else
 {
-G="SELECT TOP 2 TempAspects.*, Подразделения.ServerNum, Logins.ServerNum, Logins.Role FROM TempAspects INNER JOIN (Logins INNER JOIN (Подразделения INNER JOIN ObslOtdel ON Подразделения.[Номер подразделения] = ObslOtdel.NumObslOtdel) ON Logins.Num = ObslOtdel.Login) ON TempAspects.Подразделение = Подразделения.[Номер подразделения] Where Подразделение="+IntToStr(NumPodrazd)+" AND "+Filtr2+" Order By [Номер аспекта]";
+G="SELECT TOP 2 TempAspects.*, Подразделения.ServerNum, Logins.ServerNum, Logins.Role FROM TempAspects INNER JOIN (Logins INNER JOIN (Подразделения INNER JOIN ObslOtdel ON Подразделения.[Номер подразделения] = ObslOtdel.NumObslOtdel) ON Logins.Num = ObslOtdel.Login) ON TempAspects.Подразделение = Подразделения.[Номер подразделения] Where Подразделение="+IntToStr(NumPodrazd)+" AND "+Filtr2+" AND Значимость=true Order By [Номер аспекта]";
 }
 }
 else
 {
 if (Filtr2=="")
 {
-G="select * from TempAspects Where Подразделение="+IntToStr(NumPodrazd)+" Order By [Номер аспекта]";
+G="select * from TempAspects Where Подразделение="+IntToStr(NumPodrazd)+" AND Значимость=true Order By [Номер аспекта]";
 }
 else
 {
-G="SELECT TempAspects.*, Logins.ServerNum, Подразделения.ServerNum FROM (Logins INNER JOIN (Подразделения INNER JOIN ObslOtdel ON Подразделения.[Номер подразделения] = ObslOtdel.NumObslOtdel) ON Logins.Num = ObslOtdel.Login) INNER JOIN TempAspects ON Подразделения.ServerNum = TempAspects.Подразделение Where Подразделение="+IntToStr(NumPodrazd)+" AND "+Filtr2+" Order By [Номер аспекта]";
+G="SELECT TempAspects.*, Logins.ServerNum, Подразделения.ServerNum FROM (Logins INNER JOIN (Подразделения INNER JOIN ObslOtdel ON Подразделения.[Номер подразделения] = ObslOtdel.NumObslOtdel) ON Logins.Num = ObslOtdel.Login) INNER JOIN TempAspects ON Подразделения.ServerNum = TempAspects.Подразделение Where Подразделение="+IntToStr(NumPodrazd)+" AND "+Filtr2+" AND Значимость=true Order By [Номер аспекта]";
 }
 }
 Report->CommandText=G;

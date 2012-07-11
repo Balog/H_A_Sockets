@@ -913,22 +913,22 @@ if(Role==4)
 {
 if (Filtr2=="")
 {
-G="select TOP 2 * from TempAspects Where Подразделение="+IntToStr(NumPodrazd)+" Order By [Номер аспекта]";
+G="select TOP 2 * from TempAspects Where Подразделение="+IntToStr(NumPodrazd)+" AND Значимость=true Order By [Номер аспекта]";
 }
 else
 {
-G="SELECT TOP 2 TempAspects.*, Подразделения.ServerNum, Logins.ServerNum, Logins.Role FROM TempAspects INNER JOIN (Logins INNER JOIN (Подразделения INNER JOIN ObslOtdel ON Подразделения.[Номер подразделения] = ObslOtdel.NumObslOtdel) ON Logins.Num = ObslOtdel.Login) ON TempAspects.Подразделение = Подразделения.[Номер подразделения] Where Подразделение="+IntToStr(NumPodrazd)+" AND "+Filtr2+" Order By [Номер аспекта]";
+G="SELECT TOP 2 TempAspects.*, Подразделения.ServerNum, Logins.ServerNum, Logins.Role FROM TempAspects INNER JOIN (Logins INNER JOIN (Подразделения INNER JOIN ObslOtdel ON Подразделения.[Номер подразделения] = ObslOtdel.NumObslOtdel) ON Logins.Num = ObslOtdel.Login) ON TempAspects.Подразделение = Подразделения.[Номер подразделения] Where Подразделение="+IntToStr(NumPodrazd)+" AND "+Filtr2+" AND Значимость=true Order By [Номер аспекта]";
 }
 }
 else
 {
 if (Filtr2=="")
 {
-G="select * from TempAspects Where Подразделение="+IntToStr(NumPodrazd)+" Order By [Номер аспекта]";
+G="select * from TempAspects Where Подразделение="+IntToStr(NumPodrazd)+" AND Значимость=true Order By [Номер аспекта]";
 }
 else
 {
-G="SELECT TempAspects.*, Logins.ServerNum, Подразделения.ServerNum FROM (Logins INNER JOIN (Подразделения INNER JOIN ObslOtdel ON Подразделения.[Номер подразделения] = ObslOtdel.NumObslOtdel) ON Logins.Num = ObslOtdel.Login) INNER JOIN TempAspects ON Подразделения.ServerNum = TempAspects.Подразделение Where Подразделение="+IntToStr(NumPodrazd)+" AND "+Filtr2+" Order By [Номер аспекта]";
+G="SELECT TempAspects.*, Logins.ServerNum, Подразделения.ServerNum FROM (Logins INNER JOIN (Подразделения INNER JOIN ObslOtdel ON Подразделения.[Номер подразделения] = ObslOtdel.NumObslOtdel) ON Logins.Num = ObslOtdel.Login) INNER JOIN TempAspects ON Подразделения.ServerNum = TempAspects.Подразделение Where Подразделение="+IntToStr(NumPodrazd)+" AND "+Filtr2+" AND Значимость=true Order By [Номер аспекта]";
 }
 }
 Report->CommandText=G;
@@ -998,7 +998,7 @@ App.OlePropertyGet("Cells",12,1).OlePropertySet("Value",T.c_str());
 if(OneList & Podr==0)
 {
 
-App.OlePropertyGet("Range",(Address(Sheet,1,Start+i)+":"+Address(Sheet,17,Start+i)).c_str()).OlePropertySet("MergeCells",true);
+App.OlePropertyGet("Range",(Address(Sheet,1,Start+i)+":"+Address(Sheet,9,Start+i)).c_str()).OlePropertySet("MergeCells",true);
 App.OlePropertyGet("Cells",Start+i,1).OlePropertySet("Value",Podrazd->FieldByName("Название подразделения")->AsString.c_str());
 App.OlePropertyGet("Range",(Address(Sheet,1,Start+i)).c_str()).OlePropertySet("HorizontalAlignment",-4108);
 i++;
@@ -1192,7 +1192,7 @@ App.OlePropertyGet("Cells",Start+Number+9,6).OlePropertySet("Value","(Ф.И.О.)");
 App.OlePropertyGet("Cells",Start+Number+9,6).OlePropertyGet("Font").OlePropertySet("Size",8);
 App.OlePropertyGet("Range",(Address(Sheet,6,Start+Number+9)).c_str()).OlePropertySet("HorizontalAlignment",-4108);
 }
-
+}
 if(!OneList)
 {
 //try
@@ -1207,7 +1207,6 @@ App.OlePropertySet("DisplayAlerts",true);
 }
 else
 {
-/*
 App.OlePropertyGet("Cells",Start+Number+3,2).OlePropertySet("Value","Согласовано:");
 App.OlePropertyGet("Range",(Address(Sheet,2,Start+Number+5)).c_str()).OlePropertyGet("Borders",9).OlePropertySet("Weight",2);
 App.OlePropertyGet("Cells",Start+Number+6,2).OlePropertySet("Value","(должность)");
@@ -1243,8 +1242,7 @@ App.OlePropertyGet("Cells",Start+Number+9,6).OlePropertySet("Value","(Ф.И.О.)");
 App.OlePropertyGet("Cells",Start+Number+9,6).OlePropertyGet("Font").OlePropertySet("Size",8);
 App.OlePropertyGet("Range",(Address(Sheet,6,Start+Number+9)).c_str()).OlePropertySet("HorizontalAlignment",-4108);
 
-*/
-}
+
 }
 App.OlePropertySet("Visible",true);
 
