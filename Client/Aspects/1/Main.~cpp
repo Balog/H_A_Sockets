@@ -2771,6 +2771,8 @@ catch(...)
 void __fastcall TDocuments::N32Click(TObject *Sender)
 {
 Zast->BlockMK(true);
+try
+{
 ReadWrite.clear();
 Str_RW S;
 S.NameAction="WriteVozd1";
@@ -2779,9 +2781,16 @@ S.Num=5;
 ReadWrite.push_back(S);
 Zast->ReadWriteDoc->Execute();
 }
+catch(...)
+{
+ Zast->BlockMK(false);
+}
+}
 //---------------------------------------------------------------------------
 
 void __fastcall TDocuments::N33Click(TObject *Sender)
+{
+try
 {
 Zast->BlockMK(true);
 ReadWrite.clear();
@@ -2792,9 +2801,16 @@ S.Num=6;
 ReadWrite.push_back(S);
 Zast->ReadWriteDoc->Execute();
 }
+catch(...)
+{
+ Zast->BlockMK(false);
+}
+}
 //---------------------------------------------------------------------------
 
 void __fastcall TDocuments::N34Click(TObject *Sender)
+{
+try
 {
 Zast->BlockMK(true);
 ReadWrite.clear();
@@ -2805,11 +2821,18 @@ S.Num=7;
 ReadWrite.push_back(S);
 Zast->ReadWriteDoc->Execute();
 }
+catch(...)
+{
+ Zast->BlockMK(false);
+}
+}
 //---------------------------------------------------------------------------
 
 void __fastcall TDocuments::N35Click(TObject *Sender)
 {
 Zast->BlockMK(true);
+try
+{
 ReadWrite.clear();
 Str_RW S;
 S.NameAction="WriteDeyat1";
@@ -2818,11 +2841,18 @@ S.Num=8;
 ReadWrite.push_back(S);
 Zast->ReadWriteDoc->Execute();
 }
+catch(...)
+{
+ Zast->BlockMK(false);
+}
+}
 //---------------------------------------------------------------------------
 
 void __fastcall TDocuments::N36Click(TObject *Sender)
 {
 Zast->BlockMK(true);
+try
+{
 ReadWrite.clear();
 Str_RW S;
 S.NameAction="WriteAspect1";
@@ -2831,11 +2861,18 @@ S.Num=9;
 ReadWrite.push_back(S);
 Zast->ReadWriteDoc->Execute();
 }
+catch(...)
+{
+ Zast->BlockMK(false);
+}
+}
 //---------------------------------------------------------------------------
 
 void __fastcall TDocuments::N41Click(TObject *Sender)
 {
 Zast->BlockMK(true);
+try
+{
 Prog->SignComplete=true;
 Prog->Show();
 Prog->PB->Min=0;
@@ -2897,6 +2934,11 @@ S.Num=9;
 ReadWrite.push_back(S);
 
 Zast->ReadWriteDoc->Execute();
+}
+catch(...)
+{
+ Zast->BlockMK(false);
+}
 }
 //---------------------------------------------------------------------------
 

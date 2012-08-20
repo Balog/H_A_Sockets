@@ -184,6 +184,8 @@ void __fastcall TDocuments::N9Click(TObject *Sender)
 {
 //Добавить проверку на отсутствие у родителя удаляемой ветви (узла) потомков
 //и перевода его в категорию ветвей
+if(Application->MessageBoxA("Подтвердите удаление","Удаление",MB_YESNO	+MB_ICONQUESTION+MB_DEFBUTTON1)==IDYES)
+{
 TTreeNode *N;
 
 
@@ -247,7 +249,7 @@ if (Branches->RecordCount==0 & Nodes->RecordCount==0)
 }
 }
 TreeView1->Items->Delete(TreeView1->GetNodeAt(XX,YY));
-
+}
 }
 //---------------------------------------------------------------------------
 void __fastcall TDocuments::WMSysCommand(TMessage & Msg)
@@ -1153,6 +1155,8 @@ TreeView2->Items->AddChildObject(SelNode,"Новое мероприятие",MyNodePtr);
 
 void __fastcall TDocuments::N11Click(TObject *Sender)
 {
+if(Application->MessageBoxA("Подтвердите удаление","Удаление",MB_YESNO	+MB_ICONQUESTION+MB_DEFBUTTON1)==IDYES)
+{
 //Добавить проверку на отсутствие у родителя удаляемой ветви (узла) потомков
 //и перевода его в категорию ветвей
 TTreeNode *N;
@@ -1216,7 +1220,7 @@ if (Branches->RecordCount==0 & Nodes->RecordCount==0)
 }
 }
 TreeView2->Items->Delete(TreeView2->GetNodeAt(XX,YY));
-        
+}        
 }
 //---------------------------------------------------------------------------
 
@@ -1296,6 +1300,8 @@ TreeView3->Items->AddChildObject(SelNode,"Новая территория",MyNodePtr);
 
 void __fastcall TDocuments::N13Click(TObject *Sender)
 {
+if(Application->MessageBoxA("Подтвердите удаление","Удаление",MB_YESNO	+MB_ICONQUESTION+MB_DEFBUTTON1)==IDYES)
+{
 //Добавить проверку на отсутствие у родителя удаляемой ветви (узла) потомков
 //и перевода его в категорию ветвей
 TTreeNode *N;
@@ -1358,7 +1364,7 @@ if (Branches->RecordCount==0 & Nodes->RecordCount==0)
 }
 }
 TreeView3->Items->Delete(TreeView3->GetNodeAt(XX,YY));
-        
+}        
 }
 //---------------------------------------------------------------------------
 
@@ -1441,6 +1447,8 @@ TreeView4->Items->AddChildObject(SelNode,"Новый вид деятельности",MyNodePtr);
 
 void __fastcall TDocuments::N15Click(TObject *Sender)
 {
+if(Application->MessageBoxA("Подтвердите удаление","Удаление",MB_YESNO	+MB_ICONQUESTION+MB_DEFBUTTON1)==IDYES)
+{
 //Добавить проверку на отсутствие у родителя удаляемой ветви (узла) потомков
 //и перевода его в категорию ветвей
 TTreeNode *N;
@@ -1503,7 +1511,7 @@ if (Branches->RecordCount==0 & Nodes->RecordCount==0)
 }
 }
 TreeView4->Items->Delete(TreeView4->GetNodeAt(XX,YY));
-        
+}        
 }
 //---------------------------------------------------------------------------
 
@@ -1585,6 +1593,8 @@ TreeView5->Items->AddChildObject(SelNode,"Новый аспект",MyNodePtr);
 
 void __fastcall TDocuments::N17Click(TObject *Sender)
 {
+if(Application->MessageBoxA("Подтвердите удаление","Удаление",MB_YESNO	+MB_ICONQUESTION+MB_DEFBUTTON1)==IDYES)
+{
 //Добавить проверку на отсутствие у родителя удаляемой ветви (узла) потомков
 //и перевода его в категорию ветвей
 TTreeNode *N;
@@ -1649,6 +1659,7 @@ if (Branches->RecordCount==0 & Nodes->RecordCount==0)
 }
 TreeView5->Items->Delete(TreeView5->GetNodeAt(XX,YY));
 }
+}
 //---------------------------------------------------------------------------
 int TDocuments::DeleteNode(String NameNode, String NameBranch, int Number)
 {
@@ -1687,6 +1698,8 @@ Podr->Post();
 
 void __fastcall TDocuments::MenuItem4Click(TObject *Sender)
 {
+if(Application->MessageBoxA("Подтвердите удаление","Удаление",MB_YESNO	+MB_ICONQUESTION+MB_DEFBUTTON1)==IDYES)
+{
  Zast->MClient->Act.ParamComm.clear();
  Zast->MClient->Act.ParamComm.push_back("DeletePodr");
 
@@ -1694,7 +1707,7 @@ String DBName="Аспекты";
 String ServerSQL="SELECT Аспекты.[Номер аспекта], Аспекты.Подразделение FROM Аспекты";
 String ClientSQL="SELECT [Номер аспекта], Подразделение FROM TempAspects";
 Zast->MClient->ReadTable(DBName, ServerSQL, DBName, ClientSQL);
-
+}
 }
 //---------------------------------------------------------------------------
 
@@ -1737,7 +1750,8 @@ Ins=false;
 void __fastcall TDocuments::MenuItem2Click(TObject *Sender)
 {
 // Удалить
-
+if(Application->MessageBoxA("Подтвердите удаление","Удаление",MB_YESNO	+MB_ICONQUESTION+MB_DEFBUTTON1)==IDYES)
+{
 ADODataSet1->Delete();
 ADODataSet2->Active=false;
 ADODataSet2->CommandText="Select * From Значимость Order By [Мин граница] DESC";
@@ -1773,6 +1787,7 @@ else
 ADODataSet1->Active=false;
 ADODataSet1->Active=true;
 }
+}
 //---------------------------------------------------------------------------
 
 void __fastcall TDocuments::MenuItem5Click(TObject *Sender)
@@ -1785,7 +1800,10 @@ Sit->Post();
 
 void __fastcall TDocuments::MenuItem6Click(TObject *Sender)
 {
+if(Application->MessageBoxA("Подтвердите удаление","Удаление",MB_YESNO	+MB_ICONQUESTION+MB_DEFBUTTON1)==IDYES)
+{
 Sit->Delete();
+}
 }
 //---------------------------------------------------------------------------
 
