@@ -10308,6 +10308,18 @@ object Zast: TZast
       Caption = 'ContStartReports2'
       OnExecute = ContStartReports2Execute
     end
+    object PrepWriteAspUsr_ADM: TAction
+      Caption = 'PrepWriteAspUsr_ADM'
+      OnExecute = PrepWriteAspUsr_ADMExecute
+    end
+    object PrepWriteAspUsr_ADM_1: TAction
+      Caption = 'PrepWriteAspUsr_ADM_1'
+      OnExecute = PrepWriteAspUsr_ADM_1Execute
+    end
+    object PrepWriteAspUsr_MSpec_1: TAction
+      Caption = 'PrepWriteAspUsr_MSpec_1'
+      OnExecute = PrepWriteAspUsr_MSpec_1Execute
+    end
   end
   object BlockServer: TTimer
     Enabled = False

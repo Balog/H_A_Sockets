@@ -286,6 +286,7 @@ AnsiString Filtr1, Filtr2;
 
 void PrepareMergeAspects();
 void  MergeAspects(int NumLogin);
+void  ReadSprav();
 
         BEGIN_MESSAGE_MAP
           VCL_MESSAGE_HANDLER(WM_SYSCOMMAND, TMessage, WMSysCommand)

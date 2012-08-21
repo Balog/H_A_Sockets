@@ -2068,6 +2068,16 @@ void __fastcall TForm1::N10Click(TObject *Sender)
 Zast->BlockMK(true);
 try
 {
+ReadSprav();
+}
+catch(...)
+{
+ Zast->BlockMK(false);
+}
+}
+//---------------------------------------------------------------------------
+void  TForm1::ReadSprav()
+{
 Prog->SignComplete=true;
 Prog->Show();
 Prog->PB->Min=0;
@@ -2118,18 +2128,14 @@ Documents->ReadWrite.push_back(S);
 
 Zast->ReadWriteDoc->Execute();
 }
-catch(...)
-{
- Zast->BlockMK(false);
-}
-}
 //---------------------------------------------------------------------------
 void __fastcall TForm1::N3Click(TObject *Sender)
 {
 Zast->BlockMK(true);
 try
 {
-Zast->MClient->BlockServer("PrepWriteAspUsr");
+Zast->MClient->BlockServer("PrepWriteAspUsr_ADM");
+//Zast->MClient->BlockServer("PrepWriteAspUsr");
 }
 catch(...)
 {
