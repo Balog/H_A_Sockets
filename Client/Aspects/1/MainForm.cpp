@@ -2134,7 +2134,7 @@ void __fastcall TForm1::N3Click(TObject *Sender)
 Zast->BlockMK(true);
 try
 {
-Zast->MClient->BlockServer("PrepWriteAspUsr_ADM");
+Zast->MClient->StartAction("PrepWriteAspUsr_ADM");
 //Zast->MClient->BlockServer("PrepWriteAspUsr");
 }
 catch(...)

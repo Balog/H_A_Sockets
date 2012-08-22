@@ -3687,7 +3687,7 @@ else
 {
  //Ошибок не обнаружено, продолжаем запись
 // Zast->MClient->BlockServer("PrepWriteAspUsr");
-StartAction("PrepWriteAspUsr");
+MClient->StartAction("PrepWriteAspUsr");
 }
 }
 //---------------------------------------------------------------------------

@@ -3495,7 +3495,8 @@ Zast->MClient->Act.ParamComm.clear();
 Zast->MClient->Act.ParamComm.push_back("PrepWriteAspUsr_ADM_1");
 String ClientSQL="SELECT Login, NumObslOtdel FROM TempObslOtdel;";
 String ServerSQL="SELECT Login, NumObslOtdel FROM ObslOtdel Where Login="+IntToStr(Form1->NumLogin)+" Order by NumObslOtdel;";
-Zast->MClient->WriteTable("Аспекты", ServerSQL, "Аспекты_П", ClientSQL);
+Zast->MClient->WriteTable("Аспекты_П", ClientSQL, "Аспекты", ServerSQL);
+;
 
 }
 //---------------------------------------------------------------------------
@@ -3552,7 +3553,7 @@ ShowMessage("За время работы на сервере было изменено распределение подразделени
 
  Zast->MClient->Act.ParamComm.clear();
  Zast->MClient->Act.ParamComm.push_back("StartLoadPodrUSR");
- Zast->MClient->ReadTable("Аспекты", "Select Logins.Num, Logins.Login, Logins.Role From Logins Order by Num;", "Аспекты_П", "Select TempLogins.Num, TempLogins.Login, TempLogins.Role From TempLogins Order by Num;");
+ Zast->MClient->ReadTable("Аспекты_П", "Select TempLogins.Num, TempLogins.Login, TempLogins.Role From TempLogins Order by Num;", "Аспекты", "Select Logins.Num, Logins.Login, Logins.Role From Logins Order by Num;");
 
 }
 //----------------------------------------------------------------------------
@@ -3569,7 +3570,7 @@ Zast->MClient->Act.ParamComm.clear();
 Zast->MClient->Act.ParamComm.push_back("PrepWriteAspUsr_MSpec_1");
 String ServerSQL="SELECT Аспекты.[ServerNum],      Подразделения.ServerNum,     Аспекты.Ситуация,     Аспекты.[Вид территории],     Аспекты.Деятельность,     Аспекты.Специальность,     Аспекты.Аспект,     Аспекты.Воздействие     FROM (Подразделения INNER JOIN ObslOtdel ON Подразделения.[Номер подразделения] = ObslOtdel.NumObslOtdel) INNER JOIN Аспекты ON Подразделения.[Номер подразделения] = Аспекты.Подразделение WHERE (((ObslOtdel.Login)="+IntToStr(Form1->NumLogin)+")) ORDER BY Аспекты.[Номер аспекта];";
 String ClientSQL="SELECT TempAspects.[Номер аспекта], TempAspects.Подразделение, TempAspects.Ситуация, TempAspects.[Вид территории], TempAspects.Деятельность, TempAspects.Специальность, TempAspects.Аспект, TempAspects.Воздействие FROM TempAspects;";
-Zast->MClient->WriteTable("Аспекты", ServerSQL, "Аспекты_П", ClientSQL);
+Zast->MClient->WriteTable("Аспекты_П", ClientSQL, "Аспекты", ServerSQL);
 
 }
 //-----------------------------------------------------------------------------
