@@ -3495,8 +3495,8 @@ Zast->MClient->Act.ParamComm.clear();
 Zast->MClient->Act.ParamComm.push_back("PrepWriteAspUsr_ADM_1");
 String ClientSQL="SELECT Login, NumObslOtdel FROM TempObslOtdel;";
 String ServerSQL="SELECT Login, NumObslOtdel FROM ObslOtdel Where Login="+IntToStr(Form1->NumLogin)+" Order by NumObslOtdel;";
-Zast->MClient->WriteTable("Аспекты_П", ClientSQL, "Аспекты", ServerSQL);
-;
+Zast->MClient->ReadTable( "Аспекты", ServerSQL, "Аспекты_П", ClientSQL);
+
 
 }
 //---------------------------------------------------------------------------
@@ -3505,7 +3505,8 @@ void __fastcall TZast::PrepWriteAspUsr_ADM_1Execute(TObject *Sender)
 {
 MP<TADODataSet>Otd(this);
 Otd->Connection=ADOUsrAspect;
-Otd->CommandText="SELECT Login, NumObslOtdel FROM ObslOtdel Where Login="+IntToStr(Form1->NumLogin)+" Order by NumObslOtdel;";
+Otd->CommandText= "SELECT ObslOtdel.NumObslOtdel, ObslOtdel.Login, Подразделения.ServerNum, Logins.ServerNum FROM Подразделения INNER JOIN (Logins INNER JOIN ObslOtdel ON Logins.Num = ObslOtdel.Login) ON Подразделения.[Номер подразделения] = ObslOtdel.NumObslOtdel WHERE Logins.ServerNum="+IntToStr(Form1->NumLogin)+" Order by Подразделения.ServerNum; ";
+//"SELECT Login, NumObslOtdel FROM ObslOtdel Where Login="+IntToStr(Form1->NumLogin)+" Order by NumObslOtdel;";
 Otd->Active=true;
 
 MP<TADODataSet>ServOtd(this);
@@ -3521,7 +3522,7 @@ if(Otd->RecordCount==ServOtd->RecordCount)
 ServOtd->First();
 for(Otd->First(); !Otd->Eof; Otd->Next())
 {
-if(Otd->FieldByName("NumObslOtdel")->AsInteger==ServOtd->FieldByName("NumObslOtdel")->AsInteger)
+if(Otd->FieldByName("Подразделения.ServerNum")->AsInteger==ServOtd->FieldByName("NumObslOtdel")->AsInteger)
 {
 //Совпадает, идем дальше
 ServOtd->Next();
@@ -3551,10 +3552,12 @@ void TZast::CorrectPodrazd()
 //Обновить список подразделений и список обслуживаемых подразделений а также справочники
 ShowMessage("За время работы на сервере было изменено распределение подразделений по пользователям\n Необходимо произвести обновление справочников");
 
+/*
  Zast->MClient->Act.ParamComm.clear();
  Zast->MClient->Act.ParamComm.push_back("StartLoadPodrUSR");
- Zast->MClient->ReadTable("Аспекты_П", "Select TempLogins.Num, TempLogins.Login, TempLogins.Role From TempLogins Order by Num;", "Аспекты", "Select Logins.Num, Logins.Login, Logins.Role From Logins Order by Num;");
-
+ Zast->MClient->ReadTable("Аспекты", "Select Logins.Num, Logins.Login, Logins.Role From Logins Order by Num;", "Аспекты_П", "Select TempLogins.Num, TempLogins.Login, TempLogins.Role From TempLogins Order by Num;");
+*/
+Form1->ReadSprav();
 }
 //----------------------------------------------------------------------------
 void TZast::PrepWriteAspUsr_MSpec()
@@ -3568,9 +3571,10 @@ Comm->Execute();
 
 Zast->MClient->Act.ParamComm.clear();
 Zast->MClient->Act.ParamComm.push_back("PrepWriteAspUsr_MSpec_1");
-String ServerSQL="SELECT Аспекты.[ServerNum],      Подразделения.ServerNum,     Аспекты.Ситуация,     Аспекты.[Вид территории],     Аспекты.Деятельность,     Аспекты.Специальность,     Аспекты.Аспект,     Аспекты.Воздействие     FROM (Подразделения INNER JOIN ObslOtdel ON Подразделения.[Номер подразделения] = ObslOtdel.NumObslOtdel) INNER JOIN Аспекты ON Подразделения.[Номер подразделения] = Аспекты.Подразделение WHERE (((ObslOtdel.Login)="+IntToStr(Form1->NumLogin)+")) ORDER BY Аспекты.[Номер аспекта];";
+String ServerSQL="SELECT  Аспекты.[Номер аспекта], Аспекты.Подразделение, Аспекты.Ситуация, Аспекты.[Вид территории], Аспекты.Деятельность, Аспекты.Специальность, Аспекты.Аспект, Аспекты.Воздействие FROM (Подразделения INNER JOIN Аспекты ON Подразделения.[Номер подразделения] = Аспекты.Подразделение) INNER JOIN ObslOtdel ON Подразделения.[Номер подразделения] = ObslOtdel.NumObslOtdel WHERE (((ObslOtdel.Login)="+IntToStr(Form1->NumLogin)+")) ORDER BY Аспекты.[Номер аспекта];";
+//"SELECT Аспекты.[Номер аспекта],      Подразделения.[Номер подразделения],     Аспекты.Ситуация,     Аспекты.[Вид территории],     Аспекты.Деятельность,     Аспекты.Специальность,     Аспекты.Аспект,     Аспекты.Воздействие     FROM (Подразделения INNER JOIN ObslOtdel ON Подразделения.[Номер подразделения] = ObslOtdel.NumObslOtdel) INNER JOIN Аспекты ON Подразделения.[Номер подразделения] = Аспекты.Подразделение WHERE (((ObslOtdel.Login)="+IntToStr(Form1->NumLogin)+")) ORDER BY Аспекты.[Номер аспекта];";
 String ClientSQL="SELECT TempAspects.[Номер аспекта], TempAspects.Подразделение, TempAspects.Ситуация, TempAspects.[Вид территории], TempAspects.Деятельность, TempAspects.Специальность, TempAspects.Аспект, TempAspects.Воздействие FROM TempAspects;";
-Zast->MClient->WriteTable("Аспекты_П", ClientSQL, "Аспекты", ServerSQL);
+Zast->MClient->ReadTable("Аспекты", ServerSQL, "Аспекты_П", ClientSQL );
 
 }
 //-----------------------------------------------------------------------------
@@ -3585,7 +3589,8 @@ Comm->Execute();
 
 MP<TADODataSet>Local(this);
 Local->Connection=ADOUsrAspect;
-Local->CommandText="SELECT Аспекты.[ServerNum],      Подразделения.ServerNum,     Аспекты.Ситуация,     Аспекты.[Вид территории],     Аспекты.Деятельность,     Аспекты.Специальность,     Аспекты.Аспект,     Аспекты.Воздействие     FROM Аспекты Where ServerNum<>0 order by ServerNum";
+Local->CommandText="SELECT  Аспекты.[ServerNum], Подразделения.ServerNum, Аспекты.Ситуация, Аспекты.[Вид территории], Аспекты.Деятельность, Аспекты.Специальность, Аспекты.Аспект, Аспекты.Воздействие, Аспекты.ServerNum FROM Подразделения INNER JOIN Аспекты ON Подразделения.[Номер подразделения] = Аспекты.Подразделение WHERE (((Аспекты.ServerNum)<>0)) ORDER BY Аспекты.[ServerNum];";
+//"SELECT Аспекты.[ServerNum],      Подразделения.[ServerNum],     Аспекты.Ситуация,     Аспекты.[Вид территории],     Аспекты.Деятельность,     Аспекты.Специальность,     Аспекты.Аспект,     Аспекты.Воздействие     FROM Аспекты Where ServerNum<>0 order by ServerNum";
 Local->Active=true;
 
 MP<TADODataSet>Server(this);
@@ -3603,7 +3608,7 @@ int Deleting=0;
 bool SpravError=false;
 for(Local->First();!Local->Eof;Local->Next())
 {
- int SNum=Local->FieldByName("ServerNum")->AsInteger;
+ int SNum=Local->FieldByName("Аспекты.ServerNum")->AsInteger;
 
  if(Server->Locate("Номер аспекта", SNum, SO))
  {
@@ -3672,9 +3677,12 @@ for(Local->First();!Local->Eof;Local->Next())
  }
 }
 
+if(Deleting!=0)
+{
 Comm->CommandText="Delete * from Аспекты where Del=true";
 Comm->Execute();
 ShowMessage("Из-за изменений на сервере было перенесено "+IntToStr(Deleting)+" аспектов");
+}
 
 if(SpravError)
 {
