@@ -40,7 +40,7 @@ void Client::CommandExec(int Comm, vector<String>Parameters)
 {
 try
 {
-if(Act.WaitCommand==Comm | Act.WaitCommand==0 | Comm==7 | Comm==0 | Comm==21)
+if(Act.WaitCommand==Comm | Act.WaitCommand==0 | Comm==7 | Comm==0 | Comm==21 | Comm==19 | Comm==20)
 {
 switch(Comm)
 {

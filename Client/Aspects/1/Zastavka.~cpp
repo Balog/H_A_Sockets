@@ -3281,12 +3281,16 @@ catch(...)
 
 void __fastcall TZast::PrepWriteAspUsrExecute(TObject *Sender)
 {
+
 Form1->DataSetRefresh2->Execute();
+
+
 Zast->MClient->Act.ParamComm.clear();
 Zast->MClient->Act.ParamComm.push_back("WriteAspectsUsr");
 String ClientSQL="SELECT Аспекты.[ServerNum],      Подразделения.ServerNum,     Аспекты.Ситуация,     Аспекты.[Вид территории],     Аспекты.Деятельность,     Аспекты.Специальность,     Аспекты.Аспект,     Аспекты.Воздействие,     Аспекты.G,     Аспекты.O,     Аспекты.R,     Аспекты.S,     Аспекты.T,     Аспекты.L,     Аспекты.N,     Аспекты.Z,     Аспекты.Значимость,     Аспекты.[Проявление воздействия],     Аспекты.[Тяжесть последствий],     Аспекты.Приоритетность,     Аспекты.[Выполняющиеся мероприятия],     Аспекты.[Предлагаемые мероприятия],     Аспекты.[Мониторинг и контроль],     Аспекты.[Предлагаемый мониторинг и контроль],     Аспекты.Исполнитель,      Аспекты.[Дата создания],     Аспекты.[Начало действия],     Аспекты.[Конец действия] FROM Подразделения INNER JOIN Аспекты ON Подразделения.[Номер подразделения] = Аспекты.Подразделение ORDER BY Аспекты.[Номер аспекта];";
 String ServerSQL="SELECT TempAspects.[Номер аспекта], TempAspects.Подразделение, TempAspects.Ситуация, TempAspects.[Вид территории], TempAspects.Деятельность, TempAspects.Специальность, TempAspects.Аспект, TempAspects.Воздействие, TempAspects.G, TempAspects.O, TempAspects.R, TempAspects.S, TempAspects.T, TempAspects.L, TempAspects.N, TempAspects.Z, TempAspects.Значимость, TempAspects.[Проявление воздействия], TempAspects.[Тяжесть последствий], TempAspects.Приоритетность, TempAspects.[Выполняющиеся мероприятия], TempAspects.[Предлагаемые мероприятия], TempAspects.[Мониторинг и контроль], TempAspects.[Предлагаемый мониторинг и контроль], TempAspects.Исполнитель,  TempAspects.[Дата создания], TempAspects.[Начало действия], TempAspects.[Конец действия] FROM TempAspects;";
 Zast->MClient->WriteTable("Аспекты_П", ClientSQL, "Аспекты", ServerSQL);
+
 }
 //---------------------------------------------------------------------------
 
@@ -3543,38 +3547,82 @@ CorrectPodrazd();
 //После корректировок первого уровня от действий админа
 //нужно провести проверки второго уровня от действий главспеца.
 
-PrepWriteAspUsr_MSpec();
+//PrepWriteAspUsr_MSpec();
 }
 //---------------------------------------------------------------------------
 void TZast::CorrectPodrazd()
 {
 //вывести сообщение о несовпадении списка подразделений на сервере и локального
 //Обновить список подразделений и список обслуживаемых подразделений а также справочники
+ Zast->BlockMK(false);
 ShowMessage("За время работы на сервере было изменено распределение подразделений по пользователям\n Необходимо произвести обновление справочников");
-
+ Zast->BlockMK(true);
+/*
  Zast->MClient->Act.ParamComm.clear();
  Zast->MClient->Act.ParamComm.push_back("StartLoadPodrUSR");
  Zast->MClient->ReadTable("Аспекты", "Select Logins.Num, Logins.Login, Logins.Role From Logins Order by Num;", "Аспекты_П", "Select TempLogins.Num, TempLogins.Login, TempLogins.Role From TempLogins Order by Num;");
-
-}
-//----------------------------------------------------------------------------
-void TZast::PrepWriteAspUsr_MSpec()
-{
-//прочитать в таблицу TempAspects все сохраненные аспекты данного пользователя
-
-MP<TADOCommand>Comm(this);
-Comm->Connection=ADOUsrAspect;
-Comm->CommandText="Delete * From TempAspects";
-Comm->Execute();
-
+*/
 Zast->MClient->Act.ParamComm.clear();
-Zast->MClient->Act.ParamComm.push_back("PrepWriteAspUsr_MSpec_1");
-String ServerSQL="SELECT  Аспекты.[Номер аспекта], Аспекты.Подразделение, Аспекты.Ситуация, Аспекты.[Вид территории], Аспекты.Деятельность, Аспекты.Специальность, Аспекты.Аспект, Аспекты.Воздействие FROM (Подразделения INNER JOIN Аспекты ON Подразделения.[Номер подразделения] = Аспекты.Подразделение) INNER JOIN ObslOtdel ON Подразделения.[Номер подразделения] = ObslOtdel.NumObslOtdel WHERE (((ObslOtdel.Login)="+IntToStr(Form1->NumLogin)+")) ORDER BY Аспекты.[Номер аспекта];";
-//"SELECT Аспекты.[Номер аспекта],      Подразделения.[Номер подразделения],     Аспекты.Ситуация,     Аспекты.[Вид территории],     Аспекты.Деятельность,     Аспекты.Специальность,     Аспекты.Аспект,     Аспекты.Воздействие     FROM (Подразделения INNER JOIN ObslOtdel ON Подразделения.[Номер подразделения] = ObslOtdel.NumObslOtdel) INNER JOIN Аспекты ON Подразделения.[Номер подразделения] = Аспекты.Подразделение WHERE (((ObslOtdel.Login)="+IntToStr(Form1->NumLogin)+")) ORDER BY Аспекты.[Номер аспекта];";
-String ClientSQL="SELECT TempAspects.[Номер аспекта], TempAspects.Подразделение, TempAspects.Ситуация, TempAspects.[Вид территории], TempAspects.Деятельность, TempAspects.Специальность, TempAspects.Аспект, TempAspects.Воздействие FROM TempAspects;";
-Zast->MClient->ReadTable("Аспекты", ServerSQL, "Аспекты_П", ClientSQL );
+//Form1->ReadSprav();
+
+Prog->SignComplete=true;
+Prog->Show();
+Prog->PB->Min=0;
+Prog->PB->Position=0;
+Prog->PB->Max=9;
+
+Documents->ReadWrite.clear();
+Str_RW S;
+S.NameAction="ReadMetodika";
+S.Text="Чтение методики...";
+S.Num=1;
+Documents->ReadWrite.push_back(S);
+
+S.NameAction="ReadPodrazd";
+S.Text="Чтение подразделений...";
+S.Num=2;
+Documents->ReadWrite.push_back(S);
+
+S.NameAction="ReadCrit";
+S.Text="Чтение критериев...";
+S.Num=3;
+Documents->ReadWrite.push_back(S);
+
+S.NameAction="ReadSit";
+S.Text="Чтение ситуаций...";
+S.Num=4;
+Documents->ReadWrite.push_back(S);
+
+S.NameAction="ReadVozd1";
+S.Text="Чтение списка воздействий...";
+S.Num=5;
+Documents->ReadWrite.push_back(S);
+
+S.NameAction="ReadMeropr1";
+S.Text="Чтение списка мероприятий...";
+S.Num=6;
+Documents->ReadWrite.push_back(S);
+
+S.NameAction="ReadTerr1";
+S.Text="Чтение списка территорий...";
+S.Num=7;
+Documents->ReadWrite.push_back(S);
+
+S.NameAction="ReadDeyat1";
+S.Text="Чтение списка видов деятельности...";
+S.Num=8;
+Documents->ReadWrite.push_back(S);
+
+S.NameAction="PrepWriteAspUsr_MSpec";
+S.Text="";
+S.Num=9;
+Documents->ReadWrite.push_back(S);
+
+Zast->ReadWriteDoc->Execute();
+
 
 }
+
 //-----------------------------------------------------------------------------
 void __fastcall TZast::PrepWriteAspUsr_MSpec_1Execute(TObject *Sender)
 {
@@ -3587,13 +3635,13 @@ Comm->Execute();
 
 MP<TADODataSet>Local(this);
 Local->Connection=ADOUsrAspect;
-Local->CommandText="SELECT  Аспекты.[ServerNum], Подразделения.ServerNum, Аспекты.Ситуация, Аспекты.[Вид территории], Аспекты.Деятельность, Аспекты.Специальность, Аспекты.Аспект, Аспекты.Воздействие, Аспекты.ServerNum FROM Подразделения INNER JOIN Аспекты ON Подразделения.[Номер подразделения] = Аспекты.Подразделение WHERE (((Аспекты.ServerNum)<>0)) ORDER BY Аспекты.[ServerNum];";
+Local->CommandText="SELECT  * FROM Аспекты  WHERE (((Аспекты.ServerNum)<>0)) ORDER BY Аспекты.[ServerNum];";
 //"SELECT Аспекты.[ServerNum],      Подразделения.[ServerNum],     Аспекты.Ситуация,     Аспекты.[Вид территории],     Аспекты.Деятельность,     Аспекты.Специальность,     Аспекты.Аспект,     Аспекты.Воздействие     FROM Аспекты Where ServerNum<>0 order by ServerNum";
 Local->Active=true;
 
 MP<TADODataSet>Server(this);
 Server->Connection=ADOUsrAspect;
-Server->CommandText="SELECT TempAspects.[Номер аспекта], TempAspects.Подразделение, TempAspects.Ситуация, TempAspects.[Вид территории], TempAspects.Деятельность, TempAspects.Специальность, TempAspects.Аспект, TempAspects.Воздействие FROM TempAspects Order by [Номер аспекта]";
+Server->CommandText="SELECT * FROM TempAspects";
 Server->Active=true;
 
 //Сравниваем элементы серверного и локального списков списков
@@ -3606,9 +3654,9 @@ int Deleting=0;
 bool SpravError=false;
 for(Local->First();!Local->Eof;Local->Next())
 {
- int SNum=Local->FieldByName("Аспекты.ServerNum")->AsInteger;
-
- if(Server->Locate("Номер аспекта", SNum, SO))
+ int SNum=Local->FieldByName("ServerNum")->AsInteger;
+ bool Res=Server->Locate("Номер аспекта", SNum, SO);
+ if(Res)
  {
   //найдено
   if(Server->FieldByName("Ситуация")->AsInteger==0)
@@ -3679,9 +3727,9 @@ if(Deleting!=0)
 {
 Comm->CommandText="Delete * from Аспекты where Del=true";
 Comm->Execute();
-ShowMessage("Из-за изменений на сервере было перенесено "+IntToStr(Deleting)+" аспектов");
+ShowMessage("Из-за изменений на сервере нельзя записать и было удалено "+IntToStr(Deleting)+" аспектов");
 }
-
+Prog->Hide();
 if(SpravError)
 {
  //если были ошибки со справочником нужно сообщить что некоторые пункты справочника удалены на сервере
@@ -3694,8 +3742,29 @@ else
 {
  //Ошибок не обнаружено, продолжаем запись
 // Zast->MClient->BlockServer("PrepWriteAspUsr");
+Form1->Aspects->Active=false;
+Form1->Aspects->Active=true;
+Form1-> Initialize(1);
 MClient->StartAction("PrepWriteAspUsr");
 }
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TZast::PrepWriteAspUsr_MSpecExecute(TObject *Sender)
+{
+//прочитать в таблицу TempAspects все сохраненные аспекты данного пользователя
+MP<TADOCommand>Comm(this);
+Comm->Connection=ADOUsrAspect;
+Comm->CommandText="Delete * From TempAspects";
+Comm->Execute();
+
+Zast->MClient->Act.ParamComm.clear();
+Zast->MClient->Act.ParamComm.push_back("PrepWriteAspUsr_MSpec_1");
+String ServerSQL="SELECT  Аспекты.[Номер аспекта], Аспекты.Подразделение, Аспекты.Ситуация, Аспекты.[Вид территории], Аспекты.Деятельность, Аспекты.Специальность, Аспекты.Аспект, Аспекты.Воздействие FROM (Подразделения INNER JOIN Аспекты ON Подразделения.[Номер подразделения] = Аспекты.Подразделение) INNER JOIN ObslOtdel ON Подразделения.[Номер подразделения] = ObslOtdel.NumObslOtdel WHERE (((ObslOtdel.Login)="+IntToStr(Form1->NumLogin)+")) ORDER BY Аспекты.[Номер аспекта];";
+//"SELECT Аспекты.[Номер аспекта],      Подразделения.[Номер подразделения],     Аспекты.Ситуация,     Аспекты.[Вид территории],     Аспекты.Деятельность,     Аспекты.Специальность,     Аспекты.Аспект,     Аспекты.Воздействие     FROM (Подразделения INNER JOIN ObslOtdel ON Подразделения.[Номер подразделения] = ObslOtdel.NumObslOtdel) INNER JOIN Аспекты ON Подразделения.[Номер подразделения] = Аспекты.Подразделение WHERE (((ObslOtdel.Login)="+IntToStr(Form1->NumLogin)+")) ORDER BY Аспекты.[Номер аспекта];";
+String ClientSQL="SELECT TempAspects.[Номер аспекта], TempAspects.Подразделение, TempAspects.Ситуация, TempAspects.[Вид территории], TempAspects.Деятельность, TempAspects.Специальность, TempAspects.Аспект, TempAspects.Воздействие FROM TempAspects;";
+Zast->MClient->ReadTable("Аспекты", ServerSQL, "Аспекты_П", ClientSQL );
+
 }
 //---------------------------------------------------------------------------
 

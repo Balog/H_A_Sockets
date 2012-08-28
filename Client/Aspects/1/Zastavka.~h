@@ -200,6 +200,7 @@ __published:	// IDE-managed Components
         TAction *PrepWriteAspUsr_ADM;
         TAction *PrepWriteAspUsr_ADM_1;
         TAction *PrepWriteAspUsr_MSpec_1;
+        TAction *PrepWriteAspUsr_MSpec;
         void __fastcall Timer1Timer(TObject *Sender);
         void __fastcall Image1Click(TObject *Sender);
         void __fastcall FormShow(TObject *Sender);
@@ -314,6 +315,7 @@ __published:	// IDE-managed Components
         void __fastcall PrepWriteAspUsr_ADMExecute(TObject *Sender);
         void __fastcall PrepWriteAspUsr_ADM_1Execute(TObject *Sender);
         void __fastcall PrepWriteAspUsr_MSpec_1Execute(TObject *Sender);
+        void __fastcall PrepWriteAspUsr_MSpecExecute(TObject *Sender);
 private:	// User declarations
 String Path;
 TLocateOptions SO;
@@ -328,7 +330,7 @@ void MergeLogins();
 void MergeOtdels();
 void MergeAspects(int NumLogin, bool Quit);
 void CorrectPodrazd();
-void PrepWriteAspUsr_MSpec();
+//void PrepWriteAspUsr_MSpec();
 
 
 public:		// User declarations
