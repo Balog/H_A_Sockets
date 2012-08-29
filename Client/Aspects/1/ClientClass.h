@@ -83,6 +83,7 @@ void WriteTable(String DatabaseFrom, String ClientSQLText, String DatabaseTo, St
 bool Reg;
 void BlockServer(String NextProc);
 void UnBlockServer(String NextProc);
+void PostWriteAspectsUsr();
 private:
 String GetIP();
 TClientSocket *Socket;
@@ -92,7 +93,7 @@ TForm *Owner;
 //void VerifyLicense(String NameDB);
 String IP;
 String TableToStr(String NameDB, String SQLText);
-void PostWriteAspectsUsr();
+
 
 };
 //****************************************

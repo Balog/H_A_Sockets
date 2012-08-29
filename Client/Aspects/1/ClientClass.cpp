@@ -210,7 +210,8 @@ BlockServer("BeginWork");
  }
  case 18:
  {
- PostWriteAspectsUsr();
+ UnBlockServer("PostWriteAspectsUsr1");
+ //PostWriteAspectsUsr();
  break;
  }
  case 19:
@@ -794,6 +795,8 @@ Zast->BlockMK(false);
 //***************************************************************************
 void Client::PostWriteAspectsUsr()
 {
+//Zast->MClient->UnBlockServer("");
+//Zast->UnBlockServer->Enabled=true;
  Zast->MClient->WriteDiaryEvent("NetAspects"," онец записи аспектов (пользователь)","");
 
  Sleep(1000);

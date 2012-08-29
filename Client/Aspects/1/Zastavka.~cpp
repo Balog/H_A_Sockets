@@ -3530,6 +3530,7 @@ if(Otd->FieldByName("Подразделения.ServerNum")->AsInteger==ServOtd->FieldByName(
 {
 //Совпадает, идем дальше
 ServOtd->Next();
+Zast->MClient->StartAction("PrepWriteAspUsr");
 }
 else
 {
@@ -3635,7 +3636,8 @@ Comm->Execute();
 
 MP<TADODataSet>Local(this);
 Local->Connection=ADOUsrAspect;
-Local->CommandText="SELECT  * FROM Аспекты  WHERE (((Аспекты.ServerNum)<>0)) ORDER BY Аспекты.[ServerNum];";
+Local->CommandText="SELECT Аспекты.*, Logins.ServerNum FROM Logins INNER JOIN ((Подразделения INNER JOIN Аспекты ON Подразделения.[Номер подразделения] = Аспекты.Подразделение) INNER JOIN ObslOtdel ON Подразделения.[Номер подразделения] = ObslOtdel.NumObslOtdel) ON Logins.Num = ObslOtdel.Login WHERE (((Logins.ServerNum)="+IntToStr(Form1->NumLogin)+"));";
+//"SELECT  * FROM Аспекты";
 //"SELECT Аспекты.[ServerNum],      Подразделения.[ServerNum],     Аспекты.Ситуация,     Аспекты.[Вид территории],     Аспекты.Деятельность,     Аспекты.Специальность,     Аспекты.Аспект,     Аспекты.Воздействие     FROM Аспекты Where ServerNum<>0 order by ServerNum";
 Local->Active=true;
 
@@ -3654,7 +3656,7 @@ int Deleting=0;
 bool SpravError=false;
 for(Local->First();!Local->Eof;Local->Next())
 {
- int SNum=Local->FieldByName("ServerNum")->AsInteger;
+ int SNum=Local->FieldByName("Аспекты.ServerNum")->AsInteger;
  bool Res=Server->Locate("Номер аспекта", SNum, SO);
  if(Res)
  {
@@ -3765,6 +3767,12 @@ String ServerSQL="SELECT  Аспекты.[Номер аспекта], Аспекты.Подразделение, Аспект
 String ClientSQL="SELECT TempAspects.[Номер аспекта], TempAspects.Подразделение, TempAspects.Ситуация, TempAspects.[Вид территории], TempAspects.Деятельность, TempAspects.Специальность, TempAspects.Аспект, TempAspects.Воздействие FROM TempAspects;";
 Zast->MClient->ReadTable("Аспекты", ServerSQL, "Аспекты_П", ClientSQL );
 
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TZast::PostWriteAspectsUsr1Execute(TObject *Sender)
+{
+Zast->MClient->PostWriteAspectsUsr();
 }
 //---------------------------------------------------------------------------
 

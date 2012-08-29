@@ -201,6 +201,7 @@ __published:	// IDE-managed Components
         TAction *PrepWriteAspUsr_ADM_1;
         TAction *PrepWriteAspUsr_MSpec_1;
         TAction *PrepWriteAspUsr_MSpec;
+        TAction *PostWriteAspectsUsr1;
         void __fastcall Timer1Timer(TObject *Sender);
         void __fastcall Image1Click(TObject *Sender);
         void __fastcall FormShow(TObject *Sender);
@@ -316,6 +317,7 @@ __published:	// IDE-managed Components
         void __fastcall PrepWriteAspUsr_ADM_1Execute(TObject *Sender);
         void __fastcall PrepWriteAspUsr_MSpec_1Execute(TObject *Sender);
         void __fastcall PrepWriteAspUsr_MSpecExecute(TObject *Sender);
+        void __fastcall PostWriteAspectsUsr1Execute(TObject *Sender);
 private:	// User declarations
 String Path;
 TLocateOptions SO;
