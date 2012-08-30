@@ -1074,6 +1074,9 @@ Vozd->Active=true;
   }
   else
   {
+  Comm->CommandText="UPDATE Аспекты SET Аспекты.Воздействие = 0 WHERE (((Аспекты.Воздействие)="+IntToStr(N)+"));";
+  Comm->Execute();
+
    Vozd->Edit();
    Vozd->FieldByName("Del")->Value=true;
    Vozd->Post();
@@ -1092,12 +1095,13 @@ if(Role==2)
 {
 Documents->Sit->Active=false;
 Documents->Sit->Active=true;
-
+Documents->LoadTab1();
 Zast->MClient->WriteDiaryEvent("NetAspects","Конец загрузки воздействий (главспец)","");
 }
 else
 {
 Form1->Initialize();
+Documents->LoadTab1();
 Zast->MClient->WriteDiaryEvent("NetAspects","Конец загрузки воздействий (пользователь)","");
 }
 
@@ -1262,6 +1266,9 @@ Terr->Active=true;
   }
   else
   {
+  Comm->CommandText="UPDATE Аспекты SET Аспекты.[Вид территории] = 0 WHERE (((Аспекты.[Вид территории])="+IntToStr(N)+"));";
+  Comm->Execute();
+
    Terr->Edit();
    Terr->FieldByName("Del")->Value=true;
    Terr->Post();
@@ -1357,11 +1364,12 @@ Comm->Execute();
 
 if(Role==2)
 {
+//Form1->Initialize();
 Zast->MClient->WriteDiaryEvent("NetAspects","Конец загрузки территорий (главспец)","");
 }
 else
 {
-Form1->Initialize();
+//
 Zast->MClient->WriteDiaryEvent("NetAspects","Конец загрузки территорий (пользователь)","");
 }
 
@@ -1502,6 +1510,9 @@ Deyat->Active=true;
   }
   else
   {
+  Comm->CommandText="UPDATE Аспекты SET Аспекты.Деятельность = 0 WHERE (((Аспекты.Деятельность)="+IntToStr(N)+"));";
+  Comm->Execute();
+
    Deyat->Edit();
    Deyat->FieldByName("Del")->Value=true;
    Deyat->Post();
@@ -1579,11 +1590,19 @@ Documents->MergeNode("Узлы_7");
 Documents->MergeBranch("Ветви_7");
 Documents->LoadTab5();
 
-
+String DBName;
+if(Role==2)
+{
+ DBName="Аспекты";
+}
+else
+{
+ DBName="Аспекты_П";
+}
 
  Zast->MClient->Act.ParamComm.clear();
  Zast->MClient->Act.ParamComm.push_back("MergeAspect2");
-Zast->MClient->ReadTable("Аспекты", "Select Аспект.[Номер аспекта], Аспект.[Наименование аспекта], Аспект.[Показ] From Аспект order by [Номер аспекта];", "Аспекты", "Select TempAspect.[Номер аспекта], TempAspect.[Наименование аспекта], TempAspect.[Показ] From TempAspect order by [Номер аспекта];");
+Zast->MClient->ReadTable("Аспекты", "Select Аспект.[Номер аспекта], Аспект.[Наименование аспекта], Аспект.[Показ] From Аспект order by [Номер аспекта];", DBName, "Select TempAspect.[Номер аспекта], TempAspect.[Наименование аспекта], TempAspect.[Показ] From TempAspect order by [Номер аспекта];");
 
 }
 catch(...)
@@ -1597,18 +1616,28 @@ void __fastcall TZast::MergeAspect2Execute(TObject *Sender)
 {
 try
 {
+MDBConnector* DB;
+if(Role==2)
+{
+ DB=ADOAspect;
+}
+else
+{
+ DB=ADOUsrAspect;
+}
+
 MP<TADOCommand>Comm(this);
-Comm->Connection=Zast->ADOAspect;
+Comm->Connection=DB;
 Comm->CommandText="UPDATE Аспект SET Аспект.Del = False;";
 Comm->Execute();
 
 MP<TADODataSet>TempAspect(this);
-TempAspect->Connection=Zast->ADOAspect;
+TempAspect->Connection=DB;
 TempAspect->CommandText="Select TempAspect.[Номер аспекта], TempAspect.[Наименование аспекта], TempAspect.[Показ] From TempAspect order by [Номер аспекта]";
 TempAspect->Active=true;
 
 MP<TADODataSet>Aspect(this);
-Aspect->Connection=Zast->ADOAspect;
+Aspect->Connection=DB;
 Aspect->CommandText="Select * From Аспект";
 Aspect->Active=true;
 
@@ -1627,6 +1656,9 @@ Aspect->Active=true;
   }
   else
   {
+  Comm->CommandText="UPDATE Аспекты SET Аспекты.Аспект = 0 WHERE (((Аспекты.Аспект)="+IntToStr(N)+"));";
+  Comm->Execute();
+
    Aspect->Edit();
    Aspect->FieldByName("Del")->Value=true;
    Aspect->Post();
@@ -2386,7 +2418,7 @@ Prog->SignComplete=false;
 Prog->Show();
 Prog->PB->Min=0;
 Prog->PB->Position=0;
-Prog->PB->Max=8;
+Prog->PB->Max=9;
 
 Documents->ReadWrite.clear();
 Str_RW S;
@@ -2430,8 +2462,13 @@ S.Text="Чтение списка видов деятельности...";
 S.Num=8;
 Documents->ReadWrite.push_back(S);
 
+S.NameAction="ReadAspect1";
+S.Text="Чтение списка экологических аспектов...";
+S.Num=9;
+Documents->ReadWrite.push_back(S);
+
 S.NameAction="ShowForm1";
-S.Num=8;
+S.Num=9;
 Documents->ReadWrite.push_back(S);
 
 Zast->ReadWriteDoc->Execute();
@@ -3530,19 +3567,22 @@ if(Otd->FieldByName("Подразделения.ServerNum")->AsInteger==ServOtd->FieldByName(
 {
 //Совпадает, идем дальше
 ServOtd->Next();
-Zast->MClient->StartAction("PrepWriteAspUsr");
+//Слишком рано, надо проверить удаление пунктов справочника
+//Zast->MClient->StartAction("PrepWriteAspUsr");
+
+Zast->MClient->StartAction("PrepWriteAspUsr_MSpec_1");
 }
 else
 {
 //Не совпадает
-CorrectPodrazd();
+CorrectPodrazd(true);
 }
 }
 }
 else
 {
 //Количество не совпадает
-CorrectPodrazd();
+CorrectPodrazd(true);
 }
 
 //После корректировок первого уровня от действий админа
@@ -3551,13 +3591,16 @@ CorrectPodrazd();
 //PrepWriteAspUsr_MSpec();
 }
 //---------------------------------------------------------------------------
-void TZast::CorrectPodrazd()
+void TZast::CorrectPodrazd(bool B)
 {
 //вывести сообщение о несовпадении списка подразделений на сервере и локального
 //Обновить список подразделений и список обслуживаемых подразделений а также справочники
+if(B)
+{
  Zast->BlockMK(false);
 ShowMessage("За время работы на сервере было изменено распределение подразделений по пользователям\n Необходимо произвести обновление справочников");
  Zast->BlockMK(true);
+ }
 /*
  Zast->MClient->Act.ParamComm.clear();
  Zast->MClient->Act.ParamComm.push_back("StartLoadPodrUSR");
@@ -3570,7 +3613,7 @@ Prog->SignComplete=true;
 Prog->Show();
 Prog->PB->Min=0;
 Prog->PB->Position=0;
-Prog->PB->Max=9;
+Prog->PB->Max=10;
 
 Documents->ReadWrite.clear();
 Str_RW S;
@@ -3614,9 +3657,14 @@ S.Text="Чтение списка видов деятельности...";
 S.Num=8;
 Documents->ReadWrite.push_back(S);
 
-S.NameAction="PrepWriteAspUsr_MSpec";
-S.Text="";
+S.NameAction="ReadAspect1";
+S.Text="Чтение списка экологических аспектов...";
 S.Num=9;
+Documents->ReadWrite.push_back(S);
+
+S.NameAction="PrepWriteAspUsr_MSpec";
+S.Text="Продолжение записи аспектов...";
+S.Num=10;
 Documents->ReadWrite.push_back(S);
 
 Zast->ReadWriteDoc->Execute();
@@ -3736,9 +3784,11 @@ if(SpravError)
 {
  //если были ошибки со справочником нужно сообщить что некоторые пункты справочника удалены на сервере
  //Предложить обновить справочники. Запускаем обновление справочников и прерываем запись
- ShowMessage("За время работы на сервере /nбыли удалены некоторые пункты справочников, использованные в аспектах/nНеобходимо обновить справочники, проверить аспекты /nи вновь начать запись аспектов");
+  Zast->BlockMK(false);
+ ShowMessage("За время работы на сервере \nбыли удалены некоторые пункты справочников, использованные в аспектах\nНеобходимо обновить справочники, проверить аспекты \nи вновь начать запись аспектов");
+  Zast->BlockMK(true);
 
-Form1-> ReadSprav();
+CorrectPodrazd(false);
 }
 else
 {

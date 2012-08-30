@@ -47,6 +47,7 @@ Registered=false;
 //---------------------------------------------------------------------------
 void __fastcall TForm1::FormShow(TObject *Sender)
 {
+Prog->Hide();
 //******************************************
 //       ”даление демо-записей аспектов
 //     если они попали не демопользователю
@@ -2082,7 +2083,7 @@ Prog->SignComplete=true;
 Prog->Show();
 Prog->PB->Min=0;
 Prog->PB->Position=0;
-Prog->PB->Max=8;
+Prog->PB->Max=9;
 
 Documents->ReadWrite.clear();
 Str_RW S;
@@ -2124,6 +2125,11 @@ Documents->ReadWrite.push_back(S);
 S.NameAction="ReadDeyat1";
 S.Text="„тение списка видов де€тельности...";
 S.Num=8;
+Documents->ReadWrite.push_back(S);
+
+S.NameAction="ReadAspect1";
+S.Text="„тение списка экологических аспектов...";
+S.Num=9;
 Documents->ReadWrite.push_back(S);
 
 Zast->ReadWriteDoc->Execute();

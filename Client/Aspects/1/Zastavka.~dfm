@@ -10328,6 +10328,10 @@ object Zast: TZast
       Caption = 'PostWriteAspectsUsr1'
       OnExecute = PostWriteAspectsUsr1Execute
     end
+    object AspQ1: TAction
+      Caption = 'AspQ1'
+      OnExecute = AspQ1Execute
+    end
   end
   object BlockServer: TTimer
     Enabled = False
