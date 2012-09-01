@@ -1452,15 +1452,16 @@ void __fastcall TZast::MergeDeyat2Execute(TObject *Sender)
 
 try
 {
+MDBConnector* DB;
 String DBName;
 if(Role==2)
 {
-
+ DB=ADOAspect;
  DBName="Аспекты";
 }
 else
 {
-
+ DB=ADOUsrAspect;
  DBName="Аспекты_П";
 }
 MP<TADODataSet>Ref(this);
@@ -1469,18 +1470,18 @@ Ref->CommandText="Select * From Ветви_6";
 Ref->Active=true;
 
 MP<TADOCommand>Comm(this);
-Comm->Connection=Zast->ADOAspect;
+Comm->Connection=DB;
 Comm->CommandText="UPDATE Деятельность SET Деятельность.Del = False;";
 Comm->Execute();
 
-Comm->CommandText="Delete * From TempDeyat";
-Comm->Execute();
+//Comm->CommandText="Delete * From TempDeyat";
+//Comm->Execute();
 
 MP<TADODataSet>TempDeyat(this);
-TempDeyat->Connection=Zast->ADOAspect;
+TempDeyat->Connection=DB;
 TempDeyat->CommandText="Select TempDeyat.[Номер деятельности], TempDeyat.[Наименование деятельности], TempDeyat.[Показ] From TempDeyat order by [Номер деятельности]";
 TempDeyat->Active=true;
-
+/*
 for(Ref->First();!Ref->Eof;Ref->Next())
 {
  TempDeyat->Append();
@@ -1489,9 +1490,9 @@ for(Ref->First();!Ref->Eof;Ref->Next())
  TempDeyat->FieldByName("Показ")->Value=Ref->FieldByName("Показ")->Value;
  TempDeyat->Post();
 }
-
+*/
 MP<TADODataSet>Deyat(this);
-Deyat->Connection=Zast->ADOAspect;
+Deyat->Connection=DB;
 Deyat->CommandText="Select * From Деятельность";
 Deyat->Active=true;
 
@@ -3713,9 +3714,16 @@ for(Local->First();!Local->Eof;Local->Next())
   {
    if(Local->FieldByName("Ситуация")->AsInteger!=0)
    {
+   if(Local->FieldByName("Аспекты.ServerNum")->AsInteger!=0)
+   {
     //Ситуация была удалена
+
     SpravError=true;
-    break;
+
+    Local->Edit();
+    Local->FieldByName("Ситуация")->Value=0;
+    Local->Post();
+    }
    }
   }
 
@@ -3723,9 +3731,16 @@ for(Local->First();!Local->Eof;Local->Next())
   {
    if(Local->FieldByName("Вид территории")->AsInteger!=0)
    {
+      if(Local->FieldByName("Аспекты.ServerNum")->AsInteger!=0)
+   {
     //Вид территории был удален
+
     SpravError=true;
-    break;
+
+    Local->Edit();
+    Local->FieldByName("Вид территории")->Value=0;
+    Local->Post();
+    }
    }
   }
 
@@ -3733,9 +3748,16 @@ for(Local->First();!Local->Eof;Local->Next())
   {
    if(Local->FieldByName("Деятельность")->AsInteger!=0)
    {
+      if(Local->FieldByName("Аспекты.ServerNum")->AsInteger!=0)
+   {
     //Деятельность была удалена
+
     SpravError=true;
-    break;
+
+    Local->Edit();
+    Local->FieldByName("Деятельность")->Value=0;
+    Local->Post();
+    }
    }
   }
 
@@ -3743,9 +3765,16 @@ for(Local->First();!Local->Eof;Local->Next())
   {
    if(Local->FieldByName("Аспект")->AsInteger!=0)
    {
+      if(Local->FieldByName("Аспекты.ServerNum")->AsInteger!=0)
+   {
     //Аспект был удален
+
     SpravError=true;
-    break;
+
+    Local->Edit();
+    Local->FieldByName("Аспект")->Value=0;
+    Local->Post();
+    }
    }
   }
 
@@ -3753,9 +3782,17 @@ for(Local->First();!Local->Eof;Local->Next())
   {
    if(Local->FieldByName("Воздействие")->AsInteger!=0)
    {
+      if(Local->FieldByName("Аспекты.ServerNum")->AsInteger!=0)
+   {
     //Воздействие было удалено
+
     SpravError=true;
-    break;    
+
+
+    Local->Edit();
+    Local->FieldByName("Воздействие")->Value=0;
+    Local->Post();
+    }   
    }
   }
 
@@ -3766,10 +3803,13 @@ for(Local->First();!Local->Eof;Local->Next())
  else
  {
  //Ненайдено
+ if(Local->FieldByName("Аспекты.ServerNum")->AsInteger!=0)
+ {
  Local->Edit();
  Local->FieldByName("Del")->Value=true;
  Local->Post();
  Deleting++;
+ }
  }
 }
 
@@ -3777,7 +3817,9 @@ if(Deleting!=0)
 {
 Comm->CommandText="Delete * from Аспекты where Del=true";
 Comm->Execute();
+  Zast->BlockMK(false);
 ShowMessage("Из-за изменений на сервере нельзя записать и было удалено "+IntToStr(Deleting)+" аспектов");
+  Zast->BlockMK(true);
 }
 Prog->Hide();
 if(SpravError)

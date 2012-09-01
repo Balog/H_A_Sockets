@@ -2373,7 +2373,7 @@ ComboBox1->AutoComplete=false;
 
 String Text=ComboBox1->Text;
 MP<TADODataSet>Tab(this);
-Tab->Connection=Zast->ADOAspect;
+Tab->Connection=Zast->ADOUsrAspect;
 String CT="Select [Номер территории], [Наименование территории] From Территория Where [Наименование территории] Like '%"+Text+"%' AND Показ=true Order by [Номер территории]";
 Tab->CommandText=CT;
 Tab->Active=true;
@@ -2409,7 +2409,7 @@ void __fastcall TForm1::ComboBox1DropDown(TObject *Sender)
 {
 String Text=ComboBox1->Text;
 MP<TADODataSet>Tab(this);
-Tab->Connection=Zast->ADOAspect;
+Tab->Connection=Zast->ADOUsrAspect;
 String CT="Select [Номер территории], [Наименование территории] From Территория Where [Наименование территории] Like '%"+Text+"%' AND Показ=true Order by [Номер территории]";
 Tab->CommandText=CT;
 Tab->Active=true;
@@ -2437,7 +2437,7 @@ if(Key==13)
 {
 String Text=ComboBox1->Text;
 MP<TADODataSet>Tab(this);
-Tab->Connection=Zast->ADOAspect;
+Tab->Connection=Zast->ADOUsrAspect;
 String CT="Select [Номер территории], [Наименование территории] From Территория Where [Наименование территории] Like '%"+Text+"%' AND Показ=true Order by [Номер территории]";
 Tab->CommandText=CT;
 Tab->Active=true;
@@ -2460,7 +2460,7 @@ void __fastcall TForm1::ComboBox1Select(TObject *Sender)
 {
 String Text=ComboBox1->Text;
 MP<TADODataSet>Tab(this);
-Tab->Connection=Zast->ADOAspect;
+Tab->Connection=Zast->ADOUsrAspect;
 String CT="Select [Номер территории], [Наименование территории] From Территория Where [Наименование территории] Like '%"+Text+"%' AND Показ=true Order by [Номер территории]";
 Tab->CommandText=CT;
 Tab->Active=true;
@@ -2486,7 +2486,7 @@ ComboBox2->AutoComplete=false;
 
 String Text=ComboBox2->Text;
 MP<TADODataSet>Tab(this);
-Tab->Connection=Zast->ADOAspect;
+Tab->Connection=Zast->ADOUsrAspect;
 String CT="Select [Номер деятельности], [Наименование деятельности] From деятельность Where [Наименование деятельности] Like '%"+Text+"%' AND Показ=true Order by [Номер деятельности]";
 Tab->CommandText=CT;
 Tab->Active=true;
@@ -2522,7 +2522,7 @@ void __fastcall TForm1::ComboBox2DropDown(TObject *Sender)
 {
 String Text=ComboBox2->Text;
 MP<TADODataSet>Tab(this);
-Tab->Connection=Zast->ADOAspect;
+Tab->Connection=Zast->ADOUsrAspect;
 String CT="Select [Номер деятельности], [Наименование деятельности] From Деятельность Where [Наименование деятельности] Like '%"+Text+"%' AND Показ=true Order by [Номер деятельности]";
 Tab->CommandText=CT;
 Tab->Active=true;
@@ -2550,7 +2550,7 @@ if(Key==13)
 {
 String Text=ComboBox2->Text;
 MP<TADODataSet>Tab(this);
-Tab->Connection=Zast->ADOAspect;
+Tab->Connection=Zast->ADOUsrAspect;
 String CT="Select [Номер деятельности], [Наименование деятельности] From Деятельность Where [Наименование деятельности] Like '%"+Text+"%' AND Показ=true Order by [Номер деятельности]";
 Tab->CommandText=CT;
 Tab->Active=true;
@@ -2573,7 +2573,7 @@ void __fastcall TForm1::ComboBox2Select(TObject *Sender)
 {
 String Text=ComboBox2->Text;
 MP<TADODataSet>Tab(this);
-Tab->Connection=Zast->ADOAspect;
+Tab->Connection=Zast->ADOUsrAspect;
 String CT="Select [Номер деятельности], [Наименование деятельности] From Деятельность Where [Наименование деятельности] Like '%"+Text+"%' AND Показ=true Order by [Номер деятельности]";
 Tab->CommandText=CT;
 Tab->Active=true;
@@ -2597,7 +2597,7 @@ ComboBox3->AutoComplete=false;
 
 String Text=ComboBox3->Text;
 MP<TADODataSet>Tab(this);
-Tab->Connection=Zast->ADOAspect;
+Tab->Connection=Zast->ADOUsrAspect;
 String CT="Select [Номер аспекта], [Наименование аспекта] From Аспект Where [Наименование аспекта] Like '%"+Text+"%' AND Показ=true Order by [Номер аспекта]";
 Tab->CommandText=CT;
 Tab->Active=true;
@@ -2633,7 +2633,7 @@ void __fastcall TForm1::ComboBox3DropDown(TObject *Sender)
 {
 String Text=ComboBox3->Text;
 MP<TADODataSet>Tab(this);
-Tab->Connection=Zast->ADOAspect;
+Tab->Connection=Zast->ADOUsrAspect;
 String CT="Select [Номер аспекта], [Наименование аспекта] From Аспект Where [Наименование аспекта] Like '%"+Text+"%' AND Показ=true Order by [Номер аспекта]";
 Tab->CommandText=CT;
 Tab->Active=true;
@@ -2661,7 +2661,7 @@ if(Key==13)
 {
 String Text=ComboBox3->Text;
 MP<TADODataSet>Tab(this);
-Tab->Connection=Zast->ADOAspect;
+Tab->Connection=Zast->ADOUsrAspect;
 String CT="Select [Номер аспекта], [Наименование аспекта] From Аспект Where [Наименование аспекта] Like '%"+Text+"%' AND Показ=true Order by [Номер аспекта]";
 Tab->CommandText=CT;
 Tab->Active=true;
@@ -2684,7 +2684,7 @@ void __fastcall TForm1::ComboBox3Select(TObject *Sender)
 {
 String Text=ComboBox3->Text;
 MP<TADODataSet>Tab(this);
-Tab->Connection=Zast->ADOAspect;
+Tab->Connection=Zast->ADOUsrAspect;
 String CT="Select [Номер аспекта], [Наименование аспекта] From Аспект Where [Наименование аспекта] Like '%"+Text+"%' AND Показ=true Order by [Номер аспекта]";
 Tab->CommandText=CT;
 Tab->Active=true;
@@ -2708,7 +2708,7 @@ ComboBox4->AutoComplete=false;
 
 String Text=ComboBox4->Text;
 MP<TADODataSet>Tab(this);
-Tab->Connection=Zast->ADOAspect;
+Tab->Connection=Zast->ADOUsrAspect;
 String CT="Select [Номер воздействия], [Наименование воздействия] From Воздействия Where [Наименование воздействия] Like '%"+Text+"%' AND Показ=true Order by [Номер воздействия]";
 Tab->CommandText=CT;
 Tab->Active=true;
@@ -2744,7 +2744,7 @@ void __fastcall TForm1::ComboBox4DropDown(TObject *Sender)
 {
 String Text=ComboBox4->Text;
 MP<TADODataSet>Tab(this);
-Tab->Connection=Zast->ADOAspect;
+Tab->Connection=Zast->ADOUsrAspect;
 String CT="Select [Номер воздействия], [Наименование воздействия] From Воздействия Where [Наименование воздействия] Like '%"+Text+"%' AND Показ=true Order by [Номер воздействия]";
 Tab->CommandText=CT;
 Tab->Active=true;
@@ -2772,7 +2772,7 @@ if(Key==13)
 {
 String Text=ComboBox4->Text;
 MP<TADODataSet>Tab(this);
-Tab->Connection=Zast->ADOAspect;
+Tab->Connection=Zast->ADOUsrAspect;
 String CT="Select [Номер воздействия], [Наименование воздействия] From Воздействия Where [Наименование воздействия] Like '%"+Text+"%' AND Показ=true Order by [Номер воздействия]";
 Tab->CommandText=CT;
 Tab->Active=true;
@@ -2795,7 +2795,7 @@ void __fastcall TForm1::ComboBox4Select(TObject *Sender)
 {
 String Text=ComboBox4->Text;
 MP<TADODataSet>Tab(this);
-Tab->Connection=Zast->ADOAspect;
+Tab->Connection=Zast->ADOUsrAspect;
 String CT="Select [Номер воздействия], [Наименование воздействия] From Воздействия Where [Наименование воздействия] Like '%"+Text+"%' AND Показ=true Order by [Номер воздействия]";
 Tab->CommandText=CT;
 Tab->Active=true;

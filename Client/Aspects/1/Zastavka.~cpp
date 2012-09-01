@@ -1452,15 +1452,16 @@ void __fastcall TZast::MergeDeyat2Execute(TObject *Sender)
 
 try
 {
+MDBConnector* DB;
 String DBName;
 if(Role==2)
 {
-
+ DB=ADOAspect;
  DBName="Аспекты";
 }
 else
 {
-
+ DB=ADOUsrAspect;
  DBName="Аспекты_П";
 }
 MP<TADODataSet>Ref(this);
@@ -1469,18 +1470,18 @@ Ref->CommandText="Select * From Ветви_6";
 Ref->Active=true;
 
 MP<TADOCommand>Comm(this);
-Comm->Connection=Zast->ADOAspect;
+Comm->Connection=DB;
 Comm->CommandText="UPDATE Деятельность SET Деятельность.Del = False;";
 Comm->Execute();
 
-Comm->CommandText="Delete * From TempDeyat";
-Comm->Execute();
+//Comm->CommandText="Delete * From TempDeyat";
+//Comm->Execute();
 
 MP<TADODataSet>TempDeyat(this);
-TempDeyat->Connection=Zast->ADOAspect;
+TempDeyat->Connection=DB;
 TempDeyat->CommandText="Select TempDeyat.[Номер деятельности], TempDeyat.[Наименование деятельности], TempDeyat.[Показ] From TempDeyat order by [Номер деятельности]";
 TempDeyat->Active=true;
-
+/*
 for(Ref->First();!Ref->Eof;Ref->Next())
 {
  TempDeyat->Append();
@@ -1489,9 +1490,9 @@ for(Ref->First();!Ref->Eof;Ref->Next())
  TempDeyat->FieldByName("Показ")->Value=Ref->FieldByName("Показ")->Value;
  TempDeyat->Post();
 }
-
+*/
 MP<TADODataSet>Deyat(this);
-Deyat->Connection=Zast->ADOAspect;
+Deyat->Connection=DB;
 Deyat->CommandText="Select * From Деятельность";
 Deyat->Active=true;
 
@@ -3766,10 +3767,13 @@ for(Local->First();!Local->Eof;Local->Next())
  else
  {
  //Ненайдено
+ if(Local->FieldByName("Logins.ServerNum")->AsInteger!=0)
+ {
  Local->Edit();
  Local->FieldByName("Del")->Value=true;
  Local->Post();
  Deleting++;
+ }
  }
 }
 
@@ -3784,7 +3788,9 @@ if(SpravError)
 {
  //если были ошибки со справочником нужно сообщить что некоторые пункты справочника удалены на сервере
  //Предложить обновить справочники. Запускаем обновление справочников и прерываем запись
- ShowMessage("За время работы на сервере /nбыли удалены некоторые пункты справочников, использованные в аспектах/nНеобходимо обновить справочники, проверить аспекты /nи вновь начать запись аспектов");
+  Zast->BlockMK(false);
+ ShowMessage("За время работы на сервере \nбыли удалены некоторые пункты справочников, использованные в аспектах\nНеобходимо обновить справочники, проверить аспекты \nи вновь начать запись аспектов");
+  Zast->BlockMK(true);
 
 CorrectPodrazd(false);
 }
