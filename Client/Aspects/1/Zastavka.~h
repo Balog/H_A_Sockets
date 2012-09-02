@@ -333,7 +333,7 @@ bool Start;
 void MergeLogins();
 void MergeOtdels();
 void MergeAspects(int NumLogin, bool Quit);
-void CorrectPodrazd(bool B);
+void CorrectPodrazd();
 //void PrepWriteAspUsr_MSpec();
 
 

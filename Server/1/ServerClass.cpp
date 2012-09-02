@@ -1635,6 +1635,7 @@ MP<TADODataSet>Asp(Form1);
 Asp->Connection=Database;
 Asp->CommandText="SELECT Аспекты.*, ObslOtdel.Login FROM (Подразделения INNER JOIN Аспекты ON Подразделения.[Номер подразделения] = Аспекты.Подразделение) INNER JOIN ObslOtdel ON Подразделения.[Номер подразделения] = ObslOtdel.NumObslOtdel WHERE (((ObslOtdel.Login)="+IntToStr(NumLogin)+"));";
 Asp->Active=true;
+
 /*
 for(TempAsp->First();!TempAsp->Eof;TempAsp->Next())
 {
@@ -1655,6 +1656,25 @@ for(TempAsp->First();!TempAsp->Eof;TempAsp->Next())
  }
 }
  */
+MP<TADODataSet>Terr(Form1);
+Terr->Connection=Database;
+Terr->CommandText="select * From Территория";
+Terr->Active=true;
+
+MP<TADODataSet>Deyat(Form1);
+Deyat->Connection=Database;
+Deyat->CommandText="select * From Деятельность";
+Deyat->Active=true;
+
+MP<TADODataSet>Aspect(Form1);
+Aspect->Connection=Database;
+Aspect->CommandText="select * From Аспект";
+Aspect->Active=true;
+
+MP<TADODataSet>Vozd(Form1);
+Vozd->Connection=Database;
+Vozd->CommandText="select * From Воздействия";
+Vozd->Active=true;
 
 MP<TADOCommand>Comm(Form1);
 Comm->Connection=Database;
@@ -1670,11 +1690,45 @@ for(Asp->First();!Asp->Eof;Asp->Next())
   Asp->Edit();
   Asp->FieldByName("Подразделение")->Value=TempAsp->FieldByName("Подразделение")->Value;
   Asp->FieldByName("Ситуация")->Value=TempAsp->FieldByName("Ситуация")->Value;
+
+  if(Terr->Locate("Номер территории", TempAsp->FieldByName("Вид территории")->AsInteger, SO))
+  {
   Asp->FieldByName("Вид территории")->Value=TempAsp->FieldByName("Вид территории")->Value;
+  }
+  else
+  {
+  Asp->FieldByName("Вид территории")->Value=0;
+  }
+
+  if(Deyat->Locate("Номер деятельности", TempAsp->FieldByName("Деятельность")->AsInteger, SO))
+  {
   Asp->FieldByName("Деятельность")->Value=TempAsp->FieldByName("Деятельность")->Value;
+  }
+  else
+  {
+  Asp->FieldByName("Деятельность")->Value=0;
+  }
+
   Asp->FieldByName("Специальность")->Value=TempAsp->FieldByName("Специальность")->Value;
+
+  if(Aspect->Locate("Номер аспекта", TempAsp->FieldByName("Аспект")->AsInteger, SO))
+  {
   Asp->FieldByName("Аспект")->Value=TempAsp->FieldByName("Аспект")->Value;
+  }
+  else
+  {
+  Asp->FieldByName("Аспект")->Value=0;
+  }
+
+  if(Vozd->Locate("Номер воздействия", TempAsp->FieldByName("Воздействие")->AsInteger, SO))
+  {
   Asp->FieldByName("Воздействие")->Value=TempAsp->FieldByName("Воздействие")->Value;
+  }
+  else
+  {
+  Asp->FieldByName("Воздействие")->Value=0;
+  }
+
   Asp->FieldByName("G")->Value=TempAsp->FieldByName("G")->Value;
   Asp->FieldByName("O")->Value=TempAsp->FieldByName("O")->Value;
   Asp->FieldByName("R")->Value=TempAsp->FieldByName("R")->Value;

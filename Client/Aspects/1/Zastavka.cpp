@@ -3320,7 +3320,7 @@ catch(...)
 void __fastcall TZast::PrepWriteAspUsrExecute(TObject *Sender)
 {
 
-Form1->DataSetRefresh2->Execute();
+
 
 
 Zast->MClient->Act.ParamComm.clear();
@@ -3545,17 +3545,50 @@ Zast->MClient->ReadTable( "Аспекты", ServerSQL, "Аспекты_П", ClientSQL);
 
 void __fastcall TZast::PrepWriteAspUsr_ADM_1Execute(TObject *Sender)
 {
-MP<TADODataSet>Otd(this);
-Otd->Connection=ADOUsrAspect;
-Otd->CommandText= "SELECT ObslOtdel.NumObslOtdel, ObslOtdel.Login, Подразделения.ServerNum, Logins.ServerNum FROM Подразделения INNER JOIN (Logins INNER JOIN ObslOtdel ON Logins.Num = ObslOtdel.Login) ON Подразделения.[Номер подразделения] = ObslOtdel.NumObslOtdel WHERE Logins.ServerNum="+IntToStr(Form1->NumLogin)+" Order by Подразделения.ServerNum; ";
+Form1->DataSetRefresh2->Execute();
+
+MP<TADOCommand>Comm(this);
+Comm->Connection=ADOUsrAspect;
+Comm->CommandText="UPDATE Аспекты SET Аспекты.Del = False;";
+Comm->Execute();
+
+MP<TADODataSet>LAsp(this);
+LAsp->Connection=ADOUsrAspect;
+LAsp->CommandText="SELECT Аспекты.* FROM Logins INNER JOIN ((Подразделения INNER JOIN Аспекты ON Подразделения.[Номер подразделения] = Аспекты.Подразделение) INNER JOIN ObslOtdel ON Подразделения.[Номер подразделения] = ObslOtdel.NumObslOtdel) ON Logins.Num = ObslOtdel.Login WHERE (((Logins.ServerNum)=174)); ";
+//"SELECT ObslOtdel.NumObslOtdel, ObslOtdel.Login, Подразделения.ServerNum, Logins.ServerNum FROM Подразделения INNER JOIN (Logins INNER JOIN ObslOtdel ON Logins.Num = ObslOtdel.Login) ON Подразделения.[Номер подразделения] = ObslOtdel.NumObslOtdel WHERE Logins.ServerNum="+IntToStr(Form1->NumLogin)+" Order by Подразделения.ServerNum; ";
 //"SELECT Login, NumObslOtdel FROM ObslOtdel Where Login="+IntToStr(Form1->NumLogin)+" Order by NumObslOtdel;";
-Otd->Active=true;
+LAsp->Active=true;
 
 MP<TADODataSet>ServOtd(this);
 ServOtd->Connection=ADOUsrAspect;
 ServOtd->CommandText="SELECT Login, NumObslOtdel FROM TempObslOtdel Order by NumObslOtdel";
 ServOtd->Active=true;
 
+for(LAsp->First();!LAsp->Eof;LAsp->Next())
+{
+ int NumPodr=LAsp->FieldByName("Подразделение")->Value;
+ if(!ServOtd->Locate("NumObslOtdel",NumPodr, SO))
+ {
+  //Ненайдено
+  LAsp->Edit();
+  LAsp->FieldByName("Del")->Value=true;
+  LAsp->Post();
+ }
+}
+
+Comm->CommandText="DELETE Аспекты.* FROM Аспекты WHERE (((Аспекты.Del)=True));";
+Comm->Execute();
+
+Zast->MClient->BlockServer("PrepWriteAspUsr");
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+//Пройти по аспектам проверяя принадлежит ли аспект твоему подразделению
+//если не принадлежит - удалить
+//Потом записывать аспекты на сервер, проверяя уже там существуют ли пункты справочников которые есть в аспектах
+//Хорошо бы предусмотреть сигнал о том были ли корректировки
+
+
+/*
 //сравниваем количество записей в таблицах
 if(Otd->RecordCount==ServOtd->RecordCount)
 {
@@ -3571,42 +3604,61 @@ ServOtd->Next();
 //Слишком рано, надо проверить удаление пунктов справочника
 //Zast->MClient->StartAction("PrepWriteAspUsr");
 
-Zast->MClient->StartAction("PrepWriteAspUsr_MSpec_1");
+//Zast->MClient->StartAction("PrepWriteAspUsr_MSpec_1");
+
+
 }
 else
 {
 //Не совпадает
-CorrectPodrazd(true);
+CorrectPodrazd();
 }
 }
 }
 else
 {
 //Количество не совпадает
-CorrectPodrazd(true);
+CorrectPodrazd();
 }
+//Начать запись на сервер, сервер продолжит обработку
+Zast->MClient->BlockServer("PrepWriteAspUsr");
+
+
 
 //После корректировок первого уровня от действий админа
 //нужно провести проверки второго уровня от действий главспеца.
 
 //PrepWriteAspUsr_MSpec();
+*/
 }
 //---------------------------------------------------------------------------
-void TZast::CorrectPodrazd(bool B)
+void TZast::CorrectPodrazd()
 {
 //вывести сообщение о несовпадении списка подразделений на сервере и локального
-//Обновить список подразделений и список обслуживаемых подразделений а также справочники
+//удалить аспекты что уже не принадлежат этому пользователю
+ Zast->BlockMK(false);
+ShowMessage("За время работы на сервере было изменено распределение подразделений по пользователям\n Часть аспектов было удалено, они все равно уже не ваши");
+ Zast->BlockMK(true);
+
+
+
+
+
+/*
 if(B)
 {
  Zast->BlockMK(false);
 ShowMessage("За время работы на сервере было изменено распределение подразделений по пользователям\n Необходимо произвести обновление справочников");
  Zast->BlockMK(true);
  }
+ */
 /*
  Zast->MClient->Act.ParamComm.clear();
  Zast->MClient->Act.ParamComm.push_back("StartLoadPodrUSR");
  Zast->MClient->ReadTable("Аспекты", "Select Logins.Num, Logins.Login, Logins.Role From Logins Order by Num;", "Аспекты_П", "Select TempLogins.Num, TempLogins.Login, TempLogins.Role From TempLogins Order by Num;");
 */
+
+/*
 Zast->MClient->Act.ParamComm.clear();
 //Form1->ReadSprav();
 
@@ -3663,13 +3715,18 @@ S.Text="Чтение списка экологических аспектов...";
 S.Num=9;
 Documents->ReadWrite.push_back(S);
 
-S.NameAction="PrepWriteAspUsr_MSpec";
+//S.NameAction="PrepWriteAspUsr_MSpec";
+
+/*
+S.NameAction="PrepWriteAspUsr";
 S.Text="Продолжение записи аспектов...";
 S.Num=10;
 Documents->ReadWrite.push_back(S);
+*/
 
+/*
 Zast->ReadWriteDoc->Execute();
-
+*/
 
 }
 
@@ -3830,7 +3887,7 @@ if(SpravError)
  ShowMessage("За время работы на сервере \nбыли удалены некоторые пункты справочников, использованные в аспектах\nНеобходимо обновить справочники, проверить аспекты \nи вновь начать запись аспектов");
   Zast->BlockMK(true);
 
-CorrectPodrazd(false);
+//CorrectPodrazd(false);
 }
 else
 {
