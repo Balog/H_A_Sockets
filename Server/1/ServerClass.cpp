@@ -492,8 +492,15 @@ Parent->WriteDiaryEvent(IP, Login, "AdminARM", "Запись логинов", "Имя: "+Paramet
    {
    try
    {
-   MergeAspectsUser(StrToInt(Parameters[0]));
-   this->Socket->SendText("Command:18;0|");
+   bool Del=MergeAspectsUser(StrToInt(Parameters[0]));
+   if(Del)
+   {
+   this->Socket->SendText("Command:18;1|1#1");
+   }
+   else
+   {
+   this->Socket->SendText("Command:18;1|1#0");
+   }
    }
    catch(...)
    {
@@ -1618,8 +1625,9 @@ for(Aspects->First();!Aspects->Eof;Aspects->Next())
 }
 }
 //---------------------------------------------------------------------------
-void Client::MergeAspectsUser(int NumLogin)
+bool Client::MergeAspectsUser(int NumLogin)
 {
+bool Del=false;
 TADOConnection *Database=GetDatabase("Аспекты");
 MP<TADODataSet>TempPodr(Form1);
 TempPodr->Connection=Database;
@@ -1698,6 +1706,7 @@ for(Asp->First();!Asp->Eof;Asp->Next())
   else
   {
   Asp->FieldByName("Вид территории")->Value=0;
+  Del=true;
   }
 
   if(Deyat->Locate("Номер деятельности", TempAsp->FieldByName("Деятельность")->AsInteger, SO))
@@ -1707,6 +1716,7 @@ for(Asp->First();!Asp->Eof;Asp->Next())
   else
   {
   Asp->FieldByName("Деятельность")->Value=0;
+  Del=true;
   }
 
   Asp->FieldByName("Специальность")->Value=TempAsp->FieldByName("Специальность")->Value;
@@ -1718,6 +1728,7 @@ for(Asp->First();!Asp->Eof;Asp->Next())
   else
   {
   Asp->FieldByName("Аспект")->Value=0;
+  Del=true;
   }
 
   if(Vozd->Locate("Номер воздействия", TempAsp->FieldByName("Воздействие")->AsInteger, SO))
@@ -1727,6 +1738,7 @@ for(Asp->First();!Asp->Eof;Asp->Next())
   else
   {
   Asp->FieldByName("Воздействие")->Value=0;
+  Del=true;
   }
 
   Asp->FieldByName("G")->Value=TempAsp->FieldByName("G")->Value;
@@ -1807,6 +1819,8 @@ for(TempAsp->First();!TempAsp->Eof;TempAsp->Next())
 
 Comm->CommandText="Delete * From TempПодразделения";
 Comm->Execute();
+
+return Del;
 }
 //---------------------------------------------------------------------------
 //***************************************************************************

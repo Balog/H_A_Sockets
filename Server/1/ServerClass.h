@@ -91,7 +91,7 @@ bool SDubl;
 void CommandExec(int Comm, vector<String>);
 
 String Login;
-void MergeAspectsUser(int NumLogin);
+bool MergeAspectsUser(int NumLogin);
 
 };
 //-------------------------------------------------------------------------

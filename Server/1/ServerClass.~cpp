@@ -1699,11 +1699,36 @@ for(Asp->First();!Asp->Eof;Asp->Next())
   {
   Asp->FieldByName("Вид территории")->Value=0;
   }
-  
+
+  if(Deyat->Locate("Номер деятельности", TempAsp->FieldByName("Деятельность")->AsInteger, SO))
+  {
   Asp->FieldByName("Деятельность")->Value=TempAsp->FieldByName("Деятельность")->Value;
+  }
+  else
+  {
+  Asp->FieldByName("Деятельность")->Value=0;
+  }
+
   Asp->FieldByName("Специальность")->Value=TempAsp->FieldByName("Специальность")->Value;
+
+  if(Aspect->Locate("Номер аспекта", TempAsp->FieldByName("Аспект")->AsInteger, SO))
+  {
   Asp->FieldByName("Аспект")->Value=TempAsp->FieldByName("Аспект")->Value;
+  }
+  else
+  {
+  Asp->FieldByName("Аспект")->Value=0;
+  }
+
+  if(Vozd->Locate("Номер воздействия", TempAsp->FieldByName("Воздействие")->AsInteger, SO))
+  {
   Asp->FieldByName("Воздействие")->Value=TempAsp->FieldByName("Воздействие")->Value;
+  }
+  else
+  {
+  Asp->FieldByName("Воздействие")->Value=0;
+  }
+
   Asp->FieldByName("G")->Value=TempAsp->FieldByName("G")->Value;
   Asp->FieldByName("O")->Value=TempAsp->FieldByName("O")->Value;
   Asp->FieldByName("R")->Value=TempAsp->FieldByName("R")->Value;

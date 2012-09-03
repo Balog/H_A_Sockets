@@ -210,7 +210,8 @@ BlockServer("BeginWork");
  }
  case 18:
  {
- PostWriteAspectsUsr();
+ UnBlockServer("PostWriteAspectsUsr1");
+ //PostWriteAspectsUsr();
  break;
  }
  case 19:

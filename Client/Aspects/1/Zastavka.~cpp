@@ -3320,7 +3320,7 @@ catch(...)
 void __fastcall TZast::PrepWriteAspUsrExecute(TObject *Sender)
 {
 
-Form1->DataSetRefresh2->Execute();
+
 
 
 Zast->MClient->Act.ParamComm.clear();
@@ -3545,6 +3545,9 @@ Zast->MClient->ReadTable( "Аспекты", ServerSQL, "Аспекты_П", ClientSQL);
 
 void __fastcall TZast::PrepWriteAspUsr_ADM_1Execute(TObject *Sender)
 {
+bool Deleting=false;
+Form1->DataSetRefresh2->Execute();
+
 MP<TADOCommand>Comm(this);
 Comm->Connection=ADOUsrAspect;
 Comm->CommandText="UPDATE Аспекты SET Аспекты.Del = False;";
@@ -3571,9 +3574,15 @@ for(LAsp->First();!LAsp->Eof;LAsp->Next())
   LAsp->Edit();
   LAsp->FieldByName("Del")->Value=true;
   LAsp->Post();
+  Deleting=true;
  }
 }
-
+if(Deleting)
+{
+ Zast->BlockMK(false);
+ShowMessage("За время работы на сервере было изменено распределение подразделений по пользователям\n Часть аспектов возможно будет удалено, они уже не ваши.");
+ Zast->BlockMK(true);
+}
 Comm->CommandText="DELETE Аспекты.* FROM Аспекты WHERE (((Аспекты.Del)=True));";
 Comm->Execute();
 

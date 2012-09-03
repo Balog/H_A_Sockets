@@ -3545,6 +3545,7 @@ Zast->MClient->ReadTable( "Аспекты", ServerSQL, "Аспекты_П", ClientSQL);
 
 void __fastcall TZast::PrepWriteAspUsr_ADM_1Execute(TObject *Sender)
 {
+bool Deleting=false;
 Form1->DataSetRefresh2->Execute();
 
 MP<TADOCommand>Comm(this);
@@ -3561,21 +3562,28 @@ LAsp->Active=true;
 
 MP<TADODataSet>ServOtd(this);
 ServOtd->Connection=ADOUsrAspect;
-ServOtd->CommandText="SELECT Login, NumObslOtdel FROM TempObslOtdel Order by NumObslOtdel";
+ServOtd->CommandText="SELECT TempObslOtdel.Login, Подразделения.[Номер подразделения] FROM TempObslOtdel INNER JOIN Подразделения ON TempObslOtdel.NumObslOtdel = Подразделения.ServerNum WHERE (((TempObslOtdel.Login)="+IntToStr(Form1->NumLogin)+"));";
+//"SELECT Login, NumObslOtdel FROM TempObslOtdel Order by NumObslOtdel";
 ServOtd->Active=true;
 
 for(LAsp->First();!LAsp->Eof;LAsp->Next())
 {
  int NumPodr=LAsp->FieldByName("Подразделение")->Value;
- if(!ServOtd->Locate("NumObslOtdel",NumPodr, SO))
+ if(!ServOtd->Locate("Номер подразделения",NumPodr, SO))
  {
   //Ненайдено
   LAsp->Edit();
   LAsp->FieldByName("Del")->Value=true;
   LAsp->Post();
+  Deleting=true;
  }
 }
-
+if(Deleting)
+{
+ Zast->BlockMK(false);
+ShowMessage("За время работы на сервере было изменено распределение подразделений по пользователям\n Часть аспектов возможно будет удалено, они уже не ваши.");
+ Zast->BlockMK(true);
+}
 Comm->CommandText="DELETE Аспекты.* FROM Аспекты WHERE (((Аспекты.Del)=True));";
 Comm->Execute();
 
