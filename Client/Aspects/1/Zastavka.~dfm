@@ -10332,6 +10332,10 @@ object Zast: TZast
       Caption = 'AspQ1'
       OnExecute = AspQ1Execute
     end
+    object ReadTempAsp: TAction
+      Caption = 'ReadTempAsp'
+      OnExecute = ReadTempAspExecute
+    end
   end
   object BlockServer: TTimer
     Enabled = False

@@ -481,6 +481,19 @@ object Form1: TForm1
     Font.Style = []
     ParentFont = False
   end
+  object Label1: TLabel
+    Left = 376
+    Top = 648
+    Width = 117
+    Height = 20
+    Caption = #1053#1086#1074#1072#1103' '#1079#1072#1087#1080#1089#1100
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clRed
+    Font.Height = -16
+    Font.Name = 'MS Sans Serif'
+    Font.Style = [fsBold]
+    ParentFont = False
+  end
   object Button1: TButton
     Left = 977
     Top = 45
@@ -1527,13 +1540,13 @@ object Form1: TForm1
   end
   object Svod: TADODataSet
     Parameters = <>
-    Left = 472
-    Top = 648
+    Left = 432
+    Top = 616
   end
   object Comm: TADOCommand
     Parameters = <>
-    Left = 512
-    Top = 648
+    Left = 472
+    Top = 616
   end
   object Report: TADODataSet
     Parameters = <>

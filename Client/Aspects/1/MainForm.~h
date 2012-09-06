@@ -143,6 +143,7 @@ __published:	// IDE-managed Components
         TMenuItem *N12;
         TImageList *ImageList1;
         TMenuItem *AspQ;
+        TLabel *Label1;
         void __fastcall FormClose(TObject *Sender, TCloseAction &Action);
         void __fastcall N8Click(TObject *Sender);
         void __fastcall CPodrazdelClick(TObject *Sender);
@@ -247,6 +248,7 @@ void SavePosition();
 bool LoadSit();
 
 void EnabledForm(bool B);
+bool IsNew();
 
 public:		// User declarations
         __fastcall TForm1(TComponent* Owner);

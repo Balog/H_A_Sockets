@@ -203,6 +203,7 @@ __published:	// IDE-managed Components
         TAction *PrepWriteAspUsr_MSpec;
         TAction *PostWriteAspectsUsr1;
         TAction *AspQ1;
+        TAction *ReadTempAsp;
         void __fastcall Timer1Timer(TObject *Sender);
         void __fastcall Image1Click(TObject *Sender);
         void __fastcall FormShow(TObject *Sender);
@@ -320,6 +321,7 @@ __published:	// IDE-managed Components
         void __fastcall PrepWriteAspUsr_MSpecExecute(TObject *Sender);
         void __fastcall PostWriteAspectsUsr1Execute(TObject *Sender);
         void __fastcall AspQ1Execute(TObject *Sender);
+        void __fastcall ReadTempAspExecute(TObject *Sender);
 private:	// User declarations
 String Path;
 TLocateOptions SO;
