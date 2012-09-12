@@ -139,6 +139,8 @@ if(ExtractFileName(VClients[i]->AppPatch)=="Hazards.exe")
 bool Clients::IfBlock(TCustomWinSocket *Socket, String Flag)
 {
 bool Ret=false;
+if(!AutoBlock)//Проверка самоблокировки сервера
+{
 if(Block==0)
 {
  //Сервер не заблокирован
@@ -182,6 +184,7 @@ else
  //Нельзя ни заблокировать ни разблокировать
   Ret=false;
  }
+}
 }
 return Ret;
 }
@@ -492,8 +495,15 @@ Parent->WriteDiaryEvent(IP, Login, "AdminARM", "Запись логинов", "Имя: "+Paramet
    {
    try
    {
-   MergeAspectsUser(StrToInt(Parameters[0]));
-   this->Socket->SendText("Command:18;0|");
+   bool Del=MergeAspectsUser(StrToInt(Parameters[0]));
+   if(Del)
+   {
+   this->Socket->SendText("Command:18;1|1#1");
+   }
+   else
+   {
+   this->Socket->SendText("Command:18;1|1#0");
+   }
    }
    catch(...)
    {
@@ -1618,8 +1628,9 @@ for(Aspects->First();!Aspects->Eof;Aspects->Next())
 }
 }
 //---------------------------------------------------------------------------
-void Client::MergeAspectsUser(int NumLogin)
+bool Client::MergeAspectsUser(int NumLogin)
 {
+bool Del=false;
 TADOConnection *Database=GetDatabase("Аспекты");
 MP<TADODataSet>TempPodr(Form1);
 TempPodr->Connection=Database;
@@ -1698,6 +1709,7 @@ for(Asp->First();!Asp->Eof;Asp->Next())
   else
   {
   Asp->FieldByName("Вид территории")->Value=0;
+  Del=true;
   }
 
   if(Deyat->Locate("Номер деятельности", TempAsp->FieldByName("Деятельность")->AsInteger, SO))
@@ -1707,6 +1719,7 @@ for(Asp->First();!Asp->Eof;Asp->Next())
   else
   {
   Asp->FieldByName("Деятельность")->Value=0;
+  Del=true;
   }
 
   Asp->FieldByName("Специальность")->Value=TempAsp->FieldByName("Специальность")->Value;
@@ -1718,6 +1731,7 @@ for(Asp->First();!Asp->Eof;Asp->Next())
   else
   {
   Asp->FieldByName("Аспект")->Value=0;
+  Del=true;
   }
 
   if(Vozd->Locate("Номер воздействия", TempAsp->FieldByName("Воздействие")->AsInteger, SO))
@@ -1727,6 +1741,7 @@ for(Asp->First();!Asp->Eof;Asp->Next())
   else
   {
   Asp->FieldByName("Воздействие")->Value=0;
+  Del=true;
   }
 
   Asp->FieldByName("G")->Value=TempAsp->FieldByName("G")->Value;
@@ -1807,6 +1822,8 @@ for(TempAsp->First();!TempAsp->Eof;TempAsp->Next())
 
 Comm->CommandText="Delete * From TempПодразделения";
 Comm->Execute();
+
+return Del;
 }
 //---------------------------------------------------------------------------
 //***************************************************************************
@@ -1831,7 +1848,7 @@ DiaryBase=new TADOConnection(this->Form);
 
 DiaryBase->ConnectionString="Provider=Microsoft.Jet.OLEDB.4.0;User ID=Admin;Data Source="+PatchDiary+";Mode=Share Deny None;Extended Properties="";Jet OLEDB:System database="";Jet OLEDB:Registry Path="";Jet OLEDB:Database Password="";Jet OLEDB:Engine Type=5;Jet OLEDB:Database Locking Mode=1;Jet OLEDB:Global Partial Bulk Ops=2;Jet OLEDB:Global Bulk Transactions=1;Jet OLEDB:New Database Password="";Jet OLEDB:Create System Database=False;Jet OLEDB:Encrypt Database=False;Jet OLEDB:Don't Copy Locale on Compact=False;Jet OLEDB:Compact Without Replica Repair=False;Jet OLEDB:SFP=False";
 DiaryBase->LoginPrompt=false;
-DiaryBase->Connected=true;
+//DiaryBase->Connected=true;
 }
 //................................................
 Diary::~Diary()
@@ -1841,6 +1858,7 @@ delete DiaryBase;
 //.................................................
 void Diary::WriteEvent(TDateTime DT, String Comp, String Login, String Type, String Name, String Prim)
 {
+DiaryBase->Connected=true;
 MP<TADODataSet>TypeOp(Form);
 TypeOp->Connection=DiaryBase;
 TypeOp->CommandText="Select * From TypeOp order by Num";
@@ -1905,6 +1923,8 @@ Event->FieldByName("Login")->Value=Login;
 Event->FieldByName("Operation")->Value=NumOp;
 Event->FieldByName("Prim")->Value=Prim;
 Event->Post();
+
+DiaryBase->Connected=false;
 }
 //................................................
 void Diary::WriteEvent(TDateTime DT, String Comp, String Login, String Type, String Name)

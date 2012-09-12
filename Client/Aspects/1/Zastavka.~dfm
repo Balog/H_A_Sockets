@@ -10336,6 +10336,10 @@ object Zast: TZast
       Caption = 'ReadTempAsp'
       OnExecute = ReadTempAspExecute
     end
+    object VerIsNew: TAction
+      Caption = 'VerIsNew'
+      OnExecute = VerIsNewExecute
+    end
   end
   object BlockServer: TTimer
     Enabled = False

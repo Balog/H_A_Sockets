@@ -484,9 +484,22 @@ object Form1: TForm1
   object Label1: TLabel
     Left = 376
     Top = 648
-    Width = 117
+    Width = 116
     Height = 20
-    Caption = #1053#1086#1074#1072#1103' '#1079#1072#1087#1080#1089#1100
+    Caption = #1053#1077' '#1089#1086#1093#1088#1072#1085#1077#1085#1086
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clRed
+    Font.Height = -16
+    Font.Name = 'MS Sans Serif'
+    Font.Style = [fsBold]
+    ParentFont = False
+  end
+  object Label27: TLabel
+    Left = 256
+    Top = 624
+    Width = 196
+    Height = 20
+    Caption = #1053#1077#1074#1072#1083#1080#1076#1085#1099#1093' '#1079#1072#1087#1080#1089#1077#1081' - '
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clRed
     Font.Height = -16
@@ -1540,13 +1553,13 @@ object Form1: TForm1
   end
   object Svod: TADODataSet
     Parameters = <>
-    Left = 432
-    Top = 616
+    Left = 520
+    Top = 640
   end
   object Comm: TADOCommand
     Parameters = <>
-    Left = 472
-    Top = 616
+    Left = 552
+    Top = 640
   end
   object Report: TADODataSet
     Parameters = <>
@@ -1595,7 +1608,7 @@ object Form1: TForm1
     end
   end
   object ImageList1: TImageList
-    Left = 240
+    Left = 176
     Top = 608
     Bitmap = {
       494C010106000A00040010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600

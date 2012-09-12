@@ -616,6 +616,8 @@ if(Documents->ReadWrite.size()!=0)
 {
 try
 {
+
+
 Documents->RW=Documents->ReadWrite.begin();
 S=Documents->ReadWrite[0];
 Documents->ReadWrite.erase(Documents->RW);
@@ -3317,14 +3319,8 @@ try
 {
 MergeAspects(Form1->NumLogin, false);
 
-MP<TADOCommand>Comm(this);
-Comm->Connection=Zast->ADOUsrAspect;
-Comm->CommandText="Delete * From CompareAspects";
-Comm->Execute();
-
-Comm->CommandText="INSERT INTO CompareAspects ( [Номер аспекта], Подразделение, Ситуация, [Вид территории], Деятельность, Специальность, Аспект, Воздействие, G, O, R, S, T, L, N, Z, Значимость, [Проявление воздействия], [Тяжесть последствий], Приоритетность, [Выполняющиеся мероприятия], [Предлагаемые мероприятия], [Мониторинг и контроль], [Предлагаемый мониторинг и контроль] ) SELECT Аспекты.[ServerNum], Аспекты.Подразделение, Аспекты.Ситуация, Аспекты.[Вид территории], Аспекты.Деятельность, Аспекты.Специальность, Аспекты.Аспект, Аспекты.Воздействие, Аспекты.G, Аспекты.O, Аспекты.R, Аспекты.S, Аспекты.T, Аспекты.L, Аспекты.N, Аспекты.Z, Аспекты.Значимость, Аспекты.[Проявление воздействия], Аспекты.[Тяжесть последствий], Аспекты.Приоритетность, Аспекты.[Выполняющиеся мероприятия], Аспекты.[Предлагаемые мероприятия], Аспекты.[Мониторинг и контроль], Аспекты.[Предлагаемый мониторинг и контроль] FROM Аспекты;";
-Comm->Execute();
-
+ReadTempAsp->Execute();
+Form1->CountInvalid();
 Zast->MClient->WriteDiaryEvent("NetAspects","Конец чтения аспектов (пользователь)","");
 }
 catch(...)
@@ -3968,12 +3964,19 @@ Zast->MClient->ReadTable("Аспекты", ServerSQL, "Аспекты_П", ClientSQL);
 void __fastcall TZast::ReadTempAspExecute(TObject *Sender)
 {
  Zast->MClient->Act.ParamComm.clear();
- Zast->MClient->Act.ParamComm.push_back("ReadWriteDoc");
+ Zast->MClient->Act.ParamComm.push_back("VerIsNew");
  String ServerSQL="SELECT Аспекты.[Номер аспекта],     Аспекты.Подразделение,     Аспекты.Ситуация,     Аспекты.[Вид территории],     Аспекты.Деятельность,     Аспекты.Специальность,     Аспекты.Аспект,     Аспекты.Воздействие,     Аспекты.G,     Аспекты.O,     Аспекты.R,     Аспекты.S,     Аспекты.T,     Аспекты.L,     Аспекты.N,     Аспекты.Z,     Аспекты.Значимость,     Аспекты.[Проявление воздействия],     Аспекты.[Тяжесть последствий],     Аспекты.Приоритетность,     Аспекты.[Выполняющиеся мероприятия],     Аспекты.[Предлагаемые мероприятия],     Аспекты.[Мониторинг и контроль],     Аспекты.[Предлагаемый мониторинг и контроль],     Аспекты.Исполнитель,      Аспекты.[Дата создания],     Аспекты.[Начало действия],     Аспекты.[Конец действия] FROM (Подразделения INNER JOIN ObslOtdel ON Подразделения.[Номер подразделения] = ObslOtdel.NumObslOtdel) INNER JOIN Аспекты ON Подразделения.[Номер подразделения] = Аспекты.Подразделение WHERE (((ObslOtdel.Login)="+IntToStr(Form1->NumLogin)+"));";
  String ClientSQL="SELECT CompareAspects.[Номер аспекта], CompareAspects.Подразделение, CompareAspects.Ситуация, CompareAspects.[Вид территории], CompareAspects.Деятельность, CompareAspects.Специальность, CompareAspects.Аспект, CompareAspects.Воздействие, CompareAspects.G, CompareAspects.O, CompareAspects.R, CompareAspects.S, CompareAspects.T, CompareAspects.L, CompareAspects.N, CompareAspects.Z, CompareAspects.Значимость, CompareAspects.[Проявление воздействия], CompareAspects.[Тяжесть последствий], CompareAspects.Приоритетность, CompareAspects.[Выполняющиеся мероприятия], CompareAspects.[Предлагаемые мероприятия], CompareAspects.[Мониторинг и контроль], CompareAspects.[Предлагаемый мониторинг и контроль], CompareAspects.Исполнитель,  CompareAspects.[Дата создания], CompareAspects.[Начало действия], CompareAspects.[Конец действия] FROM CompareAspects;";
 Zast->MClient->ReadTable("Аспекты", ServerSQL, "Аспекты_П", ClientSQL);
 
 
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TZast::VerIsNewExecute(TObject *Sender)
+{
+Form1->Label1->Visible=Form1->IsNew();
+ReadWriteDoc->Execute();
 }
 //---------------------------------------------------------------------------
 

@@ -16,6 +16,7 @@
 #include <stdio.h>
 #include <ActnList.hpp>
 #include <ActnMan.hpp>
+#include <ExtCtrls.hpp>
 #include <vector>
 using namespace std;
 const MyTrayIcon = WM_USER+1;
@@ -67,6 +68,8 @@ __published:	// IDE-managed Components
         TMainMenu *MainMenu1;
         TMenuItem *N6;
         TMenuItem *N7;
+        TTimer *Timer1;
+        TTimer *ServisDB;
         void __fastcall ServerSocketClientConnect(TObject *Sender,
           TCustomWinSocket *Socket);
         void __fastcall ServerSocketClientDisconnect(TObject *Sender,
@@ -93,7 +96,10 @@ __published:	// IDE-managed Components
         void __fastcall FormCreate(TObject *Sender);
         void __fastcall N7Click(TObject *Sender);
         void __fastcall N6Click(TObject *Sender);
+        void __fastcall Timer1Timer(TObject *Sender);
+        void __fastcall ServisDBTimer(TObject *Sender);
 private:	// User declarations
+TDateTime AT;
 int Block;
 Clients* Cl;
 String Path;
@@ -111,6 +117,7 @@ int LicCount;
 int EditLoginNumber;
 
 void VerifyLicense();
+void ServisDatabase();
 void __fastcall TForm1::SelectOtdel(TObject *Sender);
 public:		// User declarations
         __fastcall TForm1(TComponent* Owner);
@@ -119,6 +126,7 @@ void UpdateTempLogin();
 void UpdateOtdel(int NumLogin);
 void SaveCode(String Login, String Password);
 TNotifyIconData NID;
+void UnBlockClients();
 
         BEGIN_MESSAGE_MAP
           VCL_MESSAGE_HANDLER(MyTrayIcon,TMessage,MTIcon);

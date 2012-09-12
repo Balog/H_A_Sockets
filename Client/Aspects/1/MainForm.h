@@ -144,6 +144,7 @@ __published:	// IDE-managed Components
         TImageList *ImageList1;
         TMenuItem *AspQ;
         TLabel *Label1;
+        TLabel *Label27;
         void __fastcall FormClose(TObject *Sender, TCloseAction &Action);
         void __fastcall N8Click(TObject *Sender);
         void __fastcall CPodrazdelClick(TObject *Sender);
@@ -248,7 +249,7 @@ void SavePosition();
 bool LoadSit();
 
 void EnabledForm(bool B);
-bool IsNew();
+
 
 public:		// User declarations
         __fastcall TForm1(TComponent* Owner);
@@ -289,6 +290,9 @@ AnsiString Filtr1, Filtr2;
 void PrepareMergeAspects();
 void  MergeAspects(int NumLogin);
 void  ReadSprav();
+
+bool IsNew();
+void CountInvalid();
 
         BEGIN_MESSAGE_MAP
           VCL_MESSAGE_HANDLER(WM_SYSCOMMAND, TMessage, WMSysCommand)

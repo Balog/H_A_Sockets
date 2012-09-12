@@ -139,6 +139,8 @@ if(ExtractFileName(VClients[i]->AppPatch)=="Hazards.exe")
 bool Clients::IfBlock(TCustomWinSocket *Socket, String Flag)
 {
 bool Ret=false;
+if(!AutoBlock)//Проверка самоблокировки сервера
+{
 if(Block==0)
 {
  //Сервер не заблокирован
@@ -183,6 +185,7 @@ else
   Ret=false;
  }
 }
+}
 return Ret;
 }
 //-------------------------------------------------------------------------
@@ -202,6 +205,11 @@ for(unsigned int i=0;i<VForm.size();i++)
 delete VForm[i];
 }
 VForm.clear();
+
+for(unsigned int i=0; i<Parent->VBases.size(); i++)
+{
+ Parent->VBases[i].Database->Connected=false;
+}
 }
 //***************************************************
 void Client::CommandExec(int Comm, vector<String>Parameters)
@@ -1845,7 +1853,7 @@ DiaryBase=new TADOConnection(this->Form);
 
 DiaryBase->ConnectionString="Provider=Microsoft.Jet.OLEDB.4.0;User ID=Admin;Data Source="+PatchDiary+";Mode=Share Deny None;Extended Properties="";Jet OLEDB:System database="";Jet OLEDB:Registry Path="";Jet OLEDB:Database Password="";Jet OLEDB:Engine Type=5;Jet OLEDB:Database Locking Mode=1;Jet OLEDB:Global Partial Bulk Ops=2;Jet OLEDB:Global Bulk Transactions=1;Jet OLEDB:New Database Password="";Jet OLEDB:Create System Database=False;Jet OLEDB:Encrypt Database=False;Jet OLEDB:Don't Copy Locale on Compact=False;Jet OLEDB:Compact Without Replica Repair=False;Jet OLEDB:SFP=False";
 DiaryBase->LoginPrompt=false;
-DiaryBase->Connected=true;
+//DiaryBase->Connected=true;
 }
 //................................................
 Diary::~Diary()
@@ -1855,6 +1863,7 @@ delete DiaryBase;
 //.................................................
 void Diary::WriteEvent(TDateTime DT, String Comp, String Login, String Type, String Name, String Prim)
 {
+DiaryBase->Connected=true;
 MP<TADODataSet>TypeOp(Form);
 TypeOp->Connection=DiaryBase;
 TypeOp->CommandText="Select * From TypeOp order by Num";
@@ -1919,6 +1928,8 @@ Event->FieldByName("Login")->Value=Login;
 Event->FieldByName("Operation")->Value=NumOp;
 Event->FieldByName("Prim")->Value=Prim;
 Event->Post();
+
+DiaryBase->Connected=false;
 }
 //................................................
 void Diary::WriteEvent(TDateTime DT, String Comp, String Login, String Type, String Name)

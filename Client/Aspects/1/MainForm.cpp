@@ -139,6 +139,7 @@ if(Aspects->RecordCount!=0)
 {
 CPodrazdel->SetFocus();
 }
+CountInvalid();
 }
 //---------------------------------------------------------------------------
 void TForm1::Initialize()
@@ -1042,6 +1043,8 @@ N=Podrazdel->FieldByName("Номер подразделения")->Value;
 Aspects->Edit();
 Aspects->FieldByName("Подразделение")->Value=N;
 Aspects->Post();
+
+  Label1->Visible=IsNew();
 }
 //---------------------------------------------------------------------------
 
@@ -1054,6 +1057,8 @@ N=Situaciya->FieldByName("Номер ситуации")->Value;
 Aspects->Edit();
 Aspects->FieldByName("Ситуация")->Value=N;
 Aspects->Post();
+
+  Label1->Visible=IsNew();
 }
 //---------------------------------------------------------------------------
 
@@ -1094,6 +1099,8 @@ N=Prioritet->FieldByName("Номер приоритетности")->Value;
 Aspects->Edit();
 Aspects->FieldByName("Приоритетность")->Value=N;
 Aspects->Post();
+
+  Label1->Visible=IsNew();
 }
 //---------------------------------------------------------------------------
 
@@ -1215,7 +1222,7 @@ ComboBox1->Text=InputDocs->TextBr;
 Aspects->Edit();
 Aspects->FieldByName("Вид территории")->Value=InputDocs->NumBr;
 Aspects->Post();
-
+  Label1->Visible=IsNew();
 }
 //-------------------------------------------
 void TForm1::InpDeyat()
@@ -1225,7 +1232,7 @@ ComboBox2->Text=InputDocs->TextBr;
 Aspects->Edit();
 Aspects->FieldByName("Деятельность")->Value=InputDocs->NumBr;
 Aspects->Post();
-
+  Label1->Visible=IsNew();
 }
 //-------------------------------------------
 void TForm1::InpAsp()
@@ -1235,7 +1242,7 @@ ComboBox3->Text=InputDocs->TextBr;
 Aspects->Edit();
 Aspects->FieldByName("Аспект")->Value=InputDocs->NumBr;
 Aspects->Post();
-
+  Label1->Visible=IsNew();
 }
 //-------------------------------------------
 void TForm1::InpVozd()
@@ -1245,7 +1252,7 @@ ComboBox4->Text=InputDocs->TextBr;
 Aspects->Edit();
 Aspects->FieldByName("Воздействие")->Value=InputDocs->NumBr;
 Aspects->Post();
-
+  Label1->Visible=IsNew();
 }
 //-------------------------------------------
 void TForm1::InpMeropr()
@@ -1256,7 +1263,7 @@ DBMemo31->Lines->Add(InputDocs->TextBr);
 Aspects->Edit();
 Aspects->FieldByName("Предлагаемые мероприятия")->Value=InputDocs->TextBr;
 Aspects->Post();
-
+  Label1->Visible=IsNew();
 }
 //-------------------------------------------
 void TForm1::Calc()
@@ -1505,6 +1512,8 @@ StatusBar1->Panels->Items[2]->Text=M;
 Aspects->UpdateBatch();
 
  Label1->Visible=IsNew();
+
+CountInvalid();
 }
 //---------------------------------------------------------------
 void __fastcall TForm1::DBCheckBox1Click(TObject *Sender)
@@ -1615,24 +1624,31 @@ Aspects->UpdateBatch();
 void __fastcall TForm1::DateTimePicker1Change(TObject *Sender)
 {
 Aspects->Edit();
-Aspects->FieldByName("Дата создания")->Value=DateTimePicker1->Date;
+Aspects->FieldByName("Дата создания")->Value=(int)DateTimePicker1->Date;
 Aspects->Post();
+
+Aspects->UpdateBatch();
+  Label1->Visible=IsNew();
 }
 //---------------------------------------------------------------------------
 
 void __fastcall TForm1::DateTimePicker2Change(TObject *Sender)
 {
 Aspects->Edit();
-Aspects->FieldByName("Начало действия")->Value=DateTimePicker2->Date;
+Aspects->FieldByName("Начало действия")->Value=(int)DateTimePicker2->Date;
 Aspects->Post();
+
+  Label1->Visible=IsNew();
 }
 //---------------------------------------------------------------------------
 
 void __fastcall TForm1::DateTimePicker3Change(TObject *Sender)
 {
 Aspects->Edit();
-Aspects->FieldByName("Конец действия")->Value=DateTimePicker3->Date;
+Aspects->FieldByName("Конец действия")->Value=(int)DateTimePicker3->Date;
 Aspects->Post();
+
+  Label1->Visible=IsNew();
 }
 //---------------------------------------------------------------------------
 
@@ -1703,6 +1719,7 @@ Zast->ContStartReports->Execute();
 void __fastcall TForm1::DBMemo1Exit(TObject *Sender)
 {
 Aspects->UpdateBatch();
+  Label1->Visible=IsNew();
 }
 //----------------------------------
 
@@ -1947,20 +1964,23 @@ Report1->NumLogin=NumLogin;
 
 void __fastcall TForm1::DBMemo2Exit(TObject *Sender)
 {
-Aspects->UpdateBatch();        
+Aspects->UpdateBatch();
+  Label1->Visible=IsNew();        
 }
 //---------------------------------------------------------------------------
 
 
 void __fastcall TForm1::DBMemo31Exit(TObject *Sender)
 {
-Aspects->UpdateBatch();        
+Aspects->UpdateBatch();
+  Label1->Visible=IsNew();        
 }
 //---------------------------------------------------------------------------
 
 void __fastcall TForm1::DBMemo4Exit(TObject *Sender)
 {
-Aspects->UpdateBatch();        
+Aspects->UpdateBatch();
+  Label1->Visible=IsNew();      
 }
 //---------------------------------------------------------------------------
 void __fastcall TForm1::MetodikaN19Click(TObject *Sender)
@@ -2408,6 +2428,8 @@ ComboBox1->Text=Text;
  keybd_event(35,0,0,0);
 
  keybd_event(35,0,KEYEVENTF_KEYUP,0);
+
+
 }
 //---------------------------------------------------------------------------
 
@@ -2481,6 +2503,7 @@ InputDocs->TextBr=Tab->FieldByName("Наименование территории")->AsString;
 
 InpTer();
 }
+CountInvalid();
 }
 //---------------------------------------------------------------------------
 
@@ -2521,6 +2544,8 @@ ComboBox2->Text=Text;
  keybd_event(35,0,0,0);
 
  keybd_event(35,0,KEYEVENTF_KEYUP,0);
+
+
 }
 //---------------------------------------------------------------------------
 
@@ -2593,7 +2618,8 @@ InputDocs->NumBr=Tab->FieldByName("Номер деятельности")->AsInteger;
 InputDocs->TextBr=Tab->FieldByName("Наименование деятельности")->AsString;
 
 InpDeyat();
-}        
+}
+CountInvalid();         
 }
 //---------------------------------------------------------------------------
 
@@ -2632,6 +2658,8 @@ ComboBox3->Text=Text;
  keybd_event(35,0,0,0);
 
  keybd_event(35,0,KEYEVENTF_KEYUP,0);
+
+
 }
 //---------------------------------------------------------------------------
 
@@ -2705,6 +2733,7 @@ InputDocs->TextBr=Tab->FieldByName("Наименование аспекта")->AsString;
 
 InpAsp();
 }
+ CountInvalid();
 }
 //---------------------------------------------------------------------------
 
@@ -2743,6 +2772,8 @@ ComboBox4->Text=Text;
  keybd_event(35,0,0,0);
 
  keybd_event(35,0,KEYEVENTF_KEYUP,0);
+
+
 }
 //---------------------------------------------------------------------------
 
@@ -2816,6 +2847,7 @@ InputDocs->TextBr=Tab->FieldByName("Наименование воздействия")->AsString;
 
 InpVozd();
 }
+ CountInvalid();
 }
 //---------------------------------------------------------------------------
 
@@ -2840,10 +2872,11 @@ Zast->MClient->BlockServer("AspQ1");
 //---------------------------------------------------------------------------
 bool TForm1::IsNew()
 {
+DataSetRefresh2->Execute();
 bool New=false;
 MP<TADODataSet>Temp(this);
 Temp->Connection=Zast->ADOUsrAspect;
-Temp->CommandText="Select * from CompareAspects";
+Temp->CommandText="SELECT CompareAspects.*, Подразделения.[Номер подразделения] FROM Подразделения INNER JOIN CompareAspects ON Подразделения.ServerNum = CompareAspects.Подразделение; ";
 Temp->Active=true;
 
 MP<TADODataSet>Asp(this);
@@ -2851,12 +2884,15 @@ Asp->Connection=Zast->ADOUsrAspect;
 Asp->CommandText="Select * from Аспекты where [Номер аспекта]="+IntToStr(Aspects->FieldByName("Номер аспекта")->AsInteger);
 Asp->Active=true;
 
-int SNum=Asp->FieldByName("ServerNum")->Value;
-
+int SNum=Asp->FieldByName("ServerNum")->AsInteger;
+if(Zast->Role!=4)
+{
+if(Asp->RecordCount!=0)
+{
 if(Temp->Locate("Номер аспекта", SNum, SO))
 {
  //Найден
- if(Temp->FieldByName("Подразделение")->Value!=Asp->FieldByName("Подразделение")->Value)
+ if(Temp->FieldByName("Номер подразделения")->Value!=Asp->FieldByName("Подразделение")->Value)
  {
   New=true;
  }
@@ -2967,10 +3003,33 @@ else
  //не найден
  New=true;
 }
+}
+}
 return New;
 }
 //---------------------------------------------------------------------------
+void TForm1::CountInvalid()
+{
+DataSetRefresh2->Execute();
+String CText="SELECT Аспекты.* FROM Logins INNER JOIN ((Подразделения INNER JOIN Аспекты ON Подразделения.[Номер подразделения] = Аспекты.Подразделение) INNER JOIN ObslOtdel ON Подразделения.[Номер подразделения] = ObslOtdel.NumObslOtdel) ON Logins.Num = ObslOtdel.Login WHERE (((Logins.ServerNum)="+IntToStr(Form1->NumLogin)+")) AND  ([Вид территории]=0 OR Деятельность=0 OR Аспект=0 OR Воздействие=0 OR Ситуация=0) Order By [Номер аспекта]";
 
+MP<TADODataSet>Tab(this);
+Tab->Connection=Zast->ADOUsrAspect;
+Tab->CommandText=CText;
+Tab->Active=true;
+
+int Col=Tab->RecordCount;
+
+if(Col!=0)
+{
+Label27->Visible=true;
+Label27->Caption="Невалидных аспектов - "+IntToStr(Col)+" шт";
+}
+else
+{
+Label27->Visible=false;
+}
+}
 
 
 

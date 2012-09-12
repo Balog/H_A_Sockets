@@ -22,6 +22,7 @@ __fastcall TForm1::TForm1(TComponent* Owner)
 {
 Block=-1;
 
+
 PageControl1->ActivePageIndex=0;
 
 Path=ExtractFilePath(Application->ExeName);
@@ -33,7 +34,7 @@ int Port=Ini->ReadInteger("Main","Port",2000);
 
 
 Cl=new Clients(this);
-
+Cl->AutoBlock=false;
 
 Cl->VBases.clear();
 Base->Clear();
@@ -160,6 +161,7 @@ UpdateTempLogin();
 Users->ItemIndex=0;
 
 String File1=GetFileDatabase("Diary");
+Database->Connected=false;
 /*
 int Num1;
 for(unsigned int i=0;i<Cl->VBases.size();i++)
@@ -185,6 +187,8 @@ VerifyLicense();
 
 ServerSocket->Port=Port;
 ServerSocket->Active=true;
+
+
 Cl->DiaryEvent->WriteEvent(Now(),"Не определен", "Не известен", "Сервер", "Сервер инициирован", "");
 }
 //---------------------------------------------------------------------------
@@ -230,6 +234,13 @@ for(unsigned int i=0;i<Cl->VClients.size();i++)
 
   Cl->DiaryEvent->WriteEvent(Now(),Cl->VClients[i]->IP,Cl->VClients[i]->Login , "Сервер", "Клиент отключен","Путь: "+Cl->VClients[i]->AppPatch);
   Cl->VClients.erase(Cl->IVC);
+  delete Cl->IVC;
+
+  for(unsigned int i=0; i<Cl->VBases.size(); i++)
+{
+ Cl->VBases[i].Database->Connected=false;
+}
+
   break;
  }
  Cl->IVC++;
@@ -1058,6 +1069,10 @@ NID.hIcon=Application->Icon->Handle;
 
 strcpy(NID.szTip,"Сервер");
 Shell_NotifyIcon(NIM_ADD, &NID);
+
+Path=ExtractFilePath(Application->ExeName);
+MP<TIniFile>Ini(Path+"Server.ini");
+AT=Ini->ReadTime("Main","ArchiveTime",StrToTime("00:00:00"));
 }
 //---------------------------------------------------------------------------
 void __fastcall TForm1::MTIcon(TMessage&a)
@@ -1176,4 +1191,86 @@ for(unsigned int i=0; i<Cl->VClients.size(); i++)
 }
 //-----------------------------------------------------------------------------
 
+
+
+void __fastcall TForm1::Timer1Timer(TObject *Sender)
+{
+Word Hour;
+Word Min;
+Word Sec;
+Word MSec;
+
+int H;
+int M;
+
+int SH;
+int SM;
+
+DecodeTime(Now(),Hour, Min, Sec, MSec);
+H=(int)Hour;
+M=(int)Min;
+
+DecodeTime(AT,Hour, Min, Sec, MSec);
+SH=(int)Hour;
+SM=(int)Min;
+
+if(H==SH & M==SM)
+{
+
+
+
+if(Block<=0)
+{
+ //Сервер не заблокирован
+ServisDatabase();
+
+}
+else
+{
+ //Сервер заблокирован
+ ServisDB->Enabled=true; //Ожидание разблокировки
+}
+}
+}
+//---------------------------------------------------------------------------
+void TForm1::ServisDatabase()
+{
+try
+{
+Cl->AutoBlock=true; //Самоблокировка
+//Обслуживание баз данных
+  for(unsigned int i=0; i<Cl->VBases.size(); i++)
+{
+ Cl->VBases[i].Database->Connected=false;
+}
+
+for(unsigned int i=0;i<Cl->VBases.size();i++)
+{
+/*
+ADOConn->PackDB();
+ADOConn->Backup("Archive");
+*/
+// Cl->VBases[i].Database->DisconnectDB();
+ Cl->VBases[i].Database->PackDB();
+ Cl->VBases[i].Database->Backup("Archive");
+// Cl->VBases[i].Database->ConnectDB();
+}
+Cl->AutoBlock=false; //Саморазблокировка
+}
+catch(...)
+{
+Cl->AutoBlock=false; //Саморазблокировка
+}
+}
+//---------------------------------------------------------------------------
+void __fastcall TForm1::ServisDBTimer(TObject *Sender)
+{
+if(Block==0)
+{
+ //Сервер разблокирован
+ServisDB->Enabled=false;
+ServisDatabase();
+}
+}
+//---------------------------------------------------------------------------
 

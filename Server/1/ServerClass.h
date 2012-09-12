@@ -4,7 +4,7 @@
 #include <ADODB.hpp>
 #include <DB.hpp>
 #include <ScktComp.hpp>
-//#include "MDBConnector.h"
+#include "MDBConnector.h"
 using namespace std;
 #ifndef ServerClassH
 #define ServerClassH
@@ -16,7 +16,7 @@ String Patch;
 bool MainSpec;
 String FileName;
 int LicCount;
-TADOConnection *Database;
+MDBConnector *Database;
 //TADOCommand* Command;
 };
 //------------------------------------------------------------------------
@@ -58,6 +58,7 @@ void WriteDiaryEvent(String Comp, String Login, String Type, String Name);
 void ConnectDiary(String DiaryPatch);
 void Clients::SearchDubl(String IP, String Login, String AppPatch, TCustomWinSocket *S);
 TCustomWinSocket *Block;
+bool AutoBlock;
 bool IfBlock(TCustomWinSocket *Socket, String Flag);
 };
 //-------------------------------------------------------------------------

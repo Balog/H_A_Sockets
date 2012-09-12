@@ -330,4 +330,17 @@ object Form1: TForm1
       OnClick = N7Click
     end
   end
+  object Timer1: TTimer
+    Interval = 60000
+    OnTimer = Timer1Timer
+    Left = 16
+    Top = 72
+  end
+  object ServisDB: TTimer
+    Enabled = False
+    Interval = 15000
+    OnTimer = ServisDBTimer
+    Left = 16
+    Top = 112
+  end
 end

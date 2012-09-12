@@ -452,16 +452,16 @@ void __fastcall TFilter::ComboBox2Click(TObject *Sender)
 {
 if (ComboBox2->ItemIndex==0)
 {
-CText="SELECT Аспекты.* FROM Logins INNER JOIN ((Подразделения INNER JOIN Аспекты ON Подразделения.[Номер подразделения] = Аспекты.Подразделение) INNER JOIN ObslOtdel ON Подразделения.[Номер подразделения] = ObslOtdel.NumObslOtdel) ON Logins.Num = ObslOtdel.Login WHERE (((Logins.ServerNum)="+IntToStr(Form1->NumLogin)+")) AND  Подразделение<>0 AND Деятельность<>0 AND Аспект<>0 AND Воздействие<>0 AND Ситуация<>0 Order By [Номер аспекта]";
-Filtr1="(Подразделение<>0 AND Деятельность<>0 AND Аспект<>0 AND Воздействие<>0 AND Ситуация<>0)";
-Filtr2="Значимость=True AND (Подразделение<>0 AND Деятельность<>0 AND Аспект<>0 AND Воздействие<>0 AND Ситуация<>0)";
+CText="SELECT Аспекты.* FROM Logins INNER JOIN ((Подразделения INNER JOIN Аспекты ON Подразделения.[Номер подразделения] = Аспекты.Подразделение) INNER JOIN ObslOtdel ON Подразделения.[Номер подразделения] = ObslOtdel.NumObslOtdel) ON Logins.Num = ObslOtdel.Login WHERE (((Logins.ServerNum)="+IntToStr(Form1->NumLogin)+")) AND  [Вид территории]<>0 AND Деятельность<>0 AND Аспект<>0 AND Воздействие<>0 AND Ситуация<>0 Order By [Номер аспекта]";
+Filtr1="([Вид территории]<>0 AND Деятельность<>0 AND Аспект<>0 AND Воздействие<>0 AND Ситуация<>0)";
+Filtr2="Значимость=True AND ([Вид территории]<>0 AND Деятельность<>0 AND Аспект<>0 AND Воздействие<>0 AND Ситуация<>0)";
 
 }
 else
 {
-CText="SELECT Аспекты.* FROM Logins INNER JOIN ((Подразделения INNER JOIN Аспекты ON Подразделения.[Номер подразделения] = Аспекты.Подразделение) INNER JOIN ObslOtdel ON Подразделения.[Номер подразделения] = ObslOtdel.NumObslOtdel) ON Logins.Num = ObslOtdel.Login WHERE (((Logins.ServerNum)="+IntToStr(Form1->NumLogin)+")) AND  (Подразделение=0 OR Деятельность=0 OR Аспект=0 OR Воздействие=0 OR Ситуация=0) Order By [Номер аспекта]";
-Filtr1="(Подразделение=0 OR Деятельность=0 OR Аспект=0 OR Воздействие=0 OR Ситуация=0)";
-Filtr2="Значимость=True AND (Подразделение=0 OR Деятельность=0 OR Аспект=0 OR Воздействие=0 OR Ситуация=0)";
+CText="SELECT Аспекты.* FROM Logins INNER JOIN ((Подразделения INNER JOIN Аспекты ON Подразделения.[Номер подразделения] = Аспекты.Подразделение) INNER JOIN ObslOtdel ON Подразделения.[Номер подразделения] = ObslOtdel.NumObslOtdel) ON Logins.Num = ObslOtdel.Login WHERE (((Logins.ServerNum)="+IntToStr(Form1->NumLogin)+")) AND  ([Вид территории]=0 OR Деятельность=0 OR Аспект=0 OR Воздействие=0 OR Ситуация=0) Order By [Номер аспекта]";
+Filtr1="([Вид территории]=0 OR Деятельность=0 OR Аспект=0 OR Воздействие=0 OR Ситуация=0)";
+Filtr2="Значимость=True AND ([Вид территории]=0 OR Деятельность=0 OR Аспект=0 OR Воздействие=0 OR Ситуация=0)";
 
 }
  Button5->Enabled=true;
