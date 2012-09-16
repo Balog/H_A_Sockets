@@ -205,6 +205,11 @@ for(unsigned int i=0;i<VForm.size();i++)
 delete VForm[i];
 }
 VForm.clear();
+
+for(unsigned int i=0; i<Parent->VBases.size(); i++)
+{
+ Parent->VBases[i].Database->Connected=false;
+}
 }
 //***************************************************
 void Client::CommandExec(int Comm, vector<String>Parameters)

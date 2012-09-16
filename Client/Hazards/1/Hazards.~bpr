@@ -1,0 +1,154 @@
+<?xml version='1.0' encoding='utf-8' ?>
+<!-- C++Builder XML Project -->
+<PROJECT>
+  <MACROS>
+    <VERSION value="BCB.06.00"/>
+    <PROJECT value="Hazards.exe"/>
+    <OBJFILES value="Hazards.obj ..\..\Aspects\1\ClientClass.obj ..\..\Aspects\1\Main.obj 
+      ..\..\Aspects\1\MasterPointer.obj ..\..\Aspects\1\MDBConnector.obj 
+      ..\..\Aspects\1\PassForm.obj ..\..\Aspects\1\Progress.obj 
+      ..\..\Aspects\1\Zastavka.obj ..\..\Aspects\1\CodeText.obj 
+      ..\..\Aspects\1\MainForm.obj ..\..\Aspects\1\Rep1.obj 
+      ..\..\Aspects\1\Reports.obj ..\..\Aspects\1\Svod.obj 
+      ..\..\Aspects\1\FMoveAsp.obj ..\..\Aspects\1\InpDocs.obj 
+      ..\..\Aspects\1\InputFiltr.obj ..\..\Aspects\1\About.obj 
+      ..\..\Aspects\1\F_Vvedenie.obj ..\..\Aspects\1\Metod.obj"/>
+    <RESFILES value="Hazards.res"/>
+    <IDLFILES value=""/>
+    <IDLGENFILES value=""/>
+    <DEFFILE value=""/>
+    <RESDEPEN value="$(RESFILES) ..\..\Aspects\1\Main.dfm ..\..\Aspects\1\PassForm.dfm 
+      ..\..\Aspects\1\Progress.dfm ..\..\Aspects\1\Zastavka.dfm 
+      ..\..\Aspects\1\MainForm.dfm ..\..\Aspects\1\Rep1.dfm 
+      ..\..\Aspects\1\Svod.dfm ..\..\Aspects\1\FMoveAsp.dfm 
+      ..\..\Aspects\1\InpDocs.dfm ..\..\Aspects\1\InputFiltr.dfm 
+      ..\..\Aspects\1\About.dfm ..\..\Aspects\1\F_Vvedenie.dfm 
+      ..\..\Aspects\1\Metod.dfm"/>
+    <LIBFILES value=""/>
+    <LIBRARIES value="indy.lib vcldb.lib adortl.lib dbrtl.lib vclx.lib dclusr.lib rtl.lib vcl.lib"/>
+    <SPARELIBS value="vcl.lib rtl.lib dclusr.lib vclx.lib dbrtl.lib adortl.lib vcldb.lib indy.lib"/>
+    <PACKAGES value="vcl.bpi rtl.bpi dbrtl.bpi adortl.bpi vcldb.bpi vclx.bpi bdertl.bpi 
+      vcldbx.bpi ibxpress.bpi dsnap.bpi cds.bpi bdecds.bpi qrpt.bpi teeui.bpi 
+      teedb.bpi tee.bpi dss.bpi teeqr.bpi visualclx.bpi visualdbclx.bpi 
+      dsnapcrba.bpi dsnapcon.bpi bcbsmp.bpi vclie.bpi xmlrtl.bpi inet.bpi 
+      inetdbbde.bpi inetdbxpress.bpi inetdb.bpi nmfast.bpi webdsnap.bpi 
+      bcbie.bpi websnap.bpi soaprtl.bpi dclocx.bpi dbexpress.bpi dbxcds.bpi 
+      indy.bpi bcb2kaxserver.bpi"/>
+    <PATHCPP value=".;..\..\Aspects\1;..\..\Aspects\1;..\..\Aspects\1;..\..\Aspects\1;..\..\Aspects\1;..\..\Aspects\1;..\..\Aspects\1;..\..\Aspects\1;..\..\Aspects\1;..\..\Aspects\1;..\..\Aspects\1;..\..\Aspects\1;..\..\Aspects\1;..\..\Aspects\1;..\..\Aspects\1;..\..\Aspects\1;..\..\Aspects\1;..\..\Aspects\1"/>
+    <PATHPAS value=".;"/>
+    <PATHRC value=".;"/>
+    <PATHASM value=".;"/>
+    <DEBUGLIBPATH value="$(BCB)\lib\debug"/>
+    <RELEASELIBPATH value="$(BCB)\lib\release"/>
+    <LINKER value="ilink32"/>
+    <USERDEFINES value="_DEBUG"/>
+    <SYSDEFINES value="NO_STRICT"/>
+    <MAINSOURCE value="Hazards.cpp"/>
+    <INCLUDEPATH value="..\..\Aspects\1;&quot;D:\Program Files (x86)\Borland\CBuilder6\Imports&quot;;&quot;D:\Program Files (x86)\Borland\CBuilder6\Projects&quot;;C:\Users\Алекс\Desktop\proba_Notify\Client2;$(BCB)\include;$(BCB)\include\vcl"/>
+    <LIBPATH value="..\..\Aspects\1;&quot;D:\Program Files (x86)\Borland\CBuilder6\Imports&quot;;&quot;D:\Program Files (x86)\Borland\CBuilder6\Projects&quot;;C:\Users\Алекс\Desktop\proba_Notify\Client2;$(BCB)\Projects\Lib;$(BCB)\lib\obj;$(BCB)\lib"/>
+    <WARNINGS value="-w-par"/>
+    <OTHERFILES value=""/>
+  </MACROS>
+  <OPTIONS>
+    <IDLCFLAGS value="-I..\..\Aspects\1 -I&quot;D:\Program Files (x86)\Borland\CBuilder6\Imports&quot; 
+      -I&quot;D:\Program Files (x86)\Borland\CBuilder6\Projects&quot; 
+      -IC:\Users\Алекс\Desktop\proba_Notify\Client2 -I$(BCB)\include 
+      -I$(BCB)\include\vcl -src_suffix cpp -D_DEBUG -boa"/>
+    <CFLAG1 value="-Od -H=$(BCB)\lib\vcl60.csm -Hc -Vx -Ve -X- -r- -a8 -b- -k -y -v -vi- -c 
+      -tW -tWM"/>
+    <PFLAGS value="-$Y+ -$W -$O- -$A8 -v -JPHNE -M"/>
+    <RFLAGS value=""/>
+    <AFLAGS value="/mx /w2 /zi"/>
+    <LFLAGS value="-D&quot;&quot; -aa -Tpe -x -Gn -v"/>
+    <OTHERFILES value=""/>
+  </OPTIONS>
+  <LINKER>
+    <ALLOBJ value="c0w32.obj sysinit.obj $(OBJFILES)"/>
+    <ALLRES value="$(RESFILES)"/>
+    <ALLLIB value="$(LIBFILES) $(LIBRARIES) import32.lib cp32mt.lib"/>
+    <OTHERFILES value=""/>
+  </LINKER>
+  <FILELIST>
+      <FILE FILENAME="Hazards.res" FORMNAME="" UNITNAME="Hazards.res" CONTAINERID="ResTool" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="Hazards.cpp" FORMNAME="" UNITNAME="Hazards" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\Aspects\1\ClientClass.cpp" FORMNAME="" UNITNAME="ClientClass.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\Aspects\1\Main.cpp" FORMNAME="Documents" UNITNAME="Main" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\Aspects\1\MasterPointer.cpp" FORMNAME="" UNITNAME="MasterPointer.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\Aspects\1\MDBConnector.cpp" FORMNAME="" UNITNAME="MDBConnector.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\Aspects\1\PassForm.cpp" FORMNAME="Pass" UNITNAME="PassForm" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\Aspects\1\Progress.cpp" FORMNAME="Prog" UNITNAME="Progress" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\Aspects\1\Zastavka.cpp" FORMNAME="Zast" UNITNAME="Zastavka" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\Aspects\1\CodeText.cpp" FORMNAME="" UNITNAME="CodeText" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\Aspects\1\MainForm.cpp" FORMNAME="Form1" UNITNAME="MainForm" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\Aspects\1\Rep1.cpp" FORMNAME="Report1" UNITNAME="Rep1" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\Aspects\1\Reports.cpp" FORMNAME="" UNITNAME="Reports" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\Aspects\1\Svod.cpp" FORMNAME="FSvod" UNITNAME="Svod" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\Aspects\1\FMoveAsp.cpp" FORMNAME="MAsp" UNITNAME="FMoveAsp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\Aspects\1\InpDocs.cpp" FORMNAME="InputDocs" UNITNAME="InpDocs" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\Aspects\1\InputFiltr.cpp" FORMNAME="Filter" UNITNAME="InputFiltr" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\Aspects\1\About.cpp" FORMNAME="FAbout" UNITNAME="About" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\Aspects\1\F_Vvedenie.cpp" FORMNAME="Vvedenie" UNITNAME="F_Vvedenie" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\Aspects\1\Metod.cpp" FORMNAME="Metodika" UNITNAME="Metod" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+  </FILELIST>
+  <BUILDTOOLS>
+  </BUILDTOOLS>
+
+  <IDEOPTIONS>
+[Version Info]
+IncludeVerInfo=0
+AutoIncBuild=0
+MajorVer=1
+MinorVer=0
+Release=0
+Build=0
+Debug=0
+PreRelease=0
+Special=0
+Private=0
+DLL=0
+Locale=1049
+CodePage=1251
+
+[Version Info Keys]
+CompanyName=
+FileDescription=
+FileVersion=1.0.0.0
+InternalName=
+LegalCopyright=
+LegalTrademarks=
+OriginalFilename=
+ProductName=
+ProductVersion=1.0.0.0
+Comments=
+
+[Excluded Packages]
+D:\Program Files (x86)\Borland\CBuilder6\Projects\Bpl\DclRx6.bpl=RX Library Controls and Tools
+d:\program files (x86)\borland\cbuilder6\Bin\dclite60.bpl=Borland Integrated Translation Environment
+D:\Program Files (x86)\Borland\CBuilder6\Projects\Bpl\dclrxdb6.bpl=RX Library Database Components
+
+[Debugging]
+DebugSourceDirs=$(BCB)\source\vcl
+
+[Parameters]
+RunParams=
+Launcher=
+UseLauncher=0
+DebugCWD=
+HostApplication=
+RemoteHost=
+RemotePath=
+RemoteLauncher=
+RemoteCWD=
+RemoteDebug=0
+
+[Compiler]
+ShowInfoMsgs=0
+LinkDebugVcl=0
+LinkCGLIB=0
+
+[CORBA]
+AddServerUnit=1
+AddClientUnit=1
+PrecompiledHeaders=1
+  </IDEOPTIONS>
+</PROJECT>

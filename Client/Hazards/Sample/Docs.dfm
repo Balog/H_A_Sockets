@@ -51,7 +51,7 @@ object Documents: TDocuments
     Top = 0
     Width = 1016
     Height = 694
-    ActivePage = TabCryt
+    ActivePage = TabAspects
     Align = alClient
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
@@ -60,7 +60,7 @@ object Documents: TDocuments
     Font.Style = []
     MultiLine = True
     ParentFont = False
-    TabIndex = 2
+    TabIndex = 7
     TabOrder = 0
     OnMouseDown = PageControl1MouseDown
     object TabMetod: TTabSheet

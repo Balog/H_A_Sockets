@@ -4919,7 +4919,7 @@ void __fastcall TDocuments::FormKeyUp(TObject *Sender, WORD &Key,
 {
 if(Key==112)
 {
-Application->HelpFile=ExtractFilePath(Application->ExeName)+"NetAspects.HLP";
+Application->HelpFile=ExtractFilePath(Application->ExeName)+"HAZARDS.HLP";
 switch (PageControl1->TabIndex)
 {
  case 0:
@@ -4954,7 +4954,7 @@ switch (PageControl1->TabIndex)
 
 void __fastcall TDocuments::N1Click(TObject *Sender)
 {
-Application->HelpFile=ExtractFilePath(Application->ExeName)+"NetAspects.HLP";
+Application->HelpFile=ExtractFilePath(Application->ExeName)+"HAZARDS.HLP";
   Application->HelpJump("IDH_ярюпр_цкюбяоеж");
 }
 //---------------------------------------------------------------------------

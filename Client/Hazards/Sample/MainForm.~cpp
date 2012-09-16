@@ -2992,7 +2992,7 @@ Key=0;
 
 void __fastcall TForm1::N1Click(TObject *Sender)
 {
-Application->HelpFile=ExtractFilePath(Application->ExeName)+"NetAspects.HLP";
+Application->HelpFile=ExtractFilePath(Application->ExeName)+"HAZARDS.HLP";
 Application->HelpJump("IDH_ярюпр_онкэгнбюрекэ");
 }
 //---------------------------------------------------------------------------
@@ -4563,7 +4563,7 @@ void __fastcall TForm1::FormKeyUp(TObject *Sender, WORD &Key,
 {
 if(Key==112)
 {
-Application->HelpFile=ExtractFilePath(Application->ExeName)+"NetAspects.HLP";
+Application->HelpFile=ExtractFilePath(Application->ExeName)+"HAZARDS.HLP";
 Application->HelpJump("IDH_ббнд_педюйрхпнбюмхе_х_сдюкемхе_юяоейрнб");
 }
 }
