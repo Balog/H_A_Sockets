@@ -148,6 +148,7 @@ __published:	// IDE-managed Components
         TLabel *Label21;
         TEdit *Edit8;
         TDBEdit *DBEdit1;
+        TADODataSet *Prior;
         void __fastcall FormClose(TObject *Sender, TCloseAction &Action);
         void __fastcall N8Click(TObject *Sender);
         void __fastcall CPodrazdelClick(TObject *Sender);
@@ -243,6 +244,8 @@ __published:	// IDE-managed Components
         void __fastcall N11Click(TObject *Sender);
         void __fastcall N12Click(TObject *Sender);
         void __fastcall AspQClick(TObject *Sender);
+        void __fastcall CBPriorClick(TObject *Sender);
+        void __fastcall CBPriorKeyPress(TObject *Sender, char &Key);
 private:	// User declarations
 bool Registered;
 TLocateOptions SO;

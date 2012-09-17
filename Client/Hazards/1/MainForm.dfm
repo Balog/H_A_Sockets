@@ -1455,6 +1455,8 @@ object Form1: TForm1
     Style = csDropDownList
     ItemHeight = 13
     TabOrder = 46
+    OnClick = CBPriorClick
+    OnKeyPress = CBPriorKeyPress
   end
   object Edit8: TEdit
     Left = 224
@@ -1587,10 +1589,10 @@ object Form1: TForm1
     Top = 333
   end
   object Prioritet: TADODataSet
-    CommandText = 'select * from '#1055#1088#1080#1086#1088#1080#1090#1077#1090#1085#1086#1089#1090#1100
+    CommandText = 'select * from '#1055#1088#1080#1086#1088#1080#1090#1077#1090#1085#1086#1089#1090#1100' order by ['#1053#1086#1084#1077#1088' '#1087#1088#1080#1086#1088#1080#1090#1077#1090#1085#1086#1089#1090#1080']'
     Parameters = <>
-    Left = 704
-    Top = 373
+    Left = 664
+    Top = 237
   end
   object TempAspects: TADODataSet
     Parameters = <>
@@ -2064,5 +2066,11 @@ object Form1: TForm1
       E787FE1FF87FE1E7E7E7FF9FF9FFE7E7FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
       FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF00000000000000000000000000000000
       000000000000}
+  end
+  object Prior: TADODataSet
+    CommandText = 'Select * From '#1055#1088#1080#1086#1088#1080#1090#1077#1090#1085#1086#1089#1090#1100' Order by ['#1053#1086#1084#1077#1088' '#1087#1088#1080#1086#1088#1080#1090#1077#1090#1085#1086#1089#1090#1080']'
+    Parameters = <>
+    Left = 544
+    Top = 383
   end
 end

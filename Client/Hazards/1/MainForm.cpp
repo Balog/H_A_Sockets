@@ -39,6 +39,8 @@ Prioritet->Connection=Zast->ADOUsrAspect;
 TempAspects->Connection=Zast->ADOUsrAspect;
 Znachimost->Connection=Zast->ADOUsrAspect;
 Report->Connection=Zast->ADOUsrAspect;
+Prior->Connection=Zast->ADOUsrAspect;
+
 
 Filtr1="";
 Filtr2="Значимость=True";
@@ -221,6 +223,7 @@ Vozdeystvie->Active=false;
 Posledstvie->Active=false;
 Tiagest->Active=false;
 Prioritet->Active=false;
+Prior->Active=false;
 
 Podrazdel->Active=true;
 Situaciya->Active=true;
@@ -231,6 +234,7 @@ Vozdeystvie->Active=true;
 Posledstvie->Active=true;
 Tiagest->Active=true;
 Prioritet->Active=true;
+Prior->Active=true;
 
 CPodrazdel->Clear();
 for(Podrazdel->First();!Podrazdel->Eof;Podrazdel->Next())
@@ -261,6 +265,14 @@ for(Prioritet->First();!Prioritet->Eof;Prioritet->Next())
 {
  CPrior->Items->Add(Prioritet->FieldByName("Наименование приоритетности")->AsString);
 }
+
+CBPrior->Clear();
+for(Prior->First();!Prior->Eof;Prior->Next())
+{
+ CBPrior->Items->Add(Prior->FieldByName("Наименование приоритетности")->AsString);
+}
+
+
 }
 //---------------------------------------------------------
 void TForm1::InitCombo()
@@ -3307,5 +3319,30 @@ Label27->Visible=false;
 }
 }
 
+//-----------------------------------------------------------------------
 
+void __fastcall TForm1::CBPriorClick(TObject *Sender)
+{
+int N;
+/*
+Prioritet->Active=false;
+Prioritet->CommandText="Select * From ВВР Order by [Номер приоритетности]  DESC";
+Prioritet->Active=true;
+*/
+Prior->First();
+Prior->MoveBy(CBPrior->ItemIndex);
+N=Prior->FieldByName("Номер приоритетности")->Value;
+Aspects->Edit();
+Aspects->FieldByName("Приоритетность")->Value=N;
+Aspects->Post();
+Aspects->UpdateBatch();
+ Calc();
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm1::CBPriorKeyPress(TObject *Sender, char &Key)
+{
+Key=0;         
+}
+//---------------------------------------------------------------------------
 

@@ -564,7 +564,7 @@ object Form1: TForm1
     SimplePanel = False
   end
   object DateTimePicker2: TDateTimePicker
-    Left = 817
+    Left = 825
     Top = 416
     Width = 133
     Height = 21
@@ -581,7 +581,7 @@ object Form1: TForm1
     OnKeyPress = DateTimePicker2KeyPress
   end
   object DateTimePicker3: TDateTimePicker
-    Left = 810
+    Left = 826
     Top = 416
     Width = 133
     Height = 21

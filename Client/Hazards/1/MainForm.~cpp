@@ -39,6 +39,8 @@ Prioritet->Connection=Zast->ADOUsrAspect;
 TempAspects->Connection=Zast->ADOUsrAspect;
 Znachimost->Connection=Zast->ADOUsrAspect;
 Report->Connection=Zast->ADOUsrAspect;
+Prior->Connection=Zast->ADOUsrAspect;
+
 
 Filtr1="";
 Filtr2="Значимость=True";
@@ -221,6 +223,7 @@ Vozdeystvie->Active=false;
 Posledstvie->Active=false;
 Tiagest->Active=false;
 Prioritet->Active=false;
+Prior->Active=false;
 
 Podrazdel->Active=true;
 Situaciya->Active=true;
@@ -231,6 +234,7 @@ Vozdeystvie->Active=true;
 Posledstvie->Active=true;
 Tiagest->Active=true;
 Prioritet->Active=true;
+Prior->Active=true;
 
 CPodrazdel->Clear();
 for(Podrazdel->First();!Podrazdel->Eof;Podrazdel->Next())
@@ -261,6 +265,14 @@ for(Prioritet->First();!Prioritet->Eof;Prioritet->Next())
 {
  CPrior->Items->Add(Prioritet->FieldByName("Наименование приоритетности")->AsString);
 }
+
+CBPrior->Clear();
+for(Prior->First();!Prior->Eof;Prior->Next())
+{
+ CBPrior->Items->Add(Prior->FieldByName("Наименование приоритетности")->AsString);
+}
+
+
 }
 //---------------------------------------------------------
 void TForm1::InitCombo()
@@ -1973,7 +1985,7 @@ if(this->Role<4)
  Zast->MClient->Act.ParamComm.push_back("ContStartReports");
  String ServerSQL="SELECT Подразделения.[Номер подразделения], Подразделения.[Название подразделения] FROM (Подразделения INNER JOIN ObslOtdel ON Подразделения.[Номер подразделения] = ObslOtdel.NumObslOtdel) INNER JOIN Аспекты ON Подразделения.[Номер подразделения] = Аспекты.Подразделение GROUP BY ObslOtdel.Login, Подразделения.[Номер подразделения], Подразделения.[Название подразделения] HAVING (((ObslOtdel.Login)="+IntToStr(NumLogin)+")) ORDER BY Подразделения.[Название подразделения];";
  String ClientSQL="Select [ServerNum], [Название подразделения] From TempПодразделения";
- Zast->MClient->ReadTable("Аспекты",ServerSQL, "Аспекты_П", ClientSQL);
+ Zast->MClient->ReadTable("Опасности",ServerSQL, "Опасности_П", ClientSQL);
 }
 else
 {
@@ -2199,7 +2211,7 @@ if(this->Role<4)
  Zast->MClient->Act.ParamComm.push_back("ContStartReports");
  String ServerSQL="SELECT Подразделения.[Номер подразделения], Подразделения.[Название подразделения] FROM (Подразделения INNER JOIN ObslOtdel ON Подразделения.[Номер подразделения] = ObslOtdel.NumObslOtdel) INNER JOIN Аспекты ON Подразделения.[Номер подразделения] = Аспекты.Подразделение GROUP BY ObslOtdel.Login, Подразделения.[Номер подразделения], Подразделения.[Название подразделения] HAVING (((ObslOtdel.Login)="+IntToStr(NumLogin)+")) ORDER BY Подразделения.[Название подразделения];";
  String ClientSQL="Select [ServerNum], [Название подразделения] From TempПодразделения";
- Zast->MClient->ReadTable("Аспекты",ServerSQL, "Аспекты_П", ClientSQL);
+ Zast->MClient->ReadTable("Опасности",ServerSQL, "Опасности_П", ClientSQL);
 }
 else
 {
@@ -2547,7 +2559,7 @@ if (!B) Edit3->Text="";
 Label26->Enabled=B;
 Zmax->Enabled=B;
 if (!B) Zmax->Text="";
-Label20->Enabled=B;
+//Label20->Enabled=B;
 Label21->Enabled=B;
 CPrior->Enabled=B;
 Label22->Enabled=B;

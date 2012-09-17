@@ -814,6 +814,7 @@ DelText=DelText.SubString(0, FromPos-2);
         {
         String F=Field.SubString(4, Field.Length());
         Tab->FieldList->Fields[i]->Value=StrToFloat(F);
+        break;
         }
         case 5:
         {
