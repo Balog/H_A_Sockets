@@ -434,7 +434,17 @@ TempAspects->CommandText="Select * From Аспекты Where [Номер аспекта]="+IntToStr
 TempAspects->Active=true;
 if(TempAspects->RecordCount!=0)
 {
-if(TempAspects->FieldByName("G")->Value==1)
+/*
+CheckBox1->Checked=TempAspects->FieldByName("G")->AsBoolean;
+CheckBox2->Checked=TempAspects->FieldByName("R")->AsBoolean;
+CheckBox3->Checked=TempAspects->FieldByName("T")->AsBoolean;
+CheckBox4->Checked=TempAspects->FieldByName("L")->AsBoolean;
+CheckBox5->Checked=TempAspects->FieldByName("O")->AsBoolean;
+CheckBox6->Checked=TempAspects->FieldByName("S")->AsBoolean;
+CheckBox7->Checked=TempAspects->FieldByName("N")->AsBoolean;
+*/
+
+if(TempAspects->FieldByName("G")->Value==-1)
 {
 
 C1=true;
@@ -447,7 +457,7 @@ C1=false;
 
 }
 
-if(TempAspects->FieldByName("R")->Value==1)
+if(TempAspects->FieldByName("R")->Value==-1)
 {
 
 C2=true;
@@ -460,7 +470,7 @@ C2=false;
 
 }
 
-if(TempAspects->FieldByName("T")->Value==1)
+if(TempAspects->FieldByName("T")->Value==-1)
 {
 
 C3=true;
@@ -473,7 +483,7 @@ C3=false;
 
 }
 
-if(TempAspects->FieldByName("L")->Value==1)
+if(TempAspects->FieldByName("L")->Value==-1)
 {
 
 C4=true;
@@ -486,7 +496,7 @@ C4=false;
 
 }
 
-if(TempAspects->FieldByName("O")->Value==1)
+if(TempAspects->FieldByName("O")->Value==-1)
 {
 
 C5=true;
@@ -499,7 +509,7 @@ C5=false;
 
 }
 
-if(TempAspects->FieldByName("S")->Value==1)
+if(TempAspects->FieldByName("S")->Value==-1)
 {
 
 C6=true;
@@ -513,7 +523,7 @@ C6=false;
 
 }
 
-if(TempAspects->FieldByName("N")->Value==1)
+if(TempAspects->FieldByName("N")->Value==-1)
 {
 
 C7=true;
@@ -588,6 +598,7 @@ else
 {
 CheckBox7->Checked=false;
 }
+
 }
 }
 
@@ -1104,6 +1115,10 @@ Aspects->UpdateBatch();
 
 void __fastcall TForm1::CPriorClick(TObject *Sender)
 {
+Prioritet->Active=false;
+Prioritet->CommandText="Select * From ВВР Order by [Номер приоритетности]  DESC";
+Prioritet->Active=true;
+
 int N;
 Prioritet->First();
 Prioritet->MoveBy(CPrior->ItemIndex);
@@ -1111,8 +1126,11 @@ N=Prioritet->FieldByName("Номер приоритетности")->Value;
 Aspects->Edit();
 Aspects->FieldByName("Приоритетность")->Value=N;
 Aspects->Post();
-
+Aspects->UpdateBatch();
   Label1->Visible=IsNew();
+
+
+ Calc();
 }
 //---------------------------------------------------------------------------
 
@@ -3345,4 +3363,6 @@ void __fastcall TForm1::CBPriorKeyPress(TObject *Sender, char &Key)
 Key=0;         
 }
 //---------------------------------------------------------------------------
+
+
 

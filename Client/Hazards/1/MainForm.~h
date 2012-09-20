@@ -244,6 +244,8 @@ __published:	// IDE-managed Components
         void __fastcall N11Click(TObject *Sender);
         void __fastcall N12Click(TObject *Sender);
         void __fastcall AspQClick(TObject *Sender);
+        void __fastcall CBPriorClick(TObject *Sender);
+        void __fastcall CBPriorKeyPress(TObject *Sender, char &Key);
 private:	// User declarations
 bool Registered;
 TLocateOptions SO;

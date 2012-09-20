@@ -1104,6 +1104,10 @@ Aspects->UpdateBatch();
 
 void __fastcall TForm1::CPriorClick(TObject *Sender)
 {
+Prioritet->Active=false;
+Prioritet->CommandText="Select * From ВВР Order by [Номер приоритетности]  DESC";
+Prioritet->Active=true;
+
 int N;
 Prioritet->First();
 Prioritet->MoveBy(CPrior->ItemIndex);
@@ -1111,8 +1115,11 @@ N=Prioritet->FieldByName("Номер приоритетности")->Value;
 Aspects->Edit();
 Aspects->FieldByName("Приоритетность")->Value=N;
 Aspects->Post();
-
+Aspects->UpdateBatch();
   Label1->Visible=IsNew();
+
+
+ Calc();
 }
 //---------------------------------------------------------------------------
 
@@ -3318,6 +3325,33 @@ else
 Label27->Visible=false;
 }
 }
+
+//-----------------------------------------------------------------------
+
+void __fastcall TForm1::CBPriorClick(TObject *Sender)
+{
+int N;
+/*
+Prioritet->Active=false;
+Prioritet->CommandText="Select * From ВВР Order by [Номер приоритетности]  DESC";
+Prioritet->Active=true;
+*/
+Prior->First();
+Prior->MoveBy(CBPrior->ItemIndex);
+N=Prior->FieldByName("Номер приоритетности")->Value;
+Aspects->Edit();
+Aspects->FieldByName("Приоритетность")->Value=N;
+Aspects->Post();
+Aspects->UpdateBatch();
+ Calc();
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm1::CBPriorKeyPress(TObject *Sender, char &Key)
+{
+Key=0;         
+}
+//---------------------------------------------------------------------------
 
 
 
