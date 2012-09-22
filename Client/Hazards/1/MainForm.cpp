@@ -17,6 +17,7 @@
 #include "F_Vvedenie.h"
 #include "Metod.h"
 #include "Winuser.h"
+#include "Math.hpp"
 //---------------------------------------------------------------------------
 #pragma package(smart_init)
 #pragma resource "*.dfm"
@@ -296,11 +297,11 @@ EnabledForm(true);
 
 
 
- N1=Aspects->FieldByName("Подразделение")->Value;
- N2=Aspects->FieldByName("Ситуация")->Value;
- N3=Aspects->FieldByName("Проявление воздействия")->Value;
- N4=Aspects->FieldByName("Тяжесть последствий")->Value;
- N5=Aspects->FieldByName("Приоритетность")->Value;
+ N1=Aspects->FieldByName("Подразделение")->AsInteger;
+ N2=Aspects->FieldByName("Ситуация")->AsInteger;
+ N3=Aspects->FieldByName("Проявление воздействия")->AsInteger;
+ N4=Aspects->FieldByName("Тяжесть последствий")->AsInteger;
+ N5=Aspects->FieldByName("Приор")->AsInteger;
 
 
 
@@ -1124,7 +1125,7 @@ Prioritet->First();
 Prioritet->MoveBy(CPrior->ItemIndex);
 N=Prioritet->FieldByName("Номер приоритетности")->Value;
 Aspects->Edit();
-Aspects->FieldByName("Приоритетность")->Value=N;
+Aspects->FieldByName("Приор")->Value=N;
 Aspects->Post();
 Aspects->UpdateBatch();
   Label1->Visible=IsNew();
@@ -3226,39 +3227,47 @@ if(Temp->Locate("Номер аспекта", SNum, SO))
  {
   New=true;
  }
- if(Temp->FieldByName("G")->Value!=Asp->FieldByName("G")->Value)
+ if(Temp->FieldByName("G")->AsBoolean!=Asp->FieldByName("G")->AsBoolean)
  {
   New=true;
  }
- if(Temp->FieldByName("O")->Value!=Asp->FieldByName("O")->Value)
+ if(Temp->FieldByName("O")->AsBoolean!=Asp->FieldByName("O")->AsBoolean)
  {
   New=true;
  }
- if(Temp->FieldByName("R")->Value!=Asp->FieldByName("R")->Value)
+ if(Temp->FieldByName("R")->AsBoolean!=Asp->FieldByName("R")->AsBoolean)
  {
   New=true;
  }
- if(Temp->FieldByName("S")->Value!=Asp->FieldByName("S")->Value)
+ if(Temp->FieldByName("S")->AsBoolean!=Asp->FieldByName("S")->AsBoolean)
  {
   New=true;
  }
- if(Temp->FieldByName("T")->Value!=Asp->FieldByName("T")->Value)
+ if(Temp->FieldByName("T")->AsBoolean!=Asp->FieldByName("T")->AsBoolean)
  {
   New=true;
  }
- if(Temp->FieldByName("L")->Value!=Asp->FieldByName("L")->Value)
+ if(Temp->FieldByName("L")->AsBoolean!=Asp->FieldByName("L")->AsBoolean)
  {
   New=true;
  }
- if(Temp->FieldByName("N")->Value!=Asp->FieldByName("N")->Value)
+ if(Temp->FieldByName("N")->AsBoolean!=Asp->FieldByName("N")->AsBoolean)
  {
   New=true;
  }
- if(Temp->FieldByName("Z")->Value!=Asp->FieldByName("Z")->Value)
+ double Z1=Temp->FieldByName("Z")->AsFloat;
+
+ double Z2=Asp->FieldByName("Z")->AsFloat;
+
+ if(RoundTo(Z1,-2)!=RoundTo(Z2,-2))
  {
   New=true;
  }
  if(Temp->FieldByName("Значимость")->Value!=Asp->FieldByName("Значимость")->Value)
+ {
+  New=true;
+ }
+ if(Temp->FieldByName("Наименование значимости")->Value!=Asp->FieldByName("Наименование значимости")->Value)
  {
   New=true;
  }
@@ -3271,6 +3280,10 @@ if(Temp->Locate("Номер аспекта", SNum, SO))
   New=true;
  }
  if(Temp->FieldByName("Приоритетность")->Value!=Asp->FieldByName("Приоритетность")->Value)
+ {
+  New=true;
+ }
+ if(Temp->FieldByName("Приор")->AsInteger!=Asp->FieldByName("Приор")->AsInteger)
  {
   New=true;
  }

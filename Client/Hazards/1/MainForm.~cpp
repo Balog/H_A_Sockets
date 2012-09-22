@@ -17,6 +17,7 @@
 #include "F_Vvedenie.h"
 #include "Metod.h"
 #include "Winuser.h"
+#include "Math.hpp"
 //---------------------------------------------------------------------------
 #pragma package(smart_init)
 #pragma resource "*.dfm"
@@ -434,7 +435,17 @@ TempAspects->CommandText="Select * From Аспекты Where [Номер аспекта]="+IntToStr
 TempAspects->Active=true;
 if(TempAspects->RecordCount!=0)
 {
-if(TempAspects->FieldByName("G")->Value==1)
+/*
+CheckBox1->Checked=TempAspects->FieldByName("G")->AsBoolean;
+CheckBox2->Checked=TempAspects->FieldByName("R")->AsBoolean;
+CheckBox3->Checked=TempAspects->FieldByName("T")->AsBoolean;
+CheckBox4->Checked=TempAspects->FieldByName("L")->AsBoolean;
+CheckBox5->Checked=TempAspects->FieldByName("O")->AsBoolean;
+CheckBox6->Checked=TempAspects->FieldByName("S")->AsBoolean;
+CheckBox7->Checked=TempAspects->FieldByName("N")->AsBoolean;
+*/
+
+if(TempAspects->FieldByName("G")->Value==-1)
 {
 
 C1=true;
@@ -447,7 +458,7 @@ C1=false;
 
 }
 
-if(TempAspects->FieldByName("R")->Value==1)
+if(TempAspects->FieldByName("R")->Value==-1)
 {
 
 C2=true;
@@ -460,7 +471,7 @@ C2=false;
 
 }
 
-if(TempAspects->FieldByName("T")->Value==1)
+if(TempAspects->FieldByName("T")->Value==-1)
 {
 
 C3=true;
@@ -473,7 +484,7 @@ C3=false;
 
 }
 
-if(TempAspects->FieldByName("L")->Value==1)
+if(TempAspects->FieldByName("L")->Value==-1)
 {
 
 C4=true;
@@ -486,7 +497,7 @@ C4=false;
 
 }
 
-if(TempAspects->FieldByName("O")->Value==1)
+if(TempAspects->FieldByName("O")->Value==-1)
 {
 
 C5=true;
@@ -499,7 +510,7 @@ C5=false;
 
 }
 
-if(TempAspects->FieldByName("S")->Value==1)
+if(TempAspects->FieldByName("S")->Value==-1)
 {
 
 C6=true;
@@ -513,7 +524,7 @@ C6=false;
 
 }
 
-if(TempAspects->FieldByName("N")->Value==1)
+if(TempAspects->FieldByName("N")->Value==-1)
 {
 
 C7=true;
@@ -588,6 +599,7 @@ else
 {
 CheckBox7->Checked=false;
 }
+
 }
 }
 
@@ -3215,39 +3227,47 @@ if(Temp->Locate("Номер аспекта", SNum, SO))
  {
   New=true;
  }
- if(Temp->FieldByName("G")->Value!=Asp->FieldByName("G")->Value)
+ if(Temp->FieldByName("G")->AsBoolean!=Asp->FieldByName("G")->AsBoolean)
  {
   New=true;
  }
- if(Temp->FieldByName("O")->Value!=Asp->FieldByName("O")->Value)
+ if(Temp->FieldByName("O")->AsBoolean!=Asp->FieldByName("O")->AsBoolean)
  {
   New=true;
  }
- if(Temp->FieldByName("R")->Value!=Asp->FieldByName("R")->Value)
+ if(Temp->FieldByName("R")->AsBoolean!=Asp->FieldByName("R")->AsBoolean)
  {
   New=true;
  }
- if(Temp->FieldByName("S")->Value!=Asp->FieldByName("S")->Value)
+ if(Temp->FieldByName("S")->AsBoolean!=Asp->FieldByName("S")->AsBoolean)
  {
   New=true;
  }
- if(Temp->FieldByName("T")->Value!=Asp->FieldByName("T")->Value)
+ if(Temp->FieldByName("T")->AsBoolean!=Asp->FieldByName("T")->AsBoolean)
  {
   New=true;
  }
- if(Temp->FieldByName("L")->Value!=Asp->FieldByName("L")->Value)
+ if(Temp->FieldByName("L")->AsBoolean!=Asp->FieldByName("L")->AsBoolean)
  {
   New=true;
  }
- if(Temp->FieldByName("N")->Value!=Asp->FieldByName("N")->Value)
+ if(Temp->FieldByName("N")->AsBoolean!=Asp->FieldByName("N")->AsBoolean)
  {
   New=true;
  }
- if(Temp->FieldByName("Z")->Value!=Asp->FieldByName("Z")->Value)
+ double Z1=Temp->FieldByName("Z")->AsFloat;
+
+ double Z2=Asp->FieldByName("Z")->AsFloat;
+
+ if(RoundTo(Z1,-2)!=RoundTo(Z2,-2))
  {
   New=true;
  }
  if(Temp->FieldByName("Значимость")->Value!=Asp->FieldByName("Значимость")->Value)
+ {
+  New=true;
+ }
+ if(Temp->FieldByName("Наименование значимости")->Value!=Asp->FieldByName("Наименование значимости")->Value)
  {
   New=true;
  }
@@ -3260,6 +3280,10 @@ if(Temp->Locate("Номер аспекта", SNum, SO))
   New=true;
  }
  if(Temp->FieldByName("Приоритетность")->Value!=Asp->FieldByName("Приоритетность")->Value)
+ {
+  New=true;
+ }
+ if(Temp->FieldByName("Приор")->AsInteger!=Asp->FieldByName("Приор")->AsInteger)
  {
   New=true;
  }
