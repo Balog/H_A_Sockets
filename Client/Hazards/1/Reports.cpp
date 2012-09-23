@@ -26,7 +26,7 @@ AnsiString PP2=WideString(ExtractFilePath(Application->ExeName)+"\Templates\\"+T
 
 Variant App =Variant::CreateObject("Excel.Application");
 //Variant App1 =Variant::CreateObject("Excel.Application");
-App.OlePropertySet("Visible",false);
+App.OlePropertySet("Visible",true);
 
 
 Variant Book=App.OlePropertyGet("Workbooks").OleFunction("Add", PP1.c_str());
@@ -1114,7 +1114,7 @@ TempAspects->Active=true;
 Text=TempAspects->FieldByName("Название ситуации")->Value;
 App.OlePropertyGet("Cells",Start+i,5).OlePropertySet("Value",Text.c_str());
 
-int Z=Report->FieldByName("Z")->Value;
+double Z=Report->FieldByName("Z")->Value;
 App.OlePropertyGet("Cells",Start+i,6).OlePropertySet("Value",Z);
 
 AnsiString ZT=ClearString(Report->FieldByName("Мониторинг и контроль")->AsString);
@@ -1197,9 +1197,11 @@ if(!OneList)
 {
 //try
 //{
+/*
 App.OlePropertySet("DisplayAlerts",false);
 Sheet1.OleFunction("Delete");
 App.OlePropertySet("DisplayAlerts",true);
+*/
 //}
 //catch(...)
 //{
