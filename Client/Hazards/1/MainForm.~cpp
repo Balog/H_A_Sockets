@@ -205,10 +205,28 @@ if(NumRec>Aspects->RecordCount)
 {
 BitBtn4->Click();
 }
+if(Aspects->RecordCount>0)
+{
 if(NumRec>0 & NumRec<=Aspects->RecordCount)
 {
  Aspects->First();
  Aspects->MoveBy(NumRec-1);
+}
+else
+{
+
+MP<TADODataSet>Tab(this);
+Tab->Connection=Zast->ADOUsrAspect;
+Tab->CommandText="SELECT  Аспекты.* FROM Logins INNER JOIN ((Подразделения INNER JOIN Аспекты ON Подразделения.[Номер подразделения] = Аспекты.Подразделение) INNER JOIN ObslOtdel ON Подразделения.[Номер подразделения] = ObslOtdel.NumObslOtdel) ON Logins.Num = ObslOtdel.Login WHERE (((Logins.ServerNum)="+IntToStr(NumLogin)+")) ORDER BY Аспекты.[Номер аспекта];";
+Tab->Active=true;
+if(Tab!=0)
+{
+Aspects->Active=false;
+Aspects->CommandText="SELECT  Аспекты.* FROM Logins INNER JOIN ((Подразделения INNER JOIN Аспекты ON Подразделения.[Номер подразделения] = Аспекты.Подразделение) INNER JOIN ObslOtdel ON Подразделения.[Номер подразделения] = ObslOtdel.NumObslOtdel) ON Logins.Num = ObslOtdel.Login WHERE (((Logins.ServerNum)="+IntToStr(NumLogin)+")) ORDER BY Аспекты.[Номер аспекта];";
+Aspects->Active=true;
+LFiltr->Caption="Отключен";
+ Aspects->First();
+}
 }
 
 }
@@ -297,11 +315,11 @@ EnabledForm(true);
 
 
 
- N1=Aspects->FieldByName("Подразделение")->Value;
- N2=Aspects->FieldByName("Ситуация")->Value;
- N3=Aspects->FieldByName("Проявление воздействия")->Value;
- N4=Aspects->FieldByName("Тяжесть последствий")->Value;
- N5=Aspects->FieldByName("Приоритетность")->Value;
+ N1=Aspects->FieldByName("Подразделение")->AsInteger;
+ N2=Aspects->FieldByName("Ситуация")->AsInteger;
+ N3=Aspects->FieldByName("Проявление воздействия")->AsInteger;
+ N4=Aspects->FieldByName("Тяжесть последствий")->AsInteger;
+ N5=Aspects->FieldByName("Приор")->AsInteger;
 
 
 
@@ -1125,7 +1143,7 @@ Prioritet->First();
 Prioritet->MoveBy(CPrior->ItemIndex);
 N=Prioritet->FieldByName("Номер приоритетности")->Value;
 Aspects->Edit();
-Aspects->FieldByName("Приоритетность")->Value=N;
+Aspects->FieldByName("Приор")->Value=N;
 Aspects->Post();
 Aspects->UpdateBatch();
   Label1->Visible=IsNew();
