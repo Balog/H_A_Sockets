@@ -186,6 +186,7 @@ Aspects->Active=true;
 
 
 
+
 Podrazdel->Active=false;
 Podrazdel->CommandText="SELECT Подразделения.* FROM Logins INNER JOIN (Подразделения INNER JOIN ObslOtdel ON Подразделения.[Номер подразделения] = ObslOtdel.NumObslOtdel) ON Logins.Num = ObslOtdel.Login WHERE (((Logins.ServerNum)="+IntToStr(NumLogin)+")) ORDER BY Подразделения.[Название подразделения];";
 Podrazdel->Active=true;
@@ -202,10 +203,30 @@ if(NumRec>Aspects->RecordCount)
 {
 BitBtn4->Click();
 }
+
+if(Aspects->RecordCount>0)
+{
 if(NumRec>0 & NumRec<=Aspects->RecordCount)
 {
  Aspects->First();
  Aspects->MoveBy(NumRec-1);
+}
+}
+else
+{
+
+MP<TADODataSet>Tab(this);
+Tab->Connection=Zast->ADOUsrAspect;
+Tab->CommandText="SELECT  Аспекты.* FROM Logins INNER JOIN ((Подразделения INNER JOIN Аспекты ON Подразделения.[Номер подразделения] = Аспекты.Подразделение) INNER JOIN ObslOtdel ON Подразделения.[Номер подразделения] = ObslOtdel.NumObslOtdel) ON Logins.Num = ObslOtdel.Login WHERE (((Logins.ServerNum)="+IntToStr(NumLogin)+")) ORDER BY Аспекты.[Номер аспекта];";
+Tab->Active=true;
+if(Tab!=0)
+{
+Aspects->Active=false;
+Aspects->CommandText="SELECT  Аспекты.* FROM Logins INNER JOIN ((Подразделения INNER JOIN Аспекты ON Подразделения.[Номер подразделения] = Аспекты.Подразделение) INNER JOIN ObslOtdel ON Подразделения.[Номер подразделения] = ObslOtdel.NumObslOtdel) ON Logins.Num = ObslOtdel.Login WHERE (((Logins.ServerNum)="+IntToStr(NumLogin)+")) ORDER BY Аспекты.[Номер аспекта];";
+Aspects->Active=true;
+LFiltr->Caption="Отключен";
+ Aspects->First();
+}
 }
 
 }
