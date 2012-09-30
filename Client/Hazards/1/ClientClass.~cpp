@@ -264,6 +264,17 @@ Zast->BlockMK(false);
 
  break;
  }
+ case 22:
+ {
+ if(Parameters[0]=="1")
+ {
+  Zast->BlockMK(false);
+ ShowMessage("За время работы на сервере \nбыли удалены некоторые пункты справочников, использованные в аспектах\nНеобходимо обновить справочники, проверить аспекты \nи вновь сохранить аспекты");
+  Zast->BlockMK(true);
+ }
+ UnBlockServer("PostWriteAspectsUsr1");
+ break;
+ }
 }
 }
 else

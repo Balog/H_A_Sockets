@@ -2728,11 +2728,11 @@ void __fastcall TZast::SaveAspectsMSpecExecute(TObject *Sender)
 {
 try
 {
-Zast->MClient->Act.WaitCommand=17;
+Zast->MClient->Act.WaitCommand=23;
  Zast->MClient->Act.ParamComm.clear();
  Zast->MClient->Act.ParamComm.push_back("EndsaveAspectsMSpec");
 
-ClientSocket->Socket->SendText("Command:17;0|");
+ClientSocket->Socket->SendText("Command:23;0|");
 }
 catch(...)
 {

@@ -275,6 +275,11 @@ Zast->BlockMK(false);
  UnBlockServer("PostWriteAspectsUsr1");
  break;
  }
+ case 23:
+ {
+ StartAction(Act.ParamComm[0]);
+ break;
+ }
 }
 }
 else

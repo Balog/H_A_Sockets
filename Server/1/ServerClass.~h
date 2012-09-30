@@ -93,7 +93,7 @@ void CommandExec(int Comm, vector<String>);
 
 String Login;
 bool MergeAspectsUser(int NumLogin);
-
+bool MergeAspectsUserH(int NumLogin);
 };
 //-------------------------------------------------------------------------
 class mForm

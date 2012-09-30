@@ -272,49 +272,49 @@ object MAsp: TMAsp
     Align = alClient
     TabOrder = 1
     object Label1: TLabel
-      Left = 25
+      Left = 10
       Top = 8
       Width = 80
       Height = 13
       Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
     end
     object Label2: TLabel
-      Left = 25
+      Left = 10
       Top = 65
-      Width = 73
+      Width = 77
       Height = 13
-      Caption = #1044#1077#1103#1090#1077#1083#1100#1085#1086#1089#1090#1100
+      Caption = #1054#1073#1098#1077#1082#1090' '#1086#1094#1077#1085#1082#1080
     end
     object Label3: TLabel
-      Left = 25
+      Left = 10
       Top = 94
-      Width = 36
+      Width = 55
       Height = 13
-      Caption = #1040#1089#1087#1077#1082#1090
+      Caption = #1054#1087#1072#1089#1085#1086#1089#1090#1100
     end
     object Label4: TLabel
-      Left = 25
+      Left = 10
       Top = 123
-      Width = 66
+      Width = 67
       Height = 13
-      Caption = #1042#1086#1079#1076#1077#1081#1089#1090#1074#1080#1077
+      Caption = #1055#1086#1089#1083#1077#1076#1089#1090#1074#1080#1103
     end
     object Label5: TLabel
-      Left = 25
+      Left = 10
       Top = 35
-      Width = 80
+      Width = 99
       Height = 13
-      Caption = #1042#1080#1076' '#1090#1077#1088#1088#1080#1090#1086#1088#1080#1080
+      Caption = #1059#1095#1072#1089#1090#1086#1082'/'#1091#1089#1090#1072#1085#1086#1074#1082#1072
     end
     object Label6: TLabel
-      Left = 25
+      Left = 10
       Top = 152
       Width = 7
       Height = 13
       Caption = 'Z'
     end
     object DBText1: TDBText
-      Left = 125
+      Left = 130
       Top = 34
       Width = 662
       Height = 17
@@ -322,7 +322,7 @@ object MAsp: TMAsp
       DataSource = DataSource4
     end
     object DBText2: TDBText
-      Left = 125
+      Left = 130
       Top = 63
       Width = 662
       Height = 17
@@ -330,7 +330,7 @@ object MAsp: TMAsp
       DataSource = DataSource4
     end
     object DBText3: TDBText
-      Left = 125
+      Left = 130
       Top = 92
       Width = 662
       Height = 17
@@ -338,7 +338,7 @@ object MAsp: TMAsp
       DataSource = DataSource4
     end
     object DBText4: TDBText
-      Left = 125
+      Left = 130
       Top = 121
       Width = 662
       Height = 17
@@ -346,7 +346,7 @@ object MAsp: TMAsp
       DataSource = DataSource4
     end
     object DBText5: TDBText
-      Left = 125
+      Left = 130
       Top = 150
       Width = 110
       Height = 17
@@ -354,7 +354,7 @@ object MAsp: TMAsp
       DataSource = DataSource4
     end
     object CPodr: TComboBox
-      Left = 125
+      Left = 130
       Top = 4
       Width = 289
       Height = 21
@@ -381,17 +381,17 @@ object MAsp: TMAsp
       Items.Strings = (
         #1054#1090#1082#1083#1102#1095#1080#1090#1100' '#1092#1080#1083#1100#1090#1088
         #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
-        #1042#1080#1076' '#1090#1077#1088#1088#1080#1090#1086#1088#1080#1080
-        #1042#1080#1076' '#1076#1077#1103#1090#1077#1083#1100#1085#1086#1089#1090#1080
-        #1040#1089#1087#1077#1082#1090
-        #1042#1086#1079#1076#1077#1081#1089#1090#1074#1080#1077
+        #1059#1095#1072#1089#1090#1086#1082'/'#1091#1089#1090#1072#1085#1086#1074#1082#1072
+        #1054#1073#1098#1077#1082#1090' '#1086#1094#1077#1085#1082#1080
+        #1054#1087#1072#1089#1085#1086#1089#1090#1100
+        #1055#1086#1089#1083#1077#1076#1089#1090#1074#1080#1103
         #1042#1072#1083#1080#1076#1085#1086#1089#1090#1100
         #1047#1085#1072#1095#1080#1084#1086#1089#1090#1100)
       TabOrder = 0
       OnClick = RadioGroup1Click
     end
     object ComboBox1: TComboBox
-      Left = 126
+      Left = 131
       Top = 49
       Width = 290
       Height = 21
@@ -401,7 +401,7 @@ object MAsp: TMAsp
       OnClick = ComboBox1Click
     end
     object ComboBox2: TComboBox
-      Left = 126
+      Left = 131
       Top = 189
       Width = 145
       Height = 21
@@ -414,7 +414,7 @@ object MAsp: TMAsp
         #1053#1077#1074#1072#1083#1080#1076#1085#1099#1077)
     end
     object ComboBox3: TComboBox
-      Left = 126
+      Left = 131
       Top = 218
       Width = 145
       Height = 21
@@ -491,7 +491,7 @@ object MAsp: TMAsp
       OnClick = Button4Click
     end
     object ComboBox4: TComboBox
-      Left = 127
+      Left = 131
       Top = 77
       Width = 655
       Height = 21
@@ -507,7 +507,7 @@ object MAsp: TMAsp
       OnSelect = ComboBox4Select
     end
     object ComboBox5: TComboBox
-      Left = 128
+      Left = 131
       Top = 105
       Width = 653
       Height = 21
@@ -523,7 +523,7 @@ object MAsp: TMAsp
       OnSelect = ComboBox5Select
     end
     object ComboBox6: TComboBox
-      Left = 128
+      Left = 131
       Top = 134
       Width = 653
       Height = 21
@@ -539,7 +539,7 @@ object MAsp: TMAsp
       OnSelect = ComboBox6Select
     end
     object ComboBox7: TComboBox
-      Left = 128
+      Left = 131
       Top = 160
       Width = 652
       Height = 21

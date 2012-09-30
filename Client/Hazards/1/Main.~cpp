@@ -1704,7 +1704,7 @@ if(Application->MessageBoxA("Подтвердите удаление","Удаление",MB_YESNO	+MB_ICONQ
  Zast->MClient->Act.ParamComm.clear();
  Zast->MClient->Act.ParamComm.push_back("DeletePodr");
 
-String DBName="Аспекты";
+String DBName="Опасности";
 String ServerSQL="SELECT Аспекты.[Номер аспекта], Аспекты.Подразделение FROM Аспекты";
 String ClientSQL="SELECT [Номер аспекта], Подразделение FROM TempAspects";
 Zast->MClient->ReadTable(DBName, ServerSQL, DBName, ClientSQL);
@@ -2965,7 +2965,7 @@ Report1->RepBase=Zast->ADOAspect;
  Zast->MClient->Act.ParamComm.push_back("ContStartReports");
  String ServerSQL=Report1->PodrComText;
  String ClientSQL="Select [ServerNum], [Название подразделения] From TempПодразделения";
- Zast->MClient->ReadTable("Аспекты",ServerSQL, "Аспекты", ClientSQL);
+ Zast->MClient->ReadTable("Опасности",ServerSQL, "Опасности", ClientSQL);
 
 
 }
@@ -2986,7 +2986,7 @@ Report1->RepBase=Zast->ADOAspect;
  Zast->MClient->Act.ParamComm.push_back("ContStartReports");
  String ServerSQL=Report1->PodrComText;
  String ClientSQL="Select [ServerNum], [Название подразделения] From TempПодразделения";
- Zast->MClient->ReadTable("Аспекты",ServerSQL, "Аспекты", ClientSQL);
+ Zast->MClient->ReadTable("Опасности",ServerSQL, "Опасности", ClientSQL);
 
 
 }

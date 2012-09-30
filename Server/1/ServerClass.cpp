@@ -585,6 +585,12 @@ Parent->WriteDiaryEvent(IP, Login, "AdminARM", "Запись логинов", "Имя: "+Paramet
     }
    break;
    }
+   case 23:
+   {
+   MergeAspectsMainSpecH();
+   this->Socket->SendText("Command:23;0|");
+   break;
+   }
  }
 
 }
@@ -1634,6 +1640,41 @@ Aspects->Active=true;
 
 MP<TADODataSet>Temp(Form1);
 Temp->Connection=GetDatabase("Аспекты");
+Temp->CommandText="Select * From TempAspects";
+Temp->Active=true;
+
+for(Aspects->First();!Aspects->Eof;Aspects->Next())
+{
+ int N=Aspects->FieldByName("номер аспекта")->Value;
+
+ if(Temp->Locate("Номер аспекта", N, SO))
+ {
+  Aspects->Edit();
+  Aspects->FieldByName("Подразделение")->Value=Temp->FieldByName("Подразделение")->Value;
+  Aspects->Post();
+ }
+ else
+ {
+//DiaryEvent->WriteEvent(Now(), this->pNameComp, this->Login, "Ошибка обработки данных", "Ошибка объединения аспектов главным специалистом (не найден аспект)", "IDC="+IntToStr(IDC())+" Номер="+IntToStr(N));
+
+ }
+}
+}
+//---------------------------------------------------------------------------
+void Client::MergeAspectsMainSpecH()
+{
+MP<TADOCommand>Comm(Form1);
+Comm->Connection=GetDatabase("Опасности");
+Comm->CommandText="UPDATE Аспекты SET Аспекты.Del = False";
+Comm->Execute();
+
+MP<TADODataSet>Aspects(Form1);
+Aspects->Connection=GetDatabase("Опасности");
+Aspects->CommandText="Select * From Аспекты";
+Aspects->Active=true;
+
+MP<TADODataSet>Temp(Form1);
+Temp->Connection=GetDatabase("Опасности");
 Temp->CommandText="Select * From TempAspects";
 Temp->Active=true;
 
