@@ -50,13 +50,9 @@ __published:	// IDE-managed Components
         TLabel *Label10;
         TLabel *Label38;
         TLabel *Label17;
-        TLabel *Label18;
         TLabel *Label19;
         TLabel *Label16;
         TLabel *Label22;
-        TLabel *Label23;
-        TLabel *Label24;
-        TLabel *Label25;
         TStatusBar *StatusBar1;
         TLabel *Label28;
         TDateTimePicker *DateTimePicker2;
@@ -113,8 +109,6 @@ __published:	// IDE-managed Components
         TADODataSet *Svod;
         TADOCommand *Comm;
         TADODataSet *Report;
-        TLabel *Label36;
-        TLabel *Label37;
         TLabel *Label26;
         TEdit *Zmax;
         TActionList *ActionList1;
@@ -149,6 +143,12 @@ __published:	// IDE-managed Components
         TEdit *Edit8;
         TDBEdit *DBEdit1;
         TADODataSet *Prior;
+        TLabel *Label23;
+        TLabel *Label18;
+        TLabel *Label20;
+        TLabel *Label36;
+        TLabel *Label24;
+        TLabel *Label37;
         void __fastcall FormClose(TObject *Sender, TCloseAction &Action);
         void __fastcall N8Click(TObject *Sender);
         void __fastcall CPodrazdelClick(TObject *Sender);

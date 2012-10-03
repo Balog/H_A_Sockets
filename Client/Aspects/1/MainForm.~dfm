@@ -1477,7 +1477,7 @@ object Form1: TForm1
   end
   object Aspects: TADODataSet
     CursorType = ctStatic
-    CommandText = 'select * from '#1072#1089#1087#1077#1082#1090#1099
+    CommandText = 'select * from '#1072#1089#1087#1077#1082#1090#1099' Order by ServerNum, ['#1053#1086#1084#1077#1088' '#1072#1089#1087#1077#1082#1090#1072']'
     Parameters = <>
     Left = 704
     Top = 191

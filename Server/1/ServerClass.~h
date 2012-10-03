@@ -80,6 +80,7 @@ void MergeNodeBranch(String NameDatabase1, String NameNode, String NameBranch, S
 void MergeNodeBranch(String NameDatabase1, String NameNode, String NameBranch);
 String PodrToLogin(String NameDB, int NumPodr);
 void MergeAspectsMainSpec();
+void MergeAspectsMainSpecH();
  public:
 Client(Clients*);
 ~Client();

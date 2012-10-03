@@ -224,7 +224,7 @@ Tab->Active=true;
 if(Tab!=0)
 {
 Aspects->Active=false;
-Aspects->CommandText="SELECT  Аспекты.* FROM Logins INNER JOIN ((Подразделения INNER JOIN Аспекты ON Подразделения.[Номер подразделения] = Аспекты.Подразделение) INNER JOIN ObslOtdel ON Подразделения.[Номер подразделения] = ObslOtdel.NumObslOtdel) ON Logins.Num = ObslOtdel.Login WHERE (((Logins.ServerNum)="+IntToStr(NumLogin)+")) ORDER BY Аспекты.[Номер аспекта];";
+Aspects->CommandText="SELECT  Аспекты.* FROM Logins INNER JOIN ((Подразделения INNER JOIN Аспекты ON Подразделения.[Номер подразделения] = Аспекты.Подразделение) INNER JOIN ObslOtdel ON Подразделения.[Номер подразделения] = ObslOtdel.NumObslOtdel) ON Logins.Num = ObslOtdel.Login WHERE (((Logins.ServerNum)="+IntToStr(NumLogin)+")) ORDER BY Аспекты.ServerNum, Аспекты.[Номер аспекта];";
 Aspects->Active=true;
 LFiltr->Caption="Отключен";
  Aspects->First();
@@ -661,7 +661,7 @@ Situaciya->Active=true;
 Posledstvie->Active=true;
 Tiagest->Active=true;
 Prioritet->Active=true;
-
+Prior->Active=true;
 
 if (Situaciya->RecordCount==0)
 {
@@ -676,6 +676,7 @@ Situaciya->First();
 Posledstvie->First();
 Tiagest->First();
 Prioritet->First();
+Prior->First();
 
  Aspects->Append();
  Aspects->FieldByName("Вид территории")->Value=0;
@@ -707,7 +708,8 @@ Prioritet->First();
 
  Aspects->FieldByName("Тяжесть последствий")->Value=Tiagest->FieldByName("Номер последствия")->Value;
  Aspects->FieldByName("Проявление воздействия")->Value=Posledstvie->FieldByName("Номер проявления")->Value;
- Aspects->FieldByName("Приоритетность")->Value=Prioritet->FieldByName("Номер приоритетности")->Value;
+ Aspects->FieldByName("Приоритетность")->Value=Prior->FieldByName("Номер приоритетности")->Value;
+ Aspects->FieldByName("Приор")->Value=Prioritet->FieldByName("Номер приоритетности")->Value;
  Aspects->FieldByName("Предлагаемые мероприятия")->Value="";
  Aspects->FieldByName("Дата создания")->Value=Now();
  Aspects->FieldByName("Начало действия")->Value=Now();
@@ -2607,7 +2609,9 @@ Label23->Enabled=B;
 Label36->Enabled=B;
 Label37->Enabled=B;
 DBMemo1->Enabled=B;
-Label25->Enabled=B;
+Label18->Enabled=B;
+Label20->Enabled=B;
+Label38->Enabled=B;
 DBMemo31->Enabled=B;
 Button6->Enabled=B;
 DBMemo2->Enabled=B;
@@ -3205,133 +3209,138 @@ MP<TADODataSet>Temp(this);
 Temp->Connection=Zast->ADOUsrAspect;
 Temp->CommandText="SELECT CompareAspects.*, Подразделения.[Номер подразделения] FROM Подразделения INNER JOIN CompareAspects ON Подразделения.ServerNum = CompareAspects.Подразделение; ";
 Temp->Active=true;
-
+/*
 MP<TADODataSet>Asp(this);
+
 Asp->Connection=Zast->ADOUsrAspect;
 Asp->CommandText="Select * from Аспекты where [Номер аспекта]="+IntToStr(Aspects->FieldByName("Номер аспекта")->AsInteger);
 Asp->Active=true;
+*/
 
-int SNum=Asp->FieldByName("ServerNum")->AsInteger;
+
+int SNum=Aspects->FieldByName("ServerNum")->AsInteger;
 if(Zast->Role!=4)
 {
-if(Asp->RecordCount!=0)
+if(Aspects->RecordCount!=0)
 {
 if(Temp->Locate("Номер аспекта", SNum, SO))
 {
  //Найден
- if(Temp->FieldByName("Номер подразделения")->Value!=Asp->FieldByName("Подразделение")->Value)
+ if(Temp->FieldByName("Номер подразделения")->Value!=Aspects->FieldByName("Подразделение")->Value)
  {
   New=true;
  }
- if(Temp->FieldByName("Ситуация")->Value!=Asp->FieldByName("Ситуация")->Value)
+ if(Temp->FieldByName("Ситуация")->Value!=Aspects->FieldByName("Ситуация")->Value)
  {
   New=true;
  }
- if(Temp->FieldByName("Вид территории")->Value!=Asp->FieldByName("Вид территории")->Value)
+ if(Temp->FieldByName("Вид территории")->Value!=Aspects->FieldByName("Вид территории")->Value)
  {
   New=true;
  }
- if(Temp->FieldByName("Деятельность")->Value!=Asp->FieldByName("Деятельность")->Value)
+ if(Temp->FieldByName("Деятельность")->Value!=Aspects->FieldByName("Деятельность")->Value)
  {
   New=true;
  }
- if(Temp->FieldByName("Специальность")->Value!=Asp->FieldByName("Специальность")->Value)
+ if(Temp->FieldByName("Специальность")->Value!=Aspects->FieldByName("Специальность")->Value)
  {
   New=true;
  }
- if(Temp->FieldByName("Аспект")->Value!=Asp->FieldByName("Аспект")->Value)
+ if(Temp->FieldByName("Аспект")->Value!=Aspects->FieldByName("Аспект")->Value)
  {
   New=true;
  }
- if(Temp->FieldByName("Воздействие")->Value!=Asp->FieldByName("Воздействие")->Value)
+ if(Temp->FieldByName("Воздействие")->Value!=Aspects->FieldByName("Воздействие")->Value)
  {
   New=true;
  }
- if(Temp->FieldByName("G")->AsBoolean!=Asp->FieldByName("G")->AsBoolean)
+ if(Temp->FieldByName("G")->AsBoolean!=Aspects->FieldByName("G")->AsBoolean)
  {
   New=true;
  }
- if(Temp->FieldByName("O")->AsBoolean!=Asp->FieldByName("O")->AsBoolean)
+ if(Temp->FieldByName("O")->AsBoolean!=Aspects->FieldByName("O")->AsBoolean)
  {
   New=true;
  }
- if(Temp->FieldByName("R")->AsBoolean!=Asp->FieldByName("R")->AsBoolean)
+ if(Temp->FieldByName("R")->AsBoolean!=Aspects->FieldByName("R")->AsBoolean)
  {
   New=true;
  }
- if(Temp->FieldByName("S")->AsBoolean!=Asp->FieldByName("S")->AsBoolean)
+ if(Temp->FieldByName("S")->AsBoolean!=Aspects->FieldByName("S")->AsBoolean)
  {
   New=true;
  }
- if(Temp->FieldByName("T")->AsBoolean!=Asp->FieldByName("T")->AsBoolean)
+ if(Temp->FieldByName("T")->AsBoolean!=Aspects->FieldByName("T")->AsBoolean)
  {
   New=true;
  }
- if(Temp->FieldByName("L")->AsBoolean!=Asp->FieldByName("L")->AsBoolean)
+ if(Temp->FieldByName("L")->AsBoolean!=Aspects->FieldByName("L")->AsBoolean)
  {
   New=true;
  }
- if(Temp->FieldByName("N")->AsBoolean!=Asp->FieldByName("N")->AsBoolean)
+ if(Temp->FieldByName("N")->AsBoolean!=Aspects->FieldByName("N")->AsBoolean)
  {
   New=true;
  }
  double Z1=Temp->FieldByName("Z")->AsFloat;
 
- double Z2=Asp->FieldByName("Z")->AsFloat;
+ double Z2=Aspects->FieldByName("Z")->AsFloat;
 
  if(RoundTo(Z1,-2)!=RoundTo(Z2,-2))
  {
   New=true;
  }
- if(Temp->FieldByName("Значимость")->Value!=Asp->FieldByName("Значимость")->Value)
+ if(Temp->FieldByName("Значимость")->Value!=Aspects->FieldByName("Значимость")->Value)
  {
   New=true;
  }
- if(Temp->FieldByName("Наименование значимости")->Value!=Asp->FieldByName("Наименование значимости")->Value)
+ /*
+ if(Temp->FieldByName("Наименование значимости")->AsString!=Aspects->FieldByName("Наименование значимости")->AsString)
  {
   New=true;
  }
- if(Temp->FieldByName("Проявление воздействия")->Value!=Asp->FieldByName("Проявление воздействия")->Value)
+ */
+ if(Temp->FieldByName("Проявление воздействия")->Value!=Aspects->FieldByName("Проявление воздействия")->Value)
  {
   New=true;
  }
- if(Temp->FieldByName("Тяжесть последствий")->Value!=Asp->FieldByName("Тяжесть последствий")->Value)
+ if(Temp->FieldByName("Тяжесть последствий")->Value!=Aspects->FieldByName("Тяжесть последствий")->Value)
  {
   New=true;
  }
- if(Temp->FieldByName("Приоритетность")->Value!=Asp->FieldByName("Приоритетность")->Value)
+ if(Temp->FieldByName("Приоритетность")->Value!=Aspects->FieldByName("Приоритетность")->Value)
  {
   New=true;
  }
- if(Temp->FieldByName("Приор")->AsInteger!=Asp->FieldByName("Приор")->AsInteger)
+ if(Temp->FieldByName("Приор")->AsInteger!=Aspects->FieldByName("Приор")->AsInteger)
  {
   New=true;
  }
- if(Temp->FieldByName("Выполняющиеся мероприятия")->Value!=Asp->FieldByName("Выполняющиеся мероприятия")->Value)
+ if(Temp->FieldByName("Выполняющиеся мероприятия")->Value!=Aspects->FieldByName("Выполняющиеся мероприятия")->Value)
  {
   New=true;
  }
- if(Temp->FieldByName("Предлагаемые мероприятия")->Value!=Asp->FieldByName("Предлагаемые мероприятия")->Value)
+ if(Temp->FieldByName("Предлагаемые мероприятия")->Value!=Aspects->FieldByName("Предлагаемые мероприятия")->Value)
  {
   New=true;
  }
- if(Temp->FieldByName("Мониторинг и контроль")->Value!=Asp->FieldByName("Мониторинг и контроль")->Value)
+ if(Temp->FieldByName("Мониторинг и контроль")->Value!=Aspects->FieldByName("Мониторинг и контроль")->Value)
  {
   New=true;
  }
- if(Temp->FieldByName("Предлагаемый мониторинг и контроль")->Value!=Asp->FieldByName("Предлагаемый мониторинг и контроль")->Value)
+ if(Temp->FieldByName("Предлагаемый мониторинг и контроль")->Value!=Aspects->FieldByName("Предлагаемый мониторинг и контроль")->Value)
  {
   New=true;
  }
- if(Temp->FieldByName("Дата создания")->Value!=Asp->FieldByName("Дата создания")->Value)
+ if(Temp->FieldByName("Дата создания")->Value!=Aspects->FieldByName("Дата создания")->Value)
  {
   New=true;
  }
- if(Temp->FieldByName("Начало действия")->Value!=Asp->FieldByName("Начало действия")->Value)
+ if(Temp->FieldByName("Начало действия")->Value!=Aspects->FieldByName("Начало действия")->Value)
  {
   New=true;
  }
- if(Temp->FieldByName("Конец действия")->Value!=Asp->FieldByName("Конец действия")->Value)
+ if(Temp->FieldByName("Конец действия")->Value!=Aspects->FieldByName("Конец действия")->Value)
  {
   New=true;
  }

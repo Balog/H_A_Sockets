@@ -3013,6 +3013,7 @@ Zast->BlockMK(false);
 
 void  TZast::MergeAspects(int NumLogin, bool Quit)
 {
+bool Del=false;
 try
 {
 MP<TADODataSet>Podr(this);
@@ -3022,8 +3023,13 @@ Podr->Active=true;
 
 MP<TADODataSet>TempAsp(this);
 TempAsp->Connection=Zast->ADOUsrAspect;
-TempAsp->CommandText="Select * From TempAspects";
+TempAsp->CommandText="Select * From TempAspects Order by [номер аспекта]";
 TempAsp->Active=true;
+
+MP<TADODataSet>Asp(this);
+Asp->Connection=Zast->ADOUsrAspect;
+Asp->CommandText="Select * From Аспекты";
+Asp->Active=true;
 
 for(TempAsp->First();!TempAsp->Eof;TempAsp->Next())
 {
@@ -3046,18 +3052,139 @@ for(TempAsp->First();!TempAsp->Eof;TempAsp->Next())
 //Неправильная процедура.
 //Аспекты нельзя вот так удалять, их надо объединять
 
+
 MP<TADOCommand>Comm(this);
 Comm->Connection=Zast->ADOUsrAspect;
-/*
-Comm->CommandText="Delete * from Аспекты";
+
+Comm->CommandText="DELETE Аспекты.*, Logins.ServerNum FROM Logins INNER JOIN ((Подразделения INNER JOIN Аспекты ON Подразделения.[Номер подразделения] = Аспекты.Подразделение) INNER JOIN ObslOtdel ON Подразделения.[Номер подразделения] = ObslOtdel.NumObslOtdel) ON Logins.Num = ObslOtdel.Login WHERE (((Logins.ServerNum)="+IntToStr(Form1->NumLogin)+"));";
 Comm->Execute();
-*/
+
 String ST="INSERT INTO Аспекты ( Подразделение, Ситуация, [Вид территории], Деятельность, Специальность, Аспект, Воздействие, G, O, R, S, T, L, N, Z, Значимость, [Наименование значимости], [Проявление воздействия], [Тяжесть последствий], Приоритетность, Приор, [Выполняющиеся мероприятия], [Предлагаемые мероприятия], [Мониторинг и контроль], [Предлагаемый мониторинг и контроль], Исполнитель, [Дата создания], [Начало действия], [Конец действия], ServerNum ) ";
 ST=ST+" SELECT TempAspects.Подразделение, TempAspects.Ситуация, TempAspects.[Вид территории], TempAspects.Деятельность, TempAspects.Специальность, TempAspects.Аспект, TempAspects.Воздействие, TempAspects.G, TempAspects.O, TempAspects.R, TempAspects.S, TempAspects.T, TempAspects.L, TempAspects.N, TempAspects.Z, TempAspects.Значимость, TempAspects.[Наименование значимости], TempAspects.[Проявление воздействия], TempAspects.[Тяжесть последствий], TempAspects.Приоритетность, TempAspects.Приор, TempAspects.[Выполняющиеся мероприятия], TempAspects.[Предлагаемые мероприятия], TempAspects.[Мониторинг и контроль], TempAspects.[Предлагаемый мониторинг и контроль], TempAspects.Исполнитель, TempAspects.[Дата создания], TempAspects.[Начало действия], TempAspects.[Конец действия], TempAspects.[Номер аспекта] ";
 ST=ST+" FROM TempAspects; ";
 Comm->CommandText=ST;
 Comm->Execute();
 
+
+/*
+MP<TADOCommand>Comm(this);
+Comm->Connection=Zast->ADOUsrAspect;
+Comm->CommandText="UPDATE Logins INNER JOIN ((Подразделения INNER JOIN Аспекты ON Подразделения.[Номер подразделения] = Аспекты.Подразделение) INNER JOIN ObslOtdel ON Подразделения.[Номер подразделения] = ObslOtdel.NumObslOtdel) ON Logins.Num = ObslOtdel.Login SET Аспекты.Del = True WHERE (((Logins.ServerNum)="+IntToStr(Form1->NumLogin)+"));";
+Comm->Execute();
+
+MP<TADODataSet>Terr(Form1);
+Terr->Connection=Zast->ADOUsrAspect;
+Terr->CommandText="select * From Территория";
+Terr->Active=true;
+
+MP<TADODataSet>Deyat(Form1);
+Deyat->Connection=Zast->ADOUsrAspect;
+Deyat->CommandText="select * From Деятельность";
+Deyat->Active=true;
+
+MP<TADODataSet>Aspect(Form1);
+Aspect->Connection=Zast->ADOUsrAspect;
+Aspect->CommandText="select * From Аспект";
+Aspect->Active=true;
+
+MP<TADODataSet>Vozd(Form1);
+Vozd->Connection=Zast->ADOUsrAspect;
+Vozd->CommandText="select * From Воздействия";
+Vozd->Active=true;
+
+for(TempAsp->First();!TempAsp->Eof;TempAsp->Next())
+{
+ int Num=TempAsp->FieldByName("Номер аспекта")->Value;
+ if(Asp->Locate("ServerNum", Num, SO))
+ {
+  Asp->Edit();
+ }
+ else
+ {
+  Asp->Insert();
+ }
+   Asp->FieldByName("Подразделение")->Value=TempAsp->FieldByName("Подразделение")->Value;
+  Asp->FieldByName("Ситуация")->Value=TempAsp->FieldByName("Ситуация")->Value;
+
+  if(Terr->Locate("Номер территории", TempAsp->FieldByName("Вид территории")->AsInteger, SO))
+  {
+  Asp->FieldByName("Вид территории")->Value=TempAsp->FieldByName("Вид территории")->Value;
+  }
+  else
+  {
+  Asp->FieldByName("Вид территории")->Value=0;
+  Del=true;
+  }
+
+  if(Deyat->Locate("Номер деятельности", TempAsp->FieldByName("Деятельность")->AsInteger, SO))
+  {
+  Asp->FieldByName("Деятельность")->Value=TempAsp->FieldByName("Деятельность")->Value;
+  }
+  else
+  {
+  Asp->FieldByName("Деятельность")->Value=0;
+  Del=true;
+  }
+
+  Asp->FieldByName("Специальность")->Value=TempAsp->FieldByName("Специальность")->Value;
+
+  if(Aspect->Locate("Номер аспекта", TempAsp->FieldByName("Аспект")->AsInteger, SO))
+  {
+  Asp->FieldByName("Аспект")->Value=TempAsp->FieldByName("Аспект")->Value;
+  }
+  else
+  {
+  Asp->FieldByName("Аспект")->Value=0;
+  Del=true;
+  }
+
+  if(Vozd->Locate("Номер воздействия", TempAsp->FieldByName("Воздействие")->AsInteger, SO))
+  {
+  Asp->FieldByName("Воздействие")->Value=TempAsp->FieldByName("Воздействие")->Value;
+  }
+  else
+  {
+  Asp->FieldByName("Воздействие")->Value=0;
+  Del=true;
+  }
+
+  Asp->FieldByName("G")->Value=TempAsp->FieldByName("G")->Value;
+  Asp->FieldByName("O")->Value=TempAsp->FieldByName("O")->Value;
+  Asp->FieldByName("R")->Value=TempAsp->FieldByName("R")->Value;
+  Asp->FieldByName("S")->Value=TempAsp->FieldByName("S")->Value;
+  Asp->FieldByName("T")->Value=TempAsp->FieldByName("T")->Value;
+  Asp->FieldByName("L")->Value=TempAsp->FieldByName("L")->Value;
+  Asp->FieldByName("N")->Value=TempAsp->FieldByName("N")->Value;
+  Asp->FieldByName("Z")->Value=TempAsp->FieldByName("Z")->Value;
+  Asp->FieldByName("Значимость")->Value=TempAsp->FieldByName("Значимость")->Value;
+  Asp->FieldByName("Наименование значимости")->Value=TempAsp->FieldByName("Наименование значимости")->Value;
+  Asp->FieldByName("Проявление воздействия")->Value=TempAsp->FieldByName("Проявление воздействия")->Value;
+  Asp->FieldByName("Тяжесть последствий")->Value=TempAsp->FieldByName("Тяжесть последствий")->Value;
+  Asp->FieldByName("Приоритетность")->Value=TempAsp->FieldByName("Приоритетность")->Value;
+  Asp->FieldByName("Приор")->Value=TempAsp->FieldByName("Приор")->Value;
+  Asp->FieldByName("Выполняющиеся мероприятия")->Value=TempAsp->FieldByName("Выполняющиеся мероприятия")->Value;
+  Asp->FieldByName("Предлагаемые мероприятия")->Value=TempAsp->FieldByName("Предлагаемые мероприятия")->Value;
+  Asp->FieldByName("Мониторинг и контроль")->Value=TempAsp->FieldByName("Мониторинг и контроль")->Value;
+  Asp->FieldByName("Предлагаемый мониторинг и контроль")->Value=TempAsp->FieldByName("Предлагаемый мониторинг и контроль")->Value;
+  Asp->FieldByName("Исполнитель")->Value=TempAsp->FieldByName("Исполнитель")->Value;
+  Asp->FieldByName("Дата создания")->Value=TempAsp->FieldByName("Дата создания")->Value;
+  Asp->FieldByName("Начало действия")->Value=TempAsp->FieldByName("Начало действия")->Value;
+  Asp->FieldByName("Конец действия")->Value=TempAsp->FieldByName("Конец действия")->Value;
+  Asp->FieldByName("ServerNum")->Value=TempAsp->FieldByName("Номер аспекта")->Value;
+  Asp->FieldByName("Del")->Value=false;
+  Asp->Post();
+}
+
+Comm->CommandText="DELETE Аспекты.*, Аспекты.Del, ObslOtdel.Login FROM (Подразделения INNER JOIN Аспекты ON Подразделения.[Номер подразделения] = Аспекты.Подразделение) INNER JOIN ObslOtdel ON Подразделения.[Номер подразделения] = ObslOtdel.NumObslOtdel WHERE (((Аспекты.Del)=True) AND ((ObslOtdel.Login)="+IntToStr(NumLogin)+"));";
+Comm->Execute();
+
+Comm->CommandText="Delete * From TempПодразделения";
+Comm->Execute();
+
+Comm->CommandText="Delete * From TempAspects";
+Comm->Execute();
+
+*/
 String Path=ExtractFilePath(Application->ExeName);
 MP<TIniFile>Ini(Path+"Hazards.ini");
 
@@ -3292,6 +3419,7 @@ MClient->UnBlockServer("StartMergeLoginsPodr");
 
 void __fastcall TZast::PrepareReadAspectsUsrExecute(TObject *Sender)
 {
+/*
 try
 {
 
@@ -3304,6 +3432,26 @@ Comm->Execute();
  Zast->MClient->Act.ParamComm.push_back("MergeAspectsUser");
  String S="SELECT Аспекты.[Номер аспекта],     Аспекты.Подразделение,     Аспекты.Ситуация,     Аспекты.[Вид территории],     Аспекты.Деятельность,     Аспекты.Специальность,     Аспекты.Аспект,     Аспекты.Воздействие,     Аспекты.G,     Аспекты.O,     Аспекты.R,     Аспекты.S,     Аспекты.T,     Аспекты.L,     Аспекты.N,     Аспекты.Z,     Аспекты.Значимость, Аспекты.[Наименование значимости],  Аспекты.[Проявление воздействия],     Аспекты.[Тяжесть последствий],     Аспекты.Приоритетность,  Аспекты.Приор,   Аспекты.[Выполняющиеся мероприятия],     Аспекты.[Предлагаемые мероприятия],     Аспекты.[Мониторинг и контроль],     Аспекты.[Предлагаемый мониторинг и контроль],     Аспекты.Исполнитель,      Аспекты.[Дата создания],     Аспекты.[Начало действия],     Аспекты.[Конец действия] ";
  String ServerSQL=S+"FROM (Подразделения INNER JOIN ObslOtdel ON Подразделения.[Номер подразделения] = ObslOtdel.NumObslOtdel) INNER JOIN Аспекты ON Подразделения.[Номер подразделения] = Аспекты.Подразделение WHERE (((ObslOtdel.Login)="+IntToStr(Form1->NumLogin)+"));";
+ String ClientSQL="SELECT TempAspects.[Номер аспекта], TempAspects.Подразделение, TempAspects.Ситуация, TempAspects.[Вид территории], TempAspects.Деятельность, TempAspects.Специальность, TempAspects.Аспект, TempAspects.Воздействие, TempAspects.G, TempAspects.O, TempAspects.R, TempAspects.S, TempAspects.T, TempAspects.L, TempAspects.N, TempAspects.Z, TempAspects.Значимость, TempAspects.[Наименование значимости], TempAspects.[Проявление воздействия], TempAspects.[Тяжесть последствий], TempAspects.Приоритетность, TempAspects.Приор, TempAspects.[Выполняющиеся мероприятия], TempAspects.[Предлагаемые мероприятия], TempAspects.[Мониторинг и контроль], TempAspects.[Предлагаемый мониторинг и контроль], TempAspects.Исполнитель,  TempAspects.[Дата создания], TempAspects.[Начало действия], TempAspects.[Конец действия] FROM TempAspects;";
+Zast->MClient->ReadTable("Опасности", ServerSQL, "Опасности_П", ClientSQL);
+}
+catch(...)
+{
+ Zast->BlockMK(false);
+}
+*/
+try
+{
+
+MP<TADOCommand>Comm(this);
+Comm->Connection=Zast->ADOUsrAspect;
+Comm->CommandText="DELETE Logins.AdmNum, Аспекты.* FROM Logins INNER JOIN ((Подразделения INNER JOIN Аспекты ON Подразделения.[Номер подразделения] = Аспекты.Подразделение) INNER JOIN ObslOtdel ON Подразделения.[Номер подразделения] = ObslOtdel.NumObslOtdel) ON Logins.Num = ObslOtdel.Login WHERE (((Logins.ServerNum)="+IntToStr(Form1->NumLogin)+"));";
+Comm->Execute();
+
+ Zast->MClient->Act.ParamComm.clear();
+ Zast->MClient->Act.ParamComm.push_back("MergeAspectsUser");
+ String ServerSQL="SELECT Аспекты.[Номер аспекта],     Аспекты.Подразделение,     Аспекты.Ситуация,     Аспекты.[Вид территории],     Аспекты.Деятельность,     Аспекты.Специальность,     Аспекты.Аспект,     Аспекты.Воздействие,     Аспекты.G,     Аспекты.O,     Аспекты.R,     Аспекты.S,     Аспекты.T,     Аспекты.L,     Аспекты.N,     Аспекты.Z,     Аспекты.Значимость, Аспекты.[Наименование значимости],  Аспекты.[Проявление воздействия],     Аспекты.[Тяжесть последствий],     Аспекты.Приоритетность,  Аспекты.Приор,   Аспекты.[Выполняющиеся мероприятия],     Аспекты.[Предлагаемые мероприятия],     Аспекты.[Мониторинг и контроль],     Аспекты.[Предлагаемый мониторинг и контроль],     Аспекты.Исполнитель,      Аспекты.[Дата создания],     Аспекты.[Начало действия],     Аспекты.[Конец действия] ";
+ ServerSQL=ServerSQL+" FROM (Подразделения INNER JOIN ObslOtdel ON Подразделения.[Номер подразделения] = ObslOtdel.NumObslOtdel) INNER JOIN Аспекты ON Подразделения.[Номер подразделения] = Аспекты.Подразделение WHERE (((ObslOtdel.Login)="+IntToStr(Form1->NumLogin)+"));";
  String ClientSQL="SELECT TempAspects.[Номер аспекта], TempAspects.Подразделение, TempAspects.Ситуация, TempAspects.[Вид территории], TempAspects.Деятельность, TempAspects.Специальность, TempAspects.Аспект, TempAspects.Воздействие, TempAspects.G, TempAspects.O, TempAspects.R, TempAspects.S, TempAspects.T, TempAspects.L, TempAspects.N, TempAspects.Z, TempAspects.Значимость, TempAspects.[Наименование значимости], TempAspects.[Проявление воздействия], TempAspects.[Тяжесть последствий], TempAspects.Приоритетность, TempAspects.Приор, TempAspects.[Выполняющиеся мероприятия], TempAspects.[Предлагаемые мероприятия], TempAspects.[Мониторинг и контроль], TempAspects.[Предлагаемый мониторинг и контроль], TempAspects.Исполнитель,  TempAspects.[Дата создания], TempAspects.[Начало действия], TempAspects.[Конец действия] FROM TempAspects;";
 Zast->MClient->ReadTable("Опасности", ServerSQL, "Опасности_П", ClientSQL);
 }
@@ -3339,7 +3487,9 @@ void __fastcall TZast::PrepWriteAspUsrExecute(TObject *Sender)
 
 Zast->MClient->Act.ParamComm.clear();
 Zast->MClient->Act.ParamComm.push_back("WriteAspectsUsr");
-String ClientSQL="SELECT Аспекты.[ServerNum],      Подразделения.ServerNum,     Аспекты.Ситуация,     Аспекты.[Вид территории],     Аспекты.Деятельность,     Аспекты.Специальность,     Аспекты.Аспект,     Аспекты.Воздействие,     Аспекты.G,     Аспекты.O,     Аспекты.R,     Аспекты.S,     Аспекты.T,     Аспекты.L,     Аспекты.N,     Аспекты.Z,     Аспекты.Значимость,       Аспекты.[Наименование значимости],      Аспекты.[Проявление воздействия],     Аспекты.[Тяжесть последствий],     Аспекты.Приоритетность,     Аспекты.Приор,     Аспекты.[Выполняющиеся мероприятия],     Аспекты.[Предлагаемые мероприятия],     Аспекты.[Мониторинг и контроль],     Аспекты.[Предлагаемый мониторинг и контроль],     Аспекты.Исполнитель,      Аспекты.[Дата создания],     Аспекты.[Начало действия],     Аспекты.[Конец действия] FROM Подразделения INNER JOIN Аспекты ON Подразделения.[Номер подразделения] = Аспекты.Подразделение ORDER BY Аспекты.[Номер аспекта];";
+//String ClientSQL="SELECT Аспекты.[ServerNum],      Подразделения.ServerNum,     Аспекты.Ситуация,     Аспекты.[Вид территории],     Аспекты.Деятельность,     Аспекты.Специальность,     Аспекты.Аспект,     Аспекты.Воздействие,     Аспекты.G,     Аспекты.O,     Аспекты.R,     Аспекты.S,     Аспекты.T,     Аспекты.L,     Аспекты.N,     Аспекты.Z,     Аспекты.Значимость,     Аспекты.[Проявление воздействия],     Аспекты.[Тяжесть последствий],     Аспекты.Приоритетность,     Аспекты.[Выполняющиеся мероприятия],     Аспекты.[Предлагаемые мероприятия],     Аспекты.[Мониторинг и контроль],     Аспекты.[Предлагаемый мониторинг и контроль],     Аспекты.Исполнитель,      Аспекты.[Дата создания],     Аспекты.[Начало действия],     Аспекты.[Конец действия] FROM Подразделения INNER JOIN Аспекты ON Подразделения.[Номер подразделения] = Аспекты.Подразделение ORDER BY Аспекты.[Номер аспекта];";
+String ClientSQL="SELECT Аспекты.[ServerNum],      Подразделения.ServerNum,     Аспекты.Ситуация,     Аспекты.[Вид территории],     Аспекты.Деятельность,     Аспекты.Специальность,     Аспекты.Аспект,     Аспекты.Воздействие,     Аспекты.G,     Аспекты.O,     Аспекты.R,     Аспекты.S,     Аспекты.T,     Аспекты.L,     Аспекты.N,     Аспекты.Z,     Аспекты.Значимость,  Аспекты.[Наименование значимости],   Аспекты.[Проявление воздействия],     Аспекты.[Тяжесть последствий],     Аспекты.Приоритетность,  Аспекты.Приор,   Аспекты.[Выполняющиеся мероприятия],     Аспекты.[Предлагаемые мероприятия],     Аспекты.[Мониторинг и контроль],     Аспекты.[Предлагаемый мониторинг и контроль],     Аспекты.Исполнитель,      Аспекты.[Дата создания],     Аспекты.[Начало действия],     Аспекты.[Конец действия] ";
+ClientSQL=ClientSQL+" FROM Logins INNER JOIN ((Подразделения INNER JOIN Аспекты ON Подразделения.[Номер подразделения] = Аспекты.Подразделение) INNER JOIN ObslOtdel ON Подразделения.[Номер подразделения] = ObslOtdel.NumObslOtdel) ON Logins.Num = ObslOtdel.Login WHERE (((Logins.ServerNum)="+IntToStr(Form1->NumLogin)+")) order by Аспекты.[Номер аспекта]  DESC;";
 String ServerSQL="SELECT TempAspects.[Номер аспекта], TempAspects.Подразделение, TempAspects.Ситуация, TempAspects.[Вид территории], TempAspects.Деятельность, TempAspects.Специальность, TempAspects.Аспект, TempAspects.Воздействие, TempAspects.G, TempAspects.O, TempAspects.R, TempAspects.S, TempAspects.T, TempAspects.L, TempAspects.N, TempAspects.Z, TempAspects.Значимость, TempAspects.[Наименование значимости], TempAspects.[Проявление воздействия], TempAspects.[Тяжесть последствий], TempAspects.Приоритетность, TempAspects.Приор, TempAspects.[Выполняющиеся мероприятия], TempAspects.[Предлагаемые мероприятия], TempAspects.[Мониторинг и контроль], TempAspects.[Предлагаемый мониторинг и контроль], TempAspects.Исполнитель,  TempAspects.[Дата создания], TempAspects.[Начало действия], TempAspects.[Конец действия] FROM TempAspects;";
 Zast->MClient->WriteTable("Опасности_П", ClientSQL, "Опасности", ServerSQL);
 
@@ -3917,7 +4067,7 @@ else
 // Zast->MClient->BlockServer("PrepWriteAspUsr");
 Form1->Aspects->Active=false;
 Form1->Aspects->Active=true;
-Form1-> Initialize(1);
+//Form1-> Initialize(1);
 MClient->StartAction("PrepWriteAspUsr");
 }
 }
@@ -3970,7 +4120,7 @@ void __fastcall TZast::ReadTempAspExecute(TObject *Sender)
  Zast->MClient->Act.ParamComm.clear();
  Zast->MClient->Act.ParamComm.push_back("VerIsNew");
  String S="SELECT Аспекты.[Номер аспекта],     Аспекты.Подразделение,     Аспекты.Ситуация,     Аспекты.[Вид территории],     Аспекты.Деятельность,     Аспекты.Специальность,     Аспекты.Аспект,     Аспекты.Воздействие,     Аспекты.G,     Аспекты.O,     Аспекты.R,     Аспекты.S,     Аспекты.T,     Аспекты.L,     Аспекты.N,     Аспекты.Z,     Аспекты.Значимость,  Аспекты.[Наименование значимости], Аспекты.[Проявление воздействия],     Аспекты.[Тяжесть последствий],     Аспекты.Приоритетность,  Аспекты.Приор,   Аспекты.[Выполняющиеся мероприятия],     Аспекты.[Предлагаемые мероприятия],     Аспекты.[Мониторинг и контроль],     Аспекты.[Предлагаемый мониторинг и контроль],     Аспекты.Исполнитель,      Аспекты.[Дата создания],     Аспекты.[Начало действия],     Аспекты.[Конец действия] ";
- String ServerSQL=S+"FROM (Подразделения INNER JOIN ObslOtdel ON Подразделения.[Номер подразделения] = ObslOtdel.NumObslOtdel) INNER JOIN Аспекты ON Подразделения.[Номер подразделения] = Аспекты.Подразделение WHERE (((ObslOtdel.Login)="+IntToStr(Form1->NumLogin)+"));";
+ String ServerSQL=S+"FROM (Подразделения INNER JOIN ObslOtdel ON Подразделения.[Номер подразделения] = ObslOtdel.NumObslOtdel) INNER JOIN Аспекты ON Подразделения.[Номер подразделения] = Аспекты.Подразделение WHERE (((ObslOtdel.Login)="+IntToStr(Form1->NumLogin)+")) Order by [Номер аспекта];";
  String ClientSQL="SELECT CompareAspects.[Номер аспекта], CompareAspects.Подразделение, CompareAspects.Ситуация, CompareAspects.[Вид территории], CompareAspects.Деятельность, CompareAspects.Специальность, CompareAspects.Аспект, CompareAspects.Воздействие, CompareAspects.G, CompareAspects.O, CompareAspects.R, CompareAspects.S, CompareAspects.T, CompareAspects.L, CompareAspects.N, CompareAspects.Z, CompareAspects.Значимость, CompareAspects.[Наименование значимости], CompareAspects.[Проявление воздействия], CompareAspects.[Тяжесть последствий], CompareAspects.Приоритетность, CompareAspects.Приор, CompareAspects.[Выполняющиеся мероприятия], CompareAspects.[Предлагаемые мероприятия], CompareAspects.[Мониторинг и контроль], CompareAspects.[Предлагаемый мониторинг и контроль], CompareAspects.Исполнитель,  CompareAspects.[Дата создания], CompareAspects.[Начало действия], CompareAspects.[Конец действия] FROM CompareAspects;";
 Zast->MClient->ReadTable("Опасности", ServerSQL, "Опасности_П", ClientSQL);
 
