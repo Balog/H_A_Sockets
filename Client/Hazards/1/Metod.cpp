@@ -45,7 +45,7 @@ Form1->Close();
 //---------------------------------------------------------------------------
 void __fastcall TMetodika::N1Click(TObject *Sender)
 {
-Application->HelpFile=ExtractFilePath(Application->ExeName)+"NetAspects.HLP";
+Application->HelpFile=ExtractFilePath(Application->ExeName)+"Hazards.HLP";
 Application->HelpJump("IDH_ярюпр_онкэгнбюрекэ");
 }
 //---------------------------------------------------------------------------

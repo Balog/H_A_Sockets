@@ -16,8 +16,8 @@
 class TFAbout : public TForm
 {
 __published:	// IDE-managed Components
-        TImage *Image1;
         TLabel *Label1;
+        TImage *Image1;
         void __fastcall Button1Click(TObject *Sender);
         void __fastcall FormClick(TObject *Sender);
         void __fastcall FormShow(TObject *Sender);

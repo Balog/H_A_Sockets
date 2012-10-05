@@ -29,7 +29,6 @@ __published:	// IDE-managed Components
         TMenuItem *N6;
         TMenuItem *N8;
         TStaticText *StaticText1;
-        TLabel *Label1;
         TADODataSet *ADODataSet1;
         TDataSource *DataSource1;
         TDBMemo *DBMemo1;
@@ -38,6 +37,7 @@ __published:	// IDE-managed Components
         TImage *Image2;
         TADODataSet *ADODataSet2;
         TMenuItem *N2;
+        TLabel *Label1;
         void __fastcall N6Click(TObject *Sender);
         void __fastcall N4Click(TObject *Sender);
         void __fastcall FormClose(TObject *Sender, TCloseAction &Action);

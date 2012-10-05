@@ -46,6 +46,7 @@ __published:	// IDE-managed Components
         void __fastcall FormActivate(TObject *Sender);
         void __fastcall FormKeyUp(TObject *Sender, WORD &Key,
           TShiftState Shift);
+        void __fastcall N7Click(TObject *Sender);
 private:	// User declarations
 public:		// User declarations
         __fastcall TVvedenie(TComponent* Owner);

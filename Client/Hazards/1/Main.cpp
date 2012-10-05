@@ -2316,7 +2316,7 @@ this->Close();
 
 void __fastcall TDocuments::N1Click(TObject *Sender)
 {
-Application->HelpFile=ExtractFilePath(Application->ExeName)+"NetAspects.HLP";
+Application->HelpFile=ExtractFilePath(Application->ExeName)+"Hazards.HLP";
   Application->HelpJump("IDH_ярюпр_цкюбяоеж");        
 }
 //---------------------------------------------------------------------------

@@ -53,7 +53,7 @@ Form1->Close();
 void __fastcall TVvedenie::N1Click(TObject *Sender)
 {
 
-Application->HelpFile=ExtractFilePath(Application->ExeName)+"NetAspects.HLP";
+Application->HelpFile=ExtractFilePath(Application->ExeName)+"Hazards.HLP";
 Application->HelpJump("IDH_ÑÒÀÐÒ_ÏÎËÜÇÎÂÀÒÅËÜ");
 
 }
@@ -90,6 +90,12 @@ if(Key==112)
 Application->HelpFile=ExtractFilePath(Application->ExeName)+"NetAspects.HLP";
 Application->HelpJump("IDH_ÂÂÅÄÅÍÈÅ");
 }
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TVvedenie::N7Click(TObject *Sender)
+{
+FAbout->ShowModal();        
 }
 //---------------------------------------------------------------------------
 

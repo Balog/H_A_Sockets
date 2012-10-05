@@ -4738,11 +4738,12 @@ object Vvedenie: TVvedenie
       OnClick = N5Click
     end
     object N6: TMenuItem
-      Caption = #1054#1094#1077#1085#1082#1072' '#1079#1085#1072#1095#1080#1084#1086#1089#1090#1080' '#1072#1089#1087#1077#1082#1090#1086#1074
+      Caption = #1054#1094#1077#1085#1082#1072' '#1088#1080#1089#1082#1086#1074
       OnClick = N6Click
     end
     object N7: TMenuItem
       Caption = #1054' '#1087#1088#1086#1075#1088#1072#1084#1084#1077
+      OnClick = N7Click
     end
     object N1: TMenuItem
       Caption = #1055#1086#1084#1086#1097#1100

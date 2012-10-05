@@ -47,19 +47,6 @@ object Metodika: TMetodika
   OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 13
-  object Label1: TLabel
-    Left = 300
-    Top = 34
-    Width = 415
-    Height = 20
-    Caption = #1040#1083#1075#1086#1088#1080#1090#1084' '#1086#1094#1077#1085#1082#1080' '#1079#1085#1072#1095#1080#1084#1086#1089#1090#1080' '#1101#1082#1086#1083#1086#1075#1080#1095#1077#1089#1082#1080#1093' '#1072#1089#1087#1077#1082#1090#1086#1074
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -16
-    Font.Name = 'MS Sans Serif'
-    Font.Style = []
-    ParentFont = False
-  end
   object Image1: TImage
     Left = 0
     Top = 0
@@ -10465,6 +10452,19 @@ object Metodika: TMetodika
       B70ABFFFD9}
     Proportional = True
   end
+  object Label1: TLabel
+    Left = 351
+    Top = 34
+    Width = 314
+    Height = 29
+    Caption = #1040#1083#1075#1086#1088#1080#1090#1084' '#1086#1094#1077#1085#1082#1080' '#1088#1080#1089#1082#1086#1074
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -24
+    Font.Name = 'MS Sans Serif'
+    Font.Style = [fsBold]
+    ParentFont = False
+  end
   object StaticText1: TStaticText
     Left = 155
     Top = 0
@@ -10508,7 +10508,7 @@ object Metodika: TMetodika
       Enabled = False
     end
     object N6: TMenuItem
-      Caption = #1054#1094#1077#1085#1082#1072' '#1079#1085#1072#1095#1080#1084#1086#1089#1090#1080' '#1072#1089#1087#1077#1082#1090#1086#1074
+      Caption = #1054#1094#1077#1085#1082#1072' '#1088#1080#1089#1082#1086#1074
       OnClick = N6Click
     end
     object N2: TMenuItem
