@@ -7,7 +7,7 @@
 #include "Main.h"
 #include "Zastavka.h"
 #include "CodeText.h"
-
+#include "Progress.h"
 //---------------------------------------------------------------------------
 #pragma package(smart_init)
 #pragma resource "*.dfm"
@@ -93,6 +93,12 @@ void __fastcall TPass::FormCreate(TObject *Sender)
 ShowWindow(Application->Handle,SW_RESTORE);
 SetWindowPos(Handle, HWND_TOPMOST,0,0,0,0,             SWP_NOMOVE|SWP_NOSIZE);
 this->BringToFront();
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TPass::FormShow(TObject *Sender)
+{
+Prog->Hide();
 }
 //---------------------------------------------------------------------------
 

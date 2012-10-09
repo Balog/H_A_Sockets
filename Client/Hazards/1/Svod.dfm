@@ -72,7 +72,8 @@ object FSvod: TFSvod
       item
         Expanded = False
         FieldName = 'Records'
-        Title.Caption = #1040#1089#1087#1077#1082#1090#1086#1074
+        Title.Caption = #1054#1087#1072#1089#1085#1086#1089#1090#1077#1081
+        Width = 69
         Visible = True
       end
       item

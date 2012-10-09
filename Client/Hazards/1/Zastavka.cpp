@@ -553,21 +553,21 @@ switch(N1)
 {
  case 1:
  {
- S1="На сервере зафиксирован "+IntToStr(N)+" аспект, принадлежащий этому подразделению.";
+ S1="На сервере зафиксирована "+IntToStr(N)+" опасность, принадлежащая этому подразделению.";
  break;
  }
  case 2: case 3: case 4:
  {
- S1="На сервере зафиксировано "+IntToStr(N)+" аспекта, принадлежащих этому подразделению.";
+ S1="На сервере зафиксировано "+IntToStr(N)+" опасности, принадлежащих этому подразделению.";
  break;
  }
  default:
  {
- S1="На сервере зафиксировано "+IntToStr(N)+" аспектов, принадлежащих этому подразделению.";
+ S1="На сервере зафиксировано "+IntToStr(N)+" опасностей, принадлежащих этому подразделению.";
  }
 }
 
-String S=S1+"\rИспользуя \"Движение аспектов\" предварительно освободите удаляемое подразделение от аспектов";
+String S=S1+"\rИспользуя \"Движение опасностей\" предварительно освободите удаляемое подразделение от опасностей";
 Application->MessageBoxA(S.c_str(),"Удаление подразделения",MB_ICONEXCLAMATION);
 }
 
@@ -1676,7 +1676,7 @@ Comm->Execute();
 Comm->CommandText="DELETE TempDeyat.* FROM TempDeyat;";
 Comm->Execute();
 
-Zast->MClient->WriteDiaryEvent("NetAspects","Конец загрузки экологических аспектов (главспец)","");
+Zast->MClient->WriteDiaryEvent("NetAspects","Конец загрузки ппрофессиональных опасностей (главспец)","");
 
 Zast->MClient->UnBlockServer("ReadWriteDoc");
 }
@@ -2288,7 +2288,7 @@ void __fastcall TZast::EndMergeServerAspectExecute(TObject *Sender)
 {
 try
 {
-Zast->MClient->WriteDiaryEvent("NetAspects","Конец записи списка экологических аспектов (главспец)","");
+Zast->MClient->WriteDiaryEvent("NetAspects","Конец записи списка профессиональных опасностей (главспец)","");
 }
 catch(...)
 {
@@ -2421,7 +2421,7 @@ Prog->SignComplete=false;
 Prog->Show();
 Prog->PB->Min=0;
 Prog->PB->Position=0;
-Prog->PB->Max=9;
+Prog->PB->Max=8;
 
 Documents->ReadWrite.clear();
 Str_RW S;
@@ -2446,36 +2446,36 @@ S.Num=4;
 Documents->ReadWrite.push_back(S);
 
 S.NameAction="ReadVozd1";
-S.Text="Чтение списка воздействий...";
+S.Text="Чтение списка последствий...";
 S.Num=5;
 Documents->ReadWrite.push_back(S);
-
+/*
 S.NameAction="ReadMeropr1";
 S.Text="Чтение списка мероприятий...";
 S.Num=6;
 Documents->ReadWrite.push_back(S);
-
+*/
 S.NameAction="ReadTerr1";
-S.Text="Чтение списка территорий...";
-S.Num=7;
+S.Text="Чтение списка участков/установок...";
+S.Num=6;
 Documents->ReadWrite.push_back(S);
 
 S.NameAction="ReadDeyat1";
-S.Text="Чтение списка видов деятельности...";
-S.Num=8;
+S.Text="Чтение списка объектов оценки...";
+S.Num=7;
 Documents->ReadWrite.push_back(S);
 
 S.NameAction="ReadAspect1";
-S.Text="Чтение списка экологических аспектов...";
-S.Num=9;
+S.Text="Чтение списка профессиональных опасностей...";
+S.Num=8;
 Documents->ReadWrite.push_back(S);
 
 S.NameAction="ReadTempAsp";
-S.Num=9;
+S.Num=8;
 Documents->ReadWrite.push_back(S);
 
 S.NameAction="ShowForm1";
-S.Num=9;
+S.Num=8;
 Documents->ReadWrite.push_back(S);
 
 Zast->ReadWriteDoc->Execute();
@@ -2642,7 +2642,7 @@ if(Tab->RecordCount==Temp->RecordCount)
    else
    {
     Res=false;
-    Mess="Содержание аспектов на сервере не совпадает с содержанием аспектов в локальной базе данных\rОбновить список аспектов?";
+    Mess="Содержание опасностей на сервере не совпадает с содержанием опасностей в локальной базе данных\rОбновить список опасностей?";
     break;
    }
   }
@@ -2655,12 +2655,12 @@ if(Tab->RecordCount==Temp->RecordCount)
 }
 else
 {
- Mess="Количество аспектов на сервере не совпадает с количеством аспектов в локальной базе данных\rОбновить список аспектов?";
+ Mess="Количество опасностей на сервере не совпадает с количеством опасностей в локальной базе данных\rОбновить список опасностей?";
 }
 
 if(!Res)
 {
- if(Application->MessageBoxA(Mess.c_str(),"Обновление аспектов",MB_YESNO+MB_ICONQUESTION+MB_DEFBUTTON1)==IDYES)
+ if(Application->MessageBoxA(Mess.c_str(),"Обновление опасностей",MB_YESNO+MB_ICONQUESTION+MB_DEFBUTTON1)==IDYES)
  {
   //Обновление списка аспектов для главспеца
 MP<TADODataSet>Temp(this);
@@ -2687,7 +2687,7 @@ for(Temp->First();!Temp->Eof;Temp->Next())
  }
  else
  {
-  ShowMessage("Ошибка копирования аспектов");
+  ShowMessage("Ошибка копирования опасностей");
  }
 }
 
@@ -2745,7 +2745,7 @@ void __fastcall TZast::EndsaveAspectsMSpecExecute(TObject *Sender)
 {
 try
 {
-Zast->MClient->WriteDiaryEvent("NetAspects","Конец записи аспектов (главспец)","");
+Zast->MClient->WriteDiaryEvent("NetAspects","Конец записи опасностей (главспец)","");
 Sleep(1000);
  Zast->MClient->UnBlockServer("ReadWriteDoc");
 }
@@ -2790,7 +2790,7 @@ if(Tab->RecordCount==Temp->RecordCount)
    else
    {
     Res=false;
-    Mess="Содержание аспектов на сервере не совпадает с содержанием аспектов в локальной базе данных\rЗаписать список аспектов на сервер?";
+    Mess="Содержание опасностей на сервере не совпадает с содержанием опасностей в локальной базе данных\rЗаписать список опасностей на сервер?";
     break;
    }
   }
@@ -2803,13 +2803,13 @@ if(Tab->RecordCount==Temp->RecordCount)
 }
 else
 {
- Mess="Количество аспектов на сервере не совпадает с количеством аспектов в локальной базе данных\rЗаписать список аспектов на сервер?";
+ Mess="Количество опасностей на сервере не совпадает с количеством опасностей в локальной базе данных\rЗаписать список опасностей на сервер?";
 }
 
 if(!Res)
 {
 
- if(Application->MessageBoxA(Mess.c_str(),"Запись аспектов",MB_YESNO+MB_ICONQUESTION+MB_DEFBUTTON1)==IDYES)
+ if(Application->MessageBoxA(Mess.c_str(),"Запись опасностей",MB_YESNO+MB_ICONQUESTION+MB_DEFBUTTON1)==IDYES)
  {
   //Запись списка аспектов главспецом
   /*
@@ -2833,7 +2833,7 @@ catch(...)
  else
  {
 
- Zast->MClient->WriteDiaryEvent("NetAspects","Отказ от сохранения движения аспектов (главспец)","");
+ Zast->MClient->WriteDiaryEvent("NetAspects","Отказ от сохранения движения опасностей (главспец)","");
  }
 }
 
@@ -2861,7 +2861,7 @@ void __fastcall TZast::EndsaveAspectsMSpec2Execute(TObject *Sender)
 {
 try
 {
-Zast->MClient->WriteDiaryEvent("NetAspects","Конец записи аспектов (главспец)","");
+Zast->MClient->WriteDiaryEvent("NetAspects","Конец записи опасностей (главспец)","");
 }
 catch(...)
 {
@@ -2900,7 +2900,7 @@ for(Temp->First();!Temp->Eof;Temp->Next())
  }
  else
  {
-  ShowMessage("Ошибка копирования аспектов");
+  ShowMessage("Ошибка копирования опасностей");
  }
 }
 
@@ -3045,8 +3045,8 @@ for(TempAsp->First();!TempAsp->Eof;TempAsp->Next())
  }
  else
  {
- Zast->MClient->WriteDiaryEvent("NetAspects ошибка","Сбой обновления аспектов","");
-  ShowMessage("Ошибка объединения аспектов");
+ Zast->MClient->WriteDiaryEvent("NetAspects ошибка","Сбой обновления опасностей","");
+  ShowMessage("Ошибка объединения опасностей");
  }
 }
 //Неправильная процедура.
@@ -3396,7 +3396,7 @@ void __fastcall TZast::EndReadAspectsMSpecExecute(TObject *Sender)
 {
 try
 {
-Zast->MClient->WriteDiaryEvent("NetAspects","Конец чтения аспектов (главспец)","");
+Zast->MClient->WriteDiaryEvent("NetAspects","Конец чтения опасностей (главспец)","");
 }
 catch(...)
 {
@@ -3745,7 +3745,7 @@ for(LAsp->First();!LAsp->Eof;LAsp->Next())
 if(Deleting)
 {
  Zast->BlockMK(false);
-ShowMessage("За время работы на сервере было изменено распределение подразделений по пользователям\n Часть аспектов возможно будет удалено, они уже не ваши.");
+ShowMessage("За время работы на сервере было изменено распределение подразделений по пользователям\n Часть опасностей возможно будет удалено, они уже не ваши.");
  Zast->BlockMK(true);
 }
 Comm->CommandText="DELETE Аспекты.* FROM Аспекты WHERE (((Аспекты.Del)=True));";
@@ -3809,7 +3809,7 @@ void TZast::CorrectPodrazd()
 //вывести сообщение о несовпадении списка подразделений на сервере и локального
 //удалить аспекты что уже не принадлежат этому пользователю
  Zast->BlockMK(false);
-ShowMessage("За время работы на сервере было изменено распределение подразделений по пользователям\n Часть аспектов было удалено, они все равно уже не ваши");
+ShowMessage("За время работы на сервере было изменено распределение подразделений по пользователям\n Часть опасностей было удалено, они все равно уже не ваши");
  Zast->BlockMK(true);
 
 
@@ -4047,7 +4047,7 @@ if(Deleting!=0)
 Comm->CommandText="Delete * from Аспекты where Del=true";
 Comm->Execute();
   Zast->BlockMK(false);
-ShowMessage("Из-за изменений на сервере нельзя записать и было удалено "+IntToStr(Deleting)+" аспектов");
+ShowMessage("Из-за изменений на сервере нельзя записать и было удалено "+IntToStr(Deleting)+" опасностей");
   Zast->BlockMK(true);
 }
 Prog->Hide();
@@ -4056,7 +4056,7 @@ if(SpravError)
  //если были ошибки со справочником нужно сообщить что некоторые пункты справочника удалены на сервере
  //Предложить обновить справочники. Запускаем обновление справочников и прерываем запись
   Zast->BlockMK(false);
- ShowMessage("За время работы на сервере \nбыли удалены некоторые пункты справочников, использованные в аспектах\nНеобходимо обновить справочники, проверить аспекты \nи вновь начать запись аспектов");
+ ShowMessage("За время работы на сервере \nбыли удалены некоторые пункты справочников, использованные в опасностях\nНеобходимо обновить справочники, проверить опасности \nи вновь начать запись опасностей");
   Zast->BlockMK(true);
 
 //CorrectPodrazd(false);

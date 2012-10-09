@@ -18,14 +18,6 @@ __fastcall TPass::TPass(TComponent* Owner)
 {
 }
 //---------------------------------------------------------------------------
-
-void TPass::ViewLogins()
-{
-
-
-
-}
-//---------------------------------------------------------------------------
 void __fastcall TPass::Button1Click(TObject *Sender)
 {
 MP<TADODataSet>Tab(this);

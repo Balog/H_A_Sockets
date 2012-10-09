@@ -27,8 +27,6 @@ __published:	// IDE-managed Components
 private:	// User declarations
 public:		// User declarations
         __fastcall TPass(TComponent* Owner);
-
-void ViewLogins();        
 };
 //---------------------------------------------------------------------------
 extern PACKAGE TPass *Pass;

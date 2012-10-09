@@ -126,6 +126,7 @@ Otdels->Items->Add(Verify->FieldByName("Название подразделения")->AsString);
 void __fastcall TForm1::FormShow(TObject *Sender)
 {
 Zast->UpdateLogins->Execute();
+Prog->Hide();
 }
 //---------------------------------------------------------------------------
 

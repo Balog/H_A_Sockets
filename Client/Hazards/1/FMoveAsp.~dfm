@@ -314,7 +314,7 @@ object MAsp: TMAsp
       Caption = 'Z'
     end
     object DBText1: TDBText
-      Left = 116
+      Left = 130
       Top = 34
       Width = 662
       Height = 17
@@ -322,7 +322,7 @@ object MAsp: TMAsp
       DataSource = DataSource4
     end
     object DBText2: TDBText
-      Left = 116
+      Left = 130
       Top = 63
       Width = 662
       Height = 17
@@ -330,7 +330,7 @@ object MAsp: TMAsp
       DataSource = DataSource4
     end
     object DBText3: TDBText
-      Left = 116
+      Left = 130
       Top = 92
       Width = 662
       Height = 17
@@ -338,7 +338,7 @@ object MAsp: TMAsp
       DataSource = DataSource4
     end
     object DBText4: TDBText
-      Left = 116
+      Left = 130
       Top = 121
       Width = 662
       Height = 17
@@ -346,7 +346,7 @@ object MAsp: TMAsp
       DataSource = DataSource4
     end
     object DBText5: TDBText
-      Left = 116
+      Left = 130
       Top = 150
       Width = 110
       Height = 17
@@ -354,7 +354,7 @@ object MAsp: TMAsp
       DataSource = DataSource4
     end
     object CPodr: TComboBox
-      Left = 116
+      Left = 130
       Top = 4
       Width = 289
       Height = 21

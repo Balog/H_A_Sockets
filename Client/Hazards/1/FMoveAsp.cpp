@@ -120,7 +120,7 @@ CPodr->ItemIndex=Num-1;
 else
 {
 CPodr->Clear();
-CPodr->Items->Add("Нет списка аспектов");
+CPodr->Items->Add("Нет списка опасностей");
 CPodr->ItemIndex=0;
 CPodr->Enabled=false;
 }
@@ -191,7 +191,7 @@ catch(...)
 
 void __fastcall TMAsp::BitBtn6Click(TObject *Sender)
 {
-if(Application->MessageBoxA("Вы действительно хотите прочесть список аспектов с сервера?\rВсе несохраненные изменения по перемещению аспектов будут удалены!","Чтение списка аспектов",MB_YESNO+MB_ICONWARNING+MB_DEFBUTTON2+MB_APPLMODAL)==IDYES)
+if(Application->MessageBoxA("Вы действительно хотите прочесть список опасностей с сервера?\rВсе несохраненные изменения по перемещению опасностей будут удалены!","Чтение списка опасностей",MB_YESNO+MB_ICONWARNING+MB_DEFBUTTON2+MB_APPLMODAL)==IDYES)
 {
 Zast->BlockMK(true);
 try
@@ -208,7 +208,7 @@ catch(...)
 //---------------------------------------------------------------------------
 void TMAsp::MergeAspects()
 {
-Zast->MClient->WriteDiaryEvent("NetAspects","Начало объединения аспектов (главспец)","");
+Zast->MClient->WriteDiaryEvent("NetAspects","Начало объединения опасностей (главспец)","");
 
 try
 {
@@ -259,7 +259,7 @@ ChangeCPodr();
 }
 catch(...)
 {
-Zast->MClient->WriteDiaryEvent("NetAspects ошибка","Ошибка объединения аспектов (главспец)","Ошибка "+IntToStr(GetLastError()));
+Zast->MClient->WriteDiaryEvent("NetAspects ошибка","Ошибка объединения опасностей (главспец)","Ошибка "+IntToStr(GetLastError()));
 
 }
 }

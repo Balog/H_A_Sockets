@@ -67,7 +67,7 @@ switch (Application->MessageBoxA("Записать все изменения на сервер?","Выход из п
 Prog->Show();
 Prog->PB->Min=0;
 Prog->PB->Position=0;
-Prog->PB->Max=10;
+Prog->PB->Max=9;
 
 Zast->BlockMK(true);
 try
@@ -98,41 +98,41 @@ ReadWrite.push_back(S);
 
 
 S.NameAction="WriteVozd1";
-S.Text="Запись воздействий...";
+S.Text="Запись последствий...";
 S.Num=5;
 ReadWrite.push_back(S);
 
-
+/*
 S.NameAction="WriteMeropr1";
 S.Text="Запись мероприятий...";
 S.Num=6;
 ReadWrite.push_back(S);
-
+*/
 
 S.NameAction="WriteTerr1";
-S.Text="Запись территорий...";
-S.Num=7;
+S.Text="Запись участков/установок...";
+S.Num=6;
 ReadWrite.push_back(S);
 
 
 S.NameAction="WriteDeyat1";
-S.Text="Запись видов деятельности...";
-S.Num=8;
+S.Text="Запись объектов оценки...";
+S.Num=7;
 ReadWrite.push_back(S);
 
 
 S.NameAction="WriteAspect1";
-S.Text="Запись списка экологических аспектов...";
-S.Num=9;
+S.Text="Запись списка профессиональных опасностей...";
+S.Num=8;
 ReadWrite.push_back(S);
 
 S.NameAction="SaveAspectsMSpec0";
-S.Text="Запись движения аспектов...";
-S.Num=10;
+S.Text="Запись движения опасностей...";
+S.Num=9;
 ReadWrite.push_back(S);
 
 S.NameAction="StopProgram";
-S.Num=10;
+S.Num=9;
 ReadWrite.push_back(S);
 
 Zast->ReadWriteDoc->Execute();
@@ -1536,7 +1536,7 @@ Branches->CommandText="Select * From Ветви_7";
 Branches->Active=true;
 Branches->Append();
 Branches->FieldByName("Номер родителя")->Value=NumParentNode;
-Branches->FieldByName("Название")->Value="Новый аспект";
+Branches->FieldByName("Название")->Value="Новая опасность";
 Branches->Post();
 Branches->Last();
 Number=Branches->FieldByName("Номер ветви")->Value;
@@ -1577,7 +1577,7 @@ Branches->CommandText="Select * From Ветви_7";
 Branches->Active=true;
 Branches->Append();
 Branches->FieldByName("Номер родителя")->Value=NumParentNode;
-Branches->FieldByName("Название")->Value="Новый аспект";
+Branches->FieldByName("Название")->Value="Новая опасность";
 Branches->Post();
 Branches->Last();
 Number=Branches->FieldByName("Номер ветви")->Value;
@@ -1588,7 +1588,7 @@ MyNodePtr->Number=Number;
 MyNodePtr->Parent=NumParentNode;
 MyNodePtr->Node=false;
 }
-TreeView5->Items->AddChildObject(SelNode,"Новый аспект",MyNodePtr);        
+TreeView5->Items->AddChildObject(SelNode,"Новая опасность",MyNodePtr);
 }
 //---------------------------------------------------------------------------
 
@@ -2598,7 +2598,7 @@ Zast->BlockMK(true);
 ReadWrite.clear();
 Str_RW S;
 S.NameAction="ReadAspect1";
-S.Text="Чтение списка экологических аспектов...";
+S.Text="Чтение списка профессиональных опасностей...";
 S.Num=8;
 ReadWrite.push_back(S);
 Zast->MClient->BlockServer("ReadWriteDoc");
@@ -2870,7 +2870,7 @@ try
 ReadWrite.clear();
 Str_RW S;
 S.NameAction="WriteAspect1";
-S.Text="Запись списка экологических аспектов...";
+S.Text="Запись списка профессиональных опасностей...";
 S.Num=9;
 ReadWrite.push_back(S);
 Zast->ReadWriteDoc->Execute();

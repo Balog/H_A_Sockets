@@ -4,7 +4,7 @@ object Prog: TProg
   BorderStyle = bsNone
   Caption = 'Prog'
   ClientHeight = 35
-  ClientWidth = 371
+  ClientWidth = 490
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -19,7 +19,7 @@ object Prog: TProg
   object Panel1: TPanel
     Left = 0
     Top = 0
-    Width = 371
+    Width = 490
     Height = 35
     Align = alClient
     BevelWidth = 2
@@ -27,7 +27,7 @@ object Prog: TProg
     object Label1: TLabel
       Left = 2
       Top = 2
-      Width = 367
+      Width = 486
       Height = 19
       Align = alClient
       Alignment = taCenter
@@ -42,7 +42,7 @@ object Prog: TProg
     object PB: TProgressBar
       Left = 2
       Top = 21
-      Width = 367
+      Width = 486
       Height = 12
       Align = alBottom
       Min = 0

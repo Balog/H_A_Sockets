@@ -157,7 +157,7 @@ TempAspects->Active=true;
 
 AnsiString Text;
 int Num;
-T="Перечень экологических аспектов c "+Date1.DateString()+" по "+Date2.DateString();
+T="Перечень профессиональных опасностей c "+Date1.DateString()+" по "+Date2.DateString();
 
 T=" "+NP;
 if(Podr==0 & OneList)
@@ -978,7 +978,7 @@ TempAspects->Active=true;
 
 AnsiString Text;
 int Num;
-T="Перечень экологических аспектов c "+Date1.DateString()+" по "+Date2.DateString();
+T="Перечень профессиональных опасностей c "+Date1.DateString()+" по "+Date2.DateString();
 
 T=" "+NP;
 if(Podr==0 & OneList)
