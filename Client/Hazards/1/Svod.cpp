@@ -357,7 +357,7 @@ void TFSvod::CreateRep(TADODataSet *TempTable, Variant App, Variant Book, Varian
 {
 TempTable->First();
 AnsiString Text;
-
+/*
 for(int j=0;j<TempTable->RecordCount;j++)
 {
 NN=j;
@@ -395,7 +395,57 @@ if (Number>1)
 {
 App.OlePropertyGet("Range",(Address(Sheet,1,Start)+":"+Address(Sheet,9,Start+NN)).c_str()).OlePropertyGet("Borders",12).OlePropertySet("Weight",4);
 }
+*/
+for(int j=0;j<TempTable->RecordCount;j++)
+{
+NN=j;
 
+Text=TempTable->FieldByName("Название подразделения")->AsString;
+App.OlePropertyGet("Cells",Start+j,1).OlePropertySet("Value",Text.c_str());
+Text=TempTable->FieldByName("Наименование территории")->AsString;
+App.OlePropertyGet("Cells",Start+j,2).OlePropertySet("Value",Text.c_str());
+Text=TempTable->FieldByName("Наименование деятельности")->AsString;
+App.OlePropertyGet("Cells",Start+j,3).OlePropertySet("Value",Text.c_str());
+Text=TempTable->FieldByName("Наименование аспекта")->AsString;
+App.OlePropertyGet("Cells",Start+j,4).OlePropertySet("Value",Text.c_str());
+Text=TempTable->FieldByName("Специальность")->AsString;
+App.OlePropertyGet("Cells",Start+j,5).OlePropertySet("Value",Text.c_str());
+Text=TempTable->FieldByName("Наименование воздействия")->AsString;
+App.OlePropertyGet("Cells",Start+j,6).OlePropertySet("Value",Text.c_str());
+Text=TempTable->FieldByName("Название ситуации")->AsString;
+App.OlePropertyGet("Cells",Start+j,7).OlePropertySet("Value",Text.c_str());
+double T=TempTable->FieldByName("Z")->AsFloat;
+Text=FloatToStr(T);
+App.OlePropertyGet("Cells",Start+j,8).OlePropertySet("Value",Text.c_str());
+Text=TempTable->FieldByName("Наименование значимости")->AsString;
+App.OlePropertyGet("Cells",Start+j,9).OlePropertySet("Value",Text.c_str());
+Text=TempTable->FieldByName("Наименование приоритетности")->AsString;
+App.OlePropertyGet("Cells",Start+j,10).OlePropertySet("Value",Text.c_str());
+Text=TempTable->FieldByName("Выполняющиеся мероприятия")->AsString;
+App.OlePropertyGet("Cells",Start+j,11).OlePropertySet("Value",Text.c_str());
+Text=TempTable->FieldByName("Предлагаемые мероприятия")->AsString;
+App.OlePropertyGet("Cells",Start+j,12).OlePropertySet("Value",Text.c_str());
+Text=TempTable->FieldByName("Мониторинг и контроль")->AsString;
+App.OlePropertyGet("Cells",Start+j,13).OlePropertySet("Value",Text.c_str());
+Text=TempTable->FieldByName("Мониторинг и контроль")->AsString;
+App.OlePropertyGet("Cells",Start+j,14).OlePropertySet("Value",Text.c_str());
+
+
+Number++;
+TempTable->Next();
+}
+
+App.OlePropertyGet("Range",(Address(Sheet,1,Start)+":"+Address(Sheet,14,Start+NN)).c_str()).OlePropertySet("VerticalAlignment",-4160);
+App.OlePropertyGet("Range",(Address(Sheet,1,Start)+":"+Address(Sheet,14,Start+NN)).c_str()).OlePropertySet("WrapText",true);
+App.OlePropertyGet("Range",(Address(Sheet,1,Start)+":"+Address(Sheet,14,Start+NN)).c_str()).OlePropertyGet("Borders",7).OlePropertySet("Weight",4);
+App.OlePropertyGet("Range",(Address(Sheet,1,Start)+":"+Address(Sheet,14,Start+NN)).c_str()).OlePropertyGet("Borders",8).OlePropertySet("Weight",4);
+App.OlePropertyGet("Range",(Address(Sheet,1,Start)+":"+Address(Sheet,14,Start+NN)).c_str()).OlePropertyGet("Borders",9).OlePropertySet("Weight",4);
+App.OlePropertyGet("Range",(Address(Sheet,1,Start)+":"+Address(Sheet,14,Start+NN)).c_str()).OlePropertyGet("Borders",10).OlePropertySet("Weight",4);
+App.OlePropertyGet("Range",(Address(Sheet,1,Start)+":"+Address(Sheet,14,Start+NN)).c_str()).OlePropertyGet("Borders",11).OlePropertySet("Weight",4);
+if (Number>1)
+{
+App.OlePropertyGet("Range",(Address(Sheet,1,Start)+":"+Address(Sheet,14,Start+NN)).c_str()).OlePropertyGet("Borders",12).OlePropertySet("Weight",4);
+}
 }
 //----------------------------------------------------------------------------
 void TFSvod::EndSvod(Variant App, Variant Sheet, int Start)
@@ -698,7 +748,7 @@ AnsiString P21=WideString(ExtractFilePath(Application->ExeName)+"\Templates\\"+T
 CopyFile(P11.c_str() ,P21.c_str() , false);
 
 
-App.OlePropertySet("Visible",false);
+//App.OlePropertySet("Visible",true);
 Variant Book=App.OlePropertyGet("Workbooks").OleFunction("Add", P2.c_str());
 Variant Sheet=App.OlePropertyGet("ActiveSheet");
 Sheet.OlePropertySet("Name","Ф-001.2");
@@ -707,14 +757,14 @@ App1.OlePropertySet("Visible",false);
 Variant Book1=App1.OlePropertyGet("Workbooks").OleFunction("Add", P21.c_str());
 Variant Sheet1=App1.OlePropertyGet("ActiveSheet");
 Sheet1.OlePropertySet("Name","Ф-001.2");
-App.OlePropertySet("Visible",false);
-App1.OlePropertySet("Visible",false);
+App.OlePropertySet("Visible",true);
+App1.OlePropertySet("Visible",true);
 
 DeleteFile(P2);
 DeleteFile(P21);
 
-int Start=15;
-int Start1=15;
+int Start=14;
+int Start1=14;
 
 
 TSvod->First();

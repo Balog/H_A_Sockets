@@ -144,7 +144,7 @@ object FSvod: TFSvod
     end
   end
   object OpenDialog1: TOpenDialog
-    Filter = #1041#1072#1079#1072' '#1076#1072#1085#1085#1099#1093'|Main_Svod_reestr.dtb'
+    Filter = #1041#1072#1079#1072' '#1076#1072#1085#1085#1099#1093'|HMain_Svod_reestr.dtb'
     Left = 296
     Top = 680
   end

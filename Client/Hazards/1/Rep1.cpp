@@ -39,11 +39,20 @@ if(Role!=4)
 {
 if(Flt!="")
 {
+
 Temp->CommandText="SELECT TempAspects.*, Logins.ServerNum, Подразделения.ServerNum FROM (Logins INNER JOIN (Подразделения INNER JOIN ObslOtdel ON Подразделения.[Номер подразделения] = ObslOtdel.NumObslOtdel) ON Logins.Num = ObslOtdel.Login) INNER JOIN TempAspects ON Подразделения.ServerNum = TempAspects.Подразделение Where Подразделение="+IntToStr(Report1->Podr->FieldByName("ServerNum")->AsInteger)+" AND "+Flt+" Order By [Номер аспекта]";
+
 }
 else
 {
+if(Report1->NumRep==1)
+{
 Temp->CommandText="SELECT TempAspects.*, Logins.ServerNum, Подразделения.ServerNum FROM (Logins INNER JOIN (Подразделения INNER JOIN ObslOtdel ON Подразделения.[Номер подразделения] = ObslOtdel.NumObslOtdel) ON Logins.Num = ObslOtdel.Login) INNER JOIN TempAspects ON Подразделения.ServerNum = TempAspects.Подразделение Where Подразделение="+IntToStr(Report1->Podr->FieldByName("ServerNum")->AsInteger)+" Order By [Номер аспекта]";
+}
+else
+{
+Temp->CommandText="SELECT TempAspects.*, Logins.ServerNum, Подразделения.ServerNum FROM (Logins INNER JOIN (Подразделения INNER JOIN ObslOtdel ON Подразделения.[Номер подразделения] = ObslOtdel.NumObslOtdel) ON Logins.Num = ObslOtdel.Login) INNER JOIN TempAspects ON Подразделения.ServerNum = TempAspects.Подразделение Where TempAspects.[Значимость]=True AND Подразделение="+IntToStr(Report1->Podr->FieldByName("ServerNum")->AsInteger)+" Order By [Номер аспекта]";
+}
 }
 }
 else

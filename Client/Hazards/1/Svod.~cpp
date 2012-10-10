@@ -698,7 +698,7 @@ AnsiString P21=WideString(ExtractFilePath(Application->ExeName)+"\Templates\\"+T
 CopyFile(P11.c_str() ,P21.c_str() , false);
 
 
-App.OlePropertySet("Visible",false);
+//App.OlePropertySet("Visible",true);
 Variant Book=App.OlePropertyGet("Workbooks").OleFunction("Add", P2.c_str());
 Variant Sheet=App.OlePropertyGet("ActiveSheet");
 Sheet.OlePropertySet("Name","Ô-001.2");
@@ -707,8 +707,8 @@ App1.OlePropertySet("Visible",false);
 Variant Book1=App1.OlePropertyGet("Workbooks").OleFunction("Add", P21.c_str());
 Variant Sheet1=App1.OlePropertyGet("ActiveSheet");
 Sheet1.OlePropertySet("Name","Ô-001.2");
-App.OlePropertySet("Visible",false);
-App1.OlePropertySet("Visible",false);
+App.OlePropertySet("Visible",true);
+App1.OlePropertySet("Visible",true);
 
 DeleteFile(P2);
 DeleteFile(P21);

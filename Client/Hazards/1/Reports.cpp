@@ -1249,11 +1249,14 @@ if(Podr==0)
 {
 if(OneList)
 {
-Podrazd->CommandText="Select * from TempПодразделения Order by [Название подразделения]";
+Podrazd->CommandText="SELECT TempAspects.Значимость, TempПодразделения.[Номер подразделения], TempПодразделения.[Название подразделения], TempПодразделения.ServerNum, TempПодразделения.Ver FROM TempПодразделения INNER JOIN TempAspects ON TempПодразделения.ServerNum = TempAspects.Подразделение GROUP BY TempAspects.Значимость,  TempПодразделения.[Номер подразделения], TempПодразделения.[Название подразделения], TempПодразделения.ServerNum, TempПодразделения.Ver HAVING (((TempAspects.Значимость)=True))  Order by [Название подразделения];";
+//"Select * from TempПодразделения Order by [Название подразделения]";
 }
 else
 {
-Podrazd->CommandText="Select * from TempПодразделения Order by [Название подразделения]  DESC";
+Podrazd->CommandText="SELECT TempAspects.Значимость, TempПодразделения.[Номер подразделения], TempПодразделения.[Название подразделения], TempПодразделения.ServerNum, TempПодразделения.Ver FROM TempПодразделения INNER JOIN TempAspects ON TempПодразделения.ServerNum = TempAspects.Подразделение GROUP BY TempAspects.Значимость, TempПодразделения.[Номер подразделения], TempПодразделения.[Название подразделения], TempПодразделения.ServerNum, TempПодразделения.Ver HAVING (((TempAspects.Значимость)=True))  Order by [Название подразделения] DESC";
+
+//"Select * from TempПодразделения Order by [Название подразделения]  DESC";
 }
 }
 else
