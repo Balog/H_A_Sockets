@@ -458,7 +458,7 @@ Pass->ShowModal();
 void __fastcall TZast::ClientSocketError(TObject *Sender,
       TCustomWinSocket *Socket, TErrorEvent ErrorEvent, int &ErrorCode)
 {
-if(ErrorCode==10061 | ErrorCode==10060)
+if(ErrorCode==10061 | ErrorCode==10060 |  ErrorCode==11004)
 {
  this->Hide();
  ShowMessage("Не найден сервер!");

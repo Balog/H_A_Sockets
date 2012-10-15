@@ -348,8 +348,8 @@ Comm->Execute();
 
  Zast->MClient->Act.ParamComm.clear();
  Zast->MClient->Act.ParamComm.push_back("ContSvodReport");
- String ServerSQL="SELECT Аспекты.[Номер аспекта], Аспекты.Подразделение, Аспекты.Ситуация, Аспекты.[Вид территории], Аспекты.Деятельность, Аспекты.Специальность, Аспекты.Аспект, Аспекты.Воздействие, Аспекты.G, Аспекты.O, Аспекты.R, Аспекты.S, Аспекты.T, Аспекты.L, Аспекты.N, Аспекты.Z, Аспекты.Значимость, Аспекты.[Проявление воздействия], Аспекты.[Тяжесть последствий], Аспекты.Приоритетность, Аспекты.[Выполняющиеся мероприятия],  Аспекты.[предлагаемые мероприятия],  Аспекты.[Мониторинг и контроль], Аспекты.[Предлагаемый мониторинг и контроль], Аспекты.[Дата создания], Аспекты.[Начало действия], Аспекты.[Конец действия] FROM Аспекты;";
- String ClientSQL="SELECT TempAspects.[Номер аспекта], TempAspects.Подразделение, TempAspects.Ситуация, TempAspects.[Вид территории], TempAspects.Деятельность, TempAspects.Специальность, TempAspects.Аспект, TempAspects.Воздействие, TempAspects.G, TempAspects.O, TempAspects.R, TempAspects.S, TempAspects.T, TempAspects.L, TempAspects.N, TempAspects.Z, TempAspects.Значимость, TempAspects.[Проявление воздействия], TempAspects.[Тяжесть последствий], TempAspects.Приоритетность, TempAspects.[Выполняющиеся мероприятия],  TempAspects.[предлагаемые мероприятия],  TempAspects.[Мониторинг и контроль], TempAspects.[Предлагаемый мониторинг и контроль],  TempAspects.[Дата создания], TempAspects.[Начало действия], TempAspects.[Конец действия] FROM TempAspects;";
+ String ServerSQL="SELECT Аспекты.[Номер аспекта], Аспекты.Подразделение, Аспекты.Ситуация, Аспекты.[Вид территории], Аспекты.Деятельность, Аспекты.Специальность, Аспекты.Аспект, Аспекты.Воздействие, Аспекты.G, Аспекты.O, Аспекты.R, Аспекты.S, Аспекты.T, Аспекты.L, Аспекты.N, Аспекты.Z, Аспекты.Значимость, Аспекты.[Наименование значимости], Аспекты.[Проявление воздействия], Аспекты.[Тяжесть последствий], Аспекты.Приоритетность, Аспекты.[Выполняющиеся мероприятия],  Аспекты.[предлагаемые мероприятия],  Аспекты.[Мониторинг и контроль], Аспекты.[Предлагаемый мониторинг и контроль], Аспекты.[Дата создания], Аспекты.[Начало действия], Аспекты.[Конец действия] FROM Аспекты;";
+ String ClientSQL="SELECT TempAspects.[Номер аспекта], TempAspects.Подразделение, TempAspects.Ситуация, TempAspects.[Вид территории], TempAspects.Деятельность, TempAspects.Специальность, TempAspects.Аспект, TempAspects.Воздействие, TempAspects.G, TempAspects.O, TempAspects.R, TempAspects.S, TempAspects.T, TempAspects.L, TempAspects.N, TempAspects.Z, TempAspects.Значимость, TempAspects.[Наименование значимости], TempAspects.[Проявление воздействия], TempAspects.[Тяжесть последствий], TempAspects.Приоритетность, TempAspects.[Выполняющиеся мероприятия],  TempAspects.[предлагаемые мероприятия],  TempAspects.[Мониторинг и контроль], TempAspects.[Предлагаемый мониторинг и контроль],  TempAspects.[Дата создания], TempAspects.[Начало действия], TempAspects.[Конец действия] FROM TempAspects;";
  Zast->MClient->ReadTable("Опасности",ServerSQL, "Опасности", ClientSQL);
 }
 //---------------------------------------------------------------------------
@@ -357,7 +357,7 @@ void TFSvod::CreateRep(TADODataSet *TempTable, Variant App, Variant Book, Varian
 {
 TempTable->First();
 AnsiString Text;
-
+/*
 for(int j=0;j<TempTable->RecordCount;j++)
 {
 NN=j;
@@ -395,7 +395,57 @@ if (Number>1)
 {
 App.OlePropertyGet("Range",(Address(Sheet,1,Start)+":"+Address(Sheet,9,Start+NN)).c_str()).OlePropertyGet("Borders",12).OlePropertySet("Weight",4);
 }
+*/
+for(int j=0;j<TempTable->RecordCount;j++)
+{
+NN=j;
 
+Text=TempTable->FieldByName("Название подразделения")->AsString;
+App.OlePropertyGet("Cells",Start+j,1).OlePropertySet("Value",Text.c_str());
+Text=TempTable->FieldByName("Наименование территории")->AsString;
+App.OlePropertyGet("Cells",Start+j,2).OlePropertySet("Value",Text.c_str());
+Text=TempTable->FieldByName("Наименование деятельности")->AsString;
+App.OlePropertyGet("Cells",Start+j,3).OlePropertySet("Value",Text.c_str());
+Text=TempTable->FieldByName("Наименование аспекта")->AsString;
+App.OlePropertyGet("Cells",Start+j,4).OlePropertySet("Value",Text.c_str());
+Text=TempTable->FieldByName("Специальность")->AsString;
+App.OlePropertyGet("Cells",Start+j,5).OlePropertySet("Value",Text.c_str());
+Text=TempTable->FieldByName("Наименование воздействия")->AsString;
+App.OlePropertyGet("Cells",Start+j,6).OlePropertySet("Value",Text.c_str());
+Text=TempTable->FieldByName("Название ситуации")->AsString;
+App.OlePropertyGet("Cells",Start+j,7).OlePropertySet("Value",Text.c_str());
+double T=TempTable->FieldByName("Z")->AsFloat;
+Text=FloatToStr(T);
+App.OlePropertyGet("Cells",Start+j,8).OlePropertySet("Value",Text.c_str());
+Text=TempTable->FieldByName("Наименование значимости")->AsString;
+App.OlePropertyGet("Cells",Start+j,9).OlePropertySet("Value",Text.c_str());
+Text=TempTable->FieldByName("Наименование приоритетности")->AsString;
+App.OlePropertyGet("Cells",Start+j,10).OlePropertySet("Value",Text.c_str());
+Text=TempTable->FieldByName("Выполняющиеся мероприятия")->AsString;
+App.OlePropertyGet("Cells",Start+j,11).OlePropertySet("Value",Text.c_str());
+Text=TempTable->FieldByName("Предлагаемые мероприятия")->AsString;
+App.OlePropertyGet("Cells",Start+j,12).OlePropertySet("Value",Text.c_str());
+Text=TempTable->FieldByName("Мониторинг и контроль")->AsString;
+App.OlePropertyGet("Cells",Start+j,13).OlePropertySet("Value",Text.c_str());
+Text=TempTable->FieldByName("Мониторинг и контроль")->AsString;
+App.OlePropertyGet("Cells",Start+j,14).OlePropertySet("Value",Text.c_str());
+
+
+Number++;
+TempTable->Next();
+}
+
+App.OlePropertyGet("Range",(Address(Sheet,1,Start)+":"+Address(Sheet,14,Start+NN)).c_str()).OlePropertySet("VerticalAlignment",-4160);
+App.OlePropertyGet("Range",(Address(Sheet,1,Start)+":"+Address(Sheet,14,Start+NN)).c_str()).OlePropertySet("WrapText",true);
+App.OlePropertyGet("Range",(Address(Sheet,1,Start)+":"+Address(Sheet,14,Start+NN)).c_str()).OlePropertyGet("Borders",7).OlePropertySet("Weight",4);
+App.OlePropertyGet("Range",(Address(Sheet,1,Start)+":"+Address(Sheet,14,Start+NN)).c_str()).OlePropertyGet("Borders",8).OlePropertySet("Weight",4);
+App.OlePropertyGet("Range",(Address(Sheet,1,Start)+":"+Address(Sheet,14,Start+NN)).c_str()).OlePropertyGet("Borders",9).OlePropertySet("Weight",4);
+App.OlePropertyGet("Range",(Address(Sheet,1,Start)+":"+Address(Sheet,14,Start+NN)).c_str()).OlePropertyGet("Borders",10).OlePropertySet("Weight",4);
+App.OlePropertyGet("Range",(Address(Sheet,1,Start)+":"+Address(Sheet,14,Start+NN)).c_str()).OlePropertyGet("Borders",11).OlePropertySet("Weight",4);
+if (Number>1)
+{
+App.OlePropertyGet("Range",(Address(Sheet,1,Start)+":"+Address(Sheet,14,Start+NN)).c_str()).OlePropertyGet("Borders",12).OlePropertySet("Weight",4);
+}
 }
 //----------------------------------------------------------------------------
 void TFSvod::EndSvod(Variant App, Variant Sheet, int Start)
@@ -558,11 +608,17 @@ void TFSvod::ContSvodReport()
 {
 MP<TADOCommand>Comm(this);
 Comm->Connection=Zast->ADOAspect;
-
+/*
 String CT="INSERT INTO TempSvodReestr ( [Название подразделения], [Наименование деятельности], [Наименование аспекта], [Наименование воздействия], [Название ситуации], Z, [Мониторинг и контроль], [Предлагаемый мониторинг и контроль], Значимость ) ";
 CT=CT+" SELECT Подразделения.[Название подразделения], Деятельность.[Наименование деятельности], Аспект.[Наименование аспекта], Воздействия.[Наименование воздействия], Ситуации.[Название ситуации], TempAspects.Z, TempAspects.[Мониторинг и контроль], TempAspects.[Предлагаемый мониторинг и контроль], TempAspects.Значимость ";
 CT=CT+" FROM (Подразделения INNER JOIN (Ситуации INNER JOIN (Воздействия INNER JOIN (Аспект INNER JOIN (Деятельность INNER JOIN TempAspects ON Деятельность.[Номер деятельности] = TempAspects.Деятельность) ON Аспект.[Номер аспекта] = TempAspects.Аспект) ON Воздействия.[Номер воздействия] = TempAspects.Воздействие) ON Ситуации.[Номер ситуации] = TempAspects.Ситуация) ON Подразделения.ServerNum = TempAspects.Подразделение) INNER JOIN (Logins INNER JOIN ObslOtdel ON Logins.Num = ObslOtdel.Login) ON Подразделения.[Номер подразделения] = ObslOtdel.NumObslOtdel ";
 CT=CT+" WHERE (((Logins.Role)=3));";
+*/
+String CT="INSERT INTO TempSvodReestr ( [Название подразделения], [Наименование территории], [Наименование деятельности], [Наименование аспекта], Специальность, [Наименование воздействия], [Название ситуации], Z, [Наименование значимости], [Выполняющиеся мероприятия], [Предлагаемые мероприятия], [Мониторинг и контроль], [Предлагаемый мониторинг и контроль], Значимость, [Наименование приоритетности] ) ";
+CT=CT+" SELECT Подразделения.[Название подразделения], Территория.[Наименование территории], Деятельность.[Наименование деятельности], Аспект.[Наименование аспекта], TempAspects.Специальность, Воздействия.[Наименование воздействия], Ситуации.[Название ситуации], TempAspects.Z, TempAspects.[Наименование значимости], TempAspects.[Выполняющиеся мероприятия], TempAspects.[Предлагаемые мероприятия], TempAspects.[Мониторинг и контроль], TempAspects.[Предлагаемый мониторинг и контроль], TempAspects.Значимость, ВВР.[Наименование приоритетности] ";
+CT=CT+" FROM ВВР INNER JOIN (Logins INNER JOIN ((Ситуации INNER JOIN ((Аспект INNER JOIN (Деятельность INNER JOIN (Территория INNER JOIN (TempAspects INNER JOIN Подразделения ON TempAspects.Подразделение = Подразделения.[ServerNum]) ON Территория.[Номер территории] = TempAspects.[Вид территории]) ON Деятельность.[Номер деятельности] = TempAspects.Деятельность) ON Аспект.[Номер аспекта] = TempAspects.Аспект) INNER JOIN Воздействия ON TempAspects.Воздействие = Воздействия.[Номер воздействия]) ON Ситуации.[Номер ситуации] = TempAspects.Ситуация) INNER JOIN ObslOtdel ON Подразделения.[Номер подразделения] = ObslOtdel.NumObslOtdel) ON Logins.Num = ObslOtdel.Login) ON ВВР.[Номер приоритетности] = TempAspects.Приоритетность ";
+CT=CT+" WHERE (((Logins.Role)=3))";
+
 Comm->CommandText=CT;
 Comm->Execute();
 
@@ -713,8 +769,8 @@ App1.OlePropertySet("Visible",true);
 DeleteFile(P2);
 DeleteFile(P21);
 
-int Start=15;
-int Start1=15;
+int Start=14;
+int Start1=14;
 
 
 TSvod->First();

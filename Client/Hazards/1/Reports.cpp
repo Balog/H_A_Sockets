@@ -26,7 +26,7 @@ AnsiString PP2=WideString(ExtractFilePath(Application->ExeName)+"\Templates\\"+T
 
 Variant App =Variant::CreateObject("Excel.Application");
 //Variant App1 =Variant::CreateObject("Excel.Application");
-App.OlePropertySet("Visible",true);
+App.OlePropertySet("Visible",false);
 
 
 Variant Book=App.OlePropertyGet("Workbooks").OleFunction("Add", PP1.c_str());
@@ -1222,7 +1222,7 @@ AnsiString PP2=WideString(ExtractFilePath(Application->ExeName)+"\Templates\\"+T
 
 Variant App =Variant::CreateObject("Excel.Application");
 //Variant App1 =Variant::CreateObject("Excel.Application");
-App.OlePropertySet("Visible",true);
+App.OlePropertySet("Visible",false);
 
 
 Variant Book=App.OlePropertyGet("Workbooks").OleFunction("Add", PP1.c_str());
@@ -1534,7 +1534,7 @@ TempAspects->Active=true;
 Text=TempAspects->FieldByName("Наименование аспекта")->Value;
 App.OlePropertyGet("Cells",Start+i,3).OlePropertySet("Value",Text.c_str());
 
-App.OlePropertyGet("Range",(Address(Sheet,7,Start)+":"+Address(Sheet,9,Start+Number)).c_str()).OlePropertySet("HorizontalAlignment",-4108);
+App.OlePropertyGet("Range",(Address(Sheet,7,Start)+":"+Address(Sheet,9,Start+Number+1)).c_str()).OlePropertySet("HorizontalAlignment",-4108);
 
 Text=Report->FieldByName("Специальность")->AsString;
 if(!Text.IsEmpty())

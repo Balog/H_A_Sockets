@@ -348,8 +348,8 @@ Comm->Execute();
 
  Zast->MClient->Act.ParamComm.clear();
  Zast->MClient->Act.ParamComm.push_back("ContSvodReport");
- String ServerSQL="SELECT Аспекты.[Номер аспекта], Аспекты.Подразделение, Аспекты.Ситуация, Аспекты.[Вид территории], Аспекты.Деятельность, Аспекты.Специальность, Аспекты.Аспект, Аспекты.Воздействие, Аспекты.G, Аспекты.O, Аспекты.R, Аспекты.S, Аспекты.T, Аспекты.L, Аспекты.N, Аспекты.Z, Аспекты.Значимость, Аспекты.[Проявление воздействия], Аспекты.[Тяжесть последствий], Аспекты.Приоритетность, Аспекты.[Выполняющиеся мероприятия],  Аспекты.[предлагаемые мероприятия],  Аспекты.[Мониторинг и контроль], Аспекты.[Предлагаемый мониторинг и контроль], Аспекты.[Дата создания], Аспекты.[Начало действия], Аспекты.[Конец действия] FROM Аспекты;";
- String ClientSQL="SELECT TempAspects.[Номер аспекта], TempAspects.Подразделение, TempAspects.Ситуация, TempAspects.[Вид территории], TempAspects.Деятельность, TempAspects.Специальность, TempAspects.Аспект, TempAspects.Воздействие, TempAspects.G, TempAspects.O, TempAspects.R, TempAspects.S, TempAspects.T, TempAspects.L, TempAspects.N, TempAspects.Z, TempAspects.Значимость, TempAspects.[Проявление воздействия], TempAspects.[Тяжесть последствий], TempAspects.Приоритетность, TempAspects.[Выполняющиеся мероприятия],  TempAspects.[предлагаемые мероприятия],  TempAspects.[Мониторинг и контроль], TempAspects.[Предлагаемый мониторинг и контроль],  TempAspects.[Дата создания], TempAspects.[Начало действия], TempAspects.[Конец действия] FROM TempAspects;";
+ String ServerSQL="SELECT Аспекты.[Номер аспекта], Аспекты.Подразделение, Аспекты.Ситуация, Аспекты.[Вид территории], Аспекты.Деятельность, Аспекты.Специальность, Аспекты.Аспект, Аспекты.Воздействие, Аспекты.G, Аспекты.O, Аспекты.R, Аспекты.S, Аспекты.T, Аспекты.L, Аспекты.N, Аспекты.Z, Аспекты.Значимость, Аспекты.[Наименование значимости], Аспекты.[Проявление воздействия], Аспекты.[Тяжесть последствий], Аспекты.Приоритетность, Аспекты.[Выполняющиеся мероприятия],  Аспекты.[предлагаемые мероприятия],  Аспекты.[Мониторинг и контроль], Аспекты.[Предлагаемый мониторинг и контроль], Аспекты.[Дата создания], Аспекты.[Начало действия], Аспекты.[Конец действия] FROM Аспекты;";
+ String ClientSQL="SELECT TempAspects.[Номер аспекта], TempAspects.Подразделение, TempAspects.Ситуация, TempAspects.[Вид территории], TempAspects.Деятельность, TempAspects.Специальность, TempAspects.Аспект, TempAspects.Воздействие, TempAspects.G, TempAspects.O, TempAspects.R, TempAspects.S, TempAspects.T, TempAspects.L, TempAspects.N, TempAspects.Z, TempAspects.Значимость, TempAspects.[Наименование значимости], TempAspects.[Проявление воздействия], TempAspects.[Тяжесть последствий], TempAspects.Приоритетность, TempAspects.[Выполняющиеся мероприятия],  TempAspects.[предлагаемые мероприятия],  TempAspects.[Мониторинг и контроль], TempAspects.[Предлагаемый мониторинг и контроль],  TempAspects.[Дата создания], TempAspects.[Начало действия], TempAspects.[Конец действия] FROM TempAspects;";
  Zast->MClient->ReadTable("Опасности",ServerSQL, "Опасности", ClientSQL);
 }
 //---------------------------------------------------------------------------
@@ -608,11 +608,17 @@ void TFSvod::ContSvodReport()
 {
 MP<TADOCommand>Comm(this);
 Comm->Connection=Zast->ADOAspect;
-
+/*
 String CT="INSERT INTO TempSvodReestr ( [Название подразделения], [Наименование деятельности], [Наименование аспекта], [Наименование воздействия], [Название ситуации], Z, [Мониторинг и контроль], [Предлагаемый мониторинг и контроль], Значимость ) ";
 CT=CT+" SELECT Подразделения.[Название подразделения], Деятельность.[Наименование деятельности], Аспект.[Наименование аспекта], Воздействия.[Наименование воздействия], Ситуации.[Название ситуации], TempAspects.Z, TempAspects.[Мониторинг и контроль], TempAspects.[Предлагаемый мониторинг и контроль], TempAspects.Значимость ";
 CT=CT+" FROM (Подразделения INNER JOIN (Ситуации INNER JOIN (Воздействия INNER JOIN (Аспект INNER JOIN (Деятельность INNER JOIN TempAspects ON Деятельность.[Номер деятельности] = TempAspects.Деятельность) ON Аспект.[Номер аспекта] = TempAspects.Аспект) ON Воздействия.[Номер воздействия] = TempAspects.Воздействие) ON Ситуации.[Номер ситуации] = TempAspects.Ситуация) ON Подразделения.ServerNum = TempAspects.Подразделение) INNER JOIN (Logins INNER JOIN ObslOtdel ON Logins.Num = ObslOtdel.Login) ON Подразделения.[Номер подразделения] = ObslOtdel.NumObslOtdel ";
 CT=CT+" WHERE (((Logins.Role)=3));";
+*/
+String CT="INSERT INTO TempSvodReestr ( [Название подразделения], [Наименование территории], [Наименование деятельности], [Наименование аспекта], Специальность, [Наименование воздействия], [Название ситуации], Z, [Наименование значимости], [Выполняющиеся мероприятия], [Предлагаемые мероприятия], [Мониторинг и контроль], [Предлагаемый мониторинг и контроль], Значимость, [Наименование приоритетности] ) ";
+CT=CT+" SELECT Подразделения.[Название подразделения], Территория.[Наименование территории], Деятельность.[Наименование деятельности], Аспект.[Наименование аспекта], TempAspects.Специальность, Воздействия.[Наименование воздействия], Ситуации.[Название ситуации], TempAspects.Z, TempAspects.[Наименование значимости], TempAspects.[Выполняющиеся мероприятия], TempAspects.[Предлагаемые мероприятия], TempAspects.[Мониторинг и контроль], TempAspects.[Предлагаемый мониторинг и контроль], TempAspects.Значимость, ВВР.[Наименование приоритетности] ";
+CT=CT+" FROM ВВР INNER JOIN (Logins INNER JOIN ((Ситуации INNER JOIN ((Аспект INNER JOIN (Деятельность INNER JOIN (Территория INNER JOIN (TempAspects INNER JOIN Подразделения ON TempAspects.Подразделение = Подразделения.[ServerNum]) ON Территория.[Номер территории] = TempAspects.[Вид территории]) ON Деятельность.[Номер деятельности] = TempAspects.Деятельность) ON Аспект.[Номер аспекта] = TempAspects.Аспект) INNER JOIN Воздействия ON TempAspects.Воздействие = Воздействия.[Номер воздействия]) ON Ситуации.[Номер ситуации] = TempAspects.Ситуация) INNER JOIN ObslOtdel ON Подразделения.[Номер подразделения] = ObslOtdel.NumObslOtdel) ON Logins.Num = ObslOtdel.Login) ON ВВР.[Номер приоритетности] = TempAspects.Приоритетность ";
+CT=CT+" WHERE (((Logins.Role)=3))";
+
 Comm->CommandText=CT;
 Comm->Execute();
 
@@ -757,8 +763,8 @@ App1.OlePropertySet("Visible",false);
 Variant Book1=App1.OlePropertyGet("Workbooks").OleFunction("Add", P21.c_str());
 Variant Sheet1=App1.OlePropertyGet("ActiveSheet");
 Sheet1.OlePropertySet("Name","Ф-001.2");
-App.OlePropertySet("Visible",true);
-App1.OlePropertySet("Visible",true);
+App.OlePropertySet("Visible",false);
+App1.OlePropertySet("Visible",false);
 
 DeleteFile(P2);
 DeleteFile(P21);
