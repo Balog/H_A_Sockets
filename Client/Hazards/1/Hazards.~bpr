@@ -4,26 +4,17 @@
   <MACROS>
     <VERSION value="BCB.06.00"/>
     <PROJECT value="Hazards.exe"/>
-    <OBJFILES value="Hazards.obj ..\..\Aspects\1\ClientClass.obj ..\..\Aspects\1\Main.obj 
-      ..\..\Aspects\1\MasterPointer.obj ..\..\Aspects\1\MDBConnector.obj 
-      ..\..\Aspects\1\PassForm.obj ..\..\Aspects\1\Progress.obj 
-      ..\..\Aspects\1\Zastavka.obj ..\..\Aspects\1\CodeText.obj 
-      ..\..\Aspects\1\MainForm.obj ..\..\Aspects\1\Rep1.obj 
-      ..\..\Aspects\1\Reports.obj ..\..\Aspects\1\Svod.obj 
-      ..\..\Aspects\1\FMoveAsp.obj ..\..\Aspects\1\InpDocs.obj 
-      ..\..\Aspects\1\InputFiltr.obj ..\..\Aspects\1\About.obj 
-      ..\..\Aspects\1\F_Vvedenie.obj ..\..\Aspects\1\Metod.obj"/>
+    <OBJFILES value="Hazards.obj ClientClass.obj Main.obj MasterPointer.obj MDBConnector.obj 
+      PassForm.obj Progress.obj Zastavka.obj CodeText.obj MainForm.obj Rep1.obj 
+      Reports.obj Svod.obj FMoveAsp.obj InpDocs.obj InputFiltr.obj About.obj 
+      F_Vvedenie.obj Metod.obj"/>
     <RESFILES value="Hazards.res"/>
     <IDLFILES value=""/>
     <IDLGENFILES value=""/>
     <DEFFILE value=""/>
-    <RESDEPEN value="$(RESFILES) ..\..\Aspects\1\Main.dfm ..\..\Aspects\1\PassForm.dfm 
-      ..\..\Aspects\1\Progress.dfm ..\..\Aspects\1\Zastavka.dfm 
-      ..\..\Aspects\1\MainForm.dfm ..\..\Aspects\1\Rep1.dfm 
-      ..\..\Aspects\1\Svod.dfm ..\..\Aspects\1\FMoveAsp.dfm 
-      ..\..\Aspects\1\InpDocs.dfm ..\..\Aspects\1\InputFiltr.dfm 
-      ..\..\Aspects\1\About.dfm ..\..\Aspects\1\F_Vvedenie.dfm 
-      ..\..\Aspects\1\Metod.dfm"/>
+    <RESDEPEN value="$(RESFILES) Main.dfm PassForm.dfm Progress.dfm Zastavka.dfm MainForm.dfm 
+      Rep1.dfm Svod.dfm FMoveAsp.dfm InpDocs.dfm InputFiltr.dfm About.dfm 
+      F_Vvedenie.dfm Metod.dfm"/>
     <LIBFILES value=""/>
     <LIBRARIES value="indy.lib vcldb.lib adortl.lib dbrtl.lib vclx.lib dclusr.lib rtl.lib vcl.lib"/>
     <SPARELIBS value="vcl.lib rtl.lib dclusr.lib vclx.lib dbrtl.lib adortl.lib vcldb.lib indy.lib"/>
@@ -34,7 +25,7 @@
       inetdbbde.bpi inetdbxpress.bpi inetdb.bpi nmfast.bpi webdsnap.bpi 
       bcbie.bpi websnap.bpi soaprtl.bpi dclocx.bpi dbexpress.bpi dbxcds.bpi 
       indy.bpi bcb2kaxserver.bpi"/>
-    <PATHCPP value=".;..\..\Aspects\1;..\..\Aspects\1;..\..\Aspects\1;..\..\Aspects\1;..\..\Aspects\1;..\..\Aspects\1;..\..\Aspects\1;..\..\Aspects\1;..\..\Aspects\1;..\..\Aspects\1;..\..\Aspects\1;..\..\Aspects\1;..\..\Aspects\1;..\..\Aspects\1;..\..\Aspects\1;..\..\Aspects\1;..\..\Aspects\1;..\..\Aspects\1"/>
+    <PATHCPP value=".;"/>
     <PATHPAS value=".;"/>
     <PATHRC value=".;"/>
     <PATHASM value=".;"/>
@@ -71,24 +62,24 @@
   <FILELIST>
       <FILE FILENAME="Hazards.res" FORMNAME="" UNITNAME="Hazards.res" CONTAINERID="ResTool" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="Hazards.cpp" FORMNAME="" UNITNAME="Hazards" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
-      <FILE FILENAME="..\..\Aspects\1\ClientClass.cpp" FORMNAME="" UNITNAME="ClientClass.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
-      <FILE FILENAME="..\..\Aspects\1\Main.cpp" FORMNAME="Documents" UNITNAME="Main" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
-      <FILE FILENAME="..\..\Aspects\1\MasterPointer.cpp" FORMNAME="" UNITNAME="MasterPointer.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
-      <FILE FILENAME="..\..\Aspects\1\MDBConnector.cpp" FORMNAME="" UNITNAME="MDBConnector.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
-      <FILE FILENAME="..\..\Aspects\1\PassForm.cpp" FORMNAME="Pass" UNITNAME="PassForm" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
-      <FILE FILENAME="..\..\Aspects\1\Progress.cpp" FORMNAME="Prog" UNITNAME="Progress" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
-      <FILE FILENAME="..\..\Aspects\1\Zastavka.cpp" FORMNAME="Zast" UNITNAME="Zastavka" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
-      <FILE FILENAME="..\..\Aspects\1\CodeText.cpp" FORMNAME="" UNITNAME="CodeText" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
-      <FILE FILENAME="..\..\Aspects\1\MainForm.cpp" FORMNAME="Form1" UNITNAME="MainForm" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
-      <FILE FILENAME="..\..\Aspects\1\Rep1.cpp" FORMNAME="Report1" UNITNAME="Rep1" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
-      <FILE FILENAME="..\..\Aspects\1\Reports.cpp" FORMNAME="" UNITNAME="Reports" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
-      <FILE FILENAME="..\..\Aspects\1\Svod.cpp" FORMNAME="FSvod" UNITNAME="Svod" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
-      <FILE FILENAME="..\..\Aspects\1\FMoveAsp.cpp" FORMNAME="MAsp" UNITNAME="FMoveAsp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
-      <FILE FILENAME="..\..\Aspects\1\InpDocs.cpp" FORMNAME="InputDocs" UNITNAME="InpDocs" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
-      <FILE FILENAME="..\..\Aspects\1\InputFiltr.cpp" FORMNAME="Filter" UNITNAME="InputFiltr" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
-      <FILE FILENAME="..\..\Aspects\1\About.cpp" FORMNAME="FAbout" UNITNAME="About" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
-      <FILE FILENAME="..\..\Aspects\1\F_Vvedenie.cpp" FORMNAME="Vvedenie" UNITNAME="F_Vvedenie" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
-      <FILE FILENAME="..\..\Aspects\1\Metod.cpp" FORMNAME="Metodika" UNITNAME="Metod" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="ClientClass.cpp" FORMNAME="" UNITNAME="ClientClass" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="Main.cpp" FORMNAME="Documents" UNITNAME="Main" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="MasterPointer.cpp" FORMNAME="" UNITNAME="MasterPointer" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="MDBConnector.cpp" FORMNAME="" UNITNAME="MDBConnector" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="PassForm.cpp" FORMNAME="Pass" UNITNAME="PassForm" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="Progress.cpp" FORMNAME="Prog" UNITNAME="Progress" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="Zastavka.cpp" FORMNAME="Zast" UNITNAME="Zastavka" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="CodeText.cpp" FORMNAME="" UNITNAME="CodeText" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="MainForm.cpp" FORMNAME="Form1" UNITNAME="MainForm" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="Rep1.cpp" FORMNAME="Report1" UNITNAME="Rep1" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="Reports.cpp" FORMNAME="" UNITNAME="Reports" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="Svod.cpp" FORMNAME="FSvod" UNITNAME="Svod" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="FMoveAsp.cpp" FORMNAME="MAsp" UNITNAME="FMoveAsp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="InpDocs.cpp" FORMNAME="InputDocs" UNITNAME="InpDocs" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="InputFiltr.cpp" FORMNAME="Filter" UNITNAME="InputFiltr" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="About.cpp" FORMNAME="FAbout" UNITNAME="About" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="F_Vvedenie.cpp" FORMNAME="Vvedenie" UNITNAME="F_Vvedenie" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="Metod.cpp" FORMNAME="Metodika" UNITNAME="Metod" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
   </FILELIST>
   <BUILDTOOLS>
   </BUILDTOOLS>

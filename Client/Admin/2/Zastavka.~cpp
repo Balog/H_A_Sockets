@@ -590,6 +590,8 @@ Form1->Users->ItemIndex=0;
 
 void __fastcall TZast::UpdateOtdelsManExecute(TObject *Sender)
 {
+try
+{
 MP<TADOCommand>Comm(this);
 Comm->Connection=MClient->Database;
 
@@ -604,12 +606,18 @@ Comm->Execute();
 
  Prog->PB->Position++;
  Zast->MClient->ReadTable(Zast->MClient->VDB[StrToInt(MClient->VTrigger[0].Var)].Name,"Select [Num], [Login], [Code1], [Code2], Role from Logins", "Select [Num], [Login], [Code1], [Code2], Role from TempLogins");
-
+}
+catch(...)
+{
+Zast->BlockMK(false);
+}
 
 }
 //---------------------------------------------------------------------------
 
 void __fastcall TZast::UpdateLoginsManExecute(TObject *Sender)
+{
+try
 {
 //Чтение таблицы распределения
 MP<TADOCommand>Comm(this);
@@ -623,10 +631,16 @@ Comm->Execute();
 
  Prog->PB->Position++;
  Zast->MClient->ReadTable(Zast->MClient->VDB[StrToInt(MClient->VTrigger[0].Var)].Name,"Select [Login], [NumObslOtdel] from ObslOtdel", "Select [Login], [NumObslOtdel] from TempObslOtdel");
-
+}
+catch(...)
+{
+Zast->BlockMK(false);
+}
 }
 //---------------------------------------------------------------------------
 void __fastcall TZast::UpdateObslOtdelManExecute(TObject *Sender)
+{
+try
 {
 MP<TADOCommand>Comm(this);
 Comm->Connection=MClient->Database;
@@ -687,6 +701,11 @@ Comm->Execute();
  Prog->PB->Position++;
   MClient->VTrigger[0].Var++;
   MClient->ActTrigger(0);
+}
+catch(...)
+{
+Zast->BlockMK(false);
+}
 }
 //---------------------------------------------------------------------------
 void TZast::MergeLogins()
@@ -920,6 +939,8 @@ for(TempLogin->First();!TempLogin->Eof;TempLogin->Next())
 void __fastcall TZast::ReadOtdelsExecute(TObject *Sender)
 {
 //Чтение подразделений
+try
+{
 MP<TADOCommand>Comm(this);
 Comm->Connection=Zast->MClient->Database;
 Comm->CommandText="Delete * From TempПодразделения";
@@ -932,11 +953,17 @@ Comm->Execute();
  Prog->PB->Position++;
 
  Zast->MClient->ReadTable(Zast->MClient->VDB[StrToInt(MClient->VTrigger[0].Var)].Name,"Select [Номер подразделения], [Название подразделения] from Подразделения", "Select [Номер подразделения], [Название подразделения] from TempПодразделения");
-
+}
+catch(...)
+{
+Zast->BlockMK(false);
+}
 }
 //---------------------------------------------------------------------------
 
 void __fastcall TZast::PrepareReadExecute(TObject *Sender)
+{
+try
 {
 Zast->MClient->Act.ParamComm.clear();
 
@@ -951,6 +978,11 @@ Zast->MClient->VTrigger.push_back(T);
 Prog->PB->Position++;
 
 MClient->ActTrigger(0);
+}
+catch(...)
+{
+Zast->BlockMK(false);
+}
 }
 //---------------------------------------------------------------------------
 

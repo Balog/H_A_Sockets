@@ -85,12 +85,12 @@ if(AspRefs->Text!="" & Table->RecordCount!=0)
 //Копирование шаблонов
 String Path=ExtractFilePath(Application->ExeName);
 String PDiary=Path+"Templates\\Diary.dtb";
-String PAspect=Path+"Templates\\Eco_Aspects.dtb";
-String PRefs=Path+"Templates\\Reference.dtb";
+String PAspect=Path+"Templates\\Hazards.dtb";
+String PRefs=Path+"Templates\\HReference.dtb";
 
 String RDiary=Path+"Result\\Diary.dtb";
-String RAspect=Path+"Result\\Eco_Aspects.dtb";
-String RRefs=Path+"Result\\Reference.dtb";
+String RAspect=Path+"Result\\Hazards.dtb";
+String RRefs=Path+"Result\\HReference.dtb";
 
 DeleteFile(RDiary.c_str());
 DeleteFile(RAspect.c_str());
@@ -121,7 +121,7 @@ TempTo->LoginPrompt=false;
 TempTo->Connected=true;
 
 CopyTable("Узлы_3","Ветви_3");
-CopyTable("Узлы_4","Ветви_4");
+//CopyTable("Узлы_4","Ветви_4");
 CopyTable("Узлы_5","Ветви_5");
 CopyTable("Узлы_6","Ветви_6");
 CopyTable("Узлы_7","Ветви_7");
@@ -449,9 +449,10 @@ for(FromPodr->First();!FromPodr->Eof;FromPodr->Next())
  AspectsFrom->Connection=AspConnect;
  AspectsFrom->CommandText="Select * from Аспекты Where Подразделение="+IntToStr(NumPodrFrom)+" Order by [Номер аспекта]";
  AspectsFrom->Active=true;
-
+ int N;
  for(AspectsFrom->First();!AspectsFrom->Eof;AspectsFrom->Next())
  {
+ N=0;
  /*
  SitTo2->Locate("Номер ситуации",AspectsFrom->FieldByName("Ситуация")->AsInteger, SO);
  int NumSit=SitTo2->FieldByName("Номер ситуации")->Value;
@@ -478,9 +479,13 @@ for(FromPodr->First();!FromPodr->Eof;FromPodr->Next())
   AspectsTo->FieldByName("N")->Value=AspectsFrom->FieldByName("N")->Value;
   AspectsTo->FieldByName("Z")->Value=AspectsFrom->FieldByName("Z")->Value;
   AspectsTo->FieldByName("Значимость")->Value=AspectsFrom->FieldByName("Значимость")->Value;
+  AspectsTo->FieldByName("Наименование значимости")->Value=AspectsFrom->FieldByName("Наименование значимости")->Value;
   AspectsTo->FieldByName("Проявление воздействия")->Value=AspectsFrom->FieldByName("Проявление воздействия")->Value;
   AspectsTo->FieldByName("Тяжесть последствий")->Value=AspectsFrom->FieldByName("Тяжесть последствий")->Value;
-  AspectsTo->FieldByName("Приоритетность")->Value=AspectsFrom->FieldByName("Приоритетность")->Value;
+  N=AspectsFrom->FieldByName("Приор")->Value;
+  AspectsTo->FieldByName("Приоритетность")->Value=N;
+  N=AspectsFrom->FieldByName("Приоритетность")->Value;
+  AspectsTo->FieldByName("Приор")->Value=N;
   AspectsTo->FieldByName("Выполняющиеся мероприятия")->Value=AspectsFrom->FieldByName("Выполняющиеся мероприятия")->Value;
   AspectsTo->FieldByName("Предлагаемые мероприятия")->Value=AspectsFrom->FieldByName("Предлагаемые мероприятия")->Value;
   AspectsTo->FieldByName("Мониторинг и контроль")->Value=AspectsFrom->FieldByName("Мониторинг и контроль")->Value;
@@ -519,8 +524,10 @@ Comm->Connection=TempTo;
 Comm->CommandText="UPDATE Ветви_3 SET Ветви_3.NumCopy = 0;";
 Comm->Execute();
 
+/*
 Comm->CommandText="UPDATE Ветви_4 SET Ветви_4.NumCopy = 0;";
 Comm->Execute();
+*/
 
 Comm->CommandText="UPDATE Ветви_5 SET Ветви_5.NumCopy = 0;";
 Comm->Execute();
@@ -672,8 +679,15 @@ return 0;
 }
 else
 {
-Branch->Locate("NumCopy", NumCode, SO);
-}
+if(Branch->Locate("NumCopy", NumCode, SO))
+{
 return Branch->FieldByName("Номер ветви")->AsInteger;
+}
+else
+{
+return 0;
+}
+}
+
 }
 //-------------------------------------------------------------------------

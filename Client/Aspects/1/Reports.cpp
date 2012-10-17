@@ -1149,7 +1149,7 @@ App.OlePropertyGet("Range",(Address(Sheet,1,Start)+":"+Address(Sheet,9,Start+i-1
 App.OlePropertyGet("Range",(Address(Sheet,1,Start)+":"+Address(Sheet,9,Start+i-1)).c_str()).OlePropertyGet("Borders",9).OlePropertySet("Weight",4);
 App.OlePropertyGet("Range",(Address(Sheet,1,Start)+":"+Address(Sheet,9,Start+i-1)).c_str()).OlePropertyGet("Borders",10).OlePropertySet("Weight",4);
 App.OlePropertyGet("Range",(Address(Sheet,1,Start)+":"+Address(Sheet,9,Start+i-1)).c_str()).OlePropertyGet("Borders",11).OlePropertySet("Weight",4);
-if (Number!=1)
+//if (Number!=1)
 {
 App.OlePropertyGet("Range",(Address(Sheet,1,Start)+":"+Address(Sheet,9,Start+i-1)).c_str()).OlePropertyGet("Borders",12).OlePropertySet("Weight",4);
 }

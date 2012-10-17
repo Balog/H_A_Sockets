@@ -449,9 +449,10 @@ for(FromPodr->First();!FromPodr->Eof;FromPodr->Next())
  AspectsFrom->Connection=AspConnect;
  AspectsFrom->CommandText="Select * from Аспекты Where Подразделение="+IntToStr(NumPodrFrom)+" Order by [Номер аспекта]";
  AspectsFrom->Active=true;
-
+ int N;
  for(AspectsFrom->First();!AspectsFrom->Eof;AspectsFrom->Next())
  {
+ N=0;
  /*
  SitTo2->Locate("Номер ситуации",AspectsFrom->FieldByName("Ситуация")->AsInteger, SO);
  int NumSit=SitTo2->FieldByName("Номер ситуации")->Value;
@@ -481,8 +482,11 @@ for(FromPodr->First();!FromPodr->Eof;FromPodr->Next())
   AspectsTo->FieldByName("Наименование значимости")->Value=AspectsFrom->FieldByName("Наименование значимости")->Value;
   AspectsTo->FieldByName("Проявление воздействия")->Value=AspectsFrom->FieldByName("Проявление воздействия")->Value;
   AspectsTo->FieldByName("Тяжесть последствий")->Value=AspectsFrom->FieldByName("Тяжесть последствий")->Value;
-  AspectsTo->FieldByName("Приоритетность")->Value=AspectsFrom->FieldByName("Приоритетность")->Value;
-  AspectsTo->FieldByName("Приор")->Value=AspectsFrom->FieldByName("Приор")->Value;
+  N=AspectsFrom->FieldByName("Приор")->Value;
+  AspectsTo->FieldByName("Приоритетность")->Value=N-1;
+
+  N=AspectsFrom->FieldByName("Приоритетность")->Value;
+  AspectsTo->FieldByName("Приор")->Value=N;
   AspectsTo->FieldByName("Выполняющиеся мероприятия")->Value=AspectsFrom->FieldByName("Выполняющиеся мероприятия")->Value;
   AspectsTo->FieldByName("Предлагаемые мероприятия")->Value=AspectsFrom->FieldByName("Предлагаемые мероприятия")->Value;
   AspectsTo->FieldByName("Мониторинг и контроль")->Value=AspectsFrom->FieldByName("Мониторинг и контроль")->Value;
@@ -676,8 +680,15 @@ return 0;
 }
 else
 {
-Branch->Locate("NumCopy", NumCode, SO);
-}
+if(Branch->Locate("NumCopy", NumCode, SO))
+{
 return Branch->FieldByName("Номер ветви")->AsInteger;
+}
+else
+{
+return 0;
+}
+}
+
 }
 //-------------------------------------------------------------------------

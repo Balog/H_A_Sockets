@@ -189,6 +189,7 @@ for(ZnFrom->First();!ZnFrom->Eof;ZnFrom->Next())
  ZnAsp->Insert();
 // ZnAsp->FieldByName("Номер значимости")->Value=ZnFrom->FieldByName("Номер значимости")->Value;
  ZnAsp->FieldByName("Номер значимости")->Value=ZnFrom->FieldByName("Номер значимости")->Value;
+ ZnAsp->FieldByName("Наименование значимости")->Value=ZnFrom->FieldByName("Наименование значимости")->Value;
  ZnAsp->FieldByName("Критерий1")->Value=ZnFrom->FieldByName("Критерий1")->Value;
  ZnAsp->FieldByName("Критерий")->Value=ZnFrom->FieldByName("Критерий")->Value;
  ZnAsp->FieldByName("Мин граница")->Value=ZnFrom->FieldByName("Мин граница")->Value;
@@ -455,31 +456,41 @@ for(FromPodr->First();!FromPodr->Eof;FromPodr->Next())
  SitTo2->Locate("Номер ситуации",AspectsFrom->FieldByName("Ситуация")->AsInteger, SO);
  int NumSit=SitTo2->FieldByName("Номер ситуации")->Value;
  */
+ int N=0;
   AspectsTo->Insert();
   AspectsTo->FieldByName("Подразделение")->Value=NumPodrTo;
-  AspectsTo->FieldByName("Ситуация")->Value=AspectsFrom->FieldByName("Ситуация")->AsInteger;
+  N=AspectsFrom->FieldByName("Ситуация")->AsInteger;
+  AspectsTo->FieldByName("Ситуация")->Value=N;
 
-
-  AspectsTo->FieldByName("Вид территории")->Value=EncodeBranch("Ветви_5", AspectsFrom->FieldByName("Вид территории")->AsInteger);//AspectsFrom->FieldByName("Вид территории")->Value;
-  AspectsTo->FieldByName("Деятельность")->Value=EncodeBranch("Ветви_6", AspectsFrom->FieldByName("Деятельность")->AsInteger);
+  N=EncodeBranch("Ветви_5", AspectsFrom->FieldByName("Вид территории")->AsInteger);
+  AspectsTo->FieldByName("Вид территории")->Value=N;//AspectsFrom->FieldByName("Вид территории")->Value;
+  N=EncodeBranch("Ветви_6", AspectsFrom->FieldByName("Деятельность")->AsInteger);
+  AspectsTo->FieldByName("Деятельность")->Value=N;
 
   AspectsTo->FieldByName("Специальность")->Value=AspectsFrom->FieldByName("Специальность")->AsString+" ";
 
   //ShowMessage(AspectsFrom->FieldByName("Аспект")->Value);
-  AspectsTo->FieldByName("Аспект")->Value=EncodeBranch("Ветви_7", AspectsFrom->FieldByName("Аспект")->AsInteger);
-  AspectsTo->FieldByName("Воздействие")->Value=EncodeBranch("Ветви_3", AspectsFrom->FieldByName("Воздействие")->AsInteger);
-  AspectsTo->FieldByName("G")->Value=AspectsFrom->FieldByName("G")->Value;
-  AspectsTo->FieldByName("O")->Value=AspectsFrom->FieldByName("O")->Value;
-  AspectsTo->FieldByName("R")->Value=AspectsFrom->FieldByName("R")->Value;
-  AspectsTo->FieldByName("S")->Value=AspectsFrom->FieldByName("S")->Value;
-  AspectsTo->FieldByName("T")->Value=AspectsFrom->FieldByName("T")->Value;
-  AspectsTo->FieldByName("L")->Value=AspectsFrom->FieldByName("L")->Value;
-  AspectsTo->FieldByName("N")->Value=AspectsFrom->FieldByName("N")->Value;
-  AspectsTo->FieldByName("Z")->Value=AspectsFrom->FieldByName("Z")->Value;
-  AspectsTo->FieldByName("Значимость")->Value=AspectsFrom->FieldByName("Значимость")->Value;
-  AspectsTo->FieldByName("Проявление воздействия")->Value=AspectsFrom->FieldByName("Проявление воздействия")->Value;
-  AspectsTo->FieldByName("Тяжесть последствий")->Value=AspectsFrom->FieldByName("Тяжесть последствий")->Value;
-  AspectsTo->FieldByName("Приоритетность")->Value=AspectsFrom->FieldByName("Приоритетность")->Value;
+  N=EncodeBranch("Ветви_7", AspectsFrom->FieldByName("Аспект")->AsInteger);
+  AspectsTo->FieldByName("Аспект")->Value=N;
+  N=EncodeBranch("Ветви_3", AspectsFrom->FieldByName("Воздействие")->AsInteger);
+  AspectsTo->FieldByName("Воздействие")->Value=N;
+  AspectsTo->FieldByName("G")->Value=AspectsFrom->FieldByName("G")->AsInteger;
+  AspectsTo->FieldByName("O")->Value=AspectsFrom->FieldByName("O")->AsInteger;
+  AspectsTo->FieldByName("R")->Value=AspectsFrom->FieldByName("R")->AsInteger;
+  AspectsTo->FieldByName("S")->Value=AspectsFrom->FieldByName("S")->AsInteger;
+  AspectsTo->FieldByName("T")->Value=AspectsFrom->FieldByName("T")->AsInteger;
+  AspectsTo->FieldByName("L")->Value=AspectsFrom->FieldByName("L")->AsInteger;
+  AspectsTo->FieldByName("N")->Value=AspectsFrom->FieldByName("N")->AsInteger;
+  AspectsTo->FieldByName("Z")->Value=AspectsFrom->FieldByName("Z")->AsInteger;
+  AspectsTo->FieldByName("Значимость")->Value=AspectsFrom->FieldByName("Значимость")->AsBoolean;
+
+  N=AspectsFrom->FieldByName("Проявление воздействия")->AsInteger;
+  AspectsTo->FieldByName("Проявление воздействия")->Value=N;
+  N=AspectsFrom->FieldByName("Тяжесть последствий")->AsInteger;
+  AspectsTo->FieldByName("Тяжесть последствий")->Value=N;
+  N=AspectsFrom->FieldByName("Приоритетность")->AsInteger;
+  AspectsTo->FieldByName("Приоритетность")->Value=N;
+
   AspectsTo->FieldByName("Выполняющиеся мероприятия")->Value=AspectsFrom->FieldByName("Выполняющиеся мероприятия")->Value;
   AspectsTo->FieldByName("Предлагаемые мероприятия")->Value=AspectsFrom->FieldByName("Предлагаемые мероприятия")->Value;
   AspectsTo->FieldByName("Мониторинг и контроль")->Value=AspectsFrom->FieldByName("Мониторинг и контроль")->Value;
@@ -488,6 +499,7 @@ for(FromPodr->First();!FromPodr->Eof;FromPodr->Next())
   AspectsTo->FieldByName("Дата создания")->Value=AspectsFrom->FieldByName("Дата создания")->Value;
   AspectsTo->FieldByName("Начало действия")->Value=AspectsFrom->FieldByName("Начало действия")->Value;
   AspectsTo->FieldByName("Конец действия")->Value=AspectsFrom->FieldByName("Конец действия")->Value;
+
   AspectsTo->Post();
  }
 
