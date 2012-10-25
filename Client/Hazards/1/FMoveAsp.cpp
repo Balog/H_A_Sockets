@@ -208,7 +208,7 @@ catch(...)
 //---------------------------------------------------------------------------
 void TMAsp::MergeAspects()
 {
-Zast->MClient->WriteDiaryEvent("NetAspects","Начало объединения опасностей (главспец)","");
+Zast->MClient->WriteDiaryEvent("Hazards","Начало объединения опасностей (главспец)","");
 
 try
 {
@@ -259,7 +259,7 @@ ChangeCPodr();
 }
 catch(...)
 {
-Zast->MClient->WriteDiaryEvent("NetAspects ошибка","Ошибка объединения опасностей (главспец)","Ошибка "+IntToStr(GetLastError()));
+Zast->MClient->WriteDiaryEvent("Hazards ошибка","Ошибка объединения опасностей (главспец)","Ошибка "+IntToStr(GetLastError()));
 
 }
 }
@@ -618,7 +618,7 @@ void __fastcall TMAsp::FormKeyUp(TObject *Sender, WORD &Key,
 {
 if(Key==112)
 {
-Application->HelpFile=ExtractFilePath(Application->ExeName)+"NetAspects.HLP";
+Application->HelpFile=ExtractFilePath(Application->ExeName)+"HAZARDS.HLP";
   Application->HelpJump("IDH_ДВИЖЕНИЕ_АСПЕКТОВ");
 }
 }

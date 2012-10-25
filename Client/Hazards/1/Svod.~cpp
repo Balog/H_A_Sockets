@@ -763,8 +763,8 @@ App1.OlePropertySet("Visible",false);
 Variant Book1=App1.OlePropertyGet("Workbooks").OleFunction("Add", P21.c_str());
 Variant Sheet1=App1.OlePropertyGet("ActiveSheet");
 Sheet1.OlePropertySet("Name","Ô-001.2");
-App.OlePropertySet("Visible",true);
-App1.OlePropertySet("Visible",true);
+App.OlePropertySet("Visible",false);
+App1.OlePropertySet("Visible",false);
 
 DeleteFile(P2);
 DeleteFile(P21);

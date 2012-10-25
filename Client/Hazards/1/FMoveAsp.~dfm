@@ -3,7 +3,7 @@ object MAsp: TMAsp
   Top = 103
   BorderIcons = [biSystemMenu]
   BorderStyle = bsSingle
-  Caption = #1044#1074#1080#1078#1077#1085#1080#1077' '#1072#1089#1087#1077#1082#1090#1086#1074
+  Caption = #1044#1074#1080#1078#1077#1085#1080#1077' '#1086#1087#1072#1089#1085#1086#1089#1090#1077#1081
   ClientHeight = 453
   ClientWidth = 828
   Color = clBtnFace

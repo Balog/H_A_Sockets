@@ -101,7 +101,7 @@ switch(Comm)
  {
  //ShowMessage(Parameters[0]);
  DecodeTable(Act.ParamComm[1],Act.ParamComm[2],Parameters[0]);
- StartAction(Act.ParamComm[0]);
+StartAction(Act.ParamComm[0]);
  break;
  }
  case 6:

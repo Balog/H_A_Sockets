@@ -147,7 +147,7 @@ Zast->BlockMK(false);
  }
  case IDNO:
  {
-Zast->MClient->WriteDiaryEvent("NetAspects","Завершение работы отказ от записи","");
+Zast->MClient->WriteDiaryEvent("Hazards","Завершение работы отказ от записи","");
 Zast->Stop=true;
 Sleep(2000);
 Zast->Close();
@@ -3157,6 +3157,49 @@ ReadWrite.push_back(S);
 Zast->ReadWriteDoc->Execute();
 */
 N36->Click();
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TDocuments::FormKeyUp(TObject *Sender, WORD &Key,
+      TShiftState Shift)
+{
+if(Key==112)
+{
+Application->HelpFile=ExtractFilePath(Application->ExeName)+"Hazards.HLP";
+switch(PageControl1->TabIndex)
+{
+ case 0:
+ {
+  Application->HelpJump("IDH_РЕДАКТИРОВАНИЕ_МЕТОДИКИ");
+ break;
+ }
+ case 1:
+ {
+  Application->HelpJump("IDH_РЕДАКТИРОВАНИЕ_ПОДРАЗДЕЛЕНИЙ");
+ break;
+ }
+ case 2:
+ {
+  Application->HelpJump("IDH_РЕДАКТИРОВАНИЕ_КРИТЕРИЕВ");
+ break;
+ }
+ case 3:
+ {
+  Application->HelpJump("IDH_РЕДАКТИРОВАНИЕ_СИТУАЦИЙ");
+ break;
+ }
+  default :
+ {
+  Application->HelpJump("IDH_РЕДАКТИРОВАНИЕ_СПРАВОЧНИКОВ");
+ break;
+ }
+
+
+
+
+}
+
+}        
 }
 //---------------------------------------------------------------------------
 

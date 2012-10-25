@@ -23,10 +23,10 @@ __fastcall TInputDocs::TInputDocs(TComponent* Owner)
 void __fastcall TInputDocs::FormShow(TObject *Sender)
 {
 Nodes->Active=false;
-Nodes->Connection=Zast->ADOUsrAspect;
+Nodes->Connection=Zast->ADOConn;
 
 Branches->Active=false;
-Branches->Connection=Zast->ADOUsrAspect;
+Branches->Connection=Zast->ADOConn;
 
 Button1->Enabled=false;
 NodeVector_3.clear();

@@ -97,7 +97,7 @@ void __fastcall TMetodika::FormKeyUp(TObject *Sender, WORD &Key,
 {
 if(Key==112)
 {
-Application->HelpFile=ExtractFilePath(Application->ExeName)+"NetAspects.HLP";
+Application->HelpFile=ExtractFilePath(Application->ExeName)+"Hazards.HLP";
 Application->HelpJump("IDH_¿À√Œ–»“Ã_Œ÷≈Õ »");
 }
 }

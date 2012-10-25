@@ -449,15 +449,16 @@ for(FromPodr->First();!FromPodr->Eof;FromPodr->Next())
  AspectsFrom->Connection=AspConnect;
  AspectsFrom->CommandText="Select * from Аспекты Where Подразделение="+IntToStr(NumPodrFrom)+" Order by [Номер аспекта]";
  AspectsFrom->Active=true;
-
+ int N;
  for(AspectsFrom->First();!AspectsFrom->Eof;AspectsFrom->Next())
  {
  /*
  SitTo2->Locate("Номер ситуации",AspectsFrom->FieldByName("Ситуация")->AsInteger, SO);
  int NumSit=SitTo2->FieldByName("Номер ситуации")->Value;
  */
- int N=0;
+  N=0;
   AspectsTo->Insert();
+  //AspectsTo->FieldByName("номер аспекта")->Value=AspectsFrom->FieldByName("Номер аспекта")->AsInteger;
   AspectsTo->FieldByName("Подразделение")->Value=NumPodrTo;
   N=AspectsFrom->FieldByName("Ситуация")->AsInteger;
   AspectsTo->FieldByName("Ситуация")->Value=N;
@@ -474,6 +475,7 @@ for(FromPodr->First();!FromPodr->Eof;FromPodr->Next())
   AspectsTo->FieldByName("Аспект")->Value=N;
   N=EncodeBranch("Ветви_3", AspectsFrom->FieldByName("Воздействие")->AsInteger);
   AspectsTo->FieldByName("Воздействие")->Value=N;
+
   AspectsTo->FieldByName("G")->Value=AspectsFrom->FieldByName("G")->AsInteger;
   AspectsTo->FieldByName("O")->Value=AspectsFrom->FieldByName("O")->AsInteger;
   AspectsTo->FieldByName("R")->Value=AspectsFrom->FieldByName("R")->AsInteger;

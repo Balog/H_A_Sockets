@@ -2612,6 +2612,7 @@ Comm->Execute();
 //----------------------------------------------------
 void __fastcall TZast::CompareMSpecAspectsExecute(TObject *Sender)
 {
+bool IsError=false;
 //Сравнение таблицы аспектов для главспеца по числу записей и составу
 //для принятия решения о необходимости чтения таблицы аспектов
 MP<TADODataSet>Tab(this);
@@ -2699,13 +2700,19 @@ Comm->Connection=Zast->ADOAspect;
 Comm->CommandText="Delete * From Аспекты";
 Comm->Execute();
 
-
+try
+{
 String CT="INSERT INTO Аспекты ( [Номер аспекта], Подразделение, Ситуация, [Вид территории], Деятельность, Специальность, Аспект, Воздействие, G, O, R, S, T, L, N, Z, Значимость, [Проявление воздействия], [Тяжесть последствий], Приоритетность, [Выполняющиеся мероприятия], [Предлагаемые мероприятия], [Мониторинг и контроль], [Предлагаемый мониторинг и контроль], Исполнитель, [Дата создания], [Начало действия], [Конец действия] ) ";
 CT=CT+" SELECT TempAspects.[Номер аспекта], TempAspects.Подразделение, TempAspects.Ситуация, TempAspects.[Вид территории], TempAspects.Деятельность, TempAspects.Специальность, TempAspects.Аспект, TempAspects.Воздействие, TempAspects.G, TempAspects.O, TempAspects.R, TempAspects.S, TempAspects.T, TempAspects.L, TempAspects.N, TempAspects.Z, TempAspects.Значимость, TempAspects.[Проявление воздействия], TempAspects.[Тяжесть последствий], TempAspects.Приоритетность, TempAspects.[Выполняющиеся мероприятия], TempAspects.[Предлагаемые мероприятия], TempAspects.[Мониторинг и контроль], TempAspects.[Предлагаемый мониторинг и контроль], TempAspects.Исполнитель, TempAspects.[Дата создания], TempAspects.[Начало действия], TempAspects.[Конец действия] ";
 CT=CT+" FROM TempAspects;";
 Comm->CommandText=CT;
 Comm->Execute();
-
+}
+catch(...)
+{
+ ShowMessage("Несовпадение справочников на сервере и в локальной базе. Прочитайте справочники с сервера и повторите операцию.");
+ IsError=true;
+}
 Comm->CommandText="Delete * From TempAspects";
 Comm->Execute();
  }
@@ -2720,7 +2727,10 @@ MAsp->MoveAspects->Connection=Zast->ADOAspect;
 MAsp->MoveAspects->Active=true;
 
 MClient->UnBlockServer("");
+if(!IsError)
+{
 MAsp->ShowModal();
+}
 }
 //---------------------------------------------------------------------------
 
@@ -2820,9 +2830,12 @@ Documents->ReadWrite.push_back(S);
 Zast->BlockMK(true);
 try
 {
+/*
 Zast->MClient->Act.ParamComm.clear();
 Zast->MClient->Act.ParamComm.push_back("SaveAspectsMSpec2");
 Zast->MClient->WriteTable("Аспекты","SELECT Аспекты.[Номер аспекта], Подразделения.ServerNum FROM Подразделения INNER JOIN Аспекты ON Подразделения.[Номер подразделения] = Аспекты.Подразделение Order by Аспекты.[Номер аспекта]; ", "Аспекты", "SELECT TempAspects.[Номер аспекта], TempAspects.Подразделение From TempAspects order by [Номер аспекта];");
+*/
+Zast->MClient->BlockServer("SaveAspectsMSpec0");
 }
 catch(...)
 {

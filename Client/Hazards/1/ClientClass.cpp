@@ -160,7 +160,7 @@ BlockServer("BeginWork");
  }
  case 12:
  {
- Zast->MClient->WriteDiaryEvent("NetAspects","Конец записи критериев (главспец)","");
+ Zast->MClient->WriteDiaryEvent("Hazards","Конец записи критериев (главспец)","");
 
  //Zast->ReadWriteDoc->Execute();
   Zast->MClient->UnBlockServer("ReadWriteDoc");
@@ -168,7 +168,7 @@ BlockServer("BeginWork");
  }
  case 13:
  {
- Zast->MClient->WriteDiaryEvent("NetAspects","Конец записи ситуаций (главспец)","");
+ Zast->MClient->WriteDiaryEvent("Hazards","Конец записи ситуаций (главспец)","");
 
   Zast->MClient->UnBlockServer("ReadWriteDoc");
  break;
@@ -822,7 +822,7 @@ void Client::PostWriteAspectsUsr()
 {
 //Zast->MClient->UnBlockServer("");
 //Zast->UnBlockServer->Enabled=true;
- Zast->MClient->WriteDiaryEvent("NetAspects","Конец записи опасностей (пользователь)","");
+ Zast->MClient->WriteDiaryEvent("Hazards","Конец записи опасностей (пользователь)","");
 
  Sleep(1000);
 

@@ -618,7 +618,7 @@ void __fastcall TMAsp::FormKeyUp(TObject *Sender, WORD &Key,
 {
 if(Key==112)
 {
-Application->HelpFile=ExtractFilePath(Application->ExeName)+"NetAspects.HLP";
+Application->HelpFile=ExtractFilePath(Application->ExeName)+"HAZARDS.HLP";
   Application->HelpJump("IDH_дбхфемхе_юяоейрнб");
 }
 }

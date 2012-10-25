@@ -538,7 +538,7 @@ void __fastcall TFilter::FormKeyUp(TObject *Sender, WORD &Key,
 {
 if(Key==112)
 {
-Application->HelpFile=ExtractFilePath(Application->ExeName)+"NetAspects.HLP";
+Application->HelpFile=ExtractFilePath(Application->ExeName)+"Hazards.HLP";
 Application->HelpJump("IDH_ิศหÜาะภึศ฿_ภัฯลสาฮย");
 }
 }

@@ -126,8 +126,8 @@ void __fastcall TReport1::FormKeyUp(TObject *Sender, WORD &Key,
 {
 if(Key==112)
 {
-Application->HelpFile=ExtractFilePath(Application->ExeName)+"NetAspects.HLP";
-if(Role==2)
+Application->HelpFile=ExtractFilePath(Application->ExeName)+"HAZARDS.HLP";
+if(Role==2)             
 {
   Application->HelpJump("IDH_нрверш_1_2");
 }

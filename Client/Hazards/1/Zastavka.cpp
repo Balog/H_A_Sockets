@@ -581,7 +581,7 @@ try
 Documents->Metod->Active=false;
 Documents->Metod->Active=true;
 
-Zast->MClient->WriteDiaryEvent("NetAspects","Конец загрузки методики (главспец)","");
+Zast->MClient->WriteDiaryEvent("Hazards","Конец загрузки методики (главспец)","");
 //Sleep(1000);
 Zast->MClient->UnBlockServer("ReadWriteDoc");
 }
@@ -731,13 +731,13 @@ if(Role==2)
 Documents->Podr->Active=false;
 Documents->Podr->Active=true;
 
-Zast->MClient->WriteDiaryEvent("NetAspects","Конец загрузки подразделений (главспец)","");
+Zast->MClient->WriteDiaryEvent("Hazards","Конец загрузки подразделений (главспец)","");
 }
 else
 {
 Form1->Initialize();
 
-Zast->MClient->WriteDiaryEvent("NetAspects","Конец загрузки подразделений (пользователь)","");
+Zast->MClient->WriteDiaryEvent("Hazards","Конец загрузки подразделений (пользователь)","");
 }
 Zast->MClient->UnBlockServer("ReadWriteDoc");
 }
@@ -785,7 +785,7 @@ if(Role==2)
 Documents->ADODataSet1->Active=false;
 Documents->ADODataSet1->Active=true;
 
-Zast->MClient->WriteDiaryEvent("NetAspects","Конец загрузки критериев (главспец)","");
+Zast->MClient->WriteDiaryEvent("Hazards","Конец загрузки критериев (главспец)","");
 }
 else
 {
@@ -818,7 +818,7 @@ for(From->First();!From->Eof;From->Next())
 
 Form1->Initialize();
 
-Zast->MClient->WriteDiaryEvent("NetAspects","Конец загрузки критериев (пользователь)","");
+Zast->MClient->WriteDiaryEvent("Hazards","Конец загрузки критериев (пользователь)","");
 }
 
 
@@ -953,7 +953,7 @@ Comm->Execute();
 Documents->Sit->Active=false;
 Documents->Sit->Active=true;
 
-Zast->MClient->WriteDiaryEvent("NetAspects","Конец загрузки ситуаций (главспец)","");
+Zast->MClient->WriteDiaryEvent("Hazards","Конец загрузки ситуаций (главспец)","");
  }
  else
  {
@@ -961,7 +961,7 @@ Zast->MClient->WriteDiaryEvent("NetAspects","Конец загрузки ситуаций (главспец)"
 
 Form1->Initialize();
 
-Zast->MClient->WriteDiaryEvent("NetAspects","Конец загрузки ситуаций (пользователь)","");
+Zast->MClient->WriteDiaryEvent("Hazards","Конец загрузки ситуаций (пользователь)","");
  }
 Zast->MClient->UnBlockServer("ReadWriteDoc");
 }
@@ -1098,13 +1098,13 @@ if(Role==2)
 Documents->Sit->Active=false;
 Documents->Sit->Active=true;
 Documents->LoadTab1();
-Zast->MClient->WriteDiaryEvent("NetAspects","Конец загрузки воздействий (главспец)","");
+Zast->MClient->WriteDiaryEvent("Hazards","Конец загрузки воздействий (главспец)","");
 }
 else
 {
 Form1->Initialize();
 Documents->LoadTab1();
-Zast->MClient->WriteDiaryEvent("NetAspects","Конец загрузки воздействий (пользователь)","");
+Zast->MClient->WriteDiaryEvent("Hazards","Конец загрузки воздействий (пользователь)","");
 }
 
 Zast->MClient->UnBlockServer("ReadWriteDoc");
@@ -1157,12 +1157,12 @@ if(Role==2)
 {
 Documents->LoadTab2();
 
-Zast->MClient->WriteDiaryEvent("NetAspects","Конец загрузки мероприятий (главспец)","");
+Zast->MClient->WriteDiaryEvent("Hazards","Конец загрузки мероприятий (главспец)","");
 }
 else
 {
 Form1->Initialize();
-Zast->MClient->WriteDiaryEvent("NetAspects","Конец загрузки мероприятий (пользователь)","");
+Zast->MClient->WriteDiaryEvent("Hazards","Конец загрузки мероприятий (пользователь)","");
 }
 
 Zast->MClient->UnBlockServer("ReadWriteDoc");
@@ -1367,12 +1367,12 @@ Comm->Execute();
 if(Role==2)
 {
 //Form1->Initialize();
-Zast->MClient->WriteDiaryEvent("NetAspects","Конец загрузки территорий (главспец)","");
+Zast->MClient->WriteDiaryEvent("Hazards","Конец загрузки территорий (главспец)","");
 }
 else
 {
 //
-Zast->MClient->WriteDiaryEvent("NetAspects","Конец загрузки территорий (пользователь)","");
+Zast->MClient->WriteDiaryEvent("Hazards","Конец загрузки территорий (пользователь)","");
 }
 
 Zast->MClient->UnBlockServer("ReadWriteDoc");
@@ -1535,12 +1535,12 @@ Comm->Execute();
 
 if(Role==2)
 {
-Zast->MClient->WriteDiaryEvent("NetAspects","Конец загрузки деятельностей (главспец)","");
+Zast->MClient->WriteDiaryEvent("Hazards","Конец загрузки деятельностей (главспец)","");
 }
 else
 {
 Form1->Initialize();
-Zast->MClient->WriteDiaryEvent("NetAspects","Конец загрузки деятельностей (пользователь)","");
+Zast->MClient->WriteDiaryEvent("Hazards","Конец загрузки деятельностей (пользователь)","");
 }
 Zast->BlockMK(false);
 Zast->MClient->UnBlockServer("ReadWriteDoc");
@@ -1676,7 +1676,7 @@ Comm->Execute();
 Comm->CommandText="DELETE TempDeyat.* FROM TempDeyat;";
 Comm->Execute();
 
-Zast->MClient->WriteDiaryEvent("NetAspects","Конец загрузки ппрофессиональных опасностей (главспец)","");
+Zast->MClient->WriteDiaryEvent("Hazards","Конец загрузки ппрофессиональных опасностей (главспец)","");
 
 Zast->MClient->UnBlockServer("ReadWriteDoc");
 }
@@ -1717,7 +1717,7 @@ MClient->Act.ParamComm.clear();
 MClient->Act.ParamComm.push_back("UnblockAndRWD");
 MClient->WriteTable("HReference","Select Номер, Методика From Методика Order by номер", "HReference","Select Номер, Методика From Методика Order by номер");
 Sleep(1000);
-Zast->MClient->WriteDiaryEvent("NetAspects","Конец записи методики (главспец)","");
+Zast->MClient->WriteDiaryEvent("Hazards","Конец записи методики (главспец)","");
 }
 catch(...)
 {
@@ -1804,7 +1804,7 @@ Comm->Connection=Zast->ADOAspect;
 Comm->CommandText="Delete * from TempПодразделения";
 Comm->Execute();
 
- Zast->MClient->WriteDiaryEvent("NetAspects","Конец записи подразделений (главспец)","");
+ Zast->MClient->WriteDiaryEvent("Hazards","Конец записи подразделений (главспец)","");
 
  //Zast->ReadWriteDoc->Execute();
  Zast->MClient->UnBlockServer("ReadWriteDoc");
@@ -2018,7 +2018,7 @@ void __fastcall TZast::EndMergeServerVozdExecute(TObject *Sender)
 {
 try
 {
-Zast->MClient->WriteDiaryEvent("NetAspects","Конец записи воздействий (главспец)","");
+Zast->MClient->WriteDiaryEvent("Hazards","Конец записи воздействий (главспец)","");
 }
 catch(...)
 {
@@ -2083,7 +2083,7 @@ catch(...)
 
 void __fastcall TZast::EndMergeServerMeroprExecute(TObject *Sender)
 {
-Zast->MClient->WriteDiaryEvent("NetAspects","Конец записи мероприятий (главспец)","");
+Zast->MClient->WriteDiaryEvent("Hazards","Конец записи мероприятий (главспец)","");
 }
 //---------------------------------------------------------------------------
 
@@ -2148,7 +2148,7 @@ void __fastcall TZast::EndMergeServerTerrExecute(TObject *Sender)
 {
 try
 {
-Zast->MClient->WriteDiaryEvent("NetAspects","Конец записи территорий (главспец)","");
+Zast->MClient->WriteDiaryEvent("Hazards","Конец записи территорий (главспец)","");
 }
 catch(...)
 {
@@ -2218,7 +2218,7 @@ void __fastcall TZast::EndMergeServerDeyatExecute(TObject *Sender)
 {
 try
 {
-Zast->MClient->WriteDiaryEvent("NetAspects","Конец записи видов деятельности (главспец)","");
+Zast->MClient->WriteDiaryEvent("Hazards","Конец записи видов деятельности (главспец)","");
 }
 catch(...)
 {
@@ -2288,7 +2288,7 @@ void __fastcall TZast::EndMergeServerAspectExecute(TObject *Sender)
 {
 try
 {
-Zast->MClient->WriteDiaryEvent("NetAspects","Конец записи списка профессиональных опасностей (главспец)","");
+Zast->MClient->WriteDiaryEvent("Hazards","Конец записи списка профессиональных опасностей (главспец)","");
 }
 catch(...)
 {
@@ -2614,6 +2614,8 @@ void __fastcall TZast::CompareMSpecAspectsExecute(TObject *Sender)
 {
 //Сравнение таблицы аспектов для главспеца по числу записей и составу
 //для принятия решения о необходимости чтения таблицы аспектов
+bool IsError=false;
+
 MP<TADODataSet>Tab(this);
 Tab->Connection=ADOAspect;
 
@@ -2699,12 +2701,19 @@ Comm->Connection=Zast->ADOAspect;
 Comm->CommandText="Delete * From Аспекты";
 Comm->Execute();
 
-
+try
+{
 String CT="INSERT INTO Аспекты ( [Номер аспекта], Подразделение, Ситуация, [Вид территории], Деятельность, Специальность, Аспект, Воздействие, G, O, R, S, T, L, N, Z, Значимость, [Проявление воздействия], [Тяжесть последствий], Приоритетность, [Выполняющиеся мероприятия], [Предлагаемые мероприятия], [Мониторинг и контроль], [Предлагаемый мониторинг и контроль], Исполнитель, [Дата создания], [Начало действия], [Конец действия] ) ";
 CT=CT+" SELECT TempAspects.[Номер аспекта], TempAspects.Подразделение, TempAspects.Ситуация, TempAspects.[Вид территории], TempAspects.Деятельность, TempAspects.Специальность, TempAspects.Аспект, TempAspects.Воздействие, TempAspects.G, TempAspects.O, TempAspects.R, TempAspects.S, TempAspects.T, TempAspects.L, TempAspects.N, TempAspects.Z, TempAspects.Значимость, TempAspects.[Проявление воздействия], TempAspects.[Тяжесть последствий], TempAspects.Приоритетность, TempAspects.[Выполняющиеся мероприятия], TempAspects.[Предлагаемые мероприятия], TempAspects.[Мониторинг и контроль], TempAspects.[Предлагаемый мониторинг и контроль], TempAspects.Исполнитель, TempAspects.[Дата создания], TempAspects.[Начало действия], TempAspects.[Конец действия] ";
 CT=CT+" FROM TempAspects;";
 Comm->CommandText=CT;
 Comm->Execute();
+}
+catch(...)
+{
+ ShowMessage("Несовпадение справочников на сервере и в локальной базе. Прочитайте справочники с сервера и повторите операцию.");
+ IsError=true;
+}
 
 Comm->CommandText="Delete * From TempAspects";
 Comm->Execute();
@@ -2720,7 +2729,10 @@ MAsp->MoveAspects->Connection=Zast->ADOAspect;
 MAsp->MoveAspects->Active=true;
 
 MClient->UnBlockServer("");
+if(!IsError)
+{
 MAsp->ShowModal();
+}
 }
 //---------------------------------------------------------------------------
 
@@ -2745,7 +2757,7 @@ void __fastcall TZast::EndsaveAspectsMSpecExecute(TObject *Sender)
 {
 try
 {
-Zast->MClient->WriteDiaryEvent("NetAspects","Конец записи опасностей (главспец)","");
+Zast->MClient->WriteDiaryEvent("Hazards","Конец записи опасностей (главспец)","");
 Sleep(1000);
  Zast->MClient->UnBlockServer("ReadWriteDoc");
 }
@@ -2817,12 +2829,16 @@ Documents->ReadWrite.clear();
 Str_RW S;
 Documents->ReadWrite.push_back(S);
  */
+//Zast->MClient->BlockServer("SaveAspectsMSpec0");
 Zast->BlockMK(true);
 try
 {
+Zast->MClient->BlockServer("SaveAspectsMSpec0");
+/*
 Zast->MClient->Act.ParamComm.clear();
 Zast->MClient->Act.ParamComm.push_back("SaveAspectsMSpec2");
 Zast->MClient->WriteTable("Опасности","SELECT Аспекты.[Номер аспекта], Подразделения.ServerNum FROM Подразделения INNER JOIN Аспекты ON Подразделения.[Номер подразделения] = Аспекты.Подразделение Order by Аспекты.[Номер аспекта]; ", "Опасности", "SELECT TempAspects.[Номер аспекта], TempAspects.Подразделение From TempAspects order by [Номер аспекта];");
+*/
 }
 catch(...)
 {
@@ -2833,7 +2849,7 @@ catch(...)
  else
  {
 
- Zast->MClient->WriteDiaryEvent("NetAspects","Отказ от сохранения движения опасностей (главспец)","");
+ Zast->MClient->WriteDiaryEvent("Hazards","Отказ от сохранения движения опасностей (главспец)","");
  }
 }
 
@@ -2844,11 +2860,11 @@ void __fastcall TZast::SaveAspectsMSpec2Execute(TObject *Sender)
 {
 try
 {
-Zast->MClient->Act.WaitCommand=17;
+Zast->MClient->Act.WaitCommand=23;
  Zast->MClient->Act.ParamComm.clear();
  Zast->MClient->Act.ParamComm.push_back("EndsaveAspectsMSpec2");
 
-ClientSocket->Socket->SendText("Command:17;0|");
+ClientSocket->Socket->SendText("Command:23;0|");
 }
 catch(...)
 {
@@ -2861,7 +2877,7 @@ void __fastcall TZast::EndsaveAspectsMSpec2Execute(TObject *Sender)
 {
 try
 {
-Zast->MClient->WriteDiaryEvent("NetAspects","Конец записи опасностей (главспец)","");
+Zast->MClient->WriteDiaryEvent("Hazards","Конец записи опасностей (главспец)","");
 }
 catch(...)
 {
@@ -3045,7 +3061,7 @@ for(TempAsp->First();!TempAsp->Eof;TempAsp->Next())
  }
  else
  {
- Zast->MClient->WriteDiaryEvent("NetAspects ошибка","Сбой обновления опасностей","");
+ Zast->MClient->WriteDiaryEvent("Hazards ошибка","Сбой обновления опасностей","");
   ShowMessage("Ошибка объединения опасностей");
  }
 }
@@ -3249,7 +3265,7 @@ this->Close();
 }
 catch(...)
 {
-Zast->MClient->WriteDiaryEvent("NetAspects ошибка","Ошибка обновления аспектов"," Ошибка "+IntToStr(GetLastError()));
+Zast->MClient->WriteDiaryEvent("Hazards ошибка","Ошибка обновления аспектов"," Ошибка "+IntToStr(GetLastError()));
 
 }
 }
@@ -3396,7 +3412,7 @@ void __fastcall TZast::EndReadAspectsMSpecExecute(TObject *Sender)
 {
 try
 {
-Zast->MClient->WriteDiaryEvent("NetAspects","Конец чтения опасностей (главспец)","");
+Zast->MClient->WriteDiaryEvent("Hazards","Конец чтения опасностей (главспец)","");
 }
 catch(...)
 {
@@ -3470,7 +3486,7 @@ MergeAspects(Form1->NumLogin, false);
 
 ReadTempAsp->Execute();
 Form1->CountInvalid();
-Zast->MClient->WriteDiaryEvent("NetAspects","Конец чтения аспектов (пользователь)","");
+Zast->MClient->WriteDiaryEvent("Hazards","Конец чтения аспектов (пользователь)","");
 }
 catch(...)
 {
@@ -3499,7 +3515,7 @@ Zast->MClient->WriteTable("Опасности_П", ClientSQL, "Опасности", ServerSQL);
 void __fastcall TZast::PrepMergeAspectsUserQExecute(TObject *Sender)
 {
 MergeAspects(Form1->NumLogin, true);
-Zast->MClient->WriteDiaryEvent("NetAspects","Конец записи аспектов (пользователь)","");
+Zast->MClient->WriteDiaryEvent("Hazards","Конец записи аспектов (пользователь)","");
 }
 //---------------------------------------------------------------------------
 

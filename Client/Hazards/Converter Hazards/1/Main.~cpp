@@ -483,7 +483,8 @@ for(FromPodr->First();!FromPodr->Eof;FromPodr->Next())
   AspectsTo->FieldByName("Проявление воздействия")->Value=AspectsFrom->FieldByName("Проявление воздействия")->Value;
   AspectsTo->FieldByName("Тяжесть последствий")->Value=AspectsFrom->FieldByName("Тяжесть последствий")->Value;
   N=AspectsFrom->FieldByName("Приор")->Value;
-  AspectsTo->FieldByName("Приоритетность")->Value=N;
+  AspectsTo->FieldByName("Приоритетность")->Value=N-1;
+
   N=AspectsFrom->FieldByName("Приоритетность")->Value;
   AspectsTo->FieldByName("Приор")->Value=N;
   AspectsTo->FieldByName("Выполняющиеся мероприятия")->Value=AspectsFrom->FieldByName("Выполняющиеся мероприятия")->Value;

@@ -248,6 +248,8 @@ __published:	// IDE-managed Components
         void __fastcall Button6Click(TObject *Sender);
         void __fastcall Button7Click(TObject *Sender);
         void __fastcall Button8Click(TObject *Sender);
+        void __fastcall FormKeyUp(TObject *Sender, WORD &Key,
+          TShiftState Shift);
 private:	// User declarations
 String Path;
 String AdminDatabase;

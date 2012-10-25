@@ -27,7 +27,6 @@
 class TVvedenie : public TForm
 {
 __published:	// IDE-managed Components
-        TImage *Image1;
         TStaticText *StaticText2;
         TButton *Button1;
         TMainMenu *MainMenu1;
@@ -37,6 +36,7 @@ __published:	// IDE-managed Components
         TMenuItem *N7;
         TMenuItem *N1;
         TMenuItem *N8;
+        TImage *Image1;
         void __fastcall N6Click(TObject *Sender);
         void __fastcall N8Click(TObject *Sender);
         void __fastcall Button1Click(TObject *Sender);

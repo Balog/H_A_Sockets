@@ -213,7 +213,7 @@ BlockServer("BeginWork");
  if(Parameters[0]=="1")
  {
   Zast->BlockMK(false);
- ShowMessage("За время работы на сервере \nбыли удалены некоторые пункты справочников, использованные в аспектах\nНеобходимо обновить справочники, проверить аспекты \nи вновь сохранить аспекты");
+ ShowMessage("За время работы на сервере \nбыли удалены некоторые пункты справочников, использованные в опасностях\nНеобходимо обновить справочники, проверить опасности \nи вновь сохранить опасности");
   Zast->BlockMK(true);
  }
  UnBlockServer("PostWriteAspectsUsr1");
@@ -269,7 +269,7 @@ Zast->BlockMK(false);
  if(Parameters[0]=="1")
  {
   Zast->BlockMK(false);
- ShowMessage("За время работы на сервере \nбыли удалены некоторые пункты справочников, использованные в аспектах\nНеобходимо обновить справочники, проверить аспекты \nи вновь сохранить аспекты");
+ ShowMessage("За время работы на сервере \nбыли удалены некоторые пункты справочников, использованные в опасностях\nНеобходимо обновить справочники, проверить опасности \nи вновь сохранить опасности");
   Zast->BlockMK(true);
  }
  UnBlockServer("PostWriteAspectsUsr1");
@@ -822,7 +822,7 @@ void Client::PostWriteAspectsUsr()
 {
 //Zast->MClient->UnBlockServer("");
 //Zast->UnBlockServer->Enabled=true;
- Zast->MClient->WriteDiaryEvent("NetAspects","Конец записи аспектов (пользователь)","");
+ Zast->MClient->WriteDiaryEvent("NetAspects","Конец записи опасностей (пользователь)","");
 
  Sleep(1000);
 

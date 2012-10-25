@@ -2483,7 +2483,7 @@ S.Num=8;
 Documents->ReadWrite.push_back(S);
 
 S.NameAction="ReadAspect1";
-S.Text="Чтение списка экологических аспектов...";
+S.Text="Чтение списка профессиональных опасностей...";
 S.Num=9;
 Documents->ReadWrite.push_back(S);
 
@@ -3371,7 +3371,7 @@ int Col=Tab->RecordCount;
 if(Col!=0)
 {
 Label27->Visible=true;
-Label27->Caption="Невалидных аспектов - "+IntToStr(Col)+" шт";
+Label27->Caption="Невалидных опасностей - "+IntToStr(Col)+" шт";
 }
 else
 {
