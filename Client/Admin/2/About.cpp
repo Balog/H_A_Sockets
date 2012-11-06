@@ -46,7 +46,15 @@ else
  Image1->Visible=false;
  Image2->Visible=true;
 }
-LicAvail->Caption=IntToStr(Zast->MClient->VDB[Form1->CBDatabase->ItemIndex].NumLicense);
+int NL=Zast->MClient->VDB[Form1->CBDatabase->ItemIndex].NumLicense;
+if(NL<0)
+{
+LicAvail->Caption="--";
+}
+else
+{
+LicAvail->Caption=IntToStr(NL);
+}
 MP<TADODataSet>Tab(this);
 Tab->Connection=Zast->MClient->Database;
 Tab->CommandText="Select * From Logins where Role=3 AND NumDatabase="+IntToStr(Zast->MClient->VDB[Zast->MClient->GetIDDBName(Form1->CBDatabase->Text)].NumDatabase)+" order by Login";

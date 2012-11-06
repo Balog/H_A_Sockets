@@ -4787,7 +4787,7 @@ object FAbout: TFAbout
     ParentFont = False
   end
   object LicAvail: TLabel
-    Left = 65
+    Left = 66
     Top = 264
     Width = 28
     Height = 13
@@ -4813,7 +4813,7 @@ object FAbout: TFAbout
     ParentFont = False
   end
   object LicUsed: TLabel
-    Left = 189
+    Left = 187
     Top = 264
     Width = 28
     Height = 13
