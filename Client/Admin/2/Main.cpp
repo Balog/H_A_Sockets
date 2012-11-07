@@ -439,7 +439,14 @@ FDiary->LoadDiary();
 
 void __fastcall TForm1::N10Click(TObject *Sender)
 {
+if(CBDatabase->Text=="¿ÒÔÂÍÚ˚")
+{
 Application->HelpFile=ExtractFilePath(Application->ExeName)+"ADMINARM.HLP";
+}
+else
+{
+Application->HelpFile=ExtractFilePath(Application->ExeName)+"ADMINARM-H.HLP";
+}
 Application->HelpJump("IDH_–” Œ¬Œƒ—“¬Œ");        
 }
 //---------------------------------------------------------------------------
@@ -493,4 +500,26 @@ DefWindowProc(Handle,Msg.Msg,Msg.WParam,Msg.LParam);
 
 }
 //-------------------------------------------------------------------
+
+void __fastcall TForm1::FormKeyUp(TObject *Sender, WORD &Key,
+      TShiftState Shift)
+{
+if(Key==112)
+{
+if(Form1->CBDatabase->Text=="¿ÒÔÂÍÚ˚")
+{
+Application->HelpFile=ExtractFilePath(Application->ExeName)+"ADMINARM.HLP";
+}
+else
+{
+Application->HelpFile=ExtractFilePath(Application->ExeName)+"ADMINARM-H.HLP";
+}
+
+ Application->HelpJump("IDH_√À¿¬Õ¿ﬂ_‘Œ–Ã¿");
+
+
+
+}
+}
+//---------------------------------------------------------------------------
 

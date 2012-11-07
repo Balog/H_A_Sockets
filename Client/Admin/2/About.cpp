@@ -77,15 +77,17 @@ void __fastcall TFAbout::FormKeyUp(TObject *Sender, WORD &Key,
 {
 if(Key==112)
 {
-Application->HelpFile=ExtractFilePath(Application->ExeName)+"ADMINARM.HLP";
 if(Form1->CBDatabase->Text=="юЯОЕЙРШ")
- {
+{
+Application->HelpFile=ExtractFilePath(Application->ExeName)+"ADMINARM.HLP";
+}
+else
+{
+Application->HelpFile=ExtractFilePath(Application->ExeName)+"ADMINARM-H.HLP";
+}
+
  Application->HelpJump("IDH_н_опнцпюлле");
- }
- else
- {
- Application->HelpJump("IDH_н_опнцпюлле1");
- }
+
 
 
 }

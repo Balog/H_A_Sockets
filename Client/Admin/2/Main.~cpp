@@ -126,6 +126,7 @@ Otdels->Items->Add(Verify->FieldByName("Название подразделения")->AsString);
 void __fastcall TForm1::FormShow(TObject *Sender)
 {
 Zast->UpdateLogins->Execute();
+Prog->Hide();
 }
 //---------------------------------------------------------------------------
 
@@ -438,7 +439,14 @@ FDiary->LoadDiary();
 
 void __fastcall TForm1::N10Click(TObject *Sender)
 {
+if(CBDatabase->Text=="Аспекты")
+{
 Application->HelpFile=ExtractFilePath(Application->ExeName)+"ADMINARM.HLP";
+}
+else
+{
+Application->HelpFile=ExtractFilePath(Application->ExeName)+"ADMINARM-H.HLP";
+}
 Application->HelpJump("IDH_РУКОВОДСТВО");        
 }
 //---------------------------------------------------------------------------
@@ -492,4 +500,26 @@ DefWindowProc(Handle,Msg.Msg,Msg.WParam,Msg.LParam);
 
 }
 //-------------------------------------------------------------------
+
+void __fastcall TForm1::FormKeyUp(TObject *Sender, WORD &Key,
+      TShiftState Shift)
+{
+if(Key==112)
+{
+if(Form1->CBDatabase->Text=="Аспекты")
+{
+Application->HelpFile=ExtractFilePath(Application->ExeName)+"ADMINARM.HLP";
+}
+else
+{
+Application->HelpFile=ExtractFilePath(Application->ExeName)+"ADMINARM-H.HLP";
+}
+
+ Application->HelpJump("IDH_ГЛАВНАЯ_ФОРМА");
+
+
+
+}
+}
+//---------------------------------------------------------------------------
 

@@ -493,7 +493,14 @@ void __fastcall TFDiary::FormKeyUp(TObject *Sender, WORD &Key,
 {
 if(Key==112)
 {
+if(Form1->CBDatabase->Text=="юЯОЕЙРШ")
+{
 Application->HelpFile=ExtractFilePath(Application->ExeName)+"ADMINARM.HLP";
+}
+else
+{
+Application->HelpFile=ExtractFilePath(Application->ExeName)+"ADMINARM-H.HLP";
+}
 Application->HelpJump("IDH_опнялнрп_фспмюкю_янашрхи");
 }
 }
