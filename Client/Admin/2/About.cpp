@@ -78,7 +78,16 @@ void __fastcall TFAbout::FormKeyUp(TObject *Sender, WORD &Key,
 if(Key==112)
 {
 Application->HelpFile=ExtractFilePath(Application->ExeName)+"ADMINARM.HLP";
-Application->HelpJump("IDH_Œ_œ–Œ√–¿ÃÃ≈");
+if(Form1->CBDatabase->Text=="¿ÒÔÂÍÚ˚")
+ {
+ Application->HelpJump("IDH_Œ_œ–Œ√–¿ÃÃ≈");
+ }
+ else
+ {
+ Application->HelpJump("IDH_Œ_œ–Œ√–¿ÃÃ≈1");
+ }
+
+
 }
 }
 //---------------------------------------------------------------------------
