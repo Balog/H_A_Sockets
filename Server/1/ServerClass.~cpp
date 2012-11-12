@@ -2027,7 +2027,7 @@ Comm->Execute();
 return Del;
 */
 bool Del=false;
-TADOConnection *Database=GetDatabase("Аспекты");
+TADOConnection *Database=GetDatabase("Опасности");
 MP<TADODataSet>TempPodr(Form1);
 TempPodr->Connection=Database;
 TempPodr->CommandText="Select * From TempПодразделения";

@@ -1707,7 +1707,7 @@ TempPodr->Active=true;
 
 MP<TADODataSet>TempAsp(Form1);
 TempAsp->Connection=Database;
-TempAsp->CommandText="select * From TempAspects Order by [Номер аспекта]";
+TempAsp->CommandText="select * From TempAspects";
 TempAsp->Active=true;
 
 MP<TADOCommand>Comm(Form1);
@@ -2087,7 +2087,8 @@ for(TempAsp->First();!TempAsp->Eof;TempAsp->Next())
  }
 
    Asp->FieldByName("Подразделение")->Value=TempAsp->FieldByName("Подразделение")->Value;
-  Asp->FieldByName("Ситуация")->Value=TempAsp->FieldByName("Ситуация")->Value;
+   int SIT=TempAsp->FieldByName("Ситуация")->AsInteger;
+  Asp->FieldByName("Ситуация")->Value=SIT;
 
   if(Terr->Locate("Номер территории", TempAsp->FieldByName("Вид территории")->AsInteger, SO))
   {

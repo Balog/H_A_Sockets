@@ -757,6 +757,7 @@ CSit->ItemIndex=0;
 //----------------------------------------------------------------------------
 void __fastcall TForm1::FormClose(TObject *Sender, TCloseAction &Action)
 {
+DataSetRefresh2->Execute();
 SavePosition();
 if(!Demo)
 {
