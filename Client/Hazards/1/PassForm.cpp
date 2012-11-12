@@ -7,7 +7,7 @@
 #include "Main.h"
 #include "Zastavka.h"
 #include "CodeText.h"
-
+#include "Progress.h"
 //---------------------------------------------------------------------------
 #pragma package(smart_init)
 #pragma resource "*.dfm"
@@ -91,6 +91,7 @@ EdPass->SetFocus();
 
 void __fastcall TPass::FormShow(TObject *Sender)
 {
+Prog->Hide();
 Pass->EdPass->SetFocus();        
 }
 //---------------------------------------------------------------------------

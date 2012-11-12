@@ -205,6 +205,7 @@ __published:	// IDE-managed Components
         TAction *AspQ1;
         TAction *ReadTempAsp;
         TAction *VerIsNew;
+        TAction *VerIsNew1;
         void __fastcall Timer1Timer(TObject *Sender);
         void __fastcall Image1Click(TObject *Sender);
         void __fastcall FormShow(TObject *Sender);
@@ -324,6 +325,7 @@ __published:	// IDE-managed Components
         void __fastcall AspQ1Execute(TObject *Sender);
         void __fastcall ReadTempAspExecute(TObject *Sender);
         void __fastcall VerIsNewExecute(TObject *Sender);
+        void __fastcall VerIsNew1Execute(TObject *Sender);
 private:	// User declarations
 String Path;
 TLocateOptions SO;

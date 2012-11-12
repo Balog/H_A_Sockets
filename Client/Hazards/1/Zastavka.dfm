@@ -10340,6 +10340,10 @@ object Zast: TZast
       Caption = 'VerIsNew'
       OnExecute = VerIsNewExecute
     end
+    object VerIsNew1: TAction
+      Caption = 'VerIsNew1'
+      OnExecute = VerIsNew1Execute
+    end
   end
   object BlockServer: TTimer
     Enabled = False

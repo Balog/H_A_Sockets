@@ -31,7 +31,7 @@ Nodes->Connection=Zast->ADOConn;
 Branches->Connection=Zast->ADOConn;
 Comm->Connection=Zast->ADOConn;
 LoadTab1();
-LoadTab2();
+//LoadTab2();
 LoadTab3();
 LoadTab4();
 LoadTab5();

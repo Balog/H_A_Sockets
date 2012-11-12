@@ -50,6 +50,7 @@ Registered=false;
 //---------------------------------------------------------------------------
 void __fastcall TForm1::FormShow(TObject *Sender)
 {
+Prog->Close();
 Prog->Hide();
 //******************************************
 //       Удаление демо-записей аспектов
@@ -162,7 +163,7 @@ if(Podrazdel->RecordCount!=0)
 }
 else
 {
-Zast->MClient->WriteDiaryEvent("NetAspects","Для пользователя не назначено подразделений",Login);
+Zast->MClient->WriteDiaryEvent("Hazards","Для пользователя не назначено подразделений",Login);
 ShowMessage("Для пользователя "+Login+" не назначено подразделений!\rЗавершение работы программы.");
 Zast->Close();
 }
@@ -775,7 +776,7 @@ N3->Click();
  }
  case IDNO:
  {
-Zast->MClient->WriteDiaryEvent("NetAspects","Завершение работы отказ от записи","");
+Zast->MClient->WriteDiaryEvent("Hazards","Завершение работы отказ от записи","");
 Zast->Stop=true;
 Sleep(2000);
 Zast->Close();
@@ -871,7 +872,7 @@ Branches->Next();
 }
 catch(...)
 {
-Zast->MClient->WriteDiaryEvent("NetAspects ошибка","Ошибка синхронизации территорий"," Ошибка "+IntToStr(GetLastError()));
+Zast->MClient->WriteDiaryEvent("Hazards ошибка","Ошибка синхронизации территорий"," Ошибка "+IntToStr(GetLastError()));
 }
 }
 //---------------------------------------------------------------------------
@@ -939,7 +940,7 @@ Branches->Next();
 }
 catch(...)
 {
-Zast->MClient->WriteDiaryEvent("NetAspects ошибка","Ошибка синхронизации деятельностей","");
+Zast->MClient->WriteDiaryEvent("Hazards ошибка","Ошибка синхронизации деятельностей","");
 }
 }
 //---------------------------------------------------------------------------
@@ -1007,7 +1008,7 @@ Branches->Next();
 }
 catch(...)
 {
-Zast->MClient->WriteDiaryEvent("NetAspects ошибка","Ошибка синхронизации экоаспектов","");
+Zast->MClient->WriteDiaryEvent("Hazards ошибка","Ошибка синхронизации экоаспектов","");
 }
 }
 //---------------------------------------------------------------------------
@@ -1075,7 +1076,7 @@ Branches->Next();
 }
 catch(...)
 {
-Zast->MClient->WriteDiaryEvent("NetAspects ошибка","Ошибка синхронизации воздействий","");
+Zast->MClient->WriteDiaryEvent("Hazards ошибка","Ошибка синхронизации воздействий","");
 }
 }
 //---------------------------------------------------------------------------
@@ -2067,7 +2068,7 @@ catch(...)
 //------------------------------------------------------------------------
 void TForm1::PrepareMergeAspects()
 {
-Zast->MClient->WriteDiaryEvent("NetAspects","Подготовка к загрузке аспектов","");
+Zast->MClient->WriteDiaryEvent("Hazards","Подготовка к загрузке аспектов","");
 try
 {
 
@@ -2152,19 +2153,19 @@ Temp->Edit();
 Temp->FieldByName("Предлагаемый мониторинг и контроль")->Assign(TT);
 Temp->Post();
 }
-Zast->MClient->WriteDiaryEvent("NetAspects","Подготовка к загрузке аспектов завершена","");
+Zast->MClient->WriteDiaryEvent("Hazards","Подготовка к загрузке аспектов завершена","");
 
 }
 catch(...)
 {
-Zast->MClient->WriteDiaryEvent("NetAspects ошибка","Ошибка подготовки к загрузке аспектов"," Ошибка "+IntToStr(GetLastError()));
+Zast->MClient->WriteDiaryEvent("Hazards ошибка","Ошибка подготовки к загрузке аспектов"," Ошибка "+IntToStr(GetLastError()));
 
 }
 }
 //------------------------------------------------------------------------
 void  TForm1::MergeAspects(int NumLogin)
 {
-Zast->MClient->WriteDiaryEvent("NetAspects","Обновление аспектов","");
+Zast->MClient->WriteDiaryEvent("Hazards","Обновление аспектов","");
 try
 {
 MP<TADODataSet>Podr(this);
@@ -2191,7 +2192,7 @@ for(TempAsp->First();!TempAsp->Eof;TempAsp->Next())
  }
  else
  {
- Zast->MClient->WriteDiaryEvent("NetAspects ошибка","Сбой обновления аспектов","");
+ Zast->MClient->WriteDiaryEvent("Hazards ошибка","Сбой обновления аспектов","");
   ShowMessage("Ошибка объединения аспектов");
  }
 }
@@ -2208,7 +2209,7 @@ Comm->Execute();
 }
 catch(...)
 {
-Zast->MClient->WriteDiaryEvent("NetAspects ошибка","Ошибка обновления аспектов"," Ошибка "+IntToStr(GetLastError()));
+Zast->MClient->WriteDiaryEvent("Hazards ошибка","Ошибка обновления аспектов"," Ошибка "+IntToStr(GetLastError()));
 
 }
 }
@@ -2641,7 +2642,7 @@ void __fastcall TForm1::FormKeyUp(TObject *Sender, WORD &Key,
 {
 if(Key==112)
 {
-Application->HelpFile=ExtractFilePath(Application->ExeName)+"NetAspects.HLP";
+Application->HelpFile=ExtractFilePath(Application->ExeName)+"Hazards.HLP";
 Application->HelpJump("IDH_ВВОД_РЕДАКТИРОВАНИЕ_И_УДАЛЕНИЕ_АСПЕКТОВ");
 }
 }

@@ -377,7 +377,7 @@ Text="";
 }
 else
 {
-Text=Report->FieldByName("Специальность")->Value;
+Text=Report->FieldByName("Специальность")->AsString;
 }
 App.OlePropertyGet("Cells",Start+i,4).OlePropertySet("Value",Text.c_str());
 
@@ -387,7 +387,7 @@ Num=Report->FieldByName("Воздействие")->Value;
 TempAspects->Active=false;
 TempAspects->CommandText="Select * From Воздействия Where [Номер воздействия]="+IntToStr(Num);
 TempAspects->Active=true;
-Text=TempAspects->FieldByName("Наименование воздействия")->Value;
+Text=TempAspects->FieldByName("Наименование воздействия")->AsString;
 App.OlePropertyGet("Cells",Start+i,5).OlePropertySet("Value",Text.c_str());
 
 
@@ -395,7 +395,7 @@ Num=Report->FieldByName("Ситуация")->Value;
 TempAspects->Active=false;
 TempAspects->CommandText="Select * From Ситуации Where [Номер ситуации]="+IntToStr(Num);
 TempAspects->Active=true;
-Text=TempAspects->FieldByName("Название ситуации")->Value;
+Text=TempAspects->FieldByName("Название ситуации")->AsString;
 App.OlePropertyGet("Cells",Start+i,6).OlePropertySet("Value",Text.c_str());
 
 
@@ -467,7 +467,7 @@ N=0;
 
 
 
-Num=Report->FieldByName("Проявление воздействия")->Value;
+Num=Report->FieldByName("Проявление воздействия")->AsInteger;
  Posledstvie->Active=false;
  Posledstvie->CommandText="Select * From [Проявление воздействия] where [Номер проявления]="+IntToStr(Num);
  Posledstvie->Active=true;
@@ -475,7 +475,7 @@ Num=Report->FieldByName("Проявление воздействия")->Value;
 // Posledstvie->MoveBy(CProyav->ItemIndex);
  F=Posledstvie->FieldByName("Балл")->Value;
 
-Num=Report->FieldByName("Тяжесть последствий")->Value;
+Num=Report->FieldByName("Тяжесть последствий")->AsInteger;
  Tiagest->Active=false;
  Tiagest->CommandText="Select * From [Тяжесть последствий] where [Номер последствия]="+IntToStr(Num);
  Tiagest->Active=true;
@@ -483,7 +483,7 @@ Num=Report->FieldByName("Тяжесть последствий")->Value;
 // Tiagest->MoveBy(CPosl->ItemIndex);
  UVZ=Tiagest->FieldByName("Балл")->Value;
 
-Num=Report->FieldByName("Приоритетность")->Value;
+Num=Report->FieldByName("Приоритетность")->AsInteger;
 Prioritet->Active=false;
 Prioritet->CommandText="Select * From ВВР where [Номер приоритетности]="+IntToStr(Num);
 Prioritet->Active=true;
@@ -1543,18 +1543,18 @@ App.OlePropertyGet("Cells",Start+i,4).OlePropertySet("Value",Text.c_str());
 }
 
 
-Num=Report->FieldByName("Воздействие")->Value;
+Num=Report->FieldByName("Воздействие")->AsInteger;
 TempAspects->Active=false;
 TempAspects->CommandText="Select * From Воздействия Where [Номер воздействия]="+IntToStr(Num);
 TempAspects->Active=true;
-Text=TempAspects->FieldByName("Наименование воздействия")->Value;
+Text=TempAspects->FieldByName("Наименование воздействия")->AsString;
 App.OlePropertyGet("Cells",Start+i,5).OlePropertySet("Value",Text.c_str());
 
 Num=Report->FieldByName("Ситуация")->Value;
 TempAspects->Active=false;
 TempAspects->CommandText="Select * From Ситуации Where [Номер ситуации]="+IntToStr(Num);
 TempAspects->Active=true;
-Text=TempAspects->FieldByName("Название ситуации")->Value;
+Text=TempAspects->FieldByName("Название ситуации")->AsString;
 App.OlePropertyGet("Cells",Start+i,6).OlePropertySet("Value",Text.c_str());
 
 int Z=Report->FieldByName("Z")->Value;
@@ -1563,17 +1563,17 @@ App.OlePropertyGet("Cells",Start+i,7).OlePropertySet("Value",Z);
 Text=Report->FieldByName("Наименование значимости")->AsString;;
 App.OlePropertyGet("Cells",Start+i,8).OlePropertySet("Value",Text.c_str());
 
-Num=Report->FieldByName("Приор")->Value;
+Num=Report->FieldByName("Приор")->AsInteger;
 TempAspects->Active=false;
 TempAspects->CommandText="Select * From Приоритетность Where [Номер приоритетности]="+IntToStr(Num);
 TempAspects->Active=true;
-Text=TempAspects->FieldByName("Наименование приоритетности")->Value;
+Text=TempAspects->FieldByName("Наименование приоритетности")->AsString;
 App.OlePropertyGet("Cells",Start+i,9).OlePropertySet("Value",Text.c_str());
 
 
 
 
-AnsiString ZT=Report->FieldByName("Выполняющиеся мероприятия")->Value;
+AnsiString ZT=Report->FieldByName("Выполняющиеся мероприятия")->AsString;
 while (ZT.Pos("\r"))
 {
  int N=ZT.Pos("\r");

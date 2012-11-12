@@ -636,10 +636,13 @@ Zast->BlockMK(false);
 }
 else
 {
+Prog->Hide();
 Prog->Close();
 Zast->BlockMK(false);
 if(Prog->SignComplete)
 {
+Prog->Hide();
+Prog->Close();
  ShowMessage("Завершено");
 }
 }
@@ -1703,6 +1706,7 @@ MClient->StartAction(S.NameAction);
 }
 else
 {
+Prog->Hide();
 Prog->Close();
  ShowMessage("Завершено");
 }        
@@ -2946,6 +2950,8 @@ MAsp->MoveAspects->Active=true;
 MAsp->ChangeCPodr();
  Zast->MClient->UnBlockServer("EndReadAspectsMSpec");
  Zast->BlockMK(false);
+ Prog->Hide();
+ Prog->Close();
 ShowMessage("Чтение завершено");
 }
 catch(...)
@@ -3123,15 +3129,11 @@ Filter->ComboBox3->Text=Ini->ReadString(IntToStr(NumLogin),"TextFilter","");
 
 }
 Form1->Initialize(Num);
+if(Form1->Quit)
+{
+ Zast->Close();
+}
 
-if(!Quit)
-{
-ShowMessage("Завершено");
-}
-else
-{
-this->Close();
-}
 }
 catch(...)
 {
@@ -3332,9 +3334,9 @@ try
 {
 MergeAspects(Form1->NumLogin, false);
 
-ReadTempAsp->Execute();
-Form1->CountInvalid();
-Zast->MClient->WriteDiaryEvent("NetAspects","Конец чтения аспектов (пользователь)","");
+Zast->MClient->BlockServer("ReadTempAsp");
+//ReadTempAsp->Execute();
+
 }
 catch(...)
 {
@@ -3614,8 +3616,9 @@ ShowMessage("За время работы на сервере было изменено распределение подразделени
 }
 Comm->CommandText="DELETE Аспекты.* FROM Аспекты WHERE (((Аспекты.Del)=True));";
 Comm->Execute();
-
-Zast->MClient->BlockServer("PrepWriteAspUsr");
+//Сервер к этому времени уже заблокирован!!!
+Zast->PrepWriteAspUsr->Execute();
+//Zast->MClient->BlockServer("PrepWriteAspUsr");
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
 //Пройти по аспектам проверяя принадлежит ли аспект твоему подразделению
@@ -3979,7 +3982,7 @@ Zast->MClient->ReadTable("Аспекты", ServerSQL, "Аспекты_П", ClientSQL);
 void __fastcall TZast::ReadTempAspExecute(TObject *Sender)
 {
  Zast->MClient->Act.ParamComm.clear();
- Zast->MClient->Act.ParamComm.push_back("VerIsNew");
+ Zast->MClient->Act.ParamComm.push_back("VerIsNew1");
  String ServerSQL="SELECT Аспекты.[Номер аспекта],     Аспекты.Подразделение,     Аспекты.Ситуация,     Аспекты.[Вид территории],     Аспекты.Деятельность,     Аспекты.Специальность,     Аспекты.Аспект,     Аспекты.Воздействие,     Аспекты.G,     Аспекты.O,     Аспекты.R,     Аспекты.S,     Аспекты.T,     Аспекты.L,     Аспекты.N,     Аспекты.Z,     Аспекты.Значимость,     Аспекты.[Проявление воздействия],     Аспекты.[Тяжесть последствий],     Аспекты.Приоритетность,     Аспекты.[Выполняющиеся мероприятия],     Аспекты.[Предлагаемые мероприятия],     Аспекты.[Мониторинг и контроль],     Аспекты.[Предлагаемый мониторинг и контроль],     Аспекты.Исполнитель,      Аспекты.[Дата создания],     Аспекты.[Начало действия],     Аспекты.[Конец действия] FROM (Подразделения INNER JOIN ObslOtdel ON Подразделения.[Номер подразделения] = ObslOtdel.NumObslOtdel) INNER JOIN Аспекты ON Подразделения.[Номер подразделения] = Аспекты.Подразделение WHERE (((ObslOtdel.Login)="+IntToStr(Form1->NumLogin)+"));";
  String ClientSQL="SELECT CompareAspects.[Номер аспекта], CompareAspects.Подразделение, CompareAspects.Ситуация, CompareAspects.[Вид территории], CompareAspects.Деятельность, CompareAspects.Специальность, CompareAspects.Аспект, CompareAspects.Воздействие, CompareAspects.G, CompareAspects.O, CompareAspects.R, CompareAspects.S, CompareAspects.T, CompareAspects.L, CompareAspects.N, CompareAspects.Z, CompareAspects.Значимость, CompareAspects.[Проявление воздействия], CompareAspects.[Тяжесть последствий], CompareAspects.Приоритетность, CompareAspects.[Выполняющиеся мероприятия], CompareAspects.[Предлагаемые мероприятия], CompareAspects.[Мониторинг и контроль], CompareAspects.[Предлагаемый мониторинг и контроль], CompareAspects.Исполнитель,  CompareAspects.[Дата создания], CompareAspects.[Начало действия], CompareAspects.[Конец действия] FROM CompareAspects;";
 Zast->MClient->ReadTable("Аспекты", ServerSQL, "Аспекты_П", ClientSQL);
@@ -3992,6 +3995,28 @@ void __fastcall TZast::VerIsNewExecute(TObject *Sender)
 {
 Form1->Label1->Visible=Form1->IsNew();
 ReadWriteDoc->Execute();
+}
+//---------------------------------------------------------------------------
+
+
+void __fastcall TZast::VerIsNew1Execute(TObject *Sender)
+{
+Form1->CountInvalid();
+Zast->MClient->WriteDiaryEvent("NetAspects","Конец чтения аспектов (пользователь)","");
+
+Zast->MClient->UnBlockServer("VerIsNew");
+
+if(!Form1->Quit & Form1->Visible)
+{
+Prog->Hide();
+Prog->Close();
+ShowMessage("Завершено");
+}
+else
+{
+Prog->Hide();
+Prog->Close();
+}
 }
 //---------------------------------------------------------------------------
 

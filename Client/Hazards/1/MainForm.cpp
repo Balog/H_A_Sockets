@@ -50,6 +50,7 @@ Registered=false;
 //---------------------------------------------------------------------------
 void __fastcall TForm1::FormShow(TObject *Sender)
 {
+Prog->Close();
 Prog->Hide();
 //******************************************
 //       Удаление демо-записей аспектов
@@ -2492,6 +2493,7 @@ Zast->ReadWriteDoc->Execute();
 //---------------------------------------------------------------------------
 void __fastcall TForm1::N3Click(TObject *Sender)
 {
+DataSetRefresh2->Execute();
 Zast->BlockMK(true);
 try
 {
