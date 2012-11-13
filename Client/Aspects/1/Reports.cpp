@@ -849,7 +849,7 @@ AnsiString PP2=WideString(ExtractFilePath(Application->ExeName)+"\Templates\\"+T
 
 Variant App =Variant::CreateObject("Excel.Application");
 //Variant App1 =Variant::CreateObject("Excel.Application");
-App.OlePropertySet("Visible",true);
+App.OlePropertySet("Visible",false);
 
 
 Variant Book=App.OlePropertyGet("Workbooks").OleFunction("Add", PP1.c_str());

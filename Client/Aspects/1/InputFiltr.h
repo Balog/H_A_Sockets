@@ -84,6 +84,8 @@ void InpDeyat();
 void InpAsp();
 void InpVozd();
 
+void SetFilterGroup(int NumFilter);
+
 int Index;
 AnsiString CText;
 AnsiString Filtr1, SeFiltr1, Filtr2;

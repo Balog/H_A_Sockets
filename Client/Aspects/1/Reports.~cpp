@@ -330,6 +330,8 @@ App.OlePropertyGet("Cells",Start+i,17).OlePropertySet("Value",Text.c_str());
 
 Number++;
 i++;
+
+
 }
 
 
@@ -874,23 +876,23 @@ if(Podr==0)
 {
 if(OneList)
 {
-Podrazd->CommandText="Select * from TempПодразделения Order by [Название подразделения]";
+Podrazd->CommandText="Select * from TempПодразделения Where Ver=true Order by [Название подразделения]";
 }
 else
 {
-Podrazd->CommandText="Select * from TempПодразделения Order by [Название подразделения]  DESC";
+Podrazd->CommandText="Select * from TempПодразделения Where Ver=true Order by [Название подразделения]  DESC";
 }
 }
 else
 {
 if(this->Role==4)
 {
-Podrazd->CommandText="Select * from TempПодразделения Where [Номер подразделения]="+IntToStr(Podr)+"  Order by [Название подразделения]  DESC";
+Podrazd->CommandText="Select * from TempПодразделения Where [Номер подразделения]="+IntToStr(Podr)+" AND Ver=true  Order by [Название подразделения]  DESC";
 
 }
 else
 {
-Podrazd->CommandText="Select * from TempПодразделения Where ServerNum="+IntToStr(Podr)+"  Order by [Название подразделения]  DESC";
+Podrazd->CommandText="Select * from TempПодразделения Where ServerNum="+IntToStr(Podr)+" AND Ver=true  Order by [Название подразделения]  DESC";
 }
 }
 Podrazd->Active=true;

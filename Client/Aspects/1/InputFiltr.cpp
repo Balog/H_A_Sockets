@@ -25,7 +25,9 @@ this->Close();
 void __fastcall TFilter::RadioGroup1Click(TObject *Sender)
 {
 
+//SetFilterGroup(RadioGroup1->ItemIndex);
  Button5->Enabled=false;
+
 switch (RadioGroup1->ItemIndex)
 {
  case 0:
@@ -175,6 +177,11 @@ ComboBox3->Visible=true;
 }
 }
 //---------------------------------------------------------------------------
+void TFilter::SetFilterGroup(int NumFilter)
+{
+
+}
+//----------------------------------------------------------------------------
 void __fastcall TFilter::FormShow(TObject *Sender)
 {
 
