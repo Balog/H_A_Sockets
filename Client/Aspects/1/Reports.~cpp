@@ -418,6 +418,8 @@ App.OlePropertyGet("Range",(Address(Sheet,4,Start+i+5)).c_str()).OlePropertySet(
 AnsiString Patch=ExtractFilePath(Application->ExeName);
 AnsiString NameReport=Patch+"\Reports\\Ф-001.1.xls";
 }
+String S="Перечень экологических аспектов с "+Report1->Date1->Date.DateString()+" по "+Report1->Date2->Date.DateString();
+App.OlePropertyGet("Cells",9,1).OlePropertySet("Value",S.c_str());
 
 App.OlePropertySet("Visible",true);
 
@@ -849,7 +851,7 @@ AnsiString PP2=WideString(ExtractFilePath(Application->ExeName)+"\Templates\\"+T
 
 Variant App =Variant::CreateObject("Excel.Application");
 //Variant App1 =Variant::CreateObject("Excel.Application");
-App.OlePropertySet("Visible",true);
+App.OlePropertySet("Visible",false);
 
 
 Variant Book=App.OlePropertyGet("Workbooks").OleFunction("Add", PP1.c_str());
@@ -1246,6 +1248,9 @@ App.OlePropertyGet("Range",(Address(Sheet,6,Start+Number+9)).c_str()).OlePropert
 
 
 }
+
+String S="Реестр значимых экологических аспектов с "+Report1->Date1->Date.DateString()+" по "+Report1->Date2->Date.DateString();
+
 App.OlePropertySet("Visible",true);
 
 App=NULL;

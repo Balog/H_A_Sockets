@@ -364,7 +364,7 @@ void __fastcall TFilter::ComboBox1Click(TObject *Sender)
 Podr->First();
 Podr->MoveBy(ComboBox1->ItemIndex);
 Index=Podr->FieldByName("Номер подразделения")->Value;
-ServerPodr=Podr->FieldByName("ServerNum")->Value;
+ServerNumPodr=Podr->FieldByName("ServerNum")->Value;
 CText="SELECT Аспекты.* FROM Logins INNER JOIN ((Подразделения INNER JOIN Аспекты ON Подразделения.[Номер подразделения] = Аспекты.Подразделение) INNER JOIN ObslOtdel ON Подразделения.[Номер подразделения] = ObslOtdel.NumObslOtdel) ON Logins.Num = ObslOtdel.Login WHERE (((Logins.ServerNum)="+IntToStr(Form1->NumLogin)+")) AND  Подразделение="+IntToStr(Index)+" Order By [Номер аспекта]";
 Filtr1="";  //По подразделению фильтр накладываем позднее
 Filtr2="Значимость=True";
