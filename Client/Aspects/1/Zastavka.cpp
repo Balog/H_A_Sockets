@@ -677,7 +677,12 @@ void __fastcall TZast::MergePodrazdExecute(TObject *Sender)
 {
 try
 {
-Filter->SetDefFiltr();
+String Path=ExtractFilePath(Application->ExeName);
+MP<TIniFile>Ini(Path+"NetAspects.ini");
+
+Filter->CText=Ini->ReadString(IntToStr(Form1->NumLogin),"Filter","");
+
+//Filter->SetDefFiltr();
 MDBConnector* DB;
  if(Role==2)
  {
@@ -3079,55 +3084,39 @@ Comm->Execute();
 String Path=ExtractFilePath(Application->ExeName);
 MP<TIniFile>Ini(Path+"NetAspects.ini");
 
-int Num=Ini->ReadInteger(IntToStr(NumLogin),"CurrentRecord",1);
-Filter->CText=Ini->ReadString(IntToStr(NumLogin),"Filter","");
-if(Filter->CText=="")
-{
- Filter->SetDefFiltr();
-}
 
 Form1->LFiltr->Caption=Ini->ReadString(IntToStr(NumLogin),"NameFilter","Отключен");
-Filter->RadioGroup1->ItemIndex=Ini->ReadInteger(IntToStr(NumLogin),"NumFilter", 0);
-switch (Filter->RadioGroup1->ItemIndex)
+Filter->NumFiltr=Ini->ReadInteger(IntToStr(NumLogin),"NumFilter", 0);
+
+MP<TADODataSet>Proba(this);
+Proba->Connection=Zast->ADOUsrAspect;
+Proba->CommandText=Filter->CText;
+Proba->Active=true;
+if(Proba->RecordCount==0)
 {
- case 1:
- {
-Filter->ComboBox1->Text=Ini->ReadString(IntToStr(NumLogin),"TextFilter","");
- break;
- }
- case 2:
- {
-Filter->ComboBox4->Text=Ini->ReadString(IntToStr(NumLogin),"TextFilter","");
- break;
- }
- case 3:
- {
-Filter->ComboBox5->Text=Ini->ReadString(IntToStr(NumLogin),"TextFilter","");
- break;
- }
- case 4:
- {
-Filter->ComboBox6->Text=Ini->ReadString(IntToStr(NumLogin),"TextFilter","");
- break;
- }
- case 5:
- {
-Filter->ComboBox7->Text=Ini->ReadString(IntToStr(NumLogin),"TextFilter","");
- break;
- }
- case 6:
- {
-Filter->ComboBox2->Text=Ini->ReadString(IntToStr(NumLogin),"TextFilter","");
- break;
- }
- case 7:
- {
-Filter->ComboBox3->Text=Ini->ReadString(IntToStr(NumLogin),"TextFilter","");
- break;
- }
+ Filter->SetDefFiltr();
+ Form1->LFiltr->Caption="Отключен";
+
+ Ini->WriteInteger(IntToStr(NumLogin),"CurrentRecord", 1);
+ Ini->WriteString(IntToStr(NumLogin),"Filter", Filter->CText);
+ Ini->WriteString(IntToStr(NumLogin),"NameFilter", Form1->LFiltr->Caption);
+ Ini->WriteInteger(IntToStr(NumLogin),"NumFilter", 0);
+ Ini->WriteString(IntToStr(NumLogin),"TextFilter", "");
+
+
+
+ Filter->NumFiltr=0;
+
+ Form1->LFiltr->Caption=Ini->ReadString(IntToStr(NumLogin),"NameFilter","Отключен");
+
+
 
 }
-Form1->Initialize(Num);
+
+
+
+
+Form1->Initialize(StrToInt(Form1->NumRecord->Text));
 if(Form1->Quit)
 {
  Zast->Close();

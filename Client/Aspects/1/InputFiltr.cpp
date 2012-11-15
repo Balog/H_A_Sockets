@@ -364,6 +364,7 @@ void __fastcall TFilter::ComboBox1Click(TObject *Sender)
 Podr->First();
 Podr->MoveBy(ComboBox1->ItemIndex);
 Index=Podr->FieldByName("Номер подразделения")->Value;
+ServerNumPodr=Podr->FieldByName("ServerNum")->Value;
 CText="SELECT Аспекты.* FROM Logins INNER JOIN ((Подразделения INNER JOIN Аспекты ON Подразделения.[Номер подразделения] = Аспекты.Подразделение) INNER JOIN ObslOtdel ON Подразделения.[Номер подразделения] = ObslOtdel.NumObslOtdel) ON Logins.Num = ObslOtdel.Login WHERE (((Logins.ServerNum)="+IntToStr(Form1->NumLogin)+")) AND  Подразделение="+IntToStr(Index)+" Order By [Номер аспекта]";
 Filtr1="";  //По подразделению фильтр накладываем позднее
 Filtr2="Значимость=True";
@@ -441,12 +442,16 @@ NumFiltr=7;
  }
 
 }
+int a=0;
+Form1->SavePosition();
 }
 else
 {
  ShowMessage("Нет аспектов удовлетворяющим этому условию");
 
 }
+
+
 }
 //---------------------------------------------------------------------------
 void __fastcall TFilter::FormClose(TObject *Sender, TCloseAction &Action)
@@ -555,7 +560,7 @@ void __fastcall TFilter::ComboBox4Change(TObject *Sender)
 {
 String Text=ComboBox4->Text;
 MP<TADODataSet>Tab(this);
-Tab->Connection=Zast->ADOAspect;
+Tab->Connection=Zast->ADOUsrAspect;
 String CT="Select [Номер территории], [Наименование территории] From Территория Where [Наименование территории] Like '%"+Text+"%' AND Показ=true Order by [Номер территории]";
 Tab->CommandText=CT;
 Tab->Active=true;
@@ -592,7 +597,7 @@ void __fastcall TFilter::ComboBox4DropDown(TObject *Sender)
 {
 String Text=ComboBox4->Text;
 MP<TADODataSet>Tab(this);
-Tab->Connection=Zast->ADOAspect;
+Tab->Connection=Zast->ADOUsrAspect;
 String CT="Select [Номер территории], [Наименование территории] From Территория Where [Наименование территории] Like '%"+Text+"%' AND Показ=true Order by [Номер территории]";
 Tab->CommandText=CT;
 Tab->Active=true;
@@ -620,7 +625,7 @@ if(Key==13)
 {
 String Text=ComboBox4->Text;
 MP<TADODataSet>Tab(this);
-Tab->Connection=Zast->ADOAspect;
+Tab->Connection=Zast->ADOUsrAspect;
 String CT="Select [Номер территории], [Наименование территории] From Территория Where [Наименование территории] Like '%"+Text+"%' AND Показ=true Order by [Номер территории]";
 Tab->CommandText=CT;
 Tab->Active=true;
@@ -643,7 +648,7 @@ void __fastcall TFilter::ComboBox4Select(TObject *Sender)
 {
 String Text=ComboBox4->Text;
 MP<TADODataSet>Tab(this);
-Tab->Connection=Zast->ADOAspect;
+Tab->Connection=Zast->ADOUsrAspect;
 String CT="Select [Номер территории], [Наименование территории] From Территория Where [Наименование территории] Like '%"+Text+"%' AND Показ=true Order by [Номер территории]";
 Tab->CommandText=CT;
 Tab->Active=true;
@@ -670,7 +675,7 @@ void __fastcall TFilter::ComboBox5Change(TObject *Sender)
 {
 String Text=ComboBox5->Text;
 MP<TADODataSet>Tab(this);
-Tab->Connection=Zast->ADOAspect;
+Tab->Connection=Zast->ADOUsrAspect;
 String CT="Select [Номер деятельности], [Наименование деятельности] From деятельность Where [Наименование деятельности] Like '%"+Text+"%' AND Показ=true Order by [Номер деятельности]";
 Tab->CommandText=CT;
 Tab->Active=true;
@@ -707,7 +712,7 @@ void __fastcall TFilter::ComboBox5DropDown(TObject *Sender)
 {
 String Text=ComboBox5->Text;
 MP<TADODataSet>Tab(this);
-Tab->Connection=Zast->ADOAspect;
+Tab->Connection=Zast->ADOUsrAspect;
 String CT="Select [Номер деятельности], [Наименование деятельности] From Деятельность Where [Наименование деятельности] Like '%"+Text+"%' AND Показ=true Order by [Номер деятельности]";
 Tab->CommandText=CT;
 Tab->Active=true;
@@ -735,7 +740,7 @@ if(Key==13)
 {
 String Text=ComboBox5->Text;
 MP<TADODataSet>Tab(this);
-Tab->Connection=Zast->ADOAspect;
+Tab->Connection=Zast->ADOUsrAspect;
 String CT="Select [Номер деятельности], [Наименование деятельности] From Деятельность Where [Наименование деятельности] Like '%"+Text+"%' AND Показ=true Order by [Номер деятельности]";
 Tab->CommandText=CT;
 Tab->Active=true;
@@ -759,7 +764,7 @@ void __fastcall TFilter::ComboBox5Select(TObject *Sender)
 {
 String Text=ComboBox5->Text;
 MP<TADODataSet>Tab(this);
-Tab->Connection=Zast->ADOAspect;
+Tab->Connection=Zast->ADOUsrAspect;
 String CT="Select [Номер деятельности], [Наименование деятельности] From Деятельность Where [Наименование деятельности] Like '%"+Text+"%' AND Показ=true Order by [Номер деятельности]";
 Tab->CommandText=CT;
 Tab->Active=true;
@@ -786,7 +791,7 @@ void __fastcall TFilter::ComboBox6Change(TObject *Sender)
 {
 String Text=ComboBox6->Text;
 MP<TADODataSet>Tab(this);
-Tab->Connection=Zast->ADOAspect;
+Tab->Connection=Zast->ADOUsrAspect;
 String CT="Select [Номер аспекта], [Наименование аспекта] From Аспект Where [Наименование аспекта] Like '%"+Text+"%' AND Показ=true Order by [Номер аспекта]";
 Tab->CommandText=CT;
 Tab->Active=true;
@@ -823,7 +828,7 @@ void __fastcall TFilter::ComboBox6DropDown(TObject *Sender)
 {
 String Text=ComboBox6->Text;
 MP<TADODataSet>Tab(this);
-Tab->Connection=Zast->ADOAspect;
+Tab->Connection=Zast->ADOUsrAspect;
 String CT="Select [Номер аспекта], [Наименование аспекта] From Аспект Where [Наименование аспекта] Like '%"+Text+"%' AND Показ=true Order by [Номер аспекта]";
 Tab->CommandText=CT;
 Tab->Active=true;
@@ -851,7 +856,7 @@ if(Key==13)
 {
 String Text=ComboBox6->Text;
 MP<TADODataSet>Tab(this);
-Tab->Connection=Zast->ADOAspect;
+Tab->Connection=Zast->ADOUsrAspect;
 String CT="Select [Номер аспекта], [Наименование аспекта] From Аспект Where [Наименование аспекта] Like '%"+Text+"%' AND Показ=true Order by [Номер аспекта]";
 Tab->CommandText=CT;
 Tab->Active=true;
@@ -873,7 +878,7 @@ void __fastcall TFilter::ComboBox6Select(TObject *Sender)
 {
 String Text=ComboBox6->Text;
 MP<TADODataSet>Tab(this);
-Tab->Connection=Zast->ADOAspect;
+Tab->Connection=Zast->ADOUsrAspect;
 String CT="Select [Номер аспекта], [Наименование аспекта] From Аспект Where [Наименование аспекта] Like '%"+Text+"%' AND Показ=true Order by [Номер аспекта]";
 Tab->CommandText=CT;
 Tab->Active=true;
@@ -900,7 +905,7 @@ void __fastcall TFilter::ComboBox7Change(TObject *Sender)
 {
 String Text=ComboBox7->Text;
 MP<TADODataSet>Tab(this);
-Tab->Connection=Zast->ADOAspect;
+Tab->Connection=Zast->ADOUsrAspect;
 String CT="Select [Номер воздействия], [Наименование воздействия] From Воздействия Where [Наименование воздействия] Like '%"+Text+"%' AND Показ=true Order by [Номер воздействия]";
 Tab->CommandText=CT;
 Tab->Active=true;
@@ -937,7 +942,7 @@ void __fastcall TFilter::ComboBox7DropDown(TObject *Sender)
 {
 String Text=ComboBox7->Text;
 MP<TADODataSet>Tab(this);
-Tab->Connection=Zast->ADOAspect;
+Tab->Connection=Zast->ADOUsrAspect;
 String CT="Select [Номер воздействия], [Наименование воздействия] From Воздействия Where [Наименование воздействия] Like '%"+Text+"%' AND Показ=true Order by [Номер воздействия]";
 Tab->CommandText=CT;
 Tab->Active=true;
@@ -965,7 +970,7 @@ if(Key==13)
 {
 String Text=ComboBox7->Text;
 MP<TADODataSet>Tab(this);
-Tab->Connection=Zast->ADOAspect;
+Tab->Connection=Zast->ADOUsrAspect;
 String CT="Select [Номер воздействия], [Наименование воздействия] From Воздействия Where [Наименование воздействия] Like '%"+Text+"%' AND Показ=true Order by [Номер воздействия]";
 Tab->CommandText=CT;
 Tab->Active=true;
@@ -987,7 +992,7 @@ void __fastcall TFilter::ComboBox7Select(TObject *Sender)
 {
 String Text=ComboBox7->Text;
 MP<TADODataSet>Tab(this);
-Tab->Connection=Zast->ADOAspect;
+Tab->Connection=Zast->ADOUsrAspect;
 String CT="Select [Номер воздействия], [Наименование воздействия] From Воздействия Where [Наименование воздействия] Like '%"+Text+"%' AND Показ=true Order by [Номер воздействия]";
 Tab->CommandText=CT;
 Tab->Active=true;

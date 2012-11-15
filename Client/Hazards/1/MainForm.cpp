@@ -155,7 +155,7 @@ if(Proba->RecordCount==0)
 LFiltr->Caption=Ini->ReadString(IntToStr(NumLogin),"NameFilter","Отключен");
 Filter->NumFiltr=Ini->ReadInteger(IntToStr(NumLogin),"NumFilter", 0);
 
-Form1->LFiltr->Caption=Ini->ReadString(IntToStr(NumLogin),"NameFilter","Отключен");
+//Form1->LFiltr->Caption=Ini->ReadString(IntToStr(NumLogin),"NameFilter","Отключен");
 
 
 InputDocs->TextBr=Ini->ReadString(IntToStr(NumLogin),"TextFilter","");

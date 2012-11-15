@@ -167,6 +167,7 @@ Zast->Close();
 void __fastcall TDocuments::FormShow(TObject *Sender)
 {
 Prog->Hide();
+Prog->Close();
 ADODataSet1->Active=false;
 ADODataSet1->CommandText="select * from Значимость Order By [Мин граница]";
 ADODataSet1->Active=true;

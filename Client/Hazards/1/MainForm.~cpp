@@ -133,6 +133,28 @@ if(Filter->CText=="")
 LFiltr->Caption=Ini->ReadString(IntToStr(NumLogin),"NameFilter","Отключен");
 Filter->NumFiltr=Ini->ReadInteger(IntToStr(NumLogin),"NumFilter", 0);
 
+MP<TADODataSet>Proba(this);
+Proba->Connection=Zast->ADOUsrAspect;
+Proba->CommandText=Filter->CText;
+Proba->Active=true;
+if(Proba->RecordCount==0)
+{
+ Filter->SetDefFiltr();
+ LFiltr->Caption="Отключен";
+
+ Ini->WriteInteger(IntToStr(NumLogin),"CurrentRecord", 1);
+ Ini->WriteString(IntToStr(NumLogin),"Filter", Filter->CText);
+ Ini->WriteString(IntToStr(NumLogin),"NameFilter", LFiltr->Caption);
+ Ini->WriteInteger(IntToStr(NumLogin),"NumFilter", 0);
+ Ini->WriteString(IntToStr(NumLogin),"TextFilter", "");
+
+
+// Filter->SetFilterGroup(0);
+ Filter->NumFiltr=0;
+}
+LFiltr->Caption=Ini->ReadString(IntToStr(NumLogin),"NameFilter","Отключен");
+Filter->NumFiltr=Ini->ReadInteger(IntToStr(NumLogin),"NumFilter", 0);
+
 Form1->LFiltr->Caption=Ini->ReadString(IntToStr(NumLogin),"NameFilter","Отключен");
 
 

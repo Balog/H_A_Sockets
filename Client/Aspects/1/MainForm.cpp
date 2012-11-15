@@ -122,6 +122,7 @@ MP<TIniFile>Ini(Path+"NetAspects.ini");
 
 int Num=Ini->ReadInteger(IntToStr(NumLogin),"CurrentRecord",1);
 Filter->CText=Ini->ReadString(IntToStr(NumLogin),"Filter","");
+Filter->NumFiltr=Ini->ReadInteger(IntToStr(NumLogin),"NumFilter",1);
 if(Filter->CText=="")
 {
  Filter->SetDefFiltr();
@@ -1729,7 +1730,27 @@ Report1->NumLogin=NumLogin;
 int NWhere=Filter->CText.LowerCase().Pos("where")+5;
 String SR=Filter->CText.SubString(NWhere, Filter->CText.Length());
 int NOrder=SR.LowerCase().Pos("order")-1;
+if(Filter->NumFiltr==1)
+{
+String S=SR.SubString(0, NOrder);
+int PodrPos=S.Pos("Подразделение")+14;
+String SNum=S.SubString(PodrPos, S.Length());
+int NP=StrToInt(SNum.Trim());
+
+
+MP<TADODataSet>Podr(this);
+Podr->Connection=Zast->ADOUsrAspect;
+Podr->CommandText="Select * From Подразделения Where [Номер подразделения]="+IntToStr(NP);
+Podr->Active=true;
+
+int SPodr=Podr->FieldByName("ServerNum")->AsInteger;
+
+Report1->Flt=" Подразделение="+IntToStr(SPodr);
+}
+else
+{
 Report1->Flt=SR.SubString(0, NOrder);
+}
 Report1->FltName=LFiltr->Caption;
 
 if(this->Role<4)
@@ -1955,7 +1976,27 @@ Report1->NumLogin=NumLogin;
 int NWhere=Filter->CText.LowerCase().Pos("where")+5;
 String SR=Filter->CText.SubString(NWhere, Filter->CText.Length());
 int NOrder=SR.LowerCase().Pos("order")-1;
+if(Filter->NumFiltr==1)
+{
+String S=SR.SubString(0, NOrder);
+int PodrPos=S.Pos("Подразделение")+14;
+String SNum=S.SubString(PodrPos, S.Length());
+int NP=StrToInt(SNum.Trim());
+
+
+MP<TADODataSet>Podr(this);
+Podr->Connection=Zast->ADOUsrAspect;
+Podr->CommandText="Select * From Подразделения Where [Номер подразделения]="+IntToStr(NP);
+Podr->Active=true;
+
+int SPodr=Podr->FieldByName("ServerNum")->AsInteger;
+
+Report1->Flt=" Подразделение="+IntToStr(SPodr);
+}
+else
+{
 Report1->Flt=SR.SubString(0, NOrder);
+}
 Report1->FltName=LFiltr->Caption;
 
 if(this->Role<4)
@@ -2376,7 +2417,7 @@ MP<TIniFile>Ini(Path+"NetAspects.ini");
 Ini->WriteInteger(IntToStr(NumLogin),"CurrentRecord",Aspects->RecNo);
 Ini->WriteString(IntToStr(NumLogin),"Filter",Filter->CText);
 Ini->WriteString(IntToStr(NumLogin),"NameFilter",LFiltr->Caption);
-Ini->WriteInteger(IntToStr(NumLogin),"NumFilter", Filter->RadioGroup1->ItemIndex);
+Ini->WriteInteger(IntToStr(NumLogin),"NumFilter", Filter->NumFiltr);
 switch (Filter->RadioGroup1->ItemIndex)
 {
  case 0:

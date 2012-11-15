@@ -87,6 +87,7 @@ void InpVozd();
 void SetFilterGroup(int NumFilter);
 
 int Index;
+int ServerPodr;
 AnsiString CText;
 AnsiString Filtr1, SeFiltr1, Filtr2;
 void SetDefFiltr();

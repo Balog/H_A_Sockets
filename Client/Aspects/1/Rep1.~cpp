@@ -8,6 +8,7 @@
 #include "Reports.h"
 #include "Zastavka.h"
 #include "MasterPointer.h"
+#include "InputFiltr.h"
 //---------------------------------------------------------------------------
 #pragma package(smart_init)
 #pragma resource "*.dfm"
@@ -21,10 +22,17 @@ Registration=false;
 //---------------------------------------------------------------------------
 void __fastcall TReport1::FormShow(TObject *Sender)
 {
+if(Filter->NumFiltr==1)
+{
+ Flt=" Подразделение="+IntToStr(Filter->ServerPodr);
+}
+
 Podr->Active=false;
 Podr->Connection=Report1->RepBase;
 Podr->CommandText="Select * from TempПодразделения Order by [Название подразделения]";
 Podr->Active=true;
+
+
 
 MP<TADODataSet>Temp(this);
 Temp->Connection=Report1->RepBase;
@@ -39,22 +47,54 @@ if(Role!=4)
 {
 if(Flt!="")
 {
+if(NumRep==1)
+{
 Temp->CommandText="SELECT TempAspects.*, Logins.ServerNum, Подразделения.ServerNum FROM (Logins INNER JOIN (Подразделения INNER JOIN ObslOtdel ON Подразделения.[Номер подразделения] = ObslOtdel.NumObslOtdel) ON Logins.Num = ObslOtdel.Login) INNER JOIN TempAspects ON Подразделения.ServerNum = TempAspects.Подразделение Where Подразделение="+IntToStr(Report1->Podr->FieldByName("ServerNum")->AsInteger)+" AND "+Flt+" Order By [Номер аспекта]";
 }
 else
 {
+Temp->CommandText="SELECT TempAspects.*, Logins.ServerNum, Подразделения.ServerNum FROM (Logins INNER JOIN (Подразделения INNER JOIN ObslOtdel ON Подразделения.[Номер подразделения] = ObslOtdel.NumObslOtdel) ON Logins.Num = ObslOtdel.Login) INNER JOIN TempAspects ON Подразделения.ServerNum = TempAspects.Подразделение Where Подразделение="+IntToStr(Report1->Podr->FieldByName("ServerNum")->AsInteger)+" AND "+Flt+" AND TempAspects.Значимость=true Order By [Номер аспекта]";
+
+}
+}
+else
+{
+if(NumRep==1)
+{
 Temp->CommandText="SELECT TempAspects.*, Logins.ServerNum, Подразделения.ServerNum FROM (Logins INNER JOIN (Подразделения INNER JOIN ObslOtdel ON Подразделения.[Номер подразделения] = ObslOtdel.NumObslOtdel) ON Logins.Num = ObslOtdel.Login) INNER JOIN TempAspects ON Подразделения.ServerNum = TempAspects.Подразделение Where Подразделение="+IntToStr(Report1->Podr->FieldByName("ServerNum")->AsInteger)+" Order By [Номер аспекта]";
+}
+else
+{
+Temp->CommandText="SELECT TempAspects.*, Logins.ServerNum, Подразделения.ServerNum FROM (Logins INNER JOIN (Подразделения INNER JOIN ObslOtdel ON Подразделения.[Номер подразделения] = ObslOtdel.NumObslOtdel) ON Logins.Num = ObslOtdel.Login) INNER JOIN TempAspects ON Подразделения.ServerNum = TempAspects.Подразделение Where Подразделение="+IntToStr(Report1->Podr->FieldByName("ServerNum")->AsInteger)+" AND TempAspects.Значимость=true Order By [Номер аспекта]";
+
+}
 }
 }
 else
 {
 if(Flt!="")
 {
+if(NumRep==1)
+{
 Temp->CommandText="SELECT TempAspects.*, Logins.ServerNum, Подразделения.[Номер подразделения] FROM (Logins INNER JOIN (Подразделения INNER JOIN ObslOtdel ON Подразделения.[Номер подразделения] = ObslOtdel.NumObslOtdel) ON Logins.Num = ObslOtdel.Login) INNER JOIN TempAspects ON Подразделения.[Номер подразделения] = TempAspects.Подразделение Where Подразделение="+IntToStr(Report1->Podr->FieldByName("Номер подразделения")->AsInteger)+" AND "+Flt+" Order By [Номер аспекта]";
 }
 else
 {
+Temp->CommandText="SELECT TempAspects.*, Logins.ServerNum, Подразделения.[Номер подразделения] FROM (Logins INNER JOIN (Подразделения INNER JOIN ObslOtdel ON Подразделения.[Номер подразделения] = ObslOtdel.NumObslOtdel) ON Logins.Num = ObslOtdel.Login) INNER JOIN TempAspects ON Подразделения.[Номер подразделения] = TempAspects.Подразделение Where Подразделение="+IntToStr(Report1->Podr->FieldByName("Номер подразделения")->AsInteger)+" AND "+Flt+" AND TempAspects.Значимость=true Order By [Номер аспекта]";
+
+}
+}
+else
+{
+if(NumRep==1)
+{
 Temp->CommandText="SELECT TempAspects.*, Logins.ServerNum, Подразделения.[Номер подразделения] FROM (Logins INNER JOIN (Подразделения INNER JOIN ObslOtdel ON Подразделения.[Номер подразделения] = ObslOtdel.NumObslOtdel) ON Logins.Num = ObslOtdel.Login) INNER JOIN TempAspects ON Подразделения.[Номер подразделения] = TempAspects.Подразделение Where Подразделение="+IntToStr(Report1->Podr->FieldByName("Номер подразделения")->AsInteger)+" Order By [Номер аспекта]";
+}
+else
+{
+Temp->CommandText="SELECT TempAspects.*, Logins.ServerNum, Подразделения.[Номер подразделения] FROM (Logins INNER JOIN (Подразделения INNER JOIN ObslOtdel ON Подразделения.[Номер подразделения] = ObslOtdel.NumObslOtdel) ON Logins.Num = ObslOtdel.Login) INNER JOIN TempAspects ON Подразделения.[Номер подразделения] = TempAspects.Подразделение Where Подразделение="+IntToStr(Report1->Podr->FieldByName("Номер подразделения")->AsInteger)+" AND TempAspects.Значимость=true Order By [Номер аспекта]";
+
+}
 }
 }
 

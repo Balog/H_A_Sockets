@@ -434,12 +434,19 @@ NumFiltr=7;
  }
 
 }
+
+
+int a=0;
+
+Form1->SavePosition();
 }
 else
 {
  ShowMessage("Ќет опасностей, удовлетвор€ющим этому условию");
 
 }
+
+
 }
 //---------------------------------------------------------------------------
 void __fastcall TFilter::FormClose(TObject *Sender, TCloseAction &Action)
@@ -538,7 +545,7 @@ void __fastcall TFilter::FormKeyUp(TObject *Sender, WORD &Key,
 {
 if(Key==112)
 {
-Application->HelpFile=ExtractFilePath(Application->ExeName)+"NetAspects.HLP";
+Application->HelpFile=ExtractFilePath(Application->ExeName)+"Hazards.HLP";
 Application->HelpJump("IDH_‘»Ћ№“–ј÷»я_ј—ѕ≈ “ќ¬");
 }
 }

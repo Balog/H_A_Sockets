@@ -122,6 +122,7 @@ MP<TIniFile>Ini(Path+"NetAspects.ini");
 
 int Num=Ini->ReadInteger(IntToStr(NumLogin),"CurrentRecord",1);
 Filter->CText=Ini->ReadString(IntToStr(NumLogin),"Filter","");
+Filter->NumFiltr=Ini->ReadInteger(IntToStr(NumLogin),"NumFilter",1);
 if(Filter->CText=="")
 {
  Filter->SetDefFiltr();
@@ -145,8 +146,8 @@ if(Proba->RecordCount==0)
  Ini->WriteString(IntToStr(NumLogin),"TextFilter", "");
 
 
- Filter->SetFilterGroup(0);
- 
+// Filter->SetFilterGroup(0);
+ Filter->NumFiltr=0;
 }
 Form1->LFiltr->Caption=Ini->ReadString(IntToStr(NumLogin),"NameFilter","Отключен");
 

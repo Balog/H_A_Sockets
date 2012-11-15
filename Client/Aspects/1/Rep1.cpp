@@ -8,6 +8,7 @@
 #include "Reports.h"
 #include "Zastavka.h"
 #include "MasterPointer.h"
+#include "InputFiltr.h"
 //---------------------------------------------------------------------------
 #pragma package(smart_init)
 #pragma resource "*.dfm"
@@ -21,10 +22,14 @@ Registration=false;
 //---------------------------------------------------------------------------
 void __fastcall TReport1::FormShow(TObject *Sender)
 {
+
+
 Podr->Active=false;
 Podr->Connection=Report1->RepBase;
 Podr->CommandText="Select * from TempПодразделения Order by [Название подразделения]";
 Podr->Active=true;
+
+
 
 MP<TADODataSet>Temp(this);
 Temp->Connection=Report1->RepBase;

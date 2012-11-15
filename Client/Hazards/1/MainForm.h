@@ -250,7 +250,7 @@ private:	// User declarations
 bool Registered;
 TLocateOptions SO;
 void SetAspects(String Login, int NumRec);
-void SavePosition();
+
 
 bool LoadSit();
 
@@ -299,6 +299,7 @@ void  ReadSprav();
 
 bool IsNew();
 void CountInvalid();
+void SavePosition();
 
         BEGIN_MESSAGE_MAP
           VCL_MESSAGE_HANDLER(WM_SYSCOMMAND, TMessage, WMSysCommand)

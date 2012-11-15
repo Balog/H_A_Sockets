@@ -675,7 +675,10 @@ void __fastcall TZast::MergePodrazdExecute(TObject *Sender)
 {
 try
 {
-Filter->SetDefFiltr();
+String Path=ExtractFilePath(Application->ExeName);
+MP<TIniFile>Ini(Path+"Hazards.ini");
+
+Filter->CText=Ini->ReadString(IntToStr(Form1->NumLogin),"Filter","");
 MDBConnector* DB;
  if(Role==2)
  {
@@ -3083,178 +3086,38 @@ ST=ST+" FROM TempAspects; ";
 Comm->CommandText=ST;
 Comm->Execute();
 
-
-/*
-MP<TADOCommand>Comm(this);
-Comm->Connection=Zast->ADOUsrAspect;
-Comm->CommandText="UPDATE Logins INNER JOIN ((Подразделения INNER JOIN Аспекты ON Подразделения.[Номер подразделения] = Аспекты.Подразделение) INNER JOIN ObslOtdel ON Подразделения.[Номер подразделения] = ObslOtdel.NumObslOtdel) ON Logins.Num = ObslOtdel.Login SET Аспекты.Del = True WHERE (((Logins.ServerNum)="+IntToStr(Form1->NumLogin)+"));";
-Comm->Execute();
-
-MP<TADODataSet>Terr(Form1);
-Terr->Connection=Zast->ADOUsrAspect;
-Terr->CommandText="select * From Территория";
-Terr->Active=true;
-
-MP<TADODataSet>Deyat(Form1);
-Deyat->Connection=Zast->ADOUsrAspect;
-Deyat->CommandText="select * From Деятельность";
-Deyat->Active=true;
-
-MP<TADODataSet>Aspect(Form1);
-Aspect->Connection=Zast->ADOUsrAspect;
-Aspect->CommandText="select * From Аспект";
-Aspect->Active=true;
-
-MP<TADODataSet>Vozd(Form1);
-Vozd->Connection=Zast->ADOUsrAspect;
-Vozd->CommandText="select * From Воздействия";
-Vozd->Active=true;
-
-for(TempAsp->First();!TempAsp->Eof;TempAsp->Next())
-{
- int Num=TempAsp->FieldByName("Номер аспекта")->Value;
- if(Asp->Locate("ServerNum", Num, SO))
- {
-  Asp->Edit();
- }
- else
- {
-  Asp->Insert();
- }
-   Asp->FieldByName("Подразделение")->Value=TempAsp->FieldByName("Подразделение")->Value;
-  Asp->FieldByName("Ситуация")->Value=TempAsp->FieldByName("Ситуация")->Value;
-
-  if(Terr->Locate("Номер территории", TempAsp->FieldByName("Вид территории")->AsInteger, SO))
-  {
-  Asp->FieldByName("Вид территории")->Value=TempAsp->FieldByName("Вид территории")->Value;
-  }
-  else
-  {
-  Asp->FieldByName("Вид территории")->Value=0;
-  Del=true;
-  }
-
-  if(Deyat->Locate("Номер деятельности", TempAsp->FieldByName("Деятельность")->AsInteger, SO))
-  {
-  Asp->FieldByName("Деятельность")->Value=TempAsp->FieldByName("Деятельность")->Value;
-  }
-  else
-  {
-  Asp->FieldByName("Деятельность")->Value=0;
-  Del=true;
-  }
-
-  Asp->FieldByName("Специальность")->Value=TempAsp->FieldByName("Специальность")->Value;
-
-  if(Aspect->Locate("Номер аспекта", TempAsp->FieldByName("Аспект")->AsInteger, SO))
-  {
-  Asp->FieldByName("Аспект")->Value=TempAsp->FieldByName("Аспект")->Value;
-  }
-  else
-  {
-  Asp->FieldByName("Аспект")->Value=0;
-  Del=true;
-  }
-
-  if(Vozd->Locate("Номер воздействия", TempAsp->FieldByName("Воздействие")->AsInteger, SO))
-  {
-  Asp->FieldByName("Воздействие")->Value=TempAsp->FieldByName("Воздействие")->Value;
-  }
-  else
-  {
-  Asp->FieldByName("Воздействие")->Value=0;
-  Del=true;
-  }
-
-  Asp->FieldByName("G")->Value=TempAsp->FieldByName("G")->Value;
-  Asp->FieldByName("O")->Value=TempAsp->FieldByName("O")->Value;
-  Asp->FieldByName("R")->Value=TempAsp->FieldByName("R")->Value;
-  Asp->FieldByName("S")->Value=TempAsp->FieldByName("S")->Value;
-  Asp->FieldByName("T")->Value=TempAsp->FieldByName("T")->Value;
-  Asp->FieldByName("L")->Value=TempAsp->FieldByName("L")->Value;
-  Asp->FieldByName("N")->Value=TempAsp->FieldByName("N")->Value;
-  Asp->FieldByName("Z")->Value=TempAsp->FieldByName("Z")->Value;
-  Asp->FieldByName("Значимость")->Value=TempAsp->FieldByName("Значимость")->Value;
-  Asp->FieldByName("Наименование значимости")->Value=TempAsp->FieldByName("Наименование значимости")->Value;
-  Asp->FieldByName("Проявление воздействия")->Value=TempAsp->FieldByName("Проявление воздействия")->Value;
-  Asp->FieldByName("Тяжесть последствий")->Value=TempAsp->FieldByName("Тяжесть последствий")->Value;
-  Asp->FieldByName("Приоритетность")->Value=TempAsp->FieldByName("Приоритетность")->Value;
-  Asp->FieldByName("Приор")->Value=TempAsp->FieldByName("Приор")->Value;
-  Asp->FieldByName("Выполняющиеся мероприятия")->Value=TempAsp->FieldByName("Выполняющиеся мероприятия")->Value;
-  Asp->FieldByName("Предлагаемые мероприятия")->Value=TempAsp->FieldByName("Предлагаемые мероприятия")->Value;
-  Asp->FieldByName("Мониторинг и контроль")->Value=TempAsp->FieldByName("Мониторинг и контроль")->Value;
-  Asp->FieldByName("Предлагаемый мониторинг и контроль")->Value=TempAsp->FieldByName("Предлагаемый мониторинг и контроль")->Value;
-  Asp->FieldByName("Исполнитель")->Value=TempAsp->FieldByName("Исполнитель")->Value;
-  Asp->FieldByName("Дата создания")->Value=TempAsp->FieldByName("Дата создания")->Value;
-  Asp->FieldByName("Начало действия")->Value=TempAsp->FieldByName("Начало действия")->Value;
-  Asp->FieldByName("Конец действия")->Value=TempAsp->FieldByName("Конец действия")->Value;
-  Asp->FieldByName("ServerNum")->Value=TempAsp->FieldByName("Номер аспекта")->Value;
-  Asp->FieldByName("Del")->Value=false;
-  Asp->Post();
-}
-
-Comm->CommandText="DELETE Аспекты.*, Аспекты.Del, ObslOtdel.Login FROM (Подразделения INNER JOIN Аспекты ON Подразделения.[Номер подразделения] = Аспекты.Подразделение) INNER JOIN ObslOtdel ON Подразделения.[Номер подразделения] = ObslOtdel.NumObslOtdel WHERE (((Аспекты.Del)=True) AND ((ObslOtdel.Login)="+IntToStr(NumLogin)+"));";
-Comm->Execute();
-
-Comm->CommandText="Delete * From TempПодразделения";
-Comm->Execute();
-
-Comm->CommandText="Delete * From TempAspects";
-Comm->Execute();
-
-*/
 String Path=ExtractFilePath(Application->ExeName);
 MP<TIniFile>Ini(Path+"Hazards.ini");
 
-int Num=Ini->ReadInteger(IntToStr(NumLogin),"CurrentRecord",1);
-Filter->CText=Ini->ReadString(IntToStr(NumLogin),"Filter","");
-if(Filter->CText=="")
-{
- Filter->SetDefFiltr();
-}
 
 Form1->LFiltr->Caption=Ini->ReadString(IntToStr(NumLogin),"NameFilter","Отключен");
-Filter->RadioGroup1->ItemIndex=Ini->ReadInteger(IntToStr(NumLogin),"NumFilter", 0);
-switch (Filter->RadioGroup1->ItemIndex)
-{
- case 1:
- {
-Filter->ComboBox1->Text=Ini->ReadString(IntToStr(NumLogin),"TextFilter","");
- break;
- }
- case 2:
- {
-Filter->ComboBox4->Text=Ini->ReadString(IntToStr(NumLogin),"TextFilter","");
- break;
- }
- case 3:
- {
-Filter->ComboBox5->Text=Ini->ReadString(IntToStr(NumLogin),"TextFilter","");
- break;
- }
- case 4:
- {
-Filter->ComboBox6->Text=Ini->ReadString(IntToStr(NumLogin),"TextFilter","");
- break;
- }
- case 5:
- {
-Filter->ComboBox7->Text=Ini->ReadString(IntToStr(NumLogin),"TextFilter","");
- break;
- }
- case 6:
- {
-Filter->ComboBox2->Text=Ini->ReadString(IntToStr(NumLogin),"TextFilter","");
- break;
- }
- case 7:
- {
-Filter->ComboBox3->Text=Ini->ReadString(IntToStr(NumLogin),"TextFilter","");
- break;
- }
+Filter->NumFiltr=Ini->ReadInteger(IntToStr(NumLogin),"NumFilter", 0);
 
+MP<TADODataSet>Proba(this);
+Proba->Connection=Zast->ADOUsrAspect;
+Proba->CommandText=Filter->CText;
+Proba->Active=true;
+if(Proba->RecordCount==0)
+{
+ Filter->SetDefFiltr();
+ Form1->LFiltr->Caption="Отключен";
+
+ Ini->WriteInteger(IntToStr(NumLogin),"CurrentRecord", 1);
+ Ini->WriteString(IntToStr(NumLogin),"Filter", Filter->CText);
+ Ini->WriteString(IntToStr(NumLogin),"NameFilter", Form1->LFiltr->Caption);
+ Ini->WriteInteger(IntToStr(NumLogin),"NumFilter", 0);
+ Ini->WriteString(IntToStr(NumLogin),"TextFilter", "");
+
+
+// Filter->SetFilterGroup(0);
+ Filter->NumFiltr=0;
+
+ Form1->LFiltr->Caption=Ini->ReadString(IntToStr(NumLogin),"NameFilter","Отключен");
+
+
+//InputDocs->TextBr=Ini->ReadString(IntToStr(NumLogin),"TextFilter","");
 }
-Form1->Initialize(Num);
+Form1->Initialize(StrToInt(Form1->NumRecord->Text));
 
 if(Form1->Quit)
 {
