@@ -3320,6 +3320,12 @@ void __fastcall TZast::MergeAspectsUser1Execute(TObject *Sender)
 {
 try
 {
+Prog->Label1->Caption="Объединение опасностей";
+Prog->PB->Min=1;
+Prog->PB->Max=3;
+Prog->PB->Position=3;
+
+
 MergeAspects(Form1->NumLogin, false);
 
 Zast->MClient->BlockServer("ReadTempAsp");
@@ -3998,6 +4004,10 @@ if(!Form1->Quit & Form1->Visible)
 {
 Prog->Hide();
 Prog->Close();
+
+
+Prog->Close();
+
 ShowMessage("Завершено");
 }
 else

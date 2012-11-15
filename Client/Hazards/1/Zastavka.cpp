@@ -3343,6 +3343,11 @@ void __fastcall TZast::MergeAspectsUser1Execute(TObject *Sender)
 {
 try
 {
+Prog->Label1->Caption="Объединение аспектов";
+Prog->PB->Min=1;
+Prog->PB->Max=3;
+Prog->PB->Position=3;
+
 MergeAspects(Form1->NumLogin, false);
 /*
 ReadTempAsp->Execute();

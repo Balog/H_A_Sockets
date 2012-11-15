@@ -1787,6 +1787,13 @@ Aspects->UpdateBatch();
 
 void __fastcall TForm1::N9Click(TObject *Sender)
 {
+
+Prog->Label1->Caption="Чтение опасностей";
+Prog->PB->Min=1;
+Prog->PB->Max=3;
+Prog->PB->Position=2;
+Prog->Show();
+
 Zast->BlockMK(true);
 try
 {
@@ -2246,6 +2253,13 @@ Zast->ReadWriteDoc->Execute();
 void __fastcall TForm1::N3Click(TObject *Sender)
 {
 DataSetRefresh2->Execute();
+
+Prog->Label1->Caption="Запись опасностей";
+Prog->PB->Min=1;
+Prog->PB->Max=3;
+Prog->PB->Position=1;
+Prog->Show();
+
 Zast->BlockMK(true);
 try
 {

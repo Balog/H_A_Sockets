@@ -677,7 +677,12 @@ void __fastcall TZast::MergePodrazdExecute(TObject *Sender)
 {
 try
 {
-Filter->SetDefFiltr();
+String Path=ExtractFilePath(Application->ExeName);
+MP<TIniFile>Ini(Path+"NetAspects.ini");
+
+Filter->CText=Ini->ReadString(IntToStr(Form1->NumLogin),"Filter","");
+
+//Filter->SetDefFiltr();
 MDBConnector* DB;
  if(Role==2)
  {
@@ -3315,6 +3320,12 @@ void __fastcall TZast::MergeAspectsUser1Execute(TObject *Sender)
 {
 try
 {
+Prog->Label1->Caption="Объединение аспектов";
+Prog->PB->Min=1;
+Prog->PB->Max=3;
+Prog->PB->Position=3;
+
+
 MergeAspects(Form1->NumLogin, false);
 
 Zast->MClient->BlockServer("ReadTempAsp");
@@ -3993,6 +4004,10 @@ if(!Form1->Quit & Form1->Visible)
 {
 Prog->Hide();
 Prog->Close();
+
+
+Prog->Close();
+
 ShowMessage("Завершено");
 }
 else

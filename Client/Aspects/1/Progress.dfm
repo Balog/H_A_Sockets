@@ -1,6 +1,6 @@
 object Prog: TProg
-  Left = 192
-  Top = 107
+  Left = 200
+  Top = 169
   BorderStyle = bsNone
   Caption = 'Prog'
   ClientHeight = 35
