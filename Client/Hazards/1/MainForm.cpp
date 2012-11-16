@@ -2098,7 +2098,7 @@ Aspects->UpdateBatch();
 
 void __fastcall TForm1::N9Click(TObject *Sender)
 {
-Prog->Label1->Caption="Чтение аспектов";
+Prog->Label1->Caption="Чтение опасностей";
 Prog->PB->Min=1;
 Prog->PB->Max=3;
 Prog->PB->Position=2;
@@ -2562,7 +2562,7 @@ Zast->ReadWriteDoc->Execute();
 //---------------------------------------------------------------------------
 void __fastcall TForm1::N3Click(TObject *Sender)
 {
-Prog->Label1->Caption="Запись аспектов";
+Prog->Label1->Caption="Запись опасностей";
 Prog->PB->Min=1;
 Prog->PB->Max=3;
 Prog->PB->Position=1;

@@ -2041,7 +2041,27 @@ Report1->NumLogin=NumLogin;
 int NWhere=Filter->CText.LowerCase().Pos("where")+5;
 String SR=Filter->CText.SubString(NWhere, Filter->CText.Length());
 int NOrder=SR.LowerCase().Pos("order")-1;
+if(Filter->NumFiltr==1)
+{
+String S=SR.SubString(0, NOrder);
+int PodrPos=S.Pos("Подразделение")+14;
+String SNum=S.SubString(PodrPos, S.Length());
+int NP=StrToInt(SNum.Trim());
+
+
+MP<TADODataSet>Podr(this);
+Podr->Connection=Zast->ADOUsrAspect;
+Podr->CommandText="Select * From Подразделения Where [Номер подразделения]="+IntToStr(NP);
+Podr->Active=true;
+
+int SPodr=Podr->FieldByName("ServerNum")->AsInteger;
+
+Report1->Flt=" Подразделение="+IntToStr(SPodr);
+}
+else
+{
 Report1->Flt=SR.SubString(0, NOrder);
+}
 Report1->FltName=LFiltr->Caption;
 
 if(this->Role<4)
@@ -2078,6 +2098,12 @@ Aspects->UpdateBatch();
 
 void __fastcall TForm1::N9Click(TObject *Sender)
 {
+Prog->Label1->Caption="Чтение аспектов";
+Prog->PB->Min=1;
+Prog->PB->Max=3;
+Prog->PB->Position=2;
+Prog->Show();
+
 Zast->BlockMK(true);
 try
 {
@@ -2267,7 +2293,27 @@ Report1->NumLogin=NumLogin;
 int NWhere=Filter->CText.LowerCase().Pos("where")+5;
 String SR=Filter->CText.SubString(NWhere, Filter->CText.Length());
 int NOrder=SR.LowerCase().Pos("order")-1;
+if(Filter->NumFiltr==1)
+{
+String S=SR.SubString(0, NOrder);
+int PodrPos=S.Pos("Подразделение")+14;
+String SNum=S.SubString(PodrPos, S.Length());
+int NP=StrToInt(SNum.Trim());
+
+
+MP<TADODataSet>Podr(this);
+Podr->Connection=Zast->ADOUsrAspect;
+Podr->CommandText="Select * From Подразделения Where [Номер подразделения]="+IntToStr(NP);
+Podr->Active=true;
+
+int SPodr=Podr->FieldByName("ServerNum")->AsInteger;
+
+Report1->Flt=" Подразделение="+IntToStr(SPodr);
+}
+else
+{
 Report1->Flt=SR.SubString(0, NOrder);
+}
 Report1->FltName=LFiltr->Caption;
 
 if(this->Role<4)
@@ -2516,6 +2562,12 @@ Zast->ReadWriteDoc->Execute();
 //---------------------------------------------------------------------------
 void __fastcall TForm1::N3Click(TObject *Sender)
 {
+Prog->Label1->Caption="Запись аспектов";
+Prog->PB->Min=1;
+Prog->PB->Max=3;
+Prog->PB->Position=1;
+Prog->Show();
+
 DataSetRefresh2->Execute();
 Zast->BlockMK(true);
 try

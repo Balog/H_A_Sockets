@@ -1,6 +1,6 @@
 object Report1: TReport1
-  Left = 200
-  Top = 125
+  Left = 313
+  Top = 146
   BorderStyle = bsDialog
   Caption = #1054#1090#1095#1077#1090
   ClientHeight = 143
