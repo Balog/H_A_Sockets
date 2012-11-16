@@ -643,6 +643,7 @@ if(Prog->SignComplete)
 {
 Prog->Hide();
 Prog->Close();
+Prog->SignComplete=false;
  ShowMessage("Завершено");
 }
 }
@@ -1713,6 +1714,7 @@ else
 {
 Prog->Hide();
 Prog->Close();
+Prog->SignComplete=false;
  ShowMessage("Завершено");
 }        
 }
@@ -2957,6 +2959,7 @@ MAsp->ChangeCPodr();
  Zast->BlockMK(false);
  Prog->Hide();
  Prog->Close();
+ Prog->SignComplete=false;
 ShowMessage("Чтение завершено");
 }
 catch(...)
@@ -4007,7 +4010,7 @@ Prog->Close();
 
 
 Prog->Close();
-
+Prog->SignComplete=false;
 ShowMessage("Завершено");
 }
 else

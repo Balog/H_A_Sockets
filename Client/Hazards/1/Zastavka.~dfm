@@ -10347,12 +10347,14 @@ object Zast: TZast
   end
   object BlockServer: TTimer
     Enabled = False
+    Interval = 5000
     OnTimer = BlockServerTimer
     Left = 432
     Top = 24
   end
   object UnBlockServer: TTimer
     Enabled = False
+    Interval = 5000
     OnTimer = UnBlockServerTimer
     Left = 432
     Top = 56

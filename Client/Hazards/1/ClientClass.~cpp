@@ -160,7 +160,7 @@ BlockServer("BeginWork");
  }
  case 12:
  {
- Zast->MClient->WriteDiaryEvent("NetAspects","Конец записи критериев (главспец)","");
+ Zast->MClient->WriteDiaryEvent("Hazards","Конец записи критериев (главспец)","");
 
  //Zast->ReadWriteDoc->Execute();
   Zast->MClient->UnBlockServer("ReadWriteDoc");
@@ -168,7 +168,7 @@ BlockServer("BeginWork");
  }
  case 13:
  {
- Zast->MClient->WriteDiaryEvent("NetAspects","Конец записи ситуаций (главспец)","");
+ Zast->MClient->WriteDiaryEvent("Hazards","Конец записи ситуаций (главспец)","");
 
   Zast->MClient->UnBlockServer("ReadWriteDoc");
  break;
@@ -225,6 +225,9 @@ BlockServer("BeginWork");
  //ответ на команду попытки блокировки сервера
  //1 - сервер заблокирован этим клиентом и можно работать
  //0 - сервер уже заблокирован другим клиентом и надо подождать
+
+ if(Zast->BlockServer->Enabled)
+ {
  if(Parameters[0]=="1")
  {
  //блокирование прошло успешно
@@ -238,6 +241,7 @@ BlockServer("BeginWork");
   //запускаем таймер повтора блокировки
  Zast->WaitBlockServer(true);
  }
+ }
  break;
  }
  case 20:
@@ -245,6 +249,9 @@ BlockServer("BeginWork");
  //ответ на команду попытки разблокировки сервера
  //1 - сервер разблокирован этим клиентом и можно работать
  //0 - сервер уже разблокировть не удалось и это ошибка логики работы
+ //Если таймер разблокировки уже выключен то это получается избыточный ответ сервера и не нужно ничего делать
+ if(Zast->UnBlockServer->Enabled)
+ {
  Zast->UnBlockServer->Enabled=false;
  if(Parameters[0]=="1")
  {
@@ -253,6 +260,7 @@ BlockServer("BeginWork");
  else
  {
   ShowMessage("Ошибка разблокирования сервера!");
+ }
  }
  break;
  }
@@ -822,7 +830,7 @@ void Client::PostWriteAspectsUsr()
 {
 //Zast->MClient->UnBlockServer("");
 //Zast->UnBlockServer->Enabled=true;
- Zast->MClient->WriteDiaryEvent("NetAspects","Конец записи опасностей (пользователь)","");
+ Zast->MClient->WriteDiaryEvent("Hazards","Конец записи опасностей (пользователь)","");
 
  Sleep(1000);
 

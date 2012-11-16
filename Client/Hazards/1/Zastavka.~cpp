@@ -641,7 +641,8 @@ Prog->Close();
 Zast->BlockMK(false);
 if(Prog->SignComplete)
 {
- ShowMessage("Завершено");
+Prog->SignComplete=false;
+ ShowMessage("Завершено1");
 }
 }
 }
@@ -1680,7 +1681,15 @@ Comm->Execute();
 Comm->CommandText="DELETE TempDeyat.* FROM TempDeyat;";
 Comm->Execute();
 
+if(Role==2)
+{
 Zast->MClient->WriteDiaryEvent("Hazards","Конец загрузки ппрофессиональных опасностей (главспец)","");
+}
+else
+{
+Zast->MClient->WriteDiaryEvent("Hazards","Конец загрузки ппрофессиональных опасностей (пользователь)","");
+
+}
 
 Zast->MClient->UnBlockServer("ReadWriteDoc");
 }
@@ -1709,7 +1718,7 @@ else
 {
 Prog->Hide();
 Prog->Close();
- ShowMessage("Завершено");
+ ShowMessage("Завершено2");
 }        
 }
 //---------------------------------------------------------------------------
@@ -2954,6 +2963,7 @@ MAsp->MoveAspects->Active=true;
 MAsp->ChangeCPodr();
  Zast->MClient->UnBlockServer("EndReadAspectsMSpec");
  Zast->BlockMK(false);
+ Prog->SignComplete=false;
 ShowMessage("Чтение завершено");
 }
 catch(...)
@@ -3343,7 +3353,7 @@ void __fastcall TZast::MergeAspectsUser1Execute(TObject *Sender)
 {
 try
 {
-Prog->Label1->Caption="Объединение аспектов";
+Prog->Label1->Caption="Объединение опасностей";
 Prog->PB->Min=1;
 Prog->PB->Max=3;
 Prog->PB->Position=3;
@@ -4032,7 +4042,8 @@ if(!Form1->Quit & Form1->Visible)
 {
 Prog->Hide();
 Prog->Close();
-ShowMessage("Завершено");
+Prog->SignComplete=false;
+ShowMessage("Завершено3");
 }
 else
 {

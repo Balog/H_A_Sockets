@@ -437,7 +437,7 @@ NumFiltr=7;
 
 
 int a=0;
-
+a++;
 Form1->SavePosition();
 }
 else
