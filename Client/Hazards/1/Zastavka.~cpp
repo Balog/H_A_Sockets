@@ -642,7 +642,7 @@ Zast->BlockMK(false);
 if(Prog->SignComplete)
 {
 Prog->SignComplete=false;
- ShowMessage("Завершено1");
+ ShowMessage("Завершено");
 }
 }
 }
@@ -1718,7 +1718,7 @@ else
 {
 Prog->Hide();
 Prog->Close();
- ShowMessage("Завершено2");
+ ShowMessage("Завершено");
 }        
 }
 //---------------------------------------------------------------------------
@@ -4043,7 +4043,7 @@ if(!Form1->Quit & Form1->Visible)
 Prog->Hide();
 Prog->Close();
 Prog->SignComplete=false;
-ShowMessage("Завершено3");
+ShowMessage("Завершено");
 }
 else
 {
