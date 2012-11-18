@@ -177,6 +177,7 @@ MoveAspects->Post();
 
 void __fastcall TMAsp::BitBtn5Click(TObject *Sender)
 {
+Prog->SignComplete=true;
 //Zast->SaveAspectsMSpec0->Execute();
 Zast->BlockMK(true);
 try

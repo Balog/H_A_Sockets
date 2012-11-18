@@ -267,7 +267,7 @@ Zast->MClient->WriteDiaryEvent("NetAspects ошибка","Ошибка объединения аспектов 
 //----------------------------------------------
 void __fastcall TMAsp::FormClose(TObject *Sender, TCloseAction &Action)
 {
-Zast->BlockMK(true);
+//Zast->BlockMK(true);
 Zast->MClient->BlockServer("CloseMAsp");
 
 
