@@ -683,7 +683,10 @@ String Path=ExtractFilePath(Application->ExeName);
 MP<TIniFile>Ini(Path+"NetAspects.ini");
 
 Filter->CText=Ini->ReadString(IntToStr(Form1->NumLogin),"Filter","");
-
+if(Filter->CText=="")
+{
+ Filter->SetDefFiltr();
+}
 //Filter->SetDefFiltr();
 MDBConnector* DB;
  if(Role==2)
@@ -2971,6 +2974,7 @@ MAsp->ChangeCPodr();
  Prog->Hide();
  Prog->Close();
  Prog->SignComplete=false;
+  Prog->Close();
 ShowMessage("Чтение завершено");
 }
 catch(...)
@@ -3399,11 +3403,6 @@ if(Role==4)
 
  //Изменить на новый список подразделений!!!
 
-/*
-String S="INSERT INTO TempAspects ( [Номер аспекта], Подразделение, Ситуация, [Вид территории], Деятельность, Специальность, Аспект, Воздействие, G, O, R, S, T, L, N, Z, Значимость, [Проявление воздействия], [Тяжесть последствий], Приоритетность, [Выполняющиеся мероприятия], [Предлагаемые мероприятия], [Мониторинг и контроль], [Предлагаемый мониторинг и контроль], Исполнитель, [Дата создания], [Начало действия], [Конец действия], ServerNum ) ";
-S=S+" SELECT TOP 2 Аспекты.[Номер аспекта], Аспекты.Подразделение, Аспекты.Ситуация, Аспекты.[Вид территории], Аспекты.Деятельность, Аспекты.Специальность, Аспекты.Аспект, Аспекты.Воздействие, Аспекты.G, Аспекты.O, Аспекты.R, Аспекты.S, Аспекты.T, Аспекты.L, Аспекты.N, Аспекты.Z, Аспекты.Значимость, Аспекты.[Проявление воздействия], Аспекты.[Тяжесть последствий], Аспекты.Приоритетность, Аспекты.[Выполняющиеся мероприятия], Аспекты.[Предлагаемые мероприятия], Аспекты.[Мониторинг и контроль], Аспекты.[Предлагаемый мониторинг и контроль], Аспекты.Исполнитель, Аспекты.[Дата создания], Аспекты.[Начало действия], Аспекты.[Конец действия], Аспекты.ServerNum ";
-S=S+" FROM Аспекты;";
-*/
 String S="INSERT INTO TempAspects ( [Номер аспекта], Подразделение, Ситуация, [Вид территории], Деятельность, Специальность, Аспект, Воздействие, G, O, R, S, T, L, N, Z, Значимость, [Проявление воздействия], [Тяжесть последствий], Приоритетность, [Выполняющиеся мероприятия], [Предлагаемые мероприятия], [Мониторинг и контроль], [Предлагаемый мониторинг и контроль], Исполнитель, [Дата создания], [Начало действия], [Конец действия], ServerNum ) ";
 S=S+" SELECT Аспекты.[Номер аспекта], Аспекты.Подразделение, Аспекты.Ситуация, Аспекты.[Вид территории], Аспекты.Деятельность, Аспекты.Специальность, Аспекты.Аспект, Аспекты.Воздействие, Аспекты.G, Аспекты.O, Аспекты.R, Аспекты.S, Аспекты.T, Аспекты.L, Аспекты.N, Аспекты.Z, Аспекты.Значимость, Аспекты.[Проявление воздействия], Аспекты.[Тяжесть последствий], Аспекты.Приоритетность, Аспекты.[Выполняющиеся мероприятия], Аспекты.[Предлагаемые мероприятия], Аспекты.[Мониторинг и контроль], Аспекты.[Предлагаемый мониторинг и контроль], Аспекты.Исполнитель, Аспекты.[Дата создания], Аспекты.[Начало действия], Аспекты.[Конец действия], Аспекты.ServerNum ";
 S=S+" FROM Logins INNER JOIN ((Подразделения INNER JOIN Аспекты ON Подразделения.[Номер подразделения] = Аспекты.Подразделение) INNER JOIN ObslOtdel ON Подразделения.[Номер подразделения] = ObslOtdel.NumObslOtdel) ON Logins.Num = ObslOtdel.Login ";
@@ -3426,23 +3425,6 @@ else
  String ClientSQL="SELECT TempAspects.[Номер аспекта], TempAspects.Подразделение, TempAspects.Ситуация, TempAspects.[Вид территории], TempAspects.Деятельность, TempAspects.Специальность, TempAspects.Аспект, TempAspects.Воздействие, TempAspects.G, TempAspects.O, TempAspects.R, TempAspects.S, TempAspects.T, TempAspects.L, TempAspects.N, TempAspects.Z, TempAspects.Значимость, TempAspects.[Проявление воздействия], TempAspects.[Тяжесть последствий], TempAspects.Приоритетность, TempAspects.[Выполняющиеся мероприятия],  TempAspects.[предлагаемые мероприятия],  TempAspects.[Мониторинг и контроль], TempAspects.[Предлагаемый мониторинг и контроль],  TempAspects.[Дата создания], TempAspects.[Начало действия], TempAspects.[Конец действия] FROM TempAspects;";
 if(Role==2)
 {
-/*
-if(Report1->CPodrazdel->ItemIndex==0)
-{
-ServerSQL="SELECT Аспекты.[Номер аспекта], Аспекты.Подразделение, Аспекты.Ситуация, Аспекты.[Вид территории], Аспекты.Деятельность, Аспекты.Специальность, Аспекты.Аспект, Аспекты.Воздействие, Аспекты.G, Аспекты.O, Аспекты.R, Аспекты.S, Аспекты.T, Аспекты.L, Аспекты.N, Аспекты.Z, Аспекты.Значимость, Аспекты.[Проявление воздействия], Аспекты.[Тяжесть последствий], Аспекты.Приоритетность,  Аспекты.[Выполняющиеся мероприятия],  Аспекты.[предлагаемые мероприятия],  Аспекты.[Мониторинг и контроль], Аспекты.[Предлагаемый мониторинг и контроль], Аспекты.[Дата создания], Аспекты.[Начало действия], Аспекты.[Конец действия] FROM Аспекты ;";
-
-}
-else
-{
-Report1->Podr->First();
-Report1->Podr->MoveBy(Report1->CPodrazdel->ItemIndex-1);
-int NumPodr=Report1->Podr->FieldByName("ServerNum")->Value;
-ServerSQL="SELECT Аспекты.[Номер аспекта], Аспекты.Подразделение, Аспекты.Ситуация, Аспекты.[Вид территории], Аспекты.Деятельность, Аспекты.Специальность, Аспекты.Аспект, Аспекты.Воздействие, Аспекты.G, Аспекты.O, Аспекты.R, Аспекты.S, Аспекты.T, Аспекты.L, Аспекты.N, Аспекты.Z, Аспекты.Значимость, Аспекты.[Проявление воздействия], Аспекты.[Тяжесть последствий], Аспекты.Приоритетность,  Аспекты.[Выполняющиеся мероприятия],  Аспекты.[предлагаемые мероприятия],  Аспекты.[Мониторинг и контроль], Аспекты.[Предлагаемый мониторинг и контроль], Аспекты.[Дата создания], Аспекты.[Начало действия], Аспекты.[Конец действия] FROM Аспекты Where Подразделение="+IntToStr(NumPodr)+" ;";
-
-}
-*/
-//ServerSQL="SELECT Аспекты.[Номер аспекта], Аспекты.Подразделение, Аспекты.Ситуация, Аспекты.[Вид территории], Аспекты.Деятельность, Аспекты.Специальность, Аспекты.Аспект, Аспекты.Воздействие, Аспекты.G, Аспекты.O, Аспекты.R, Аспекты.S, Аспекты.T, Аспекты.L, Аспекты.N, Аспекты.Z, Аспекты.Значимость, Аспекты.[Проявление воздействия], Аспекты.[Тяжесть последствий], Аспекты.Приоритетность,  Аспекты.[Выполняющиеся мероприятия],  Аспекты.[предлагаемые мероприятия],  Аспекты.[Мониторинг и контроль], Аспекты.[Предлагаемый мониторинг и контроль], Аспекты.[Дата создания], Аспекты.[Начало действия], Аспекты.[Конец действия] FROM Аспекты ;";
-//ServerSQL="SELECT Аспекты.[Номер аспекта], Аспекты.Подразделение, Аспекты.Ситуация, Аспекты.[Вид территории], Аспекты.Деятельность, Аспекты.Специальность, Аспекты.Аспект, Аспекты.Воздействие, Аспекты.G, Аспекты.O, Аспекты.R, Аспекты.S, Аспекты.T, Аспекты.L, Аспекты.N, Аспекты.Z, Аспекты.Значимость, Аспекты.[Проявление воздействия], Аспекты.[Тяжесть последствий], Аспекты.Приоритетность, Аспекты.[Выполняющиеся мероприятия], Аспекты.[Предлагаемые мероприятия], Аспекты.[Мониторинг и контроль], Аспекты.[Предлагаемый мониторинг и контроль], Аспекты.[Дата создания], Аспекты.[Начало действия], Аспекты.[Конец действия] FROM (Подразделения INNER JOIN ObslOtdel ON Подразделения.[Номер подразделения] = ObslOtdel.NumObslOtdel) INNER JOIN Аспекты ON Подразделения.[Номер подразделения] = Аспекты.Подразделение WHERE (((ObslOtdel.Login)="+IntToStr(Report1->NumLogin)+"));";
 ServerSQL="SELECT Аспекты.[Номер аспекта], Аспекты.Подразделение, Аспекты.Ситуация, Аспекты.[Вид территории], Аспекты.Деятельность, Аспекты.Специальность, Аспекты.Аспект, Аспекты.Воздействие, Аспекты.G, Аспекты.O, Аспекты.R, Аспекты.S, Аспекты.T, Аспекты.L, Аспекты.N, Аспекты.Z, Аспекты.Значимость, Аспекты.[Проявление воздействия], Аспекты.[Тяжесть последствий], Аспекты.Приоритетность, Аспекты.[Выполняющиеся мероприятия], Аспекты.[Предлагаемые мероприятия], Аспекты.[Мониторинг и контроль], Аспекты.[Предлагаемый мониторинг и контроль], Аспекты.[Дата создания], Аспекты.[Начало действия], Аспекты.[Конец действия] FROM Logins INNER JOIN ((Подразделения INNER JOIN Аспекты ON Подразделения.[Номер подразделения] = Аспекты.Подразделение) INNER JOIN ObslOtdel ON Подразделения.[Номер подразделения] = ObslOtdel.NumObslOtdel) ON Logins.Num = ObslOtdel.Login WHERE (((Logins.Role)<>4));";
 
 
@@ -3451,26 +3433,6 @@ Zast->MClient->ReadTable("Аспекты",ServerSQL, "Аспекты", ClientSQL);
 else
 {
 
-/*
-if(Report1->CPodrazdel->ItemIndex==0)
-{
-ServerSQL="SELECT Аспекты.[Номер аспекта], Аспекты.Подразделение, Аспекты.Ситуация, Аспекты.[Вид территории], Аспекты.Деятельность, Аспекты.Специальность, Аспекты.Аспект, Аспекты.Воздействие, Аспекты.G, Аспекты.O, Аспекты.R, Аспекты.S, Аспекты.T, Аспекты.L, Аспекты.N, Аспекты.Z, Аспекты.Значимость, Аспекты.[Проявление воздействия], Аспекты.[Тяжесть последствий], Аспекты.Приоритетность, Аспекты.[Выполняющиеся мероприятия], Аспекты.[Предлагаемые мероприятия], Аспекты.[Мониторинг и контроль], Аспекты.[Предлагаемый мониторинг и контроль], Аспекты.[Дата создания], Аспекты.[Начало действия], Аспекты.[Конец действия] FROM (Подразделения INNER JOIN ObslOtdel ON Подразделения.[Номер подразделения] = ObslOtdel.NumObslOtdel) INNER JOIN Аспекты ON Подразделения.[Номер подразделения] = Аспекты.Подразделение WHERE (((ObslOtdel.Login)="+IntToStr(Report1->NumLogin)+"));";
-}
-else
-{
-
-Report1->Podr->Active=false;
-Report1->Podr->Connection=Report1->RepBase;
-Report1->Podr->CommandText="Select * from TempПодразделения";
-Report1->Podr->Active=true;
-
-Report1->Podr->First();
-Report1->Podr->MoveBy(Report1->CPodrazdel->ItemIndex-1);
-int NumPodr=Report1->Podr->FieldByName("ServerNum")->Value;
-ServerSQL="SELECT Аспекты.[Номер аспекта], Аспекты.Подразделение, Аспекты.Ситуация, Аспекты.[Вид территории], Аспекты.Деятельность, Аспекты.Специальность, Аспекты.Аспект, Аспекты.Воздействие, Аспекты.G, Аспекты.O, Аспекты.R, Аспекты.S, Аспекты.T, Аспекты.L, Аспекты.N, Аспекты.Z, Аспекты.Значимость, Аспекты.[Проявление воздействия], Аспекты.[Тяжесть последствий], Аспекты.Приоритетность,  Аспекты.[Выполняющиеся мероприятия],  Аспекты.[предлагаемые мероприятия],  Аспекты.[Мониторинг и контроль], Аспекты.[Предлагаемый мониторинг и контроль], Аспекты.[Дата создания], Аспекты.[Начало действия], Аспекты.[Конец действия] FROM Аспекты Where Подразделение="+IntToStr(NumPodr)+" ;";
-
-}
-*/
 ServerSQL="SELECT Аспекты.[Номер аспекта], Аспекты.Подразделение, Аспекты.Ситуация, Аспекты.[Вид территории], Аспекты.Деятельность, Аспекты.Специальность, Аспекты.Аспект, Аспекты.Воздействие, Аспекты.G, Аспекты.O, Аспекты.R, Аспекты.S, Аспекты.T, Аспекты.L, Аспекты.N, Аспекты.Z, Аспекты.Значимость, Аспекты.[Проявление воздействия], Аспекты.[Тяжесть последствий], Аспекты.Приоритетность, Аспекты.[Выполняющиеся мероприятия], Аспекты.[Предлагаемые мероприятия], Аспекты.[Мониторинг и контроль], Аспекты.[Предлагаемый мониторинг и контроль], Аспекты.[Дата создания], Аспекты.[Начало действия], Аспекты.[Конец действия] FROM (Подразделения INNER JOIN ObslOtdel ON Подразделения.[Номер подразделения] = ObslOtdel.NumObslOtdel) INNER JOIN Аспекты ON Подразделения.[Номер подразделения] = Аспекты.Подразделение WHERE (((ObslOtdel.Login)="+IntToStr(Report1->NumLogin)+"));";
 
 Zast->MClient->ReadTable("Аспекты",ServerSQL, "Аспекты_П", ClientSQL);
@@ -3536,7 +3498,8 @@ if(B)
 //---------------------------------------------------------------------------
 void __fastcall TZast::ContStartReports2Execute(TObject *Sender)
 {
- Report1->ShowModal();
+Zast->MClient->UnBlockServer("EndPrepReports");
+
 }
 //---------------------------------------------------------------------------
 
@@ -4014,6 +3977,141 @@ else
 Prog->Hide();
 Prog->Close();
 }
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TZast::PrepReport1Execute(TObject *Sender)
+{
+Report1->Flt=Form1->Filtr1;
+Report1->FltName=Form1->LFiltr->Caption;
+Report1->PodrComText=Form1->Podrazdel->CommandText;
+
+Report1->NumRep=1;
+Report1->RepBase=Zast->ADOUsrAspect;
+Report1->Role=Role;
+Report1->NumLogin=Form1->NumLogin;
+//ShowMessage(Filter->CText);
+int NWhere=Filter->CText.LowerCase().Pos("where")+5;
+String SR=Filter->CText.SubString(NWhere, Filter->CText.Length());
+int NOrder=SR.LowerCase().Pos("order")-1;
+if(Filter->NumFiltr==1)
+{
+String S=SR.SubString(0, NOrder);
+int PodrPos=S.Pos("Подразделение")+14;
+String SNum=S.SubString(PodrPos, S.Length());
+int NP=StrToInt(SNum.Trim());
+
+
+MP<TADODataSet>Podr(this);
+Podr->Connection=Zast->ADOUsrAspect;
+Podr->CommandText="Select * From Подразделения Where [Номер подразделения]="+IntToStr(NP);
+Podr->Active=true;
+
+int SPodr=Podr->FieldByName("ServerNum")->AsInteger;
+
+Report1->Flt=" Подразделение="+IntToStr(SPodr);
+}
+else
+{
+Report1->Flt=SR.SubString(0, NOrder);
+}
+Report1->FltName=Form1->LFiltr->Caption;
+
+if(this->Role<4)
+{
+
+
+ Zast->MClient->Act.ParamComm.clear();
+ Zast->MClient->Act.ParamComm.push_back("ContStartReports");
+ String ServerSQL="SELECT Подразделения.[Номер подразделения], Подразделения.[Название подразделения] FROM (Подразделения INNER JOIN ObslOtdel ON Подразделения.[Номер подразделения] = ObslOtdel.NumObslOtdel) INNER JOIN Аспекты ON Подразделения.[Номер подразделения] = Аспекты.Подразделение GROUP BY ObslOtdel.Login, Подразделения.[Номер подразделения], Подразделения.[Название подразделения] HAVING (((ObslOtdel.Login)="+IntToStr(Form1->NumLogin)+")) ORDER BY Подразделения.[Название подразделения];";
+ String ClientSQL="Select [ServerNum], [Название подразделения] From TempПодразделения";
+ Zast->MClient->ReadTable("Аспекты",ServerSQL, "Аспекты_П", ClientSQL);
+}
+else
+{
+Report1->Podr->Active=false;
+
+MP<TADOCommand>Comm(this);
+Comm->Connection=Zast->ADOUsrAspect;
+Comm->CommandText="Delete * From TempПодразделения";
+Comm->Execute();
+
+
+Comm->CommandText="INSERT INTO TempПодразделения ( [Номер подразделения], [Название подразделения], ServerNum ) SELECT Подразделения.[Номер подразделения], Подразделения.[Название подразделения], Подразделения.ServerNum FROM Logins INNER JOIN ((Подразделения INNER JOIN Аспекты ON Подразделения.[Номер подразделения] = Аспекты.Подразделение) INNER JOIN ObslOtdel ON Подразделения.[Номер подразделения] = ObslOtdel.NumObslOtdel) ON Logins.Num = ObslOtdel.Login GROUP BY Logins.Role, Подразделения.[Номер подразделения], Подразделения.[Название подразделения], Подразделения.ServerNum, Аспекты.Подразделение HAVING (((Logins.Role)=4));";
+Comm->Execute();
+Zast->ContStartReports->Execute();
+}
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TZast::EndPrepReportsExecute(TObject *Sender)
+{
+Prog->Close();
+ Report1->ShowModal();
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TZast::PrepReport2Execute(TObject *Sender)
+{
+Report1->Flt=Form1->Filtr2;
+Report1->FltName=Form1->LFiltr->Caption;
+Report1->PodrComText=Form1->Podrazdel->CommandText;
+
+Report1->NumRep=2;
+Report1->RepBase=Zast->ADOUsrAspect;
+Report1->Role=Role;
+Report1->NumLogin=Form1->NumLogin;
+
+
+int NWhere=Filter->CText.LowerCase().Pos("where")+5;
+String SR=Filter->CText.SubString(NWhere, Filter->CText.Length());
+int NOrder=SR.LowerCase().Pos("order")-1;
+if(Filter->NumFiltr==1)
+{
+String S=SR.SubString(0, NOrder);
+int PodrPos=S.Pos("Подразделение")+14;
+String SNum=S.SubString(PodrPos, S.Length());
+int NP=StrToInt(SNum.Trim());
+
+
+MP<TADODataSet>Podr(this);
+Podr->Connection=Zast->ADOUsrAspect;
+Podr->CommandText="Select * From Подразделения Where [Номер подразделения]="+IntToStr(NP);
+Podr->Active=true;
+
+int SPodr=Podr->FieldByName("ServerNum")->AsInteger;
+
+Report1->Flt=" Подразделение="+IntToStr(SPodr);
+}
+else
+{
+Report1->Flt=SR.SubString(0, NOrder);
+}
+Report1->FltName=Form1->LFiltr->Caption;
+
+if(this->Role<4)
+{
+ Zast->MClient->Act.ParamComm.clear();
+ Zast->MClient->Act.ParamComm.push_back("ContStartReports");
+ String ServerSQL="SELECT Подразделения.[Номер подразделения], Подразделения.[Название подразделения] FROM (Подразделения INNER JOIN ObslOtdel ON Подразделения.[Номер подразделения] = ObslOtdel.NumObslOtdel) INNER JOIN Аспекты ON Подразделения.[Номер подразделения] = Аспекты.Подразделение GROUP BY ObslOtdel.Login, Подразделения.[Номер подразделения], Подразделения.[Название подразделения] HAVING (((ObslOtdel.Login)="+IntToStr(Form1->NumLogin)+")) ORDER BY Подразделения.[Название подразделения];";
+ String ClientSQL="Select [ServerNum], [Название подразделения] From TempПодразделения";
+ Zast->MClient->ReadTable("Аспекты",ServerSQL, "Аспекты_П", ClientSQL);
+}
+else
+{
+Report1->Podr->Active=false;
+
+MP<TADOCommand>Comm(this);
+Comm->Connection=Zast->ADOUsrAspect;
+Comm->CommandText="Delete * From TempПодразделения";
+Comm->Execute();
+
+
+Comm->CommandText="INSERT INTO TempПодразделения ( [Номер подразделения], [Название подразделения], ServerNum ) SELECT Подразделения.[Номер подразделения], Подразделения.[Название подразделения], Подразделения.ServerNum FROM Logins INNER JOIN ((Подразделения INNER JOIN Аспекты ON Подразделения.[Номер подразделения] = Аспекты.Подразделение) INNER JOIN ObslOtdel ON Подразделения.[Номер подразделения] = ObslOtdel.NumObslOtdel) ON Logins.Num = ObslOtdel.Login GROUP BY Logins.Role, Подразделения.[Номер подразделения], Подразделения.[Название подразделения], Подразделения.ServerNum, Аспекты.Подразделение HAVING (((Logins.Role)=4));";
+Comm->Execute();
+Zast->ContStartReports->Execute();
+}
+
 }
 //---------------------------------------------------------------------------
 

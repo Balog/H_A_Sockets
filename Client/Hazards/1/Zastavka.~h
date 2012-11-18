@@ -206,6 +206,9 @@ __published:	// IDE-managed Components
         TAction *ReadTempAsp;
         TAction *VerIsNew;
         TAction *VerIsNew1;
+        TAction *PrepReport1;
+        TAction *EndPrepReports;
+        TAction *PrepReport2;
         void __fastcall Timer1Timer(TObject *Sender);
         void __fastcall Image1Click(TObject *Sender);
         void __fastcall FormShow(TObject *Sender);
@@ -326,6 +329,9 @@ __published:	// IDE-managed Components
         void __fastcall ReadTempAspExecute(TObject *Sender);
         void __fastcall VerIsNewExecute(TObject *Sender);
         void __fastcall VerIsNew1Execute(TObject *Sender);
+        void __fastcall PrepReport1Execute(TObject *Sender);
+        void __fastcall EndPrepReportsExecute(TObject *Sender);
+        void __fastcall PrepReport2Execute(TObject *Sender);
 private:	// User declarations
 String Path;
 TLocateOptions SO;

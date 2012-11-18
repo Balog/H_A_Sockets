@@ -10344,6 +10344,18 @@ object Zast: TZast
       Caption = 'VerIsNew1'
       OnExecute = VerIsNew1Execute
     end
+    object PrepReport1: TAction
+      Caption = 'PrepReport1'
+      OnExecute = PrepReport1Execute
+    end
+    object EndPrepReports: TAction
+      Caption = 'EndPrepReports'
+      OnExecute = EndPrepReportsExecute
+    end
+    object PrepReport2: TAction
+      Caption = 'PrepReport2'
+      OnExecute = PrepReport2Execute
+    end
   end
   object BlockServer: TTimer
     Enabled = False

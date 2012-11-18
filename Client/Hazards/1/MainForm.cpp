@@ -2028,64 +2028,8 @@ Filter->ShowModal();
 
 void __fastcall TForm1::BitBtn7Click(TObject *Sender)
 {
+Zast->MClient->BlockServer("PrepReport1");
 
-Report1->Flt=Filtr1;
-Report1->FltName=LFiltr->Caption;
-Report1->PodrComText=Podrazdel->CommandText;
-
-Report1->NumRep=1;
-Report1->RepBase=Zast->ADOUsrAspect;
-Report1->Role=Role;
-Report1->NumLogin=NumLogin;
-//ShowMessage(Filter->CText);
-int NWhere=Filter->CText.LowerCase().Pos("where")+5;
-String SR=Filter->CText.SubString(NWhere, Filter->CText.Length());
-int NOrder=SR.LowerCase().Pos("order")-1;
-if(Filter->NumFiltr==1)
-{
-String S=SR.SubString(0, NOrder);
-int PodrPos=S.Pos("Подразделение")+14;
-String SNum=S.SubString(PodrPos, S.Length());
-int NP=StrToInt(SNum.Trim());
-
-
-MP<TADODataSet>Podr(this);
-Podr->Connection=Zast->ADOUsrAspect;
-Podr->CommandText="Select * From Подразделения Where [Номер подразделения]="+IntToStr(NP);
-Podr->Active=true;
-
-int SPodr=Podr->FieldByName("ServerNum")->AsInteger;
-
-Report1->Flt=" Подразделение="+IntToStr(SPodr);
-}
-else
-{
-Report1->Flt=SR.SubString(0, NOrder);
-}
-Report1->FltName=LFiltr->Caption;
-
-if(this->Role<4)
-{
- Zast->MClient->Act.ParamComm.clear();
- Zast->MClient->Act.ParamComm.push_back("ContStartReports");
- String ServerSQL="SELECT Подразделения.[Номер подразделения], Подразделения.[Название подразделения] FROM (Подразделения INNER JOIN ObslOtdel ON Подразделения.[Номер подразделения] = ObslOtdel.NumObslOtdel) INNER JOIN Аспекты ON Подразделения.[Номер подразделения] = Аспекты.Подразделение GROUP BY ObslOtdel.Login, Подразделения.[Номер подразделения], Подразделения.[Название подразделения] HAVING (((ObslOtdel.Login)="+IntToStr(NumLogin)+")) ORDER BY Подразделения.[Название подразделения];";
- String ClientSQL="Select [ServerNum], [Название подразделения] From TempПодразделения";
- Zast->MClient->ReadTable("Опасности",ServerSQL, "Опасности_П", ClientSQL);
-}
-else
-{
-Report1->Podr->Active=false;
-
-MP<TADOCommand>Comm(this);
-Comm->Connection=Zast->ADOUsrAspect;
-Comm->CommandText="Delete * From TempПодразделения";
-Comm->Execute();
-
-
-Comm->CommandText="INSERT INTO TempПодразделения ( [Номер подразделения], [Название подразделения], ServerNum ) SELECT Подразделения.[Номер подразделения], Подразделения.[Название подразделения], Подразделения.ServerNum FROM Logins INNER JOIN ((Подразделения INNER JOIN Аспекты ON Подразделения.[Номер подразделения] = Аспекты.Подразделение) INNER JOIN ObslOtdel ON Подразделения.[Номер подразделения] = ObslOtdel.NumObslOtdel) ON Logins.Num = ObslOtdel.Login GROUP BY Logins.Role, Подразделения.[Номер подразделения], Подразделения.[Название подразделения], Подразделения.ServerNum, Аспекты.Подразделение HAVING (((Logins.Role)=4));";
-Comm->Execute();
-Zast->ContStartReports->Execute();
-}
 }
 //---------------------------------------------------------------------------
 
@@ -2098,6 +2042,7 @@ Aspects->UpdateBatch();
 
 void __fastcall TForm1::N9Click(TObject *Sender)
 {
+Prog->SignComplete=false;
 Prog->Label1->Caption="Чтение опасностей";
 Prog->PB->Min=1;
 Prog->PB->Max=3;
@@ -2280,81 +2225,7 @@ this->Height=742;
 //---------------------------------------------------------------------------
 void __fastcall TForm1::BitBtn9Click(TObject *Sender)
 {
-Report1->Flt=Filtr2;
-Report1->FltName=LFiltr->Caption;
-Report1->PodrComText=Podrazdel->CommandText;
-
-Report1->NumRep=2;
-Report1->RepBase=Zast->ADOUsrAspect;
-Report1->Role=Role;
-Report1->NumLogin=NumLogin;
-
-
-int NWhere=Filter->CText.LowerCase().Pos("where")+5;
-String SR=Filter->CText.SubString(NWhere, Filter->CText.Length());
-int NOrder=SR.LowerCase().Pos("order")-1;
-if(Filter->NumFiltr==1)
-{
-String S=SR.SubString(0, NOrder);
-int PodrPos=S.Pos("Подразделение")+14;
-String SNum=S.SubString(PodrPos, S.Length());
-int NP=StrToInt(SNum.Trim());
-
-
-MP<TADODataSet>Podr(this);
-Podr->Connection=Zast->ADOUsrAspect;
-Podr->CommandText="Select * From Подразделения Where [Номер подразделения]="+IntToStr(NP);
-Podr->Active=true;
-
-int SPodr=Podr->FieldByName("ServerNum")->AsInteger;
-
-Report1->Flt=" Подразделение="+IntToStr(SPodr);
-}
-else
-{
-Report1->Flt=SR.SubString(0, NOrder);
-}
-Report1->FltName=LFiltr->Caption;
-
-if(this->Role<4)
-{
- Zast->MClient->Act.ParamComm.clear();
- Zast->MClient->Act.ParamComm.push_back("ContStartReports");
- String ServerSQL="SELECT Подразделения.[Номер подразделения], Подразделения.[Название подразделения] FROM (Подразделения INNER JOIN ObslOtdel ON Подразделения.[Номер подразделения] = ObslOtdel.NumObslOtdel) INNER JOIN Аспекты ON Подразделения.[Номер подразделения] = Аспекты.Подразделение GROUP BY ObslOtdel.Login, Подразделения.[Номер подразделения], Подразделения.[Название подразделения] HAVING (((ObslOtdel.Login)="+IntToStr(NumLogin)+")) ORDER BY Подразделения.[Название подразделения];";
- String ClientSQL="Select [ServerNum], [Название подразделения] From TempПодразделения";
- Zast->MClient->ReadTable("Опасности",ServerSQL, "Опасности_П", ClientSQL);
-}
-else
-{
-Report1->Podr->Active=false;
-
-MP<TADOCommand>Comm(this);
-Comm->Connection=Zast->ADOUsrAspect;
-Comm->CommandText="Delete * From TempПодразделения";
-Comm->Execute();
-
-
-Comm->CommandText="INSERT INTO TempПодразделения ( [Номер подразделения], [Название подразделения], ServerNum ) SELECT Подразделения.[Номер подразделения], Подразделения.[Название подразделения], Подразделения.ServerNum FROM Logins INNER JOIN ((Подразделения INNER JOIN Аспекты ON Подразделения.[Номер подразделения] = Аспекты.Подразделение) INNER JOIN ObslOtdel ON Подразделения.[Номер подразделения] = ObslOtdel.NumObslOtdel) ON Logins.Num = ObslOtdel.Login GROUP BY Logins.Role, Подразделения.[Номер подразделения], Подразделения.[Название подразделения], Подразделения.ServerNum, Аспекты.Подразделение HAVING (((Logins.Role)=4));";
-Comm->Execute();
-Zast->ContStartReports->Execute();
-}
-
-/*
-Report1->Flt=Filtr2;
-Report1->FltName=LFiltr->Caption;
-Report1->PodrComText=Podrazdel->CommandText;
-
-Report1->NumRep=2;
-Report1->RepBase=Zast->ADOUsrAspect;
-Report1->Role=Role;
-Report1->NumLogin=NumLogin;
-
- Zast->MClient->Act.ParamComm.clear();
- Zast->MClient->Act.ParamComm.push_back("ContStartReports");
- String ServerSQL="SELECT Подразделения.[Номер подразделения], Подразделения.[Название подразделения] FROM (Подразделения INNER JOIN ObslOtdel ON Подразделения.[Номер подразделения] = ObslOtdel.NumObslOtdel) INNER JOIN Аспекты ON Подразделения.[Номер подразделения] = Аспекты.Подразделение GROUP BY ObslOtdel.Login, Подразделения.[Номер подразделения], Подразделения.[Название подразделения] HAVING (((ObslOtdel.Login)="+IntToStr(NumLogin)+")) ORDER BY Подразделения.[Название подразделения];";
- String ClientSQL="Select [ServerNum], [Название подразделения] From TempПодразделения";
- Zast->MClient->ReadTable("Аспекты",ServerSQL, "Аспекты_П", ClientSQL);
-*/
+Zast->MClient->BlockServer("PrepReport2");
 
 
 }
@@ -2364,7 +2235,7 @@ Report1->NumLogin=NumLogin;
 void __fastcall TForm1::DBMemo2Exit(TObject *Sender)
 {
 Aspects->UpdateBatch();
-  Label1->Visible=IsNew();        
+  Label1->Visible=IsNew();
 }
 //---------------------------------------------------------------------------
 
@@ -2372,7 +2243,7 @@ Aspects->UpdateBatch();
 void __fastcall TForm1::DBMemo31Exit(TObject *Sender)
 {
 Aspects->UpdateBatch();
-  Label1->Visible=IsNew();        
+  Label1->Visible=IsNew();
 }
 //---------------------------------------------------------------------------
 
@@ -2491,6 +2362,7 @@ Button4->Click();
 
 void __fastcall TForm1::N10Click(TObject *Sender)
 {
+Prog->SignComplete=false;
 Zast->BlockMK(true);
 try
 {
@@ -2562,6 +2434,7 @@ Zast->ReadWriteDoc->Execute();
 //---------------------------------------------------------------------------
 void __fastcall TForm1::N3Click(TObject *Sender)
 {
+Prog->SignComplete=false;
 Prog->Label1->Caption="Запись опасностей";
 Prog->PB->Min=1;
 Prog->PB->Max=3;

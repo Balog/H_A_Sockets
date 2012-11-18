@@ -21,6 +21,7 @@ Cont=true;
 //---------------------------------------------------------------------------
 void __fastcall TMAsp::FormShow(TObject *Sender)
 {
+
 Podr->Active=false;
 Podr->CommandText="Select * From Подразделения";
 Podr->Connection=Zast->ADOAspect;
@@ -176,6 +177,7 @@ MoveAspects->Post();
 
 void __fastcall TMAsp::BitBtn5Click(TObject *Sender)
 {
+Prog->SignComplete=true;
 //Zast->SaveAspectsMSpec0->Execute();
 Zast->BlockMK(true);
 try
@@ -191,6 +193,7 @@ catch(...)
 
 void __fastcall TMAsp::BitBtn6Click(TObject *Sender)
 {
+Prog->SignComplete=true;
 if(Application->MessageBoxA("Вы действительно хотите прочесть список опасностей с сервера?\rВсе несохраненные изменения по перемещению опасностей будут удалены!","Чтение списка опасностей",MB_YESNO+MB_ICONWARNING+MB_DEFBUTTON2+MB_APPLMODAL)==IDYES)
 {
 Zast->BlockMK(true);
