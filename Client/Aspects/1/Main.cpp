@@ -2323,6 +2323,7 @@ Application->HelpFile=ExtractFilePath(Application->ExeName)+"NetAspects.HLP";
 
 void __fastcall TDocuments::N2Click(TObject *Sender)
 {
+Prog->SignComplete=true;
 Zast->BlockMK(true);
 try
 {
@@ -2344,6 +2345,7 @@ Zast->BlockMK(false);
 
 void __fastcall TDocuments::N27Click(TObject *Sender)
 {
+Prog->SignComplete=true;
 Zast->BlockMK(true);
 try
 {
@@ -2365,6 +2367,7 @@ Zast->BlockMK(false);
 
 void __fastcall TDocuments::N26Click(TObject *Sender)
 {
+Prog->SignComplete=true;
 Zast->BlockMK(true);
 try
 {
@@ -2386,6 +2389,7 @@ catch(...)
 
 void __fastcall TDocuments::N28Click(TObject *Sender)
 {
+Prog->SignComplete=true;
 Zast->BlockMK(true);
 try
 {
@@ -2407,6 +2411,7 @@ catch(...)
 
 void __fastcall TDocuments::N6Click(TObject *Sender)
 {
+Prog->SignComplete=true;
 try
 {
 Zast->BlockMK(true);
@@ -2529,6 +2534,7 @@ Comm->Execute();
 
 void __fastcall TDocuments::N7Click(TObject *Sender)
 {
+Prog->SignComplete=true;
 try
 {
 Zast->BlockMK(true);
@@ -2550,6 +2556,7 @@ catch(...)
 
 void __fastcall TDocuments::N20Click(TObject *Sender)
 {
+Prog->SignComplete=true;
 try
 {
 Zast->BlockMK(true);
@@ -2571,6 +2578,7 @@ catch(...)
 
 void __fastcall TDocuments::N24Click(TObject *Sender)
 {
+Prog->SignComplete=true;
 try
 {
 Zast->BlockMK(true);
@@ -2592,6 +2600,7 @@ catch(...)
 
 void __fastcall TDocuments::N25Click(TObject *Sender)
 {
+Prog->SignComplete=true;
 try
 {
 Zast->BlockMK(true);
@@ -2698,6 +2707,7 @@ DataSetPost4->Execute();
 //---------------------------------------------------------------------------
 void __fastcall TDocuments::N18Click(TObject *Sender)
 {
+Prog->SignComplete=true;
 Zast->BlockMK(true);
 try
 {
@@ -2721,6 +2731,7 @@ catch(...)
 //---------------------------------------------------------------------------
 void __fastcall TDocuments::N38Click(TObject *Sender)
 {
+Prog->SignComplete=true;
 Zast->BlockMK(true);
 try
 {
@@ -2743,6 +2754,7 @@ catch(...)
 //---------------------------------------------------------------------------
 void __fastcall TDocuments::N37Click(TObject *Sender)
 {
+Prog->SignComplete=true;
 try
 {
 Zast->BlockMK(true);
@@ -2766,6 +2778,7 @@ catch(...)
 
 void __fastcall TDocuments::N39Click(TObject *Sender)
 {
+Prog->SignComplete=true;
 try
 {
 Zast->BlockMK(true);
@@ -2789,6 +2802,7 @@ catch(...)
 
 void __fastcall TDocuments::N32Click(TObject *Sender)
 {
+Prog->SignComplete=true;
 Zast->BlockMK(true);
 try
 {
@@ -2809,6 +2823,7 @@ catch(...)
 
 void __fastcall TDocuments::N33Click(TObject *Sender)
 {
+Prog->SignComplete=true;
 try
 {
 Zast->BlockMK(true);
@@ -2829,6 +2844,7 @@ catch(...)
 
 void __fastcall TDocuments::N34Click(TObject *Sender)
 {
+Prog->SignComplete=true;
 try
 {
 Zast->BlockMK(true);
@@ -2849,6 +2865,7 @@ catch(...)
 
 void __fastcall TDocuments::N35Click(TObject *Sender)
 {
+Prog->SignComplete=true;
 Zast->BlockMK(true);
 try
 {
@@ -2869,6 +2886,7 @@ catch(...)
 
 void __fastcall TDocuments::N36Click(TObject *Sender)
 {
+Prog->SignComplete=true;
 Zast->BlockMK(true);
 try
 {
@@ -3026,6 +3044,7 @@ FAbout->ShowModal();
 
 void __fastcall TDocuments::Button1Click(TObject *Sender)
 {
+Prog->SignComplete=true;
 /*
 DataSetRefresh4->Execute();
 DataSetPost1->Execute();
@@ -3044,6 +3063,7 @@ N18->Click();
 
 void __fastcall TDocuments::Button2Click(TObject *Sender)
 {
+Prog->SignComplete=true;
 /*
 DataSetRefresh3->Execute();
 DataSetPost3->Execute();
@@ -3062,6 +3082,7 @@ N38->Click();
 
 void __fastcall TDocuments::Button3Click(TObject *Sender)
 {
+Prog->SignComplete=true;
 /*
 DataSetRefresh2->Execute();
 DataSetPost2->Execute();
@@ -3080,6 +3101,7 @@ N37->Click();
 
 void __fastcall TDocuments::Button9Click(TObject *Sender)
 {
+Prog->SignComplete=true;
 /*
 DataSetRefresh1->Execute();
 DataSetPost4->Execute();
@@ -3098,6 +3120,7 @@ N39->Click();
 
 void __fastcall TDocuments::Button4Click(TObject *Sender)
 {
+Prog->SignComplete=true;
 /*
 ReadWrite.clear();
 Str_RW S;
@@ -3113,6 +3136,7 @@ N32->Click();
 
 void __fastcall TDocuments::Button5Click(TObject *Sender)
 {
+Prog->SignComplete=true;
 /*
 ReadWrite.clear();
 Str_RW S;
@@ -3128,6 +3152,7 @@ N33->Click();
 
 void __fastcall TDocuments::Button6Click(TObject *Sender)
 {
+Prog->SignComplete=true;
 /*
 ReadWrite.clear();
 Str_RW S;
@@ -3143,6 +3168,7 @@ N34->Click();
 
 void __fastcall TDocuments::Button7Click(TObject *Sender)
 {
+Prog->SignComplete=true;
 /*
 ReadWrite.clear();
 Str_RW S;
@@ -3158,6 +3184,7 @@ N35->Click();
 
 void __fastcall TDocuments::Button8Click(TObject *Sender)
 {
+Prog->SignComplete=true;
 /*
 ReadWrite.clear();
 Str_RW S;
@@ -3213,4 +3240,5 @@ switch(PageControl1->TabIndex)
 }
 }
 //---------------------------------------------------------------------------
+
 

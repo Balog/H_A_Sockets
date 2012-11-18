@@ -1685,7 +1685,15 @@ Comm->Execute();
 Comm->CommandText="DELETE TempDeyat.* FROM TempDeyat;";
 Comm->Execute();
 
+if(Role==2)
+{
 Zast->MClient->WriteDiaryEvent("NetAspects","Конец загрузки экологических аспектов (главспец)","");
+}
+else
+{
+Zast->MClient->WriteDiaryEvent("NetAspects","Конец загрузки экологических аспектов (пользователь)","");
+
+}
 
 Zast->MClient->UnBlockServer("ReadWriteDoc");
 }
@@ -2768,6 +2776,7 @@ try
 {
 Zast->MClient->WriteDiaryEvent("NetAspects","Конец записи аспектов (главспец)","");
 Sleep(1000);
+Zast->BlockMK(false);
  Zast->MClient->UnBlockServer("ReadWriteDoc");
 }
 catch(...)
@@ -2824,21 +2833,24 @@ if(Tab->RecordCount==Temp->RecordCount)
 }
 else
 {
+
  Mess="Количество аспектов на сервере не совпадает с количеством аспектов в локальной базе данных\rЗаписать список аспектов на сервер?";
+
 }
 
 if(!Res)
 {
-
+Zast->BlockMK(false);
  if(Application->MessageBoxA(Mess.c_str(),"Запись аспектов",MB_YESNO+MB_ICONQUESTION+MB_DEFBUTTON1)==IDYES)
  {
+ Zast->BlockMK(true);
   //Запись списка аспектов главспецом
   /*
 Documents->ReadWrite.clear();
 Str_RW S;
 Documents->ReadWrite.push_back(S);
  */
-Zast->BlockMK(true);
+
 try
 {
 /*
@@ -2846,7 +2858,9 @@ Zast->MClient->Act.ParamComm.clear();
 Zast->MClient->Act.ParamComm.push_back("SaveAspectsMSpec2");
 Zast->MClient->WriteTable("Аспекты","SELECT Аспекты.[Номер аспекта], Подразделения.ServerNum FROM Подразделения INNER JOIN Аспекты ON Подразделения.[Номер подразделения] = Аспекты.Подразделение Order by Аспекты.[Номер аспекта]; ", "Аспекты", "SELECT TempAspects.[Номер аспекта], TempAspects.Подразделение From TempAspects order by [Номер аспекта];");
 */
-Zast->MClient->BlockServer("SaveAspectsMSpec0");
+Zast->SaveAspectsMSpec0->Execute();
+
+//Zast->MClient->BlockServer("SaveAspectsMSpec0");
 }
 catch(...)
 {
@@ -2859,6 +2873,11 @@ catch(...)
 
  Zast->MClient->WriteDiaryEvent("NetAspects","Отказ от сохранения движения аспектов (главспец)","");
  }
+}
+else
+{
+ Zast->BlockMK(false);
+Zast->MClient->BlockServer("EndsaveAspectsMSpec");
 }
 
 }

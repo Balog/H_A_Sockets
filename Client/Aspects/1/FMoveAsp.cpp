@@ -21,6 +21,7 @@ Cont=true;
 //---------------------------------------------------------------------------
 void __fastcall TMAsp::FormShow(TObject *Sender)
 {
+Prog->Close();
 Podr->Active=false;
 Podr->CommandText="Select * From Подразделения";
 Podr->Connection=Zast->ADOAspect;
@@ -266,7 +267,7 @@ Zast->MClient->WriteDiaryEvent("NetAspects ошибка","Ошибка объединения аспектов 
 //----------------------------------------------
 void __fastcall TMAsp::FormClose(TObject *Sender, TCloseAction &Action)
 {
-
+//Zast->BlockMK(true);
 Zast->MClient->BlockServer("CloseMAsp");
 
 

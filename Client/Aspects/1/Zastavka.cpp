@@ -639,6 +639,7 @@ else
 Prog->Hide();
 Prog->Close();
 Zast->BlockMK(false);
+
 if(Prog->SignComplete)
 {
 Prog->Hide();
@@ -2776,6 +2777,8 @@ try
 {
 Zast->MClient->WriteDiaryEvent("NetAspects","Конец записи аспектов (главспец)","");
 Sleep(1000);
+//Zast->BlockMK(false);
+
  Zast->MClient->UnBlockServer("ReadWriteDoc");
 }
 catch(...)
@@ -2832,41 +2835,41 @@ if(Tab->RecordCount==Temp->RecordCount)
 }
 else
 {
+
  Mess="Количество аспектов на сервере не совпадает с количеством аспектов в локальной базе данных\rЗаписать список аспектов на сервер?";
+
 }
 
 if(!Res)
 {
-
+Zast->BlockMK(false);
  if(Application->MessageBoxA(Mess.c_str(),"Запись аспектов",MB_YESNO+MB_ICONQUESTION+MB_DEFBUTTON1)==IDYES)
  {
+ Zast->BlockMK(true);
   //Запись списка аспектов главспецом
-  /*
-Documents->ReadWrite.clear();
-Str_RW S;
-Documents->ReadWrite.push_back(S);
- */
-Zast->BlockMK(true);
+
+
 try
 {
-/*
-Zast->MClient->Act.ParamComm.clear();
-Zast->MClient->Act.ParamComm.push_back("SaveAspectsMSpec2");
-Zast->MClient->WriteTable("Аспекты","SELECT Аспекты.[Номер аспекта], Подразделения.ServerNum FROM Подразделения INNER JOIN Аспекты ON Подразделения.[Номер подразделения] = Аспекты.Подразделение Order by Аспекты.[Номер аспекта]; ", "Аспекты", "SELECT TempAspects.[Номер аспекта], TempAspects.Подразделение From TempAspects order by [Номер аспекта];");
-*/
-Zast->MClient->BlockServer("SaveAspectsMSpec0");
+
+Zast->SaveAspectsMSpec0->Execute();
 }
 catch(...)
 {
  Zast->BlockMK(false);
 }
-//Zast->ReadWriteDoc->Execute();
  }
  else
  {
 
  Zast->MClient->WriteDiaryEvent("NetAspects","Отказ от сохранения движения аспектов (главспец)","");
  }
+}
+else
+{
+Prog->SignComplete=false;
+Zast->EndsaveAspectsMSpec->Execute();
+//Zast->MClient->UnBlockServer("EndsaveAspectsMSpec");
 }
 
 }
@@ -3492,6 +3495,7 @@ void TZast::BlockMK(bool B)
 {
 if(B)
 {
+
 Save_Cursor = Screen->Cursor;
 
 Screen->Cursor = crNone;
@@ -3505,6 +3509,7 @@ if(Result | B)
 {
 if(B)
 {
+//Zast->MClient->WriteDiaryEvent("NetAspects","Клавиатура блокирована","");
 //Documents->Memo1->Lines->Add("Инициализация");
   hDll = LoadLibrary("User32.dll");
   BlockInput = (DWORD __stdcall (*)(bool Status))GetProcAddress(hDll, "BlockInput");
@@ -3517,29 +3522,12 @@ if(B)
 }
   Result = BlockInput(B);
 
-if(B)
-{
-//Documents->Memo1->Lines->Add("B=true");
-}
-else
-{
-//Documents->Memo1->Lines->Add("B=false");
-}
-
-if(Result)
-{
-//Documents->Memo1->Lines->Add("Result=true");
-}
-else
-{
-//Documents->Memo1->Lines->Add("Result=false");
-}
 
   if(!B | !Result)
   {
   FreeLibrary(hDll);
   Result=false;
-
+//Zast->MClient->WriteDiaryEvent("NetAspects","Клавиатура расблокирована","");
 //Documents->Memo1->Lines->Add("Освобождение");
   }
 }
