@@ -47,8 +47,7 @@ __published:	// IDE-managed Components
           TShiftState Shift);
 private:	// User declarations
 void CreateMainSvod();
-void CreateRep(TADODataSet *TempTable, Variant App, Variant Book, Variant Sheet, int& Start, int& NN, int Number);
-void EndSvod(Variant App, Variant Sheet, int Start);
+
 
 void PrepareMergeAspects();
 bool Registered;
@@ -57,6 +56,8 @@ public:		// User declarations
 AnsiString TFSvod::Address(Variant Sheet,int x,int y);
 void TFSvod::Initialize();
 void ContSvodReport();
+void CreateRep(TADODataSet *TempTable, Variant App, Variant Book, Variant Sheet, int& Start, int& NN, int Number);
+void EndSvod(Variant App, Variant Sheet, int Start);
 };
 //---------------------------------------------------------------------------
 extern PACKAGE TFSvod *FSvod;

@@ -2982,19 +2982,8 @@ catch(...)
 void __fastcall TDocuments::N00111Click(TObject *Sender)
 {
 //Ф001.1
-Report1->Role=2;
-Report1->Flt="";
-Report1->FltName="Отключен";
-Report1->PodrComText="SELECT Подразделения.[Номер подразделения], Подразделения.[Название подразделения] FROM (Подразделения INNER JOIN ObslOtdel ON Подразделения.[Номер подразделения] = ObslOtdel.NumObslOtdel) INNER JOIN Аспекты ON Подразделения.[Номер подразделения] = Аспекты.Подразделение GROUP BY ObslOtdel.Login, Подразделения.[Номер подразделения], Подразделения.[Название подразделения] ORDER BY Подразделения.[Название подразделения];";
 
-Report1->NumRep=1;
-Report1->RepBase=Zast->ADOAspect;
-
- Zast->MClient->Act.ParamComm.clear();
- Zast->MClient->Act.ParamComm.push_back("ContStartReports");
- String ServerSQL=Report1->PodrComText;
- String ClientSQL="Select [ServerNum], [Название подразделения] From TempПодразделения";
- Zast->MClient->ReadTable("Аспекты",ServerSQL, "Аспекты", ClientSQL);
+Zast->MClient->BlockServer("PrepReport1Mspec");
 
 
 }
@@ -3003,19 +2992,8 @@ Report1->RepBase=Zast->ADOAspect;
 void __fastcall TDocuments::N00121Click(TObject *Sender)
 {
 //Ф001.2
-Report1->Role=2;
-Report1->Flt="";
-Report1->FltName="Отключен";
-Report1->PodrComText="SELECT Подразделения.[Номер подразделения], Подразделения.[Название подразделения] FROM (Подразделения INNER JOIN ObslOtdel ON Подразделения.[Номер подразделения] = ObslOtdel.NumObslOtdel) INNER JOIN Аспекты ON Подразделения.[Номер подразделения] = Аспекты.Подразделение GROUP BY ObslOtdel.Login, Подразделения.[Номер подразделения], Подразделения.[Название подразделения] ORDER BY Подразделения.[Название подразделения];";
+Zast->MClient->BlockServer("PrepReport2Mspec");
 
-Report1->NumRep=2;
-Report1->RepBase=Zast->ADOAspect;
-
- Zast->MClient->Act.ParamComm.clear();
- Zast->MClient->Act.ParamComm.push_back("ContStartReports");
- String ServerSQL=Report1->PodrComText;
- String ClientSQL="Select [ServerNum], [Название подразделения] From TempПодразделения";
- Zast->MClient->ReadTable("Аспекты",ServerSQL, "Аспекты", ClientSQL);
 
 
 }

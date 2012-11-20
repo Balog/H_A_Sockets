@@ -225,6 +225,8 @@ BlockServer("BeginWork");
  //ответ на команду попытки блокировки сервера
  //1 - сервер заблокирован этим клиентом и можно работать
  //0 - сервер уже заблокирован другим клиентом и надо подождать
+  if(!Zast->BlockServer->Enabled)
+ {
  if(Parameters[0]=="1")
  {
  //блокирование прошло успешно
@@ -238,6 +240,7 @@ BlockServer("BeginWork");
   //запускаем таймер повтора блокировки
  Zast->WaitBlockServer(true);
  }
+ }
  break;
  }
  case 20:
@@ -245,6 +248,8 @@ BlockServer("BeginWork");
  //ответ на команду попытки разблокировки сервера
  //1 - сервер разблокирован этим клиентом и можно работать
  //0 - сервер уже разблокировть не удалось и это ошибка логики работы
+  if(Zast->UnBlockServer->Enabled)
+ {
  Zast->UnBlockServer->Enabled=false;
  if(Parameters[0]=="1")
  {
@@ -252,9 +257,11 @@ BlockServer("BeginWork");
  }
  else
  {
-  ShowMessage("Ошибка разблокирования сервера!");
+  //ShowMessage("Ошибка разблокирования сервера!");
  }
+  }
  break;
+
  }
  case 21:
  {

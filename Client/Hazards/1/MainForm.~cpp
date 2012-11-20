@@ -181,15 +181,15 @@ SetCombo();
 Aspects->Active=true;
 if(Podrazdel->RecordCount!=0)
 {
-
+ InitCombo();
+ Zast->MClient->UnBlockServer("ReadWriteDoc");
 }
 else
 {
-Zast->MClient->WriteDiaryEvent("Hazards","Для пользователя не назначено подразделений",Login);
-ShowMessage("Для пользователя "+Login+" не назначено подразделений!\rЗавершение работы программы.");
-Zast->Close();
+Zast->MClient->UnBlockServer("StopDemoNoPodr");
+
+
 }
- InitCombo();
 }
 //----------------------------------------------------------------------------
 void TForm1::SetAspects(String Login, int NumRec)

@@ -181,15 +181,15 @@ SetCombo();
 Aspects->Active=true;
 if(Podrazdel->RecordCount!=0)
 {
-
+ InitCombo();
+ Zast->MClient->UnBlockServer("ReadWriteDoc");
 }
 else
 {
-Zast->MClient->WriteDiaryEvent("Hazards","Для пользователя не назначено подразделений",Login);
-ShowMessage("Для пользователя "+Login+" не назначено подразделений!\rЗавершение работы программы.");
-Zast->Close();
+Zast->MClient->UnBlockServer("StopDemoNoPodr");
+
+
 }
- InitCombo();
 }
 //----------------------------------------------------------------------------
 void TForm1::SetAspects(String Login, int NumRec)
@@ -1031,7 +1031,7 @@ Branches->Next();
 }
 catch(...)
 {
-Zast->MClient->WriteDiaryEvent("Hazards ошибка","Ошибка синхронизации экоаспектов","");
+Zast->MClient->WriteDiaryEvent("Hazards ошибка","Ошибка синхронизации опасностей","");
 }
 }
 //---------------------------------------------------------------------------
@@ -2062,7 +2062,7 @@ catch(...)
 //------------------------------------------------------------------------
 void TForm1::PrepareMergeAspects()
 {
-Zast->MClient->WriteDiaryEvent("Hazards","Подготовка к загрузке аспектов","");
+Zast->MClient->WriteDiaryEvent("Hazards","Подготовка к загрузке опасностей","");
 try
 {
 
@@ -2147,19 +2147,19 @@ Temp->Edit();
 Temp->FieldByName("Предлагаемый мониторинг и контроль")->Assign(TT);
 Temp->Post();
 }
-Zast->MClient->WriteDiaryEvent("Hazards","Подготовка к загрузке аспектов завершена","");
+Zast->MClient->WriteDiaryEvent("Hazards","Подготовка к загрузке опасностей завершена","");
 
 }
 catch(...)
 {
-Zast->MClient->WriteDiaryEvent("Hazards ошибка","Ошибка подготовки к загрузке аспектов"," Ошибка "+IntToStr(GetLastError()));
+Zast->MClient->WriteDiaryEvent("Hazards ошибка","Ошибка подготовки к загрузке опасностей"," Ошибка "+IntToStr(GetLastError()));
 
 }
 }
 //------------------------------------------------------------------------
 void  TForm1::MergeAspects(int NumLogin)
 {
-Zast->MClient->WriteDiaryEvent("Hazards","Обновление аспектов","");
+Zast->MClient->WriteDiaryEvent("Hazards","Обновление опасностей","");
 try
 {
 MP<TADODataSet>Podr(this);
@@ -2186,8 +2186,8 @@ for(TempAsp->First();!TempAsp->Eof;TempAsp->Next())
  }
  else
  {
- Zast->MClient->WriteDiaryEvent("Hazards ошибка","Сбой обновления аспектов","");
-  ShowMessage("Ошибка объединения аспектов");
+ Zast->MClient->WriteDiaryEvent("Hazards ошибка","Сбой обновления опасностей","");
+  ShowMessage("Ошибка объединения опасностей");
  }
 }
 
@@ -2203,7 +2203,7 @@ Comm->Execute();
 }
 catch(...)
 {
-Zast->MClient->WriteDiaryEvent("Hazards ошибка","Ошибка обновления аспектов"," Ошибка "+IntToStr(GetLastError()));
+Zast->MClient->WriteDiaryEvent("Hazards ошибка","Ошибка обновления опасностей"," Ошибка "+IntToStr(GetLastError()));
 
 }
 }

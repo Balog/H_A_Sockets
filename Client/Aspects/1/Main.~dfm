@@ -1,6 +1,6 @@
 object Documents: TDocuments
-  Left = 209
-  Top = 136
+  Left = 190
+  Top = 91
   BorderIcons = [biSystemMenu, biMinimize]
   BorderStyle = bsSingle
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
@@ -26,7 +26,7 @@ object Documents: TDocuments
     Top = 0
     Width = 1031
     Height = 736
-    ActivePage = TabMetod
+    ActivePage = TabAspects
     Align = alClient
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
@@ -35,7 +35,7 @@ object Documents: TDocuments
     Font.Style = []
     MultiLine = True
     ParentFont = False
-    TabIndex = 0
+    TabIndex = 8
     TabOrder = 0
     object TabMetod: TTabSheet
       Caption = #1052#1077#1090#1086#1076#1080#1082#1072

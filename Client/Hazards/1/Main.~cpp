@@ -2324,6 +2324,7 @@ Application->HelpFile=ExtractFilePath(Application->ExeName)+"Hazards.HLP";
 
 void __fastcall TDocuments::N2Click(TObject *Sender)
 {
+Prog->SignComplete=true;
 Zast->BlockMK(true);
 try
 {
@@ -2345,6 +2346,7 @@ Zast->BlockMK(false);
 
 void __fastcall TDocuments::N27Click(TObject *Sender)
 {
+Prog->SignComplete=true;
 Zast->BlockMK(true);
 try
 {
@@ -2366,6 +2368,7 @@ Zast->BlockMK(false);
 
 void __fastcall TDocuments::N26Click(TObject *Sender)
 {
+Prog->SignComplete=true;
 Zast->BlockMK(true);
 try
 {
@@ -2387,6 +2390,7 @@ catch(...)
 
 void __fastcall TDocuments::N28Click(TObject *Sender)
 {
+Prog->SignComplete=true;
 Zast->BlockMK(true);
 try
 {
@@ -2408,6 +2412,7 @@ catch(...)
 
 void __fastcall TDocuments::N6Click(TObject *Sender)
 {
+Prog->SignComplete=true;
 try
 {
 Zast->BlockMK(true);
@@ -2551,6 +2556,7 @@ catch(...)
 
 void __fastcall TDocuments::N20Click(TObject *Sender)
 {
+Prog->SignComplete=true;
 try
 {
 Zast->BlockMK(true);
@@ -2572,6 +2578,7 @@ catch(...)
 
 void __fastcall TDocuments::N24Click(TObject *Sender)
 {
+Prog->SignComplete=true;
 try
 {
 Zast->BlockMK(true);
@@ -2593,6 +2600,7 @@ catch(...)
 
 void __fastcall TDocuments::N25Click(TObject *Sender)
 {
+Prog->SignComplete=true;
 try
 {
 Zast->BlockMK(true);
@@ -2614,6 +2622,7 @@ catch(...)
 
 void __fastcall TDocuments::N31Click(TObject *Sender)
 {
+Prog->SignComplete=true;
 Zast->BlockMK(true);
 try
 {
@@ -2694,6 +2703,7 @@ DataSetPost4->Execute();
 //---------------------------------------------------------------------------
 void __fastcall TDocuments::N18Click(TObject *Sender)
 {
+Prog->SignComplete=true;
 Zast->BlockMK(true);
 try
 {
@@ -2717,6 +2727,7 @@ catch(...)
 //---------------------------------------------------------------------------
 void __fastcall TDocuments::N38Click(TObject *Sender)
 {
+Prog->SignComplete=true;
 Zast->BlockMK(true);
 try
 {
@@ -2739,6 +2750,7 @@ catch(...)
 //---------------------------------------------------------------------------
 void __fastcall TDocuments::N37Click(TObject *Sender)
 {
+Prog->SignComplete=true;
 try
 {
 Zast->BlockMK(true);
@@ -2762,6 +2774,7 @@ catch(...)
 
 void __fastcall TDocuments::N39Click(TObject *Sender)
 {
+Prog->SignComplete=true;
 try
 {
 Zast->BlockMK(true);
@@ -2785,6 +2798,7 @@ catch(...)
 
 void __fastcall TDocuments::N32Click(TObject *Sender)
 {
+Prog->SignComplete=true;
 Zast->BlockMK(true);
 try
 {
@@ -2825,6 +2839,7 @@ catch(...)
 
 void __fastcall TDocuments::N34Click(TObject *Sender)
 {
+Prog->SignComplete=true;
 try
 {
 Zast->BlockMK(true);
@@ -2845,6 +2860,7 @@ catch(...)
 
 void __fastcall TDocuments::N35Click(TObject *Sender)
 {
+Prog->SignComplete=true;
 Zast->BlockMK(true);
 try
 {
@@ -2865,6 +2881,7 @@ catch(...)
 
 void __fastcall TDocuments::N36Click(TObject *Sender)
 {
+Prog->SignComplete=true;
 Zast->BlockMK(true);
 try
 {
@@ -2885,6 +2902,7 @@ catch(...)
 
 void __fastcall TDocuments::N41Click(TObject *Sender)
 {
+Prog->SignComplete=true;
 Zast->BlockMK(true);
 try
 {

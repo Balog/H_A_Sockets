@@ -353,15 +353,8 @@ Comm->Execute();
  Zast->MClient->ReadTable("Аспекты",ServerSQL, "Аспекты", ClientSQL);
 }
 //---------------------------------------------------------------------------
-void TFSvod::AddMainSvod(TADODataSet *Table)
-{
-
-}
-//---------------------------------------------------------------------------
 void TFSvod::CreateRep(TADODataSet *TempTable, Variant App, Variant Book, Variant Sheet, int &Start, int &NN, int Number)
 {
-AddMainSvod(TempTable);
-
 TempTable->First();
 AnsiString Text;
 

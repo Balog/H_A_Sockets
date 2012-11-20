@@ -745,6 +745,8 @@ Documents->Podr->Active=false;
 Documents->Podr->Active=true;
 
 Zast->MClient->WriteDiaryEvent("NetAspects","Конец загрузки подразделений (главспец)","");
+
+Zast->MClient->UnBlockServer("ReadWriteDoc");
 }
 else
 {
@@ -752,7 +754,7 @@ Form1->Initialize();
 
 Zast->MClient->WriteDiaryEvent("NetAspects","Конец загрузки подразделений (пользователь)","");
 }
-Zast->MClient->UnBlockServer("ReadWriteDoc");
+//Zast->MClient->UnBlockServer("ReadWriteDoc");
 }
 catch(...)
 {
@@ -2323,7 +2325,8 @@ catch(...)
 
 void __fastcall TZast::ContSvodReportExecute(TObject *Sender)
 {
- FSvod->ContSvodReport();
+Zast->MClient->UnBlockServer("ContSvodReportAct");
+// FSvod->ContSvodReport();
 }
 //---------------------------------------------------------------------------
 
@@ -2749,7 +2752,7 @@ MAsp->MoveAspects->CommandText=CT;
 MAsp->MoveAspects->Connection=Zast->ADOAspect;
 MAsp->MoveAspects->Active=true;
 
-MClient->UnBlockServer("");
+//MClient->UnBlockServer("");
 if(!IsError)
 {
 MAsp->ShowModal();
@@ -2845,34 +2848,8 @@ else
 
 if(!Res)
 {
-Zast->BlockMK(false);
- if(Application->MessageBoxA(Mess.c_str(),"Запись аспектов",MB_YESNO+MB_ICONQUESTION+MB_DEFBUTTON1)==IDYES)
- {
- Zast->BlockMK(true);
-  //Запись списка аспектов главспецом
-
-
-try
-{
-
-Zast->SaveAspectsMSpec0->Execute();
-}
-catch(...)
-{
- Zast->BlockMK(false);
-}
- }
- else
- {
-
- Zast->MClient->WriteDiaryEvent("NetAspects","Отказ от сохранения движения аспектов (главспец)","");
- }
-}
-else
-{
-Prog->SignComplete=false;
-Zast->EndsaveAspectsMSpec->Execute();
-//Zast->MClient->UnBlockServer("EndsaveAspectsMSpec");
+Message=Mess;
+Zast->MClient->UnBlockServer("ZaprosSaveAspectsMspes");
 }
 
 }
@@ -3238,6 +3215,7 @@ try
 {
  Zast->MClient->Act.WaitCommand=20;
  ClientSocket->Socket->SendText("Command:20;1|1#0");
+ //UnBlockServer->Enabled=false;
 }
 catch(...)
 {
@@ -3279,7 +3257,7 @@ catch(...)
 void __fastcall TZast::PrepareCompareMSpecAspectsExecute(TObject *Sender)
 {
  Zast->MClient->Act.ParamComm.clear();
- Zast->MClient->Act.ParamComm.push_back("CompareMSpecAspects");
+ Zast->MClient->Act.ParamComm.push_back("CompareMSpecAspects0");
  String ServerSQL="SELECT Аспекты.[Номер аспекта], Аспекты.Подразделение, Аспекты.Ситуация, Аспекты.[Вид территории], Аспекты.Деятельность, Аспекты.Специальность, Аспекты.Аспект, Аспекты.Воздействие, Аспекты.G, Аспекты.O, Аспекты.R, Аспекты.S, Аспекты.T, Аспекты.L, Аспекты.N, Аспекты.Z, Аспекты.Значимость, Аспекты.[Проявление воздействия], Аспекты.[Тяжесть последствий], Аспекты.Приоритетность,  Аспекты.[Выполняющиеся мероприятия],  Аспекты.[предлагаемые мероприятия],  Аспекты.[Мониторинг и контроль], Аспекты.[Предлагаемый мониторинг и контроль], Аспекты.[Дата создания], Аспекты.[Начало действия], Аспекты.[Конец действия] FROM Аспекты;";
  String ClientSQL="SELECT TempAspects.[Номер аспекта], TempAspects.Подразделение, TempAspects.Ситуация, TempAspects.[Вид территории], TempAspects.Деятельность, TempAspects.Специальность, TempAspects.Аспект, TempAspects.Воздействие, TempAspects.G, TempAspects.O, TempAspects.R, TempAspects.S, TempAspects.T, TempAspects.L, TempAspects.N, TempAspects.Z, TempAspects.Значимость, TempAspects.[Проявление воздействия], TempAspects.[Тяжесть последствий], TempAspects.Приоритетность, TempAspects.[Выполняющиеся мероприятия],  TempAspects.[предлагаемые мероприятия],  TempAspects.[Мониторинг и контроль], TempAspects.[Предлагаемый мониторинг и контроль],  TempAspects.[Дата создания], TempAspects.[Начало действия], TempAspects.[Конец действия] FROM TempAspects;";
 Zast->MClient->ReadTable("Аспекты",ServerSQL, "Аспекты", ClientSQL);
@@ -3338,7 +3316,7 @@ void __fastcall TZast::MergeAspectsUser1Execute(TObject *Sender)
 {
 try
 {
-Prog->Label1->Caption="Объединение опасностей";
+Prog->Label1->Caption="Объединение аспектов";
 Prog->PB->Min=1;
 Prog->PB->Max=3;
 Prog->PB->Position=3;
@@ -4112,6 +4090,340 @@ Comm->Execute();
 Zast->ContStartReports->Execute();
 }
 
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TZast::StopDemoNoPodrExecute(TObject *Sender)
+{
+
+Zast->MClient->WriteDiaryEvent("NetAspects","Для пользователя не назначено подразделений",Form1->Login);
+ShowMessage("Для пользователя "+Form1->Login+" не назначено подразделений!\rЗавершение работы программы.");
+Zast->Close();
+
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TZast::ZaprosSaveAspectsMspesExecute(TObject *Sender)
+{
+ if(Application->MessageBoxA(Message.c_str(),"Запись опасностей",MB_YESNO+MB_ICONQUESTION+MB_DEFBUTTON1)==IDYES)
+ {
+  //Запись списка аспектов главспецом
+
+Zast->BlockMK(true);
+try
+{
+Prog->SignComplete=true;
+Zast->MClient->BlockServer("SaveAspectsMSpec0");
+
+}
+catch(...)
+
+{
+ Zast->BlockMK(false);
+}
+ }
+ else
+ {
+
+ Zast->MClient->WriteDiaryEvent("Hazards","Отказ от сохранения движения опасностей (главспец)","");
+ }
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TZast::CompareMSpecAspects0Execute(TObject *Sender)
+{
+Zast->MClient->UnBlockServer("CompareMSpecAspects");
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TZast::PrepReport1MspecExecute(TObject *Sender)
+{
+Report1->Role=2;
+Report1->Flt="";
+Report1->FltName="Отключен";
+Report1->PodrComText="SELECT Подразделения.[Номер подразделения], Подразделения.[Название подразделения] FROM (Подразделения INNER JOIN ObslOtdel ON Подразделения.[Номер подразделения] = ObslOtdel.NumObslOtdel) INNER JOIN Аспекты ON Подразделения.[Номер подразделения] = Аспекты.Подразделение GROUP BY ObslOtdel.Login, Подразделения.[Номер подразделения], Подразделения.[Название подразделения] ORDER BY Подразделения.[Название подразделения];";
+
+Report1->NumRep=1;
+Report1->RepBase=Zast->ADOAspect;
+
+ Zast->MClient->Act.ParamComm.clear();
+ Zast->MClient->Act.ParamComm.push_back("ContStartReports");
+ String ServerSQL=Report1->PodrComText;
+ String ClientSQL="Select [ServerNum], [Название подразделения] From TempПодразделения";
+ Zast->MClient->ReadTable("Аспекты",ServerSQL, "Аспекты", ClientSQL);
+
+        
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TZast::PrepReport2MspecExecute(TObject *Sender)
+{
+Report1->Role=2;
+Report1->Flt="";
+Report1->FltName="Отключен";
+Report1->PodrComText="SELECT Подразделения.[Номер подразделения], Подразделения.[Название подразделения] FROM (Подразделения INNER JOIN ObslOtdel ON Подразделения.[Номер подразделения] = ObslOtdel.NumObslOtdel) INNER JOIN Аспекты ON Подразделения.[Номер подразделения] = Аспекты.Подразделение GROUP BY ObslOtdel.Login, Подразделения.[Номер подразделения], Подразделения.[Название подразделения] ORDER BY Подразделения.[Название подразделения];";
+
+Report1->NumRep=2;
+Report1->RepBase=Zast->ADOAspect;
+
+ Zast->MClient->Act.ParamComm.clear();
+ Zast->MClient->Act.ParamComm.push_back("ContStartReports");
+ String ServerSQL=Report1->PodrComText;
+ String ClientSQL="Select [ServerNum], [Название подразделения] From TempПодразделения";
+ Zast->MClient->ReadTable("Аспекты",ServerSQL, "Аспекты", ClientSQL);
+        
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TZast::CreateMainSvodExecute(TObject *Sender)
+{
+//Фиксация собственных сводных
+MP<TADODataSet>LPodr(this);
+LPodr->Connection=Zast->ADOAspect;
+LPodr->CommandText="SELECT Подразделения.[Номер подразделения], Подразделения.[Название подразделения], Подразделения.ServerNum FROM Logins INNER JOIN (Подразделения INNER JOIN ObslOtdel ON Подразделения.[Номер подразделения] = ObslOtdel.NumObslOtdel) ON Logins.Num = ObslOtdel.Login;";
+LPodr->Active=true;
+
+MP<TADOCommand>Comm(this);
+Comm->Connection=Zast->ADOAspect;
+Comm->CommandText="Delete * From TempAspects";
+Comm->Execute();
+
+Comm->CommandText="Delete * From TempSvodReestr";
+Comm->Execute();
+
+ Zast->MClient->Act.ParamComm.clear();
+ Zast->MClient->Act.ParamComm.push_back("ContSvodReport");
+ String ServerSQL="SELECT Аспекты.[Номер аспекта], Аспекты.Подразделение, Аспекты.Ситуация, Аспекты.[Вид территории], Аспекты.Деятельность, Аспекты.Специальность, Аспекты.Аспект, Аспекты.Воздействие, Аспекты.G, Аспекты.O, Аспекты.R, Аспекты.S, Аспекты.T, Аспекты.L, Аспекты.N, Аспекты.Z, Аспекты.Значимость, Аспекты.[Проявление воздействия], Аспекты.[Тяжесть последствий], Аспекты.Приоритетность, Аспекты.[Выполняющиеся мероприятия],  Аспекты.[предлагаемые мероприятия],  Аспекты.[Мониторинг и контроль], Аспекты.[Предлагаемый мониторинг и контроль], Аспекты.[Дата создания], Аспекты.[Начало действия], Аспекты.[Конец действия] FROM Аспекты;";
+ String ClientSQL="SELECT TempAspects.[Номер аспекта], TempAspects.Подразделение, TempAspects.Ситуация, TempAspects.[Вид территории], TempAspects.Деятельность, TempAspects.Специальность, TempAspects.Аспект, TempAspects.Воздействие, TempAspects.G, TempAspects.O, TempAspects.R, TempAspects.S, TempAspects.T, TempAspects.L, TempAspects.N, TempAspects.Z, TempAspects.Значимость, TempAspects.[Проявление воздействия], TempAspects.[Тяжесть последствий], TempAspects.Приоритетность, TempAspects.[Выполняющиеся мероприятия],  TempAspects.[предлагаемые мероприятия],  TempAspects.[Мониторинг и контроль], TempAspects.[Предлагаемый мониторинг и контроль],  TempAspects.[Дата создания], TempAspects.[Начало действия], TempAspects.[Конец действия] FROM TempAspects;";
+ Zast->MClient->ReadTable("Аспекты",ServerSQL, "Аспекты", ClientSQL);
+
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TZast::ContSvodReportActExecute(TObject *Sender)
+{
+MP<TADOCommand>Comm(this);
+Comm->Connection=Zast->ADOAspect;
+
+String CT="INSERT INTO TempSvodReestr ( [Название подразделения], [Наименование деятельности], [Наименование аспекта], [Наименование воздействия], [Название ситуации], Z, [Мониторинг и контроль], [Предлагаемый мониторинг и контроль], Значимость ) ";
+CT=CT+" SELECT Подразделения.[Название подразделения], Деятельность.[Наименование деятельности], Аспект.[Наименование аспекта], Воздействия.[Наименование воздействия], Ситуации.[Название ситуации], TempAspects.Z, TempAspects.[Мониторинг и контроль], TempAspects.[Предлагаемый мониторинг и контроль], TempAspects.Значимость ";
+CT=CT+" FROM (Подразделения INNER JOIN (Ситуации INNER JOIN (Воздействия INNER JOIN (Аспект INNER JOIN (Деятельность INNER JOIN TempAspects ON Деятельность.[Номер деятельности] = TempAspects.Деятельность) ON Аспект.[Номер аспекта] = TempAspects.Аспект) ON Воздействия.[Номер воздействия] = TempAspects.Воздействие) ON Ситуации.[Номер ситуации] = TempAspects.Ситуация) ON Подразделения.ServerNum = TempAspects.Подразделение) INNER JOIN (Logins INNER JOIN ObslOtdel ON Logins.Num = ObslOtdel.Login) ON Подразделения.[Номер подразделения] = ObslOtdel.NumObslOtdel ";
+CT=CT+" WHERE (((Logins.Role)=3));";
+Comm->CommandText=CT;
+Comm->Execute();
+
+MP<TADODataSet>SlReestr(this);
+SlReestr->Connection=Zast->ADOAspect;
+SlReestr->CommandText="select * from SlaveReestr where Records>0 Order by Number";
+SlReestr->Active=true;
+
+MP<TADODataSet>DT(this);
+DT->CommandText="Select * from Date_Time";
+
+MP<TADODataSet>D(this);
+D->CommandText="select * from Data";
+
+ MP<TADODataSet>TempSvod(this);
+ TempSvod->Connection=Zast->ADOAspect;
+ TempSvod->CommandText="Select * From TempSvodReestr Order by [Название подразделения]";
+ TempSvod->Active=true;
+
+
+for(SlReestr->First();!SlReestr->Eof;SlReestr->Next())
+{
+ String Patch=SlReestr->FieldByName("Patch")->Value;
+
+ FSvod->Temp->Connected=false;
+ FSvod->Temp->ConnectionString="Provider=Microsoft.Jet.OLEDB.4.0;User ID=Admin;Data Source="+Patch+";Mode=Share Deny None;Extended Properties="";Jet OLEDB:System database="";Jet OLEDB:Registry Path="";Jet OLEDB:Database Password="";Jet OLEDB:Engine Type=5;Jet OLEDB:Database Locking Mode=1;Jet OLEDB:Global Partial Bulk Ops=2;Jet OLEDB:Global Bulk Transactions=1;Jet OLEDB:New Database Password="";Jet OLEDB:Create System Database=False;Jet OLEDB:Encrypt Database=False;Jet OLEDB:Don't Copy Locale on Compact=False;Jet OLEDB:Compact Without Replica Repair=False;Jet OLEDB:SFP=False";
+ FSvod->Temp->Connected=true;
+
+ DT->Active=false;
+ DT->Connection=FSvod->Temp;
+ DT->Active=true;
+
+ D->Active=false;
+ D->Connection=FSvod->Temp;
+ D->Active=true;
+
+ String Res="Обработан";
+ for(D->First();!D->Eof;D->Next())
+ {
+ try
+ {
+  TempSvod->Insert();
+  TempSvod->FieldByName("Название подразделения")->Value=D->FieldByName("Подразделение")->Value;
+  TempSvod->FieldByName("Наименование деятельности")->Value=D->FieldByName("Деятельность")->Value;
+  TempSvod->FieldByName("Наименование аспекта")->Value=D->FieldByName("Аспект")->Value;
+  TempSvod->FieldByName("Наименование воздействия")->Value=D->FieldByName("Воздействие")->Value;
+  TempSvod->FieldByName("Название ситуации")->Value=D->FieldByName("Ситуация")->Value;
+  TempSvod->FieldByName("Z")->Value=D->FieldByName("Z")->Value;
+  TempSvod->FieldByName("Мониторинг и контроль")->Value=D->FieldByName("Требования к качественным")->Value;
+  TempSvod->FieldByName("Предлагаемый мониторинг и контроль")->Value=D->FieldByName("Требования к средствам")->Value;
+  TempSvod->FieldByName("Значимость")->Value=D->FieldByName("Значимость")->Value;
+
+  TempSvod->Post();
+  }
+  catch(...)
+  {
+  Res="Не обработан";
+  }
+ }
+
+ SlReestr->Edit();
+ SlReestr->FieldByName("Komm")->Value=Res;
+ SlReestr->Post();
+}
+
+//Реализовать запись данных в собственную таблицу MainSvodReestr
+
+ FSvod->Temp->Connected=false;
+ FSvod->Temp->ConnectionString="Provider=Microsoft.Jet.OLEDB.4.0;User ID=Admin;Data Source="+FSvod->MainPatch->Text+";Mode=Share Deny None;Extended Properties="";Jet OLEDB:System database="";Jet OLEDB:Registry Path="";Jet OLEDB:Database Password="";Jet OLEDB:Engine Type=5;Jet OLEDB:Database Locking Mode=1;Jet OLEDB:Global Partial Bulk Ops=2;Jet OLEDB:Global Bulk Transactions=1;Jet OLEDB:New Database Password="";Jet OLEDB:Create System Database=False;Jet OLEDB:Encrypt Database=False;Jet OLEDB:Don't Copy Locale on Compact=False;Jet OLEDB:Compact Without Replica Repair=False;Jet OLEDB:SFP=False";
+ FSvod->Temp->Connected=true;
+
+ FSvod->TempTable->Active=false;
+ FSvod->TempTable->Connection=FSvod->Temp;
+ FSvod->TempTable->CommandText="Select * from Date_Time";
+ FSvod->TempTable->Active=true;
+
+ FSvod->TempTable->Edit();
+ FSvod->TempTable->FieldByName("Date_Time")->Value=Now();
+ FSvod->TempTable->Post();
+
+ FSvod->TempTable->Active=false;
+ FSvod->TempTable->Connection=FSvod->Temp;
+ FSvod->TempTable->CommandText="Select * from Data";
+ FSvod->TempTable->Active=true;
+
+ TempSvod->Active=false;
+ TempSvod->Active=true;
+
+ Comm->Connection=FSvod->Temp;
+ Comm->CommandText="Delete * from Data";
+ Comm->Execute();
+
+ for(TempSvod->First();!TempSvod->Eof;TempSvod->Next())
+ {
+  FSvod->TempTable->Insert();
+  FSvod->TempTable->FieldByName("Подразделение")->Value=TempSvod->FieldByName("Название подразделения")->Value;
+  FSvod->TempTable->FieldByName("Деятельность")->Value=TempSvod->FieldByName("Наименование деятельности")->Value;
+  FSvod->TempTable->FieldByName("Аспект")->Value=TempSvod->FieldByName("Наименование аспекта")->Value;
+  FSvod->TempTable->FieldByName("Воздействие")->Value=TempSvod->FieldByName("Наименование воздействия")->Value;
+  FSvod->TempTable->FieldByName("Ситуация")->Value=TempSvod->FieldByName("Название ситуации")->Value;
+  FSvod->TempTable->FieldByName("Z")->Value=TempSvod->FieldByName("Z")->Value;
+  FSvod->TempTable->FieldByName("Требования к качественным")->Value=TempSvod->FieldByName("Мониторинг и контроль")->Value;
+  FSvod->TempTable->FieldByName("Требования к средствам")->Value=TempSvod->FieldByName("Предлагаемый мониторинг и контроль")->Value;
+  FSvod->TempTable->FieldByName("Значимость")->Value=TempSvod->FieldByName("Значимость")->Value;
+
+  FSvod->TempTable->Post();
+ }
+////////////////////////////////////////////////////////////
+int NumFiles=0;
+FSvod->TempTable->Active=false;
+FSvod->TempTable->CommandText="Select * From TempSvodReestr";
+FSvod->TempTable->Connection=Zast->ADOAspect;
+FSvod->TempTable->Active=true;
+
+if(FSvod->TempTable->RecordCount!=0)
+{
+Variant App =Variant::CreateObject("Excel.Application");
+Variant App1 =Variant::CreateObject("Excel.Application");
+try
+{
+AnsiString T="Ф-001.3 ";
+AnsiString T1="Ф-001.3 ";
+
+T=T+" Сводный реестр значимых";
+T1=T1+" Сводный реестр незначимых";
+
+AnsiString P1=WideString(ExtractFilePath(Application->ExeName)+"\Templates\\Ф-001_3.xlt");
+AnsiString P2=WideString(ExtractFilePath(Application->ExeName)+"\Templates\\"+T+".xlt");
+CopyFile(P1.c_str() ,P2.c_str() , false);
+
+AnsiString P11=WideString(ExtractFilePath(Application->ExeName)+"\Templates\\Ф-001_3a.xlt");
+AnsiString P21=WideString(ExtractFilePath(Application->ExeName)+"\Templates\\"+T1+".xlt");
+CopyFile(P11.c_str() ,P21.c_str() , false);
+
+
+App.OlePropertySet("Visible",false);
+Variant Book=App.OlePropertyGet("Workbooks").OleFunction("Add", P2.c_str());
+Variant Sheet=App.OlePropertyGet("ActiveSheet");
+Sheet.OlePropertySet("Name","Ф-001.2");
+
+App1.OlePropertySet("Visible",false);
+Variant Book1=App1.OlePropertyGet("Workbooks").OleFunction("Add", P21.c_str());
+Variant Sheet1=App1.OlePropertyGet("ActiveSheet");
+Sheet1.OlePropertySet("Name","Ф-001.2");
+App.OlePropertySet("Visible",false);
+App1.OlePropertySet("Visible",false);
+
+DeleteFile(P2);
+DeleteFile(P21);
+
+int Start=15;
+int Start1=15;
+
+
+FSvod->TSvod->First();
+AnsiString Patch;
+int Number=1;
+
+try
+{
+
+
+FSvod->TempTable->Active=false;
+FSvod->TempTable->Connection=Zast->ADOAspect;
+FSvod->TempTable->CommandText="Select * From TempSvodReestr Where Значимость=true;";
+FSvod->TempTable->Active=true;
+
+int NN=0;
+
+FSvod->CreateRep(FSvod->TempTable, App, Book, Sheet, Start, NN, Number);
+Start=Start+NN+1;
+
+int NN1=0;
+
+FSvod->TempTable->Active=false;
+FSvod->TempTable->Connection=Zast->ADOAspect;
+FSvod->TempTable->CommandText="Select * From TempSvodReestr Where Значимость=false;";
+FSvod->TempTable->Active=true;
+
+FSvod->CreateRep(FSvod->TempTable, App1, Book1, Sheet1, Start1, NN1, Number);
+
+Start1=Start1+NN1+1;
+NumFiles++;
+}
+catch (EOleException &)
+{
+ //ShowMessage("Неверный путь или файл");
+ FSvod->TSvod->Edit();
+ FSvod->TSvod->FieldByName("Komm")->Value="Нет файла";
+ FSvod->TSvod->Post();
+
+
+}
+
+
+FSvod->EndSvod(App, Sheet, Start);
+FSvod->EndSvod(App1, Sheet1, Start1);
+
+//ShowMessage("окончание свода");
+}
+catch(...)
+{
+App.OlePropertySet("Visible",true);
+
+}
+
+
+
+FSvod->TSvod->Active=false;
+FSvod->TSvod->Active=true;
+}
+else
+{
+ ShowMessage("Нет данных для отчета");
+}
 }
 //---------------------------------------------------------------------------
 

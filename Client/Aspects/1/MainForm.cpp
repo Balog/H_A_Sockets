@@ -175,15 +175,16 @@ SetCombo();
 Aspects->Active=true;
 if(Podrazdel->RecordCount!=0)
 {
-
+ InitCombo();
+ Zast->MClient->UnBlockServer("ReadWriteDoc");
 }
 else
 {
-Zast->MClient->WriteDiaryEvent("NetAspects","Для пользователя не назначено подразделений",Login);
-ShowMessage("Для пользователя "+Login+" не назначено подразделений!\rЗавершение работы программы.");
-Zast->Close();
+Zast->MClient->UnBlockServer("StopDemoNoPodr");
+
+
 }
- InitCombo();
+
 }
 //----------------------------------------------------------------------------
 void TForm1::SetAspects(String Login, int NumRec)
@@ -1732,7 +1733,7 @@ Aspects->UpdateBatch();
 void __fastcall TForm1::N9Click(TObject *Sender)
 {
 Prog->SignComplete=true;
-Prog->Label1->Caption="Чтение опасностей";
+Prog->Label1->Caption="Чтение аспектов";
 Prog->PB->Min=1;
 Prog->PB->Max=3;
 Prog->PB->Position=2;
@@ -2126,7 +2127,7 @@ void __fastcall TForm1::N3Click(TObject *Sender)
 Prog->SignComplete=true;
 DataSetRefresh2->Execute();
 
-Prog->Label1->Caption="Запись опасностей";
+Prog->Label1->Caption="Запись аспектов";
 Prog->PB->Min=1;
 Prog->PB->Max=3;
 Prog->PB->Position=1;

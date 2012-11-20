@@ -226,7 +226,7 @@ BlockServer("BeginWork");
  //1 - сервер заблокирован этим клиентом и можно работать
  //0 - сервер уже заблокирован другим клиентом и надо подождать
 
- if(Zast->BlockServer->Enabled)
+ if(!Zast->BlockServer->Enabled)
  {
  if(Parameters[0]=="1")
  {

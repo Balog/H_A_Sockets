@@ -47,7 +47,6 @@ __published:	// IDE-managed Components
           TShiftState Shift);
 private:	// User declarations
 void CreateMainSvod();
-void AddMainSvod(TADODataSet *Table);
 void CreateRep(TADODataSet *TempTable, Variant App, Variant Book, Variant Sheet, int& Start, int& NN, int Number);
 void EndSvod(Variant App, Variant Sheet, int Start);
 

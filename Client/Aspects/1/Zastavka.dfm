@@ -10356,6 +10356,34 @@ object Zast: TZast
       Caption = 'PrepReport2'
       OnExecute = PrepReport2Execute
     end
+    object StopDemoNoPodr: TAction
+      Caption = 'StopDemoNoPodr'
+      OnExecute = StopDemoNoPodrExecute
+    end
+    object ZaprosSaveAspectsMspes: TAction
+      Caption = 'ZaprosSaveAspectsMspes'
+      OnExecute = ZaprosSaveAspectsMspesExecute
+    end
+    object CompareMSpecAspects0: TAction
+      Caption = 'CompareMSpecAspects0'
+      OnExecute = CompareMSpecAspects0Execute
+    end
+    object PrepReport1Mspec: TAction
+      Caption = 'PrepReport1Mspec'
+      OnExecute = PrepReport1MspecExecute
+    end
+    object PrepReport2Mspec: TAction
+      Caption = 'PrepReport2Mspec'
+      OnExecute = PrepReport2MspecExecute
+    end
+    object CreateMainSvod: TAction
+      Caption = 'CreateMainSvod'
+      OnExecute = CreateMainSvodExecute
+    end
+    object ContSvodReportAct: TAction
+      Caption = 'ContSvodReportAct'
+      OnExecute = ContSvodReportActExecute
+    end
   end
   object BlockServer: TTimer
     Enabled = False
