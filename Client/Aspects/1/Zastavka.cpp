@@ -458,6 +458,7 @@ Pass->ShowModal();
 void __fastcall TZast::ClientSocketError(TObject *Sender,
       TCustomWinSocket *Socket, TErrorEvent ErrorEvent, int &ErrorCode)
 {
+//ShowMessage(IntToStr(ErrorCode));
 if(ErrorCode==10061 | ErrorCode==10060 |  ErrorCode==11004)
 {
  this->Hide();
@@ -465,6 +466,14 @@ if(ErrorCode==10061 | ErrorCode==10060 |  ErrorCode==11004)
  ErrorCode=0;
  this->Close();
 }
+if(ErrorCode==1053 | ErrorCode==1054)
+{
+ this->Hide();
+ ShowMessage("Сбой связи с сервером!\nЗавершение работы программы");
+ ErrorCode=0;
+ this->Close();
+}
+//ErrorCode=0;
 }
 //---------------------------------------------------------------------------
 
@@ -2851,6 +2860,10 @@ if(!Res)
 Message=Mess;
 Zast->MClient->UnBlockServer("ZaprosSaveAspectsMspes");
 }
+else
+{
+Zast->MClient->UnBlockServer("");
+}
 
 }
 //---------------------------------------------------------------------------
@@ -4426,4 +4439,5 @@ else
 }
 }
 //---------------------------------------------------------------------------
+
 

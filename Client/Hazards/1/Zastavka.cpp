@@ -465,6 +465,14 @@ if(ErrorCode==10061 | ErrorCode==10060 |  ErrorCode==11004)
  ErrorCode=0;
  this->Close();
 }
+//ErrorCode=0;
+if(ErrorCode==1053 | ErrorCode==1054)
+{
+ this->Hide();
+ ShowMessage("Сбой связи с сервером!\nЗавершение работы программы");
+ ErrorCode=0;
+ this->Close();
+}
 }
 //---------------------------------------------------------------------------
 
@@ -2843,6 +2851,11 @@ if(!Res)
 {
 Message=Mess;
 Zast->MClient->UnBlockServer("ZaprosSaveAspectsMspes");
+}
+else
+{
+Prog->Close();
+Zast->MClient->UnBlockServer("");
 }
 
 

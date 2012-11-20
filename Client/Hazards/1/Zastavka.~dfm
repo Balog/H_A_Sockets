@@ -10376,6 +10376,14 @@ object Zast: TZast
       Caption = 'PrepReport2Mspec'
       OnExecute = PrepReport2MspecExecute
     end
+    object ContSvodReportAct: TAction
+      Caption = 'ContSvodReportAct'
+      OnExecute = ContSvodReportActExecute
+    end
+    object CreateMainSvod: TAction
+      Caption = 'CreateMainSvod'
+      OnExecute = CreateMainSvodExecute
+    end
   end
   object BlockServer: TTimer
     Enabled = False
