@@ -1,9 +1,10 @@
 object Form1: TForm1
   Left = 502
   Top = 329
-  Width = 308
-  Height = 320
+  BorderStyle = bsDialog
   Caption = #1057#1077#1088#1074#1077#1088
+  ClientHeight = 274
+  ClientWidth = 300
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -69,7 +70,7 @@ object Form1: TForm1
         Width = 129
         Height = 21
         Style = csDropDownList
-        ItemHeight = 13
+        ItemHeight = 0
         TabOrder = 0
         OnClick = RoleClick
       end
@@ -116,7 +117,7 @@ object Form1: TForm1
         Width = 157
         Height = 21
         Style = csDropDownList
-        ItemHeight = 13
+        ItemHeight = 0
         TabOrder = 5
         OnClick = BaseClick
       end

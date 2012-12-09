@@ -1239,6 +1239,11 @@ try
 {
 Cl->AutoBlock=true; //Самоблокировка
 //Обслуживание баз данных
+  for(unsigned int i=0; i<Cl->VBases.size(); i++)
+{
+ Cl->VBases[i].Database->Connected=false;
+}
+
 for(unsigned int i=0;i<Cl->VBases.size();i++)
 {
 /*
