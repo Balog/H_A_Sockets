@@ -21,7 +21,7 @@ Clients::~Clients()
 for(unsigned int i=0; i<VBases.size();i++)
 {
   delete VBases[i].Database;
-//  delete VBases[i].Command;
+
 }
 VBases.clear();
 
@@ -79,7 +79,7 @@ VClients[Di]->Socket->SendText("Command:0;0|");
 }
 catch(...)
 {
-//Cl->VClients[i]->Socket->SendText("Command:10;1|1#1");
+
 delete VClients[Di];
 VClients.erase(IVC);
 
@@ -87,30 +87,6 @@ VClients.erase(IVC);
 }
 
 
-
- /*
-delete VClients[i];
-VClients.erase(IVC);
-
-  Form1->ListBox1->Clear();
-for(unsigned int i=0; i<VClients.size();i++)
-{
-String App;
-if(ExtractFileName(VClients[i]->AppPatch)=="AdminARM.exe")
-{
- App="AdminARM";
-}
-if(ExtractFileName(VClients[i]->AppPatch)=="NetAspects.exe")
-{
- App="Aspects";
-}
-if(ExtractFileName(VClients[i]->AppPatch)=="Hazards.exe")
-{
- App="Hazards";
-}
- Form1->ListBox1->Items->Add(VClients[i]->IP+" "+App);
-}
- */
 }
 else
 {
@@ -224,7 +200,7 @@ if(LastCommand==Comm | LastCommand==0)
     try
     {
    //если существующий логин ответил то надо подать команду на отключение нового клиента
-   //this->Socket->SendText("Command:10;1|1#0");
+
    for(unsigned int i=0; i<Parent->VClients.size();i++)
    {
     if(Parent->VClients[i]->Login==this->Login & Parent->VClients[i]->Socket!=this->Socket)
@@ -279,7 +255,6 @@ if(ExtractFileName(Parent->VClients[i]->AppPatch)=="Hazards.exe")
   case 3:
   {
   //Организовать регистрацию формы на сервере
-//   ShowMessage(Parameters[0]);
    LastCommand=0;
    mForm *F=new mForm();
    F->IDF=VForm.size();
@@ -333,11 +308,11 @@ if(ExtractFileName(Parent->VClients[i]->AppPatch)=="Hazards.exe")
    Parent->WriteDiaryEvent(IP, Login, "Служебное", "Передача таблицы", "Имя: "+Parameters[0]+" SQL: "+Parameters[1]);
 
    String Text=TableToStr(Parameters[0], Parameters[1]);
-   //ShowMessage(Text);
+
    Text="Command:5;1|"+IntToStr(Text.Length())+"#"+Text+"|";
 
    this->Socket->SendText(Text);
-   //Text=Text.SubString(Rec+1,Text.Length());
+
    }
    catch(...)
    {
@@ -362,33 +337,22 @@ if(ExtractFileName(Parent->VClients[i]->AppPatch)=="Hazards.exe")
    }
    else
    {
-   //Parent->WriteDiaryEvent(this->IP, Parameters[0], "Служебное","Идентификация пользователя");
    Parent->WriteDiaryEvent(this->IP, Parameters[0], "Служебное","Пользователь не идентифицирован","Pass: "+Parameters[1]);
    }
    break;
    }
    case 7:
    {
-   /*
-   ShowMessage(Parameters[0]);
-   ShowMessage(Parameters[1]);
-   ShowMessage(Parameters[2]);
-   ShowMessage(Parameters[3]);
-   ShowMessage(Parameters[4]);
-   */
-//void WriteDiaryEvent(String Comp, String Login, String Type, String Name, String Prim);
+
+
 
 Parent->WriteDiaryEvent(Parameters[0], Parameters[1], Parameters[2], Parameters[3], Parameters[4]);
-   //this->Socket->SendText("Command:7;0|");
+
    break;
    }
    case 8:
    {
-   /*
-   ShowMessage(Parameters[0]);  //NameDB
-   ShowMessage(Parameters[1]);  //SQL
-   ShowMessage(Parameters[2]);  //Data
-   */
+
    try
    {
 Parent->WriteDiaryEvent(IP, Login, "Служебное", "Прием таблицы", "Имя: "+Parameters[0]+" SQL: "+Parameters[1]);
@@ -518,7 +482,7 @@ Parent->WriteDiaryEvent(IP, Login, "AdminARM", "Запись логинов", "Имя: "+Paramet
    }
    case 19:
    {
-   //:IfBlock(TCustomWinSocket *Socket, bool Flag)
+
    try
    {
    bool Res=Parent->IfBlock(this->Socket,"1");
@@ -884,23 +848,9 @@ DelText=DelText.SubString(0, FromPos-2);
 //--------------------------------------------------------------------------
 void Client::MergeLogins(String NameDB)
 {
-//DiaryEvent->WriteEvent(Now(), this->pNameComp, this->Login, "Администратор", "Объединение логинов", "IDC="+IntToStr(IDC())+"IDDB="+IntToStr(IDDB));
 TLocateOptions SO;
-//try
-//{
-/*
-TADOConnection *Database=NULL;
-for(unsigned int i=0;i<VDatabase.size();i++)
-{
- if(VDatabase[i]->IDDB==IDDB)
- {
-  Database=VDatabase[i]->Database;
-  break;
- }
-}
-*/
-//if(Database!=NULL)
-//{
+
+
 
 MP<TADOCommand>Comm((TForm*)Parent->pOwner);
 Comm->Connection=GetDatabase(NameDB);;
@@ -1014,7 +964,6 @@ for(TempObslOtdel->First();!TempObslOtdel->Eof;TempObslOtdel->Next())
  }
  else
  {
-//DiaryEvent->WriteEvent(Now(), this->pNameComp, this->Login, "Служебная ошибка", "Ошибка объединения таблицы ObslOtdel по логинам", "IDC="+IntToStr(IDC())+" Log1="+IntToStr(Log1)+" Log2="+IntToStr(Log2));
  }
 
  int Otd1=TempObslOtdel->FieldByName("NumObslOtdel")->Value;
@@ -1033,7 +982,6 @@ for(TempObslOtdel->First();!TempObslOtdel->Eof;TempObslOtdel->Next())
   TempObslOtdel->FieldByName("Del")->Value=True;
   TempObslOtdel->Post();
 
-//DiaryEvent->WriteEvent(Now(), this->pNameComp, this->Login, "Служебная ошибка", "Ошибка объединения таблицы ObslOtdel по подразделениям", "IDC="+IntToStr(IDC())+" Log1="+IntToStr(Otd1)+" Log2="+IntToStr(Otd2));
 
  }
 }
@@ -1050,116 +998,7 @@ Comm->Execute();
 Comm->CommandText="INSERT INTO ObslOtdel ( Login, NumObslOtdel ) SELECT TempObslOtdel.Login, TempObslOtdel.NumObslOtdel FROM TempObslOtdel;";
 Comm->Execute();
 
-//return true;
-//}
-//else
-//{
-//DiaryEvent->WriteEvent(Now(), this->pNameComp, this->Login, "Служебная ошибка", "Ошибка объединения логинов (нет базы данных)", "IDC="+IntToStr(IDC())+" IDDB="+IntToStr(IDDB));
 
-//return false;
-//}
-//}
-//catch(...)
-//{
-//Form1->Block=-1;
-//DiaryEvent->WriteEvent(Now(), this->pNameComp, this->Login, "Служебная ошибка", "Ошибка объединения логинов", "IDC="+IntToStr(IDC())+" IDDB="+IntToStr(IDDB));
-
-//return false;
-//}
-/*
-TLocateOptions SO;
-MP<TADOCommand>Comm((TForm*)Parent->pOwner);
-Comm->Connection=GetDatabase(NameDB);
-Comm->CommandText="Delete * from Logins where Del=true";
-
-
-MP<TADODataSet>TempLogins((TForm*)Parent->pOwner);
-TempLogins->Connection=GetDatabase(NameDB);
-TempLogins->CommandText="Select * From TempLogins";
-TempLogins->Active=true;
-
-MP<TADODataSet>Logins((TForm*)Parent->pOwner);
-Logins->Connection=GetDatabase(NameDB);
-Logins->CommandText="Select * From Logins Order by Num";
-Logins->Active=true;
-
-MP<TADODataSet>TempObslOtdel((TForm*)Parent->pOwner);
-TempObslOtdel->Connection=GetDatabase(NameDB);
-
-//Пройти по Logins, переписать данные совпадающих логинов,удаляя строки из TempLogins
-//пометить к удалению те, у которых нет совпадений в TempLogins и удалить их в конце
-
-for(Logins->First();!Logins->Eof;Logins->Next())
-{
-Logins->Edit();
-Logins->FieldByName("Del")->Value=false;
-Logins->Post();
-
-String Log=Logins->FieldByName("Login")->Value;
-bool B=TempLogins->Locate("Login",Log,SO);
-if(B)
-{
-//есть совпадение
-int NumLogin=Logins->FieldByName("Num")->Value;
-int NumTempLogin= TempLogins->FieldByName("Num")->Value;
-
-TempObslOtdel->Active=false;
-TempObslOtdel->CommandText="Select * From TempObslOtdel where Login="+IntToStr(NumTempLogin);
-TempObslOtdel->Active=true;
-for(TempObslOtdel->First();!TempObslOtdel->Eof;TempObslOtdel->Next())
-{
-TempObslOtdel->Edit();
-TempObslOtdel->FieldByName("Login")->Value=NumLogin;
-TempObslOtdel->Post();
-}
-
-Logins->Edit();
-Logins->FieldByName("Code1")->Value=TempLogins->FieldByName("Code1")->Value;
-Logins->FieldByName("Code2")->Value=TempLogins->FieldByName("Code2")->Value;
-Logins->FieldByName("Role")->Value=TempLogins->FieldByName("Role")->Value;
-Logins->Post();
-TempLogins->Delete();
-}
-else
-{
-Logins->Edit();
-Logins->FieldByName("Del")->Value=true;
-Logins->Post();
-}
-}
-Comm->Execute();
-//пройти по TempLogins и перенести в Logins оставшиеся
-for(TempLogins->First();!TempLogins->Eof;TempLogins->Next())
-{
-Logins->Insert();
-Logins->FieldByName("Login")->Value=TempLogins->FieldByName("Login")->Value;
-Logins->FieldByName("Code1")->Value=TempLogins->FieldByName("Code1")->Value;
-Logins->FieldByName("Code2")->Value=TempLogins->FieldByName("Code2")->Value;
-Logins->FieldByName("Role")->Value=TempLogins->FieldByName("Role")->Value;
-Logins->Post();
-
-Logins->Active=false;
-Logins->Active=true;
-Logins->Last();
-
-int NumLogin=Logins->FieldByName("Num")->Value;
-int NumTempLogin= TempLogins->FieldByName("Num")->Value;
-
-TempObslOtdel->Active=false;
-TempObslOtdel->CommandText="Select * From TempObslOtdel where Login="+IntToStr(NumTempLogin);
-TempObslOtdel->Active=true;
-for(TempObslOtdel->First();!TempObslOtdel->Eof;TempObslOtdel->Next())
-{
-TempObslOtdel->Edit();
-TempObslOtdel->FieldByName("Login")->Value=NumLogin;
-TempObslOtdel->Post();
-}
-}
-
-//очистить TempLogins
-Comm->CommandText="Delete * from TempLogins";
-Comm->Execute();
-*/
 }
 //--------------------------------------------------------------------------
 void Client::MergePodr(String DB1)
@@ -1349,8 +1188,7 @@ Comm2->Execute();
 Comm2->CommandText="INSERT INTO Ситуации ( [Номер ситуации], [Название ситуации], [показ] ) SELECT TempSit.[Номер ситуации], TempSit.[Название ситуации], true FROM TempSit Where [Номер ситуации]<>0;";
 Comm2->Execute();
 
-//Temp->CommandText="Select * From TempSit Order by [Номер ситуации]";
-//Temp->Active=true;
+
 
 Comm2->CommandText="Delete * From TempSit";
 Comm2->Execute();
@@ -1481,7 +1319,6 @@ for(TempBranch->First();!TempBranch->Eof;TempBranch->Next())
  }
  else
  {
-//DiaryEvent->WriteEvent(Now(), this->pNameComp, this->Login, "Ошибка обработки данных", "Ошибка записи структуры", "IDC="+IntToStr(IDC())+" DB: "+NameDatabase1+" Номер узла: "+IntToStr(NumTemp)+"NameNode "+NameNode+" NameBravch "+NameBranch);
 Parent->WriteDiaryEvent(IP, Login, "Ошибка обработки данных", "Ошибка записи структуры", " DB: "+NameDatabase1+" Номер узла: "+IntToStr(NumTemp)+"NameNode "+NameNode+" NameBravch "+NameBranch);
  }
  }
@@ -1489,7 +1326,6 @@ Parent->WriteDiaryEvent(IP, Login, "Ошибка обработки данных", "Ошибка записи стр
 }
 else
 {
-//DiaryEvent->WriteEvent(Now(), this->pNameComp, this->Login, "Ошибка обработки данных", "Ошибка записи узлов и ветвей 1 (Full) (нет базы данных)", "IDC="+IntToStr(IDC())+" DB: "+NameDatabase1);
 Parent->WriteDiaryEvent(IP, Login, "Ошибка обработки данных", "Ошибка записи узлов и ветвей 1 (Full) (нет базы данных)", " DB: "+NameDatabase1);
 
 }
@@ -1573,7 +1409,6 @@ Comm->Execute();
 }
 else
 {
-//DiaryEvent->WriteEvent(Now(), this->pNameComp, this->Login, "Сбой", "Сбой записи узлов и ветвей (Full) (нет базы данных)", "IDC="+IntToStr(IDC())+" DB: "+NameDatabase2);
 Parent->WriteDiaryEvent(IP, Login, "Сбой", "Сбой записи узлов и ветвей (Full) (нет базы данных)", " DB: "+NameDatabase2);
 }
 }
@@ -1603,7 +1438,6 @@ Comm->Execute();
 }
 else
 {
-//DiaryEvent->WriteEvent(Now(), this->pNameComp, this->Login, "Сбой", "Сбой записи узлов и ветвей (Low) (нет базы данных)", "IDC="+IntToStr(IDC())+" DB: "+NameDatabase1);
 Parent->WriteDiaryEvent(IP, Login, "Сбой", "Сбой записи узлов и ветвей (Low) (нет базы данных)", " DB: "+NameDatabase1);
 
 
@@ -1690,7 +1524,6 @@ for(Aspects->First();!Aspects->Eof;Aspects->Next())
  }
  else
  {
-//DiaryEvent->WriteEvent(Now(), this->pNameComp, this->Login, "Ошибка обработки данных", "Ошибка объединения аспектов главным специалистом (не найден аспект)", "IDC="+IntToStr(IDC())+" Номер="+IntToStr(N));
 
  }
 }
@@ -1845,187 +1678,7 @@ return Del;
 //---------------------------------------------------------------------------
 bool Client::MergeAspectsUserH(int NumLogin)
 {
-/*
-bool Del=false;
-TADOConnection *Database=GetDatabase("Опасности");
-MP<TADODataSet>TempPodr(Form1);
-TempPodr->Connection=Database;
-TempPodr->CommandText="Select * From TempПодразделения";
-TempPodr->Active=true;
 
-MP<TADODataSet>TempAsp(Form1);
-TempAsp->Connection=Database;
-TempAsp->CommandText="select * From TempAspects";
-TempAsp->Active=true;
-
-MP<TADODataSet>Asp(Form1);
-Asp->Connection=Database;
-Asp->CommandText="SELECT Аспекты.*, ObslOtdel.Login FROM (Подразделения INNER JOIN Аспекты ON Подразделения.[Номер подразделения] = Аспекты.Подразделение) INNER JOIN ObslOtdel ON Подразделения.[Номер подразделения] = ObslOtdel.NumObslOtdel WHERE (((ObslOtdel.Login)="+IntToStr(NumLogin)+"));";
-Asp->Active=true;
-
-
-MP<TADODataSet>Terr(Form1);
-Terr->Connection=Database;
-Terr->CommandText="select * From Территория";
-Terr->Active=true;
-
-MP<TADODataSet>Deyat(Form1);
-Deyat->Connection=Database;
-Deyat->CommandText="select * From Деятельность";
-Deyat->Active=true;
-
-MP<TADODataSet>Aspect(Form1);
-Aspect->Connection=Database;
-Aspect->CommandText="select * From Аспект";
-Aspect->Active=true;
-
-MP<TADODataSet>Vozd(Form1);
-Vozd->Connection=Database;
-Vozd->CommandText="select * From Воздействия";
-Vozd->Active=true;
-
-MP<TADOCommand>Comm(Form1);
-Comm->Connection=Database;
-Comm->CommandText="UPDATE (Подразделения INNER JOIN Аспекты ON Подразделения.[Номер подразделения] = Аспекты.Подразделение) INNER JOIN ObslOtdel ON Подразделения.[Номер подразделения] = ObslOtdel.NumObslOtdel SET Аспекты.Del = False WHERE (((ObslOtdel.Login)="+IntToStr(NumLogin)+"));";
-Comm->Execute();
-
-for(Asp->First();!Asp->Eof;Asp->Next())
-{
- int N=Asp->FieldByName("Номер аспекта")->Value;
-
- if(TempAsp->Locate("Номер аспекта", N, SO))
- {
-  Asp->Edit();
-  Asp->FieldByName("Подразделение")->Value=TempAsp->FieldByName("Подразделение")->Value;
-  Asp->FieldByName("Ситуация")->Value=TempAsp->FieldByName("Ситуация")->Value;
-
-  if(Terr->Locate("Номер территории", TempAsp->FieldByName("Вид территории")->AsInteger, SO))
-  {
-  Asp->FieldByName("Вид территории")->Value=TempAsp->FieldByName("Вид территории")->Value;
-  }
-  else
-  {
-  Asp->FieldByName("Вид территории")->Value=0;
-  Del=true;
-  }
-
-  if(Deyat->Locate("Номер деятельности", TempAsp->FieldByName("Деятельность")->AsInteger, SO))
-  {
-  Asp->FieldByName("Деятельность")->Value=TempAsp->FieldByName("Деятельность")->Value;
-  }
-  else
-  {
-  Asp->FieldByName("Деятельность")->Value=0;
-  Del=true;
-  }
-
-  Asp->FieldByName("Специальность")->Value=TempAsp->FieldByName("Специальность")->Value;
-
-  if(Aspect->Locate("Номер аспекта", TempAsp->FieldByName("Аспект")->AsInteger, SO))
-  {
-  Asp->FieldByName("Аспект")->Value=TempAsp->FieldByName("Аспект")->Value;
-  }
-  else
-  {
-  Asp->FieldByName("Аспект")->Value=0;
-  Del=true;
-  }
-
-  if(Vozd->Locate("Номер воздействия", TempAsp->FieldByName("Воздействие")->AsInteger, SO))
-  {
-  Asp->FieldByName("Воздействие")->Value=TempAsp->FieldByName("Воздействие")->Value;
-  }
-  else
-  {
-  Asp->FieldByName("Воздействие")->Value=0;
-  Del=true;
-  }
-
-  Asp->FieldByName("G")->Value=TempAsp->FieldByName("G")->Value;
-  Asp->FieldByName("O")->Value=TempAsp->FieldByName("O")->Value;
-  Asp->FieldByName("R")->Value=TempAsp->FieldByName("R")->Value;
-  Asp->FieldByName("S")->Value=TempAsp->FieldByName("S")->Value;
-  Asp->FieldByName("T")->Value=TempAsp->FieldByName("T")->Value;
-  Asp->FieldByName("L")->Value=TempAsp->FieldByName("L")->Value;
-  Asp->FieldByName("N")->Value=TempAsp->FieldByName("N")->Value;
-  Asp->FieldByName("Z")->Value=TempAsp->FieldByName("Z")->Value;
-  Asp->FieldByName("Значимость")->Value=TempAsp->FieldByName("Значимость")->Value;
-  Asp->FieldByName("Наименование значимости")->Value=TempAsp->FieldByName("Наименование значимости")->Value;
-  Asp->FieldByName("Проявление воздействия")->Value=TempAsp->FieldByName("Проявление воздействия")->Value;
-  Asp->FieldByName("Тяжесть последствий")->Value=TempAsp->FieldByName("Тяжесть последствий")->Value;
-  Asp->FieldByName("Приоритетность")->Value=TempAsp->FieldByName("Приоритетность")->Value;
-  Asp->FieldByName("Приор")->Value=TempAsp->FieldByName("Приор")->Value;
-  Asp->FieldByName("Выполняющиеся мероприятия")->Value=TempAsp->FieldByName("Выполняющиеся мероприятия")->Value;
-  Asp->FieldByName("Предлагаемые мероприятия")->Value=TempAsp->FieldByName("Предлагаемые мероприятия")->Value;
-  Asp->FieldByName("Мониторинг и контроль")->Value=TempAsp->FieldByName("Мониторинг и контроль")->Value;
-  Asp->FieldByName("Предлагаемый мониторинг и контроль")->Value=TempAsp->FieldByName("Предлагаемый мониторинг и контроль")->Value;
-  Asp->FieldByName("Исполнитель")->Value=TempAsp->FieldByName("Исполнитель")->Value;
-  Asp->FieldByName("Дата создания")->Value=TempAsp->FieldByName("Дата создания")->Value;
-  Asp->FieldByName("Начало действия")->Value=TempAsp->FieldByName("Начало действия")->Value;
-  Asp->FieldByName("Конец действия")->Value=TempAsp->FieldByName("Конец действия")->Value;
-  Asp->Post();
-
-  TempAsp->Delete();
- }
- else
- {
-  Asp->Edit();
-  Asp->FieldByName("Del")->Value=true;
-  Asp->Post();
- }
-}
-
-Comm->CommandText="DELETE Аспекты.*, Аспекты.Del, ObslOtdel.Login FROM (Подразделения INNER JOIN Аспекты ON Подразделения.[Номер подразделения] = Аспекты.Подразделение) INNER JOIN ObslOtdel ON Подразделения.[Номер подразделения] = ObslOtdel.NumObslOtdel WHERE (((Аспекты.Del)=True) AND ((ObslOtdel.Login)="+IntToStr(NumLogin)+"));";
-Comm->Execute();
-
-for(TempAsp->First();!TempAsp->Eof;TempAsp->Next())
-{
-  Asp->Insert();
-  Asp->FieldByName("Подразделение")->Value=TempAsp->FieldByName("Подразделение")->Value;
-  Asp->FieldByName("Ситуация")->Value=TempAsp->FieldByName("Ситуация")->Value;
-  Asp->FieldByName("Вид территории")->Value=TempAsp->FieldByName("Вид территории")->Value;
-  Asp->FieldByName("Деятельность")->Value=TempAsp->FieldByName("Деятельность")->Value;
-  Asp->FieldByName("Специальность")->Value=TempAsp->FieldByName("Специальность")->Value;
-  Asp->FieldByName("Аспект")->Value=TempAsp->FieldByName("Аспект")->Value;
-  Asp->FieldByName("Воздействие")->Value=TempAsp->FieldByName("Воздействие")->Value;
-  Asp->FieldByName("G")->Value=TempAsp->FieldByName("G")->Value;
-  Asp->FieldByName("O")->Value=TempAsp->FieldByName("O")->Value;
-  Asp->FieldByName("R")->Value=TempAsp->FieldByName("R")->Value;
-  Asp->FieldByName("S")->Value=TempAsp->FieldByName("S")->Value;
-  Asp->FieldByName("T")->Value=TempAsp->FieldByName("T")->Value;
-  Asp->FieldByName("L")->Value=TempAsp->FieldByName("L")->Value;
-  Asp->FieldByName("N")->Value=TempAsp->FieldByName("N")->Value;
-  Asp->FieldByName("Z")->Value=TempAsp->FieldByName("Z")->Value;
-  Asp->FieldByName("Значимость")->Value=TempAsp->FieldByName("Значимость")->Value;
-  Asp->FieldByName("Наименование значимости")->Value=TempAsp->FieldByName("Наименование значимости")->Value;
-  Asp->FieldByName("Проявление воздействия")->Value=TempAsp->FieldByName("Проявление воздействия")->Value;
-  Asp->FieldByName("Тяжесть последствий")->Value=TempAsp->FieldByName("Тяжесть последствий")->Value;
-  Asp->FieldByName("Приоритетность")->Value=TempAsp->FieldByName("Приоритетность")->Value;
-  Asp->FieldByName("Приор")->Value=TempAsp->FieldByName("Приор")->Value;
-  Asp->FieldByName("Выполняющиеся мероприятия")->Value=TempAsp->FieldByName("Выполняющиеся мероприятия")->Value;
-  Asp->FieldByName("Предлагаемые мероприятия")->Value=TempAsp->FieldByName("Предлагаемые мероприятия")->Value;
-  Asp->FieldByName("Мониторинг и контроль")->Value=TempAsp->FieldByName("Мониторинг и контроль")->Value;
-  Asp->FieldByName("Предлагаемый мониторинг и контроль")->Value=TempAsp->FieldByName("Предлагаемый мониторинг и контроль")->Value;
-  //Asp->FieldByName("Исполнитель")->Value=TempAsp->FieldByName("Исполнитель")->Value;
-  Asp->FieldByName("Дата создания")->Value=TempAsp->FieldByName("Дата создания")->Value;
-  Asp->FieldByName("Начало действия")->Value=TempAsp->FieldByName("Начало действия")->Value;
-  Asp->FieldByName("Конец действия")->Value=TempAsp->FieldByName("Конец действия")->Value;
-  Asp->Post();
-
-  Asp->Active=false;
-  Asp->Active=true;
-  Asp->Last();
-
-  TempAsp->Edit();
-  TempAsp->FieldByName("ServerNum")->Value=Asp->FieldByName("Номер аспекта")->Value;
-  TempAsp->Post();
-}
-
-Comm->CommandText="Delete * From TempПодразделения";
-Comm->Execute();
-
-return Del;
-*/
 bool Del=false;
 TADOConnection *Database=GetDatabase("Опасности");
 MP<TADODataSet>TempPodr(Form1);
@@ -2196,7 +1849,7 @@ DiaryBase=new TADOConnection(this->Form);
 
 DiaryBase->ConnectionString="Provider=Microsoft.Jet.OLEDB.4.0;User ID=Admin;Data Source="+PatchDiary+";Mode=Share Deny None;Extended Properties="";Jet OLEDB:System database="";Jet OLEDB:Registry Path="";Jet OLEDB:Database Password="";Jet OLEDB:Engine Type=5;Jet OLEDB:Database Locking Mode=1;Jet OLEDB:Global Partial Bulk Ops=2;Jet OLEDB:Global Bulk Transactions=1;Jet OLEDB:New Database Password="";Jet OLEDB:Create System Database=False;Jet OLEDB:Encrypt Database=False;Jet OLEDB:Don't Copy Locale on Compact=False;Jet OLEDB:Compact Without Replica Repair=False;Jet OLEDB:SFP=False";
 DiaryBase->LoginPrompt=false;
-//DiaryBase->Connected=true;
+
 }
 //................................................
 Diary::~Diary()
@@ -2235,10 +1888,7 @@ Operation->Connection=DiaryBase;
 Operation->CommandText="Select * From Operations order by Num";
 Operation->Active=true;
 
-/*
-Variant locvalues[] = {EDep->Text, EFam->Text};
-Table1->Locate("Dep;Fam", VarArrayOf(locvalues,1),      SearchOptions<<loPartialKey<<loCaseInsensitive);
-*/
+
 int NumOp;
 Variant locvalues[] = {Name, NumType};
 if(Operation->Locate("NameOperation;Type",VarArrayOf(locvalues,1),SO))

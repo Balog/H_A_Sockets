@@ -452,10 +452,7 @@ for(FromPodr->First();!FromPodr->Eof;FromPodr->Next())
  int N;
  for(AspectsFrom->First();!AspectsFrom->Eof;AspectsFrom->Next())
  {
- /*
- SitTo2->Locate("Номер ситуации",AspectsFrom->FieldByName("Ситуация")->AsInteger, SO);
- int NumSit=SitTo2->FieldByName("Номер ситуации")->Value;
- */
+
   N=0;
   AspectsTo->Insert();
   //AspectsTo->FieldByName("номер аспекта")->Value=AspectsFrom->FieldByName("Номер аспекта")->AsInteger;

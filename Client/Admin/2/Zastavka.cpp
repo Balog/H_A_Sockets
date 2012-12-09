@@ -81,8 +81,7 @@ Timer2->Enabled=false;
 if(Start)
 {
 Timer1->Enabled=false;
-//Pass->Show();
-//PreViewLogins1
+
 MClient->BlockServer("PreViewLogins1");
 
 Timer1->Enabled=false;
@@ -1198,20 +1197,20 @@ if(B)
 
 if(B)
 {
-//Documents->Memo1->Lines->Add("B=true");
+
 }
 else
 {
-//Documents->Memo1->Lines->Add("B=false");
+
 }
 
 if(Result)
 {
-//Documents->Memo1->Lines->Add("Result=true");
+
 }
 else
 {
-//Documents->Memo1->Lines->Add("Result=false");
+
 }
 
   if(!B | !Result)
@@ -1219,10 +1218,10 @@ else
   FreeLibrary(hDll);
   Result=false;
 
-//Documents->Memo1->Lines->Add("Освобождение");
+
   }
 }
-//Documents->Memo1->Lines->Add("Конец");
+
 }
 //---------------------------------------------------------------------------
 void __fastcall TZast::BlockServerTimer(TObject *Sender)
@@ -1262,11 +1261,7 @@ if(Flag)
 {
  //Начинаем ожидание
  Prog->Label1->Caption=Mess;
- /*
- Prog->PB->Min=0;
- Prog->PB->Position=0;
- Prog->PB->Max=9;
- */
+
 
  Prog->Show();
  BlockServer->Enabled=true;
@@ -1276,12 +1271,7 @@ else
  //Ожидание закончено
   BlockServer->Enabled=false;
   
-/*
- if(Prog->Label1->Caption==Mess)
- {
- Prog->Close();
- }
-*/
+
 }
 }
 //---------------------------------------------------------------------------

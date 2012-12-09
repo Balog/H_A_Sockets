@@ -152,7 +152,6 @@ N=N+256;
 int S=N/16;
 for(int j=0;j<16;j++)
 {
-//A[1]=(char)S[5];
 int Shift=S+j;
 if(Shift>=16)
 {
@@ -261,7 +260,7 @@ N=N+256;
 int S=N/16;
 for(int j=0;j<16;j++)
 {
-//A[1]=(char)S[5];
+
 
 V[j]=(char)Section[j*16+i+1];
 }

@@ -57,7 +57,7 @@ object FDiary: TFDiary
     Top = 21
     Width = 155
     Height = 154
-    Date = 40897.9429344676
+    Date = 40897.5947055556
     TabOrder = 0
     OnClick = NDateClick
   end
@@ -66,7 +66,7 @@ object FDiary: TFDiary
     Top = 21
     Width = 155
     Height = 154
-    Date = 40897.9429344676
+    Date = 40897.5947055556
     TabOrder = 1
     OnClick = NDateClick
   end

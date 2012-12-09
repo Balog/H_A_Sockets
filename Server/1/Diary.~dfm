@@ -57,7 +57,7 @@ object FDiary: TFDiary
     Top = 21
     Width = 155
     Height = 154
-    Date = 40897.8944381366
+    Date = 40897.9429344676
     TabOrder = 0
     OnClick = NDateClick
   end
@@ -66,7 +66,7 @@ object FDiary: TFDiary
     Top = 21
     Width = 155
     Height = 154
-    Date = 40897.8944381366
+    Date = 40897.9429344676
     TabOrder = 1
     OnClick = NDateClick
   end
@@ -103,7 +103,8 @@ object FDiary: TFDiary
     Width = 1013
     Height = 535
     DataSource = DataSource1
-    Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit]
+    Options = [dgEditing, dgTitles, dgIndicator, dgColLines, dgRowLines, dgTabs, dgConfirmDelete, dgCancelOnExit]
+    ReadOnly = True
     TabOrder = 5
     TitleFont.Charset = DEFAULT_CHARSET
     TitleFont.Color = clWindowText

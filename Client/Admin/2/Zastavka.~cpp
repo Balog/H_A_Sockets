@@ -378,7 +378,7 @@ Comm->Execute();
 //если в TempПодразделения остались записи то это новые подразделения на сервере
 //Перенести их в Подразделения
 
-Comm->CommandText="INSERT INTO Подразделения ( ServerNum, [Название подразделения], NumDatabase ) SELECT TempПодразделения.[Номер подразделения], TempПодразделения.[Название подразделения], "+IntToStr(Zast->MClient->VDB[Zast->MClient->GetIDDBName(Form1->CBDatabase->Text)].NumDatabase)+" AS [Database] FROM TempПодразделения;";
+Comm->CommandText="INSERT INTO Подразделения ( ServerNum, [Название подразделения], NumDatabase ) SELECT TempПодразделения.[Номер подразделения], TempПодразделения.[Название подразделения], "+IntToStr(Zast->MClient->VDB[StrToInt(MClient->VTrigger[0].Var)].NumDatabase)+" AS [Database] FROM TempПодразделения;";
 Comm->Execute();
 }
 catch(...)

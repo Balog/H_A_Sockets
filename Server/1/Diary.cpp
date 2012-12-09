@@ -107,8 +107,8 @@ i=0;
 Logins->Clear();
 for(Login->First();!Login->Eof;Login->Next())
 {
-//if(Login->FieldByName("Login")->AsString!="")
-//{
+
+
 Logins->Items->Add(Login->FieldByName("Login")->AsString);
 if(Login->FieldByName("Login")->AsString=="Не известен")
 {
@@ -120,7 +120,7 @@ Logins->Checked[i]=true;
 }
 
 i++;
-//}
+
 }
 
 MP<TADODataSet>Type(this);
@@ -185,23 +185,7 @@ Day=(int)D;
 Dat=IntToStr(Month)+"/"+IntToStr(Day)+"/"+IntToStr(Year);
 Filtr2=" Date_Time<=#"+Dat+"# ";
 }
-/*
-for(int i=0;i<Comps->Count;i++)
-{
- if(Comps->Checked[i])
- {
-  if(Filtr3=="")
-  {
-   Filtr3="Events.Comp='"+Comps->Items->Strings[i]+"'";
-  }
-  else
-  {
-   Filtr3=Filtr3+" OR Events.Comp='"+Comps->Items->Strings[i]+"'";
-  }
- }
-}
-Filtr3=" "+Filtr3+" ";
-*/
+
 for(int i=0;i<Comps->Count;i++)
 {
  if(Comps->Checked[i])
@@ -228,23 +212,7 @@ for(int i=0;i<Comps->Count;i++)
  }
 }
 Filtr3=" "+Filtr3+" ";
-/*
-for(int i=0;i<Logins->Count;i++)
-{
- if(Logins->Checked[i])
- {
-  if(Filtr4=="")
-  {
-   Filtr4="Events.Login='"+Logins->Items->Strings[i]+"'";
-  }
-  else
-  {
-   Filtr4=Filtr4+" OR Events.Login='"+Logins->Items->Strings[i]+"'";
-  }
- }
-}
-Filtr4=" "+Filtr4+" ";
-*/
+
 
 for(int i=0;i<Logins->Count;i++)
 {
@@ -370,7 +338,7 @@ Filtr="("+Filtr5+")";
 
 
 
-//Filtr=" ("+Filtr1+" OR "+Filtr2+") AND ("+Filtr3+") AND ("+Filtr4+") AND ("+Filtr5+") ";
+
 
 String CT="SELECT Events.Num, Events.Date_Time, Events.Comp, Events.Login, TypeOp.NameType, Operations.NameOperation, Events.Prim FROM TypeOp INNER JOIN (Operations INNER JOIN Events ON Operations.Num = Events.Operation) ON TypeOp.Num = Operations.Type ";
 if(Filtr!="")

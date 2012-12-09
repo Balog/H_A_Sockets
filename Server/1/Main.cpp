@@ -56,23 +56,18 @@ if(Lic!="")
 {
  FILE *F;
 String File=ExtractFilePath(Application->ExeName)+Lic;
-//Form1->MyClients->DiaryEvent->WriteEvent(Now(),"Не определен", "Еще не определен", "Лицензия", "Открываю файл лицензии", File);
 
 if ((F = fopen(File.c_str(), "rt")) == NULL)
 {
- //ShowMessage("Файл лицензии не удается открыть");
-//Form1->MyClients->DiaryEvent->WriteEvent(Now(),"Не определен", "Еще не определен" "Ошибка лицензии", "Файл неудалось открыть", File);
 
  BI.LicCount=0;
 }
 else
 {
-//Form1->MyClients->DiaryEvent->WriteEvent(Now(),"Не определен", "Еще не определен" "Лицензия", "Файл лицензии открыт", File); //ShowMessage("Файл лицензии открыт");
  char S[256];
  fgets(S, 257, F);
  String Text=S;
  int LC=AnalizLic(Text, BI.Name+"1");
-//Form1->MyClients->DiaryEvent->WriteEvent(Now(),"Не определен", "Еще не определен" "Лицензия", "Файл лицензии расшифрован", "DB: "+BI.Name+" NumUsers="+IntToStr(LC)); //ShowMessage("Файл лицензии открыт");
 
  BI.LicCount=LC;
 
@@ -105,7 +100,6 @@ BI.FileName=FN1;
 MDBConnector* ADOConn=new MDBConnector(ExtractFilePath(BI.Patch), FN1, this);
 ADOConn->SetPatchBackUp("Archive");
 BI.Database=ADOConn;
-//BI.Database->Connected=true;
 Cl->VBases.push_back(BI);
 
 ADOConn->ClearArchive(Days);
@@ -122,14 +116,13 @@ ADOConn->Connected=false;
 
 Cl->ConnectDiary(BI.Patch);
 }
-//delete ADOConn;
+
 }
 
 Base->ItemIndex=0;
 
 String File=GetFileDatabase(Base->Text);
-//int Num;
-//int LicCount;
+
 for(unsigned int i=0;i<Cl->VBases.size();i++)
 {
  if(Cl->VBases[i].FileName==File)
@@ -137,15 +130,13 @@ for(unsigned int i=0;i<Cl->VBases.size();i++)
 Database->Connected=false;
 Database->ConnectionString="Provider=Microsoft.Jet.OLEDB.4.0;Data Source="+Cl->VBases[i].Patch+";Persist Security Info=False";
 Database->LoginPrompt=false;
-//Database->Connected=true;
+
 
   break;
  }
 }
 
-/*
 
-*/
 MP<TADODataSet>Roles(this);
 Roles->CommandText="Select * from Roles order by Num";
 Roles->Connection=Database;
@@ -162,25 +153,7 @@ Users->ItemIndex=0;
 
 String File1=GetFileDatabase("Diary");
 Database->Connected=false;
-/*
-int Num1;
-for(unsigned int i=0;i<Cl->VBases.size();i++)
-{
- if(Cl->VBases[i].FileName==File1)
- {
-  Num1=i;
-  break;
- }
-}
-*/
 
-
-//MyClients=new mClients(Form1, VBases[Num1].Patch);
-//MyClients->SetDatabasePatc(ExtractFilePath(VBases[Base->ItemIndex].Patch));
-//MyClients->SetDiaryBase(VBases[Num1].Patch);
-//MyClients->OnCountClientChanged=ChangeCountClient;
-
-//MyClients->CountClientChanged=ChangeCountClient;
 
 VerifyLicense();
 
@@ -202,15 +175,7 @@ Cl->VClients.push_back(C);
 
 //Передача команды на запрос IP адреса
 String Mess="Command:1;0|";
-/*
-for(unsigned int i=0;i<Cl->VClients.size();i++)
-{
- if(Socket==Cl->VClients[i]->Socket)
- {
-  Cl->VClients[i]->Socket->SendText(Mess);
- }
-}
-*/
+
 Socket->SendText(Mess);
 
 Label1->Caption=IntToStr(Cl->VClients.size());
@@ -265,10 +230,10 @@ if(ExtractFileName(Cl->VClients[i]->AppPatch)=="Hazards.exe")
 }
  Form1->ListBox1->Items->Add(Cl->VClients[i]->IP+" "+App+" "+Cl->VClients[i]->Login);
 }
-// Form1->ListBox1->Items->Add(Cl->VClients[i]->IP+" "+App+" "+Cl->VClients[i]->Login);
 
 
-//}
+
+
 this->ChangeCountClient(this);
 
 }
@@ -287,7 +252,6 @@ for(unsigned int i=0;i<Cl->VClients.size();i++)
   {
    Cl->Block=0;
   }
-//Cl->DiaryEvent->WriteEvent(Now(),Cl->VClients[i]->IP,Cl->VClients[i]->Login , "Сервер", "Клиент отключен","Путь: "+Cl->VClients[i]->AppPatch);
  Comp=Cl->VClients[i]->IP;
  Login=Cl->VClients[i]->Login;
 
@@ -314,7 +278,7 @@ if(ExtractFileName(Cl->VClients[i]->AppPatch)=="Hazards.exe")
 }
  Form1->ListBox1->Items->Add(Cl->VClients[i]->IP+" "+App+" "+Cl->VClients[i]->Login);
 }
-//Cl->VClients[i]->Socket->SendText("Command:10;1|1#1");
+
 
 
  break;
@@ -339,7 +303,7 @@ do
 {
 Sleep(100);
 Mess1=Socket->ReceiveText();
-//String Mess1=Socket->ReceiveText();
+
 Mess=Mess+Mess1;
 }
 while(Mess1.Length()!=0);
@@ -349,7 +313,7 @@ if (Mess.Length()!=0)
 int N0=Mess.Pos(":");
 int N=Mess.Pos(";");
 int N1=Mess.Pos("|");
-//String Num=RText.SubString(9,1);
+
 int Comm, NumPar;
 String Nick;
 String SS=Mess.SubString(N0+1,N-N0-1);
@@ -404,7 +368,7 @@ String Key2=DText.SubString(1,Pos2-1);
 String Key1_2="+"+Key1+"+"+Key2;
 int Pos3=DCopy.AnsiPos(Key1_2);
 
-//ShowMessage("Pos3="+IntToStr(Pos3));
+
 if(Pos3!=0)
 {
 //Лицензия верна
@@ -580,15 +544,14 @@ for(Tab->First();!Tab->Eof;Tab->Next())
 //-----------------------------------------------------------------
 void TForm1::VerifyLicense()
 {
-//int Num;
-//int LicCount;
+
 MP<TADOConnection>DB(this);
 DB->LoginPrompt=false;
 for(unsigned int i=0;i<Cl->VBases.size();i++)
 {
  if(Cl->VBases[i].MainSpec==0)
  {
-  //Num=i;
+
   LicCount=Cl->VBases[i].LicCount;
 
   DB->Connected=false;
@@ -601,18 +564,13 @@ MP<TADODataSet>Logins(this);
 Logins->Connection=DB;
 Logins->CommandText="Select * From Logins Where Role=3 Order by Num";
 Logins->Active=true;
-//Form1->MyClients->DiaryEvent->WriteEvent(Now(),Form1->MyClients->NameComp, Form1->MyClients->Login, "Лицензия", "Проверка числа пользователей", "DB: "+VBases[i].Name+" Разрешено="+IntToStr(LicCount)+" Имеется="+IntToStr(Logins->RecordCount)); //ShowMessage("Файл лицензии открыт");
 if(LicCount<Logins->RecordCount)
 {
 int j=0;
 for(Logins->First();!Logins->Eof;Logins->Next())
 {
-//ShowMessage("i="+IntToStr(i)+" LicCount="+IntToStr(LicCount));
 if(j>=LicCount)
 {
-//Form1->MyClients->DiaryEvent->WriteEvent(Now(),Form1->MyClients->NameComp, Form1->MyClients->Login, "Лицензия ошибка", "Удаление избыточных пользователей", "DB: "+VBases[i].Name+" Login: "+Logins->FieldByName("Login")->AsString); //ShowMessage("Файл лицензии открыт");
-
-//Logins->Delete();
 Logins->Edit();
 Logins->FieldByName("Del")->Value=true;
 Logins->Post();
@@ -629,13 +587,11 @@ Comm->Execute();
 }
 else
 {
-//Form1->MyClients->DiaryEvent->WriteEvent(Now(),Form1->MyClients->NameComp, Form1->MyClients->Login, "Лицензия", "Проверка числа пользователей", "DB: "+VBases[i].Name+" Разрешенное число пользователей"); //ShowMessage("Файл лицензии открыт");
 
 }
 }
 else
 {
-//Form1->MyClients->DiaryEvent->WriteEvent(Now(),Form1->MyClients->NameComp, Form1->MyClients->Login, "Лицензия", "Неограниченная лицензия", "DB: "+VBases[i].Name); //ShowMessage("Файл лицензии открыт");
 
 }
  }
@@ -666,7 +622,7 @@ Tab->First();
 Tab->MoveBy(NumLogin);
 int N1=Tab->FieldByName("Num")->AsInteger;
 
-//int NumLogin=TempLogin->FieldByName("Num")->Value;
+
 MP<TADODataSet>Verify(this);
 Verify->Connection=Database;
 
@@ -857,7 +813,7 @@ delete CT;
 
 Tab->CommandText="Select * From Logins Where Num="+IntToStr(EditLoginNumber);
 Tab->Active=true;
-//Tab->MoveBy(Users->ItemIndex);
+
 
 Tab->Edit();
 Tab->FieldByName("Login")->Value=Login;
@@ -1020,12 +976,10 @@ else
 MP<TADODataSet>Tab(this);
 Tab->Connection=Database;
 Tab->CommandText="Select * From ObslOtdel Where Login="+IntToStr(N1)+" Order by NumObslOtdel";
-//Tab->CommandText="SELECT ObslOtdel.Login, Подразделения.[Название подразделения] FROM Подразделения INNER JOIN ObslOtdel ON Подразделения.[Номер подразделения] = ObslOtdel.NumObslOtdel  where Login="+IntToStr(N1);
 Tab->Active=true;
 
 Tab->First();
 Tab->MoveBy(Otdels->ItemIndex);
-//ShowMessage(Tab->FieldByName("Login")->AsString+" "+Tab->FieldByName("NumObslOtdel")->AsString);
 Tab->Delete();
 
 UpdateOtdel(Users->ItemIndex);
@@ -1040,7 +994,6 @@ void __fastcall TForm1::N5Click(TObject *Sender)
 int N=Cl->VClients.size();
 if(N==0)
 {
-//Form1->MyClients->DiaryEvent->WriteEvent(Now(),Form1->MyClients->NameComp, Form1->MyClients->Login, "Служебное", "Ручной останов сервера", "");
 
 this->Close();
 }
@@ -1053,7 +1006,6 @@ ShowMessage("К серверу подключено "+IntToStr(N)+" клиентов!\rПодождите пока они 
 
 void __fastcall TForm1::FormCreate(TObject *Sender)
 {
-//Form1->MyClients->DiaryEvent->WriteEvent(Now(),Form1->MyClients->NameComp, Form1->MyClients->Login, "Служебное", "Форма сервера создана", "");
 
 Application->ShowMainForm=false;
 NID.cbSize = sizeof(TNotifyIconData);
@@ -1108,13 +1060,9 @@ case SC_CLOSE:
 {
 
   Shell_NotifyIcon(NIM_ADD, &NID);
-//  BCreate->Enabled = false;
-// BDelete->Enabled = true;
-// BHide->Enabled = true;
-Form1->Visible=false;
-//SendMessage(Handle,WM_SYSCOMMAND,SC_MINIMIZE,0);
 
-//ShowMessage("SC_Close");
+Form1->Visible=false;
+
 break;
 }
 
@@ -1127,7 +1075,6 @@ DefWindowProc(Handle,Msg.Msg,Msg.WParam,Msg.LParam);
 //------------------------------------------------------------------
 void __fastcall TForm1::N7Click(TObject *Sender)
 {
-//Form1->MyClients->DiaryEvent->WriteEvent(Now(),Form1->MyClients->NameComp, Form1->MyClients->Login, "Служебное", "Ручной останов сервера", "");
 
 this->Close();
 }
@@ -1140,27 +1087,10 @@ FDiary->ShowModal();
 //---------------------------------------------------------------------------
 void __fastcall TForm1::ChangeCountClient(TObject *Sender)
 {
-//Label1->Caption=MyClients->ClientCount();
 
 String S="Сервер. Клиентов: "+Label1->Caption;
 strcpy(NID.szTip,S.c_str());
-/*
-if(Net_Error)
-{
-ImageList1->GetIcon(2, Application->Icon);
-}
-else
-{
-if(MyClients->ClientCount()==0)
-{
-ImageList1->GetIcon(0, Application->Icon);
-}
-else
-{
-ImageList1->GetIcon(1, Application->Icon);
-}
-}
-*/
+
 if(Cl->VClients.size()==0)
 {
 ImageList1->GetIcon(0, Application->Icon);
@@ -1173,13 +1103,7 @@ ImageList1->GetIcon(1, Application->Icon);
 
 NID.hIcon=Application->Icon->Handle;
 Shell_NotifyIcon(NIM_MODIFY, &NID);
-/*
-ListBox1->Clear();
-for(int i=0;i<MyClients->ClientCount();i++)
-{
- ListBox1->Items->Add(IntToStr(MyClients->GetIDC(i))+". "+MyClients->GetName(i));
-}
-*/
+
 }
 //-------------------------------------
 void TForm1::UnBlockClients()
@@ -1246,14 +1170,11 @@ Cl->AutoBlock=true; //Самоблокировка
 
 for(unsigned int i=0;i<Cl->VBases.size();i++)
 {
-/*
-ADOConn->PackDB();
-ADOConn->Backup("Archive");
-*/
-// Cl->VBases[i].Database->DisconnectDB();
+
+
  Cl->VBases[i].Database->PackDB();
  Cl->VBases[i].Database->Backup("Archive");
-// Cl->VBases[i].Database->ConnectDB();
+
 }
 Cl->AutoBlock=false; //Саморазблокировка
 }

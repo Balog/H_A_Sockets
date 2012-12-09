@@ -27,7 +27,7 @@
     <DEBUGLIBPATH value="$(BCB)\lib\debug"/>
     <RELEASELIBPATH value="$(BCB)\lib\release"/>
     <LINKER value="ilink32"/>
-    <USERDEFINES value="_DEBUG"/>
+    <USERDEFINES value=""/>
     <SYSDEFINES value="NO_STRICT"/>
     <MAINSOURCE value="Hazards_Converter.cpp"/>
     <INCLUDEPATH value="&quot;Сервер-клиент аспекты и опасности\Converter\1&quot;;&quot;D:\Program Files (x86)\Borland\CBuilder6\Imports&quot;;&quot;D:\Program Files (x86)\Borland\CBuilder6\Projects&quot;;C:\Users\Алекс\Desktop\proba_Notify\Client2;$(BCB)\include;$(BCB)\include\vcl"/>
@@ -40,13 +40,12 @@
       -I&quot;D:\Program Files (x86)\Borland\CBuilder6\Imports&quot; 
       -I&quot;D:\Program Files (x86)\Borland\CBuilder6\Projects&quot; 
       -IC:\Users\Алекс\Desktop\proba_Notify\Client2 -I$(BCB)\include 
-      -I$(BCB)\include\vcl -src_suffix cpp -D_DEBUG -boa"/>
-    <CFLAG1 value="-Od -H=$(BCB)\lib\vcl60.csm -Hc -Vx -Ve -X- -r- -a8 -b- -k -y -v -vi- -c 
-      -tW -tWM"/>
-    <PFLAGS value="-$YD -$W -$O- -$A8 -v -JPHNE -M"/>
+      -I$(BCB)\include\vcl -src_suffix cpp -boa"/>
+    <CFLAG1 value="-O2 -H=$(BCB)\lib\vcl60.csm -Hc -Vx -Ve -X- -a8 -b- -k- -vi -c -tW -tWM"/>
+    <PFLAGS value="-$Y- -$L- -$D- -$A8 -v -JPHNE -M"/>
     <RFLAGS value=""/>
-    <AFLAGS value="/mx /w2 /zd"/>
-    <LFLAGS value="-D&quot;&quot; -aa -Tpe -x -Gn -v"/>
+    <AFLAGS value="/mx /w2 /zn"/>
+    <LFLAGS value="-D&quot;&quot; -aa -Tpe -x -Gn"/>
     <OTHERFILES value=""/>
   </OPTIONS>
   <LINKER>
@@ -91,11 +90,6 @@ ProductName=
 ProductVersion=1.0.0.0
 Comments=
 
-[Excluded Packages]
-D:\Program Files (x86)\Borland\CBuilder6\Projects\Bpl\DclRx6.bpl=RX Library Controls and Tools
-d:\program files (x86)\borland\cbuilder6\Bin\dclite60.bpl=Borland Integrated Translation Environment
-D:\Program Files (x86)\Borland\CBuilder6\Projects\Bpl\dclrxdb6.bpl=RX Library Database Components
-
 [Debugging]
 DebugSourceDirs=$(BCB)\source\vcl
 
@@ -120,5 +114,10 @@ LinkCGLIB=0
 AddServerUnit=1
 AddClientUnit=1
 PrecompiledHeaders=1
+
+[Language]
+ActiveLang=
+ProjectLang=
+RootDir=
   </IDEOPTIONS>
 </PROJECT>

@@ -11,7 +11,7 @@
     <DEFFILE value=""/>
     <RESDEPEN value="$(RESFILES) LG.dfm"/>
     <LIBFILES value=""/>
-    <LIBRARIES value="dclusr.lib"/>
+    <LIBRARIES value="dclusr.lib rtl.lib vcl.lib"/>
     <SPARELIBS value="vcl.lib rtl.lib dclusr.lib"/>
     <PACKAGES value="vcl.bpi rtl.bpi dbrtl.bpi adortl.bpi vcldb.bpi vclx.bpi bdertl.bpi 
       vcldbx.bpi ibxpress.bpi dsnap.bpi cds.bpi bdecds.bpi qrpt.bpi teeui.bpi 
@@ -28,7 +28,7 @@
     <RELEASELIBPATH value="$(BCB)\lib\release"/>
     <LINKER value="ilink32"/>
     <USERDEFINES value="_DEBUG"/>
-    <SYSDEFINES value="_RTLDLL;NO_STRICT;USEPACKAGES"/>
+    <SYSDEFINES value="NO_STRICT"/>
     <MAINSOURCE value="LicenseGenerator.cpp"/>
     <INCLUDEPATH value="&quot;Сервер-клиент аспекты и опасности\Клиенты\Генератор лицензий\Аспекты\1&quot;;&quot;D:\Program Files (x86)\Borland\CBuilder6\Imports&quot;;&quot;D:\Program Files (x86)\Borland\CBuilder6\Projects&quot;;C:\Users\Алекс\Desktop\proba_Notify\Client2;$(BCB)\include;$(BCB)\include\vcl"/>
     <LIBPATH value="&quot;Сервер-клиент аспекты и опасности\Клиенты\Генератор лицензий\Аспекты\1&quot;;&quot;D:\Program Files (x86)\Borland\CBuilder6\Imports&quot;;&quot;D:\Program Files (x86)\Borland\CBuilder6\Projects&quot;;C:\Users\Алекс\Desktop\proba_Notify\Client2;$(BCB)\Projects\Lib;$(BCB)\lib\obj;$(BCB)\lib"/>
@@ -50,9 +50,9 @@
     <OTHERFILES value=""/>
   </OPTIONS>
   <LINKER>
-    <ALLOBJ value="c0w32.obj $(PACKAGES) Memmgr.Lib sysinit.obj $(OBJFILES)"/>
+    <ALLOBJ value="c0w32.obj sysinit.obj $(OBJFILES)"/>
     <ALLRES value="$(RESFILES)"/>
-    <ALLLIB value="$(LIBFILES) $(LIBRARIES) import32.lib cp32mti.lib"/>
+    <ALLLIB value="$(LIBFILES) $(LIBRARIES) import32.lib cp32mt.lib"/>
     <OTHERFILES value=""/>
   </LINKER>
   <FILELIST>
@@ -93,7 +93,9 @@ ProductVersion=1.0.0.0
 Comments=
 
 [Excluded Packages]
+D:\Program Files (x86)\Borland\CBuilder6\Projects\Bpl\DclRx6.bpl=RX Library Controls and Tools
 d:\program files (x86)\borland\cbuilder6\Bin\dclite60.bpl=Borland Integrated Translation Environment
+D:\Program Files (x86)\Borland\CBuilder6\Projects\Bpl\dclrxdb6.bpl=RX Library Database Components
 
 [Debugging]
 DebugSourceDirs=$(BCB)\source\vcl
